@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="GC11" />
         <module name="ing-sw-2022-Spagnolo-Vallone-Zoccatelli" />
       </profile>
     </annotationProcessing>
