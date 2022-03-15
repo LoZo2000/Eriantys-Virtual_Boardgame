@@ -4,7 +4,7 @@ package it.polimi.ingsw.model;
 import java.util.ArrayList;
 
 public class Game {
-    private final int numPlayers;
+    /*private final int numPlayers;
     //ArrayList <Island> islands = new ArrayList<>();
     MotherNature motherNature;
     private ArrayList<Player> players = new ArrayList<Player>();
@@ -36,7 +36,7 @@ public class Game {
             return 1;
         }
         else return 2;
-    }
+    }*/
 
 
 

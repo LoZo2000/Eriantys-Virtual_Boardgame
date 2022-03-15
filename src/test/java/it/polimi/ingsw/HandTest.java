@@ -31,18 +31,15 @@ public class HandTest {
                 hand.playCard(0);
             }
             catch(Exception e){
-                System.out.println(e);
-                assertTrue(false, "False");
+                fail();
             }
         }
         assertEquals(0, hand.getNumCards());
         try{
             hand.playCard(0);
-            assertTrue(false, "False");
+            fail();
         }
-        catch(Exception e){
-            System.out.println(e);
-        }
+        catch(Exception e){e.printStackTrace();}
         assertEquals(0, hand.getNumCards());
     }
 
@@ -53,9 +50,7 @@ public class HandTest {
             assertThrows(OverflowCardException.class, () -> hand.getCard(hand.getNumCards()));
             try {
                 hand.playCard(0);
-            } catch (OverflowCardException e) {
-                e.printStackTrace();
-            }
+            } catch (OverflowCardException e) {e.printStackTrace();}
         }
     }
 
@@ -66,9 +61,7 @@ public class HandTest {
             assertThrows(OverflowCardException.class, () -> hand.playCard(hand.getNumCards()));
             try {
                 hand.playCard(0);
-            } catch (OverflowCardException e) {
-                e.printStackTrace();
-            }
+            } catch (OverflowCardException e) {e.printStackTrace();}
         }
     }
 
@@ -86,8 +79,7 @@ public class HandTest {
             assertEquals(9, hand.getNumCards());
         }
         catch(Exception e){
-            System.out.println(e);
-            assertTrue(false, "False");
+            fail();
         }
     }
 
