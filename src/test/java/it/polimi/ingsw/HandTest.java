@@ -47,19 +47,30 @@ public class HandTest {
     }
 
     //Checks if the exception is thrown if the position requested from getCard is higher than the size of the ArrayList
-    /*@Test
+    @Test
     public void getOverflowCard(){
-        int numberOverflow = hand.getNumCards();
         for(int i = 0; i < 10; i++){
-            assertThrows(OverflowCardException.class, () -> hand.getCard(numberOverflow));
+            assertThrows(OverflowCardException.class, () -> hand.getCard(hand.getNumCards()));
             try {
-                hand.playCard(i);
+                hand.playCard(0);
             } catch (OverflowCardException e) {
                 e.printStackTrace();
             }
         }
-    }*/
+    }
 
+    //Checks if the exception is thrown if the position requested from playCard is higher than the size of the ArrayList
+    @Test
+    public void playOverflowCard(){
+        for(int i = 0; i < 10; i++){
+            assertThrows(OverflowCardException.class, () -> hand.playCard(hand.getNumCards()));
+            try {
+                hand.playCard(0);
+            } catch (OverflowCardException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     //Checks if it returns the right card
 

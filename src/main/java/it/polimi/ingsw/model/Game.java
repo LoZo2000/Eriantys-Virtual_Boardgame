@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 public class Game {
     private final int numPlayers;
-    ArrayList <Island> islands = new ArrayList<>();
+    //ArrayList <Island> islands = new ArrayList<>();
     MotherNature motherNature;
     private ArrayList<Player> players = new ArrayList<Player>();
-    Cloud[] clouds;
+    //Cloud[] clouds;
     Card[] playedCards;
 
     //Create game and add the first player
