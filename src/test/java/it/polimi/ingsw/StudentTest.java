@@ -3,12 +3,10 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.Student;
 
-import junit.framework.TestCase;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-
-
-public class StudentTest extends TestCase {
+public class StudentTest{
 
     //Checks if 'getColor' works correctly
     @Test

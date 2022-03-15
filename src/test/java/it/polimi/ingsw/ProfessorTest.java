@@ -2,10 +2,10 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.Professor;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-public class ProfessorTest extends TestCase {
+public class ProfessorTest {
 
     @Test
     public void getColorTest(){

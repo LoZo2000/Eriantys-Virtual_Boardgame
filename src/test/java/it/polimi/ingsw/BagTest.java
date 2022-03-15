@@ -3,15 +3,13 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.Student;
 
-import junit.framework.TestCase;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 
-
-public class BagTest extends TestCase{
+public class BagTest{
     Bag bag;
-
-
 
     //Creates a bag containing 120 students
     @BeforeEach
@@ -47,7 +45,7 @@ public class BagTest extends TestCase{
                 }
             }
             catch(Exception e){
-                assertTrue("No exceptions should occur now!", false);
+                assertTrue(false, "No exceptions should occur now!");
                 System.out.println(e);
             }
         }
@@ -65,13 +63,13 @@ public class BagTest extends TestCase{
                 Student s = bag.getRandomStudent();
             }
             catch(Exception e){
-                assertTrue("No exceptions should occur now!", false);
+                assertTrue(false, "No exceptions should occur now!");
                 System.out.println(e);
             }
         }
         try{
             Student s = bag.getRandomStudent();
-            assertTrue("I expected an exception!", false);
+            assertTrue(false, "I expected an exception!");
         }
         catch(Exception e){
             System.out.println(e);
@@ -89,7 +87,7 @@ public class BagTest extends TestCase{
                 Student s = bag.getRandomStudent();
             }
             catch(Exception e){
-                assertTrue("No exceptions should occur now!", false);
+                assertTrue(false, "No exceptions should occur now!");
                 System.out.println(e);
             }
         }
