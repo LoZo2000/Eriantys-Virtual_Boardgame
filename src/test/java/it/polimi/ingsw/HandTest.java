@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.Hand;
+import it.polimi.ingsw.model.exceptions.OverflowCardException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,6 @@ import java.util.ArrayList;
 
 public class HandTest {
     Hand hand;
-
-
 
     @BeforeEach
     public void init(){
@@ -47,10 +46,23 @@ public class HandTest {
         assertEquals(0, hand.getNumCards());
     }
 
+    //Checks if the exception is thrown if the position requested from getCard is higher than the size of the ArrayList
+    /*@Test
+    public void getOverflowCard(){
+        int numberOverflow = hand.getNumCards();
+        for(int i = 0; i < 10; i++){
+            assertThrows(OverflowCardException.class, () -> hand.getCard(numberOverflow));
+            try {
+                hand.playCard(i);
+            } catch (OverflowCardException e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
 
 
     //Checks if it returns the right card
-    @Test
+
     @RepeatedTest(50)
     public void testExtraction(){
         int rand = (int)(Math.random()*10);
