@@ -1,11 +1,19 @@
 package it.polimi.ingsw.model;
 
 public class Card {
-    Color color;
-    int init;
+    private int initiative;
+    private int movement;
 
-    public Card(Color color, int init){
-        this.color = color;
-        this.init = init;
+    public Card(int initiative, int movement){
+        this.initiative = initiative;
+        this.movement = movement;
+    }
+
+    public int getInitiative(){
+        return initiative;
+    }
+
+    public int getMovement(){
+        return movement;
     }
 }
