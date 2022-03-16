@@ -45,8 +45,7 @@ public class BagTest{
                 }
             }
             catch(Exception e){
-                assertTrue(false, "No exceptions should occur now!");
-                System.out.println(e);
+                fail();
             }
         }
         for(int i=0; i<5; i++)
@@ -63,17 +62,14 @@ public class BagTest{
                 Student s = bag.getRandomStudent();
             }
             catch(Exception e){
-                assertTrue(false, "No exceptions should occur now!");
-                System.out.println(e);
+                fail();
             }
         }
         try{
             Student s = bag.getRandomStudent();
-            assertTrue(false, "I expected an exception!");
+            fail();
         }
-        catch(Exception e){
-            System.out.println(e);
-        }
+        catch(Exception e){e.printStackTrace();}
     }
 
 
@@ -87,8 +83,7 @@ public class BagTest{
                 Student s = bag.getRandomStudent();
             }
             catch(Exception e){
-                assertTrue(false, "No exceptions should occur now!");
-                System.out.println(e);
+                fail();
             }
         }
         assertEquals(0, bag.getStudentsNum());

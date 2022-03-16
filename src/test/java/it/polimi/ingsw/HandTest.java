@@ -31,35 +31,39 @@ public class HandTest {
                 hand.playCard(0);
             }
             catch(Exception e){
-                System.out.println(e);
-                assertTrue(false, "False");
+                fail();
             }
         }
         assertEquals(0, hand.getNumCards());
         try{
             hand.playCard(0);
-            assertTrue(false, "False");
+            fail();
         }
-        catch(Exception e){
-            System.out.println(e);
-        }
+        catch(Exception e){e.printStackTrace();}
         assertEquals(0, hand.getNumCards());
     }
 
     //Checks if the exception is thrown if the position requested from getCard is higher than the size of the ArrayList
-    /*@Test
+    @Test
     public void getOverflowCard(){
-        int numberOverflow = hand.getNumCards();
         for(int i = 0; i < 10; i++){
-            assertThrows(OverflowCardException.class, () -> hand.getCard(numberOverflow));
+            assertThrows(OverflowCardException.class, () -> hand.getCard(hand.getNumCards()));
             try {
-                hand.playCard(i);
-            } catch (OverflowCardException e) {
-                e.printStackTrace();
-            }
+                hand.playCard(0);
+            } catch (OverflowCardException e) {e.printStackTrace();}
         }
-    }*/
+    }
 
+    //Checks if the exception is thrown if the position requested from playCard is higher than the size of the ArrayList
+    @Test
+    public void playOverflowCard(){
+        for(int i = 0; i < 10; i++){
+            assertThrows(OverflowCardException.class, () -> hand.playCard(hand.getNumCards()));
+            try {
+                hand.playCard(0);
+            } catch (OverflowCardException e) {e.printStackTrace();}
+        }
+    }
 
     //Checks if it returns the right card
 
@@ -75,8 +79,7 @@ public class HandTest {
             assertEquals(9, hand.getNumCards());
         }
         catch(Exception e){
-            System.out.println(e);
-            assertTrue(false, "False");
+            fail();
         }
     }
 
