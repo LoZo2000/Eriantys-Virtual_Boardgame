@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 
 public class HandTest {
-    Hand hand;
+    private Hand hand;
 
     @BeforeEach
     public void init(){
@@ -67,7 +67,7 @@ public class HandTest {
 
     //Checks if it returns the right card
 
-    @RepeatedTest(50)
+    @RepeatedTest(10)
     public void testExtraction(){
         int rand = (int)(Math.random()*10);
         assertEquals(10, hand.getNumCards());

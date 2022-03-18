@@ -8,12 +8,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class StudentTest{
 
-    //Checks if 'getColor' works correctly
     @Test
-    public void getColor(){
-        for(Color c : Color.values()){
-            Student s = new Student(c);
-            assertEquals(c, s.getColor());
+    public void getterTest(){
+        for(int i=0; i<50; i++){
+            for(Color c : Color.values()){
+                Student s = new Student(i, c);
+                assertEquals(i, s.getId());
+                assertEquals(c, s.getColor());
+            }
         }
     }
 }

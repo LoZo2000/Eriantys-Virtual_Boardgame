@@ -12,7 +12,6 @@ public class Card {
     public int getInitiative(){
         return initiative;
     }
-
     public int getMovement(){
         return movement;
     }

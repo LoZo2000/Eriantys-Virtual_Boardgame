@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class BagTest{
-    Bag bag;
+    private Bag bag;
 
     //Creates a bag containing 120 students
     @BeforeEach
@@ -54,26 +54,6 @@ public class BagTest{
 
 
 
-    //Checks if exception is triggered after 120 students:
-    @Test
-    public void checkTriggeredException(){
-        for(int i=0; i<120; i++){
-            try {
-                Student s = bag.getRandomStudent();
-            }
-            catch(Exception e){
-                fail();
-            }
-        }
-        try{
-            Student s = bag.getRandomStudent();
-            fail();
-        }
-        catch(Exception e){e.printStackTrace();}
-    }
-
-
-
     //Checks if 'getStudentsNum' works correctly
     @Test
     public void checkStudentsNum(){
@@ -87,5 +67,10 @@ public class BagTest{
             }
         }
         assertEquals(0, bag.getStudentsNum());
+        try{
+            Student s = bag.getRandomStudent();
+            fail();
+        }
+        catch(Exception e){e.printStackTrace();}
     }
 }

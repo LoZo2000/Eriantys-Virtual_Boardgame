@@ -8,4 +8,11 @@ public class Tower {
         this.id = id;
         this.color =color;
     }
+
+    public int getId(){
+        return id;
+    }
+    public ColorTower getColorTower() {
+        return color;
+    }
 }

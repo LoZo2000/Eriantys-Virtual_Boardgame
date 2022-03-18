@@ -9,11 +9,12 @@ import java.util.List;
 public class Bag {
     private List<Student> students;
 
+    //'num' is the number of students to create FOR EVERY single color
     public Bag(int num){
         students = new ArrayList<Student>();
         for(Color c : Color.values())
             for(int i=0; i<num; i++)
-                students.add(new Student(c));
+                students.add(new Student(i,c));
         Collections.shuffle(students);
     }
 

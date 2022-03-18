@@ -29,6 +29,7 @@ public class Hand {
         return (ArrayList<Card>)cards.clone();
     }
 
+    //Returns the selected card and deletes it
     public Card playCard(int pos) throws OverflowCardException {
         if(pos<cards.size() && pos>=0){
             Card c = cards.get(pos);
