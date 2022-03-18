@@ -4,17 +4,19 @@ package it.polimi.ingsw.model;
 import java.util.ArrayList;
 
 public class Game {
-    /*private final int numPlayers;
-    //ArrayList <Island> islands = new ArrayList<>();
+    private int lastPlayed;
+    private final int numPlayers;
+    ArrayList <Island> islands = new ArrayList<>();
     MotherNature motherNature;
     private ArrayList<Player> players = new ArrayList<Player>();
-    //Cloud[] clouds;
+    Cloud[] clouds;
     Card[] playedCards;
 
     //Create game and add the first player
     public Game(String Gametype, int numPlayers, String nickFirstPlayer){
         this.numPlayers=numPlayers;
         this.addPlayer(nickFirstPlayer);
+        lastPlayed=0;
     }
 
     //create player, dashboard and hand (hand not inizialized)
@@ -36,7 +38,20 @@ public class Game {
             return 1;
         }
         else return 2;
-    }*/
+    }
+
+    public int getNumPlayers(){
+        return numPlayers;
+    }
+
+    public int getLastPlayed(){
+        return lastPlayed;
+    }
+
+    public Player getPlayerNum(int i){
+        Player temp = new Player(players.get(i%numPlayers));
+        return temp;
+    }
 
 
 
