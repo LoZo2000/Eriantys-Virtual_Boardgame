@@ -3,38 +3,79 @@ package it.polimi.ingsw.controller;
 import  it.polimi.ingsw.model.*;
 
 public class GameHandler {
-    /*private final Game game;
+    private boolean CharacterPlayed;
+    private final Game game;
+    private final int numPlayers;
+    private int currentPlayer;
 
     public GameHandler(Game game) {
         this.game= game;
+        this.numPlayers= game.getNumPlayers();
+        CharacterPlayed=false;
+    }
+
+    public void Turn(){
+        PreTurn();
+        MiddleTurn();
+        //EndTurn();
     }
 
 
-    public void PreTurn(){
+    private void PreTurn(){
         int first = game.getLastPlayed();
-        int numPlayers= game.getNumPlayers();
         for(int i=0; i<numPlayers; i++){
             //tutti i metodi non ritornano nulla in quanto sono da implementare
             ThrowCard(game.getPlayerNum(i));
-            WaitForThrowCard(game.getPlayerNum(i+1));
-            WaitForThrowCard(game.getPlayerNum(i+2));
+            for(int j=1; j<(numPlayers); j++) {
+                WaitForThrownCard(game.getPlayerNum(i + j));
+            }
 
             WaitForUserCard();
 
             SaveCard();
 
-            WaitForThrowCard(game.getPlayerNum(i));
-            SendCard(game.getPlayerNum(i+1));
-            SendCard(game.getPlayerNum(i+2));
+            WaitForThrownCard(game.getPlayerNum(i));
+            for(int j=1; j<(numPlayers); j++) {
+                SendCard(game.getPlayerNum(i+1));
+            }
 
         }
-        WhoPlays();
-
+        currentPlayer=WhoPlays();
+        game.setLastPlayed(currentPlayer);
     }
+
+    private void MiddleTurn(){
+        for(int i=0; i<numPlayers; i++){
+            StartTurn(game.getPlayerNum(currentPlayer));
+            for(int j=1; j<(numPlayers); j++) {
+                WaitTurn(game.getPlayerNum(currentPlayer+j));
+            }
+
+            WaitStudents();
+
+            for(int j=1; j<(numPlayers); j++) {
+                NotifyStudent(game.getPlayerNum(currentPlayer+j));
+            }
+
+            WaitMotherNature();
+
+            for(int j=1; j<(numPlayers); j++) {
+                NotifyMotherNature(game.getPlayerNum(currentPlayer+j));
+            }
+
+            WaitCloud();
+
+            for(int j=1; j<(numPlayers); j++) {
+                NotifyCloud(game.getPlayerNum(currentPlayer+j));
+            }
+            currentPlayer++;
+        }
+    }
+
     //da implementare
     private void ThrowCard(Player player){}
 
-    private void WaitForThrowCard(Player player){}
+    private void WaitForThrownCard(Player player){}
 
     private void WaitForUserCard(){}
 
@@ -42,6 +83,22 @@ public class GameHandler {
 
     private void SaveCard(){}
 
-    private void WhoPlays(){}*/
+    private int WhoPlays(){}
+
+    private void StartTurn(Player currentPlayer){}
+
+    private void WaitTurn(Player nonCurrentPlayer){}
+
+    private void WaitStudents(){}
+
+    private void NotifyStudent(Player player){}
+
+    private void WaitMotherNature(){}
+
+    private void NotifyMotherNature(Player player){}
+
+    private void WaitCloud(){}
+
+    private void NotifyCloud(Player player){}
 
 }
