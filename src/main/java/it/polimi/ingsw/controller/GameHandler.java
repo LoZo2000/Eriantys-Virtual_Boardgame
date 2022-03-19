@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller;
 import  it.polimi.ingsw.model.*;
 
 public class GameHandler {
-    private final Game game;
+    /*private final Game game;
 
     public GameHandler(Game game) {
         this.game= game;
@@ -42,6 +42,6 @@ public class GameHandler {
 
     private void SaveCard(){}
 
-    private void WhoPlays(){}
+    private void WhoPlays(){}*/
 
 }
