@@ -15,4 +15,11 @@ public class Student {
     public Color getColor(){
         return this.color;
     }
+
+    public boolean equals(Object o){
+        if(o instanceof Student){
+            if(((Student) o).getId() == id) return true;
+        }
+        return false;
+    }
 }

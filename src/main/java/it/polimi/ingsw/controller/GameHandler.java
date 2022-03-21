@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller;
 import  it.polimi.ingsw.model.*;
 
 public class GameHandler {
-    private boolean CharacterPlayed;
+    /*private boolean CharacterPlayed;
     private final Game game;
     private final int numPlayers;
     private int currentPlayer;
@@ -99,6 +99,6 @@ public class GameHandler {
 
     private void WaitCloud(){}
 
-    private void NotifyCloud(Player player){}
+    private void NotifyCloud(Player player){}*/
 
 }

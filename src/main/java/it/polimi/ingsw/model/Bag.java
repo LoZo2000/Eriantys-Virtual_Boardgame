@@ -4,17 +4,12 @@ import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class Bag {
-    private List<Student> students;
+    private ArrayList<Student> students;
 
-    //'num' is the number of students to create FOR EVERY single color
-    public Bag(int num){
-        students = new ArrayList<Student>();
-        for(Color c : Color.values())
-            for(int i=0; i<num; i++)
-                students.add(new Student(i,c));
+    public Bag(ArrayList<Student> students){
+        this.students = (ArrayList<Student>) students.clone();
         Collections.shuffle(students);
     }
 
@@ -24,7 +19,7 @@ public class Bag {
             students.remove(0);
             return s;
         }
-        else throw new NoMoreStudentsException("There are no more students in the bag!!!");
+        else throw new NoMoreStudentsException("There are no more students in this bag!!!");
     }
 
     public int getStudentsNum(){
