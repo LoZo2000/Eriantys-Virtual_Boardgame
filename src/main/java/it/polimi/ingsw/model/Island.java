@@ -8,14 +8,13 @@ import java.util.ArrayList;
 public class Island {
     private final int id;
     private ArrayList<Student> students;
-    private ArrayList<Tower> towers;
     private boolean prohibitionToken = false;
     private int maxTowers;
+    private ColorTower owner;
 
     public Island(int id){
         this.id = id;
         students = new ArrayList<Student>();
-        towers = new ArrayList<Tower>();
         maxTowers = 1;
     }
 
@@ -25,31 +24,39 @@ public class Island {
         this(i1.getId());
         students.addAll(i1.getAllStudents());
         students.addAll(i2.getAllStudents());
-        towers.addAll(i1.getAllTowers());
-        towers.addAll(i2.getAllTowers());
         maxTowers = i1.getMaxTowers() + i2.getMaxTowers();
     }
 
     public int getId(){
         return id;
     }
+
+    public Report getReport(){
+        int numTowers;
+        if(owner==null){
+            numTowers=0;
+        }
+        else { numTowers=maxTowers;}
+
+        return new Report( owner, numTowers, getNumberStudentColor(Color.BLUE), getNumberStudentColor(Color.YELLOW),
+                           getNumberStudentColor(Color.RED), getNumberStudentColor(Color.GREEN), getNumberStudentColor(Color.PINK));
+    }
+
+
     public int getMaxTowers(){
         return maxTowers;
     }
+
     public ArrayList<Student> getAllStudents(){
         return (ArrayList<Student>)students.clone();
-    }
-    public ArrayList<Tower> getAllTowers(){
-        return (ArrayList<Tower>)towers.clone();
     }
 
     //Returns the color of the player who currently owns the island (null if the island is still free)
     public ColorTower getCurrentOwner(){
-        if(towers.size()>0) return towers.get(0).getColorTower();
-        return null;
+        return owner;
     }
 
-    //Returns the number of students
+    //Returns the number of students (to change in a private method probably)
     public int getNumberStudentColor(Color color){
         int cont = 0;
         for(Student s : students){
@@ -62,38 +69,17 @@ public class Island {
         students.add(s);
     }
 
-    //This method will be launched only ONCE: the first time a player conquests the island
-    public void conquest(Tower t) throws WrongNumberOfTowersException, TowersColorException {
-        if(maxTowers==1){
-            if(towers.size()==0 || towers.get(0).getColorTower()!=t.getColorTower()) {
-                towers.clear();
-                towers.add(t);
-            }
-            else throw new TowersColorException();
-        }
-        else throw new WrongNumberOfTowersException();
-    }
+    public void removeStudent(Student s){ students.remove(s); }
 
-    //Saves in 'towers' the new owner's towers (resetting 'towers')
-    public void conquest(ArrayList<Tower> towers) throws WrongNumberOfTowersException, TowersColorException {
-        if(towers.size() == maxTowers) {
-            if(this.towers.get(0).getColorTower() != towers.get(0).getColorTower()) {
-                for(int i=1; i<towers.size(); i++){
-                    if(towers.get(i).getColorTower() != towers.get(i-1).getColorTower()){
-                        throw new TowersColorException();
-                    }
-                }
-                this.towers.clear();
-                this.towers.addAll(towers);
-            }
-            else throw new TowersColorException();
-        }
-        else throw new WrongNumberOfTowersException();
+    //Change the owner of the island
+    public void conquest(ColorTower t) {
+        owner=t;
     }
 
     public void setProhibition(boolean prohibitionToken) {
         this.prohibitionToken = prohibitionToken;
     }
+
     public boolean getProhibition(){
         return prohibitionToken;
     }
