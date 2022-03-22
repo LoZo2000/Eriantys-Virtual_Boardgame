@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IslandTest {
-    private Island island;
+    /*private Island island;
 
     @BeforeEach
     public void init(){
@@ -134,5 +134,5 @@ public class IslandTest {
         assertEquals(red, island.getNumberStudentColor(Color.RED));
         assertEquals(green, island.getNumberStudentColor(Color.GREEN));
         assertEquals(pink, island.getNumberStudentColor(Color.PINK));
-    }
+    }*/
 }

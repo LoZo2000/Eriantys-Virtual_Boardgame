@@ -15,4 +15,11 @@ public class Card {
     public int getMovement(){
         return movement;
     }
+
+    public boolean equals(Object o){
+        if(o instanceof Card){
+            if(((Card)o).getInitiative() == initiative) return true;
+        }
+        return false;
+    }
 }

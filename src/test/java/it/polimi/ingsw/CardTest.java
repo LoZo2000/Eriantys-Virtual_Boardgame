@@ -17,4 +17,15 @@ public class CardTest{
             }
         }
     }
+
+    @Test
+    public void equalsTest(){
+        Card c1 = new Card(10, 5);
+        Card c2 = new Card(10, 5);
+        Card c3 = new Card(9, 5);
+        assertEquals(c1,c2);
+        assertEquals(c2,c1);
+        assertNotEquals(c1,c3);
+        assertNotEquals(c3,c1);
+    }
 }

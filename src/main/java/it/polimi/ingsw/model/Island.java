@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.TowersColorException;
-import it.polimi.ingsw.model.exceptions.WrongNumberOfTowersException;
-
 import java.util.ArrayList;
 
 public class Island {

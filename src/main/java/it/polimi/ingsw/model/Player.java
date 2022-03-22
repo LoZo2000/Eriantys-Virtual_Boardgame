@@ -6,10 +6,10 @@ public class Player {
     final String nickname;
 
 
-    public Player(String nickname, Dashboard dashboard) {
+    public Player(String nickname) {
         this.nickname = nickname;
-        this.dashboard = dashboard;
         this.hand = new Hand();
+        this.dashboard = new Dashboard(7);
     }
 
     public Player(Player player) {

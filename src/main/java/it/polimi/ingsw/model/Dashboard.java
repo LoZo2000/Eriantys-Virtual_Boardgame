@@ -1,42 +1,39 @@
 package it.polimi.ingsw.model;
 
-import java.util.List;
-import java.util.ArrayList;
-
-public class Dashboard {
+public class Dashboard implements Cloneable{
     Card graveyard;
-    private List<Tower> towers = new ArrayList<Tower>();
-    private List<Student> students = new ArrayList<Student>();
+    Canteen canteen;
+    Entrance entrance;
+    int towers;
 
     //students will be inizialized when the game start not when the players are created
-    public Dashboard(int numPlayers, int posPlayer) {
-        switch (numPlayers) {
-            case 2:
-                if (posPlayer == 0) {
-                    for (int i = 0; i < 8; i++) {
-                        towers.add(new Tower(i, ColorTower.BLACK));
-                    }
-                } else {
-                    for (int i = 0; i < 8; i++) {
-                        towers.add(new Tower(i, ColorTower.WHITE));
-                    }
-                }
-            case 3:
-                if (posPlayer == 0) {
-                    for (int i = 0; i < 6; i++) {
-                        towers.add(new Tower(i, ColorTower.BLACK));
-                    }
-                } else if (posPlayer == 1) {
-                    for (int i = 0; i < 6; i++) {
-                        towers.add(new Tower(i, ColorTower.WHITE));
-                    }
-                } else {
-                    for (int i = 0; i < 6; i++) {
-                        towers.add(new Tower(i, ColorTower.GREY));
-                    }
-                }
-                //miss case:4
-        }
+    public Dashboard(int towers) {
+        canteen = new Canteen();
+        entrance = new Entrance();
+        this.towers = towers;
+    }
 
+    public Canteen getCanteen(){
+        return (Canteen)canteen.clone();
+    }
+
+    public Entrance getEntrance(){
+        return (Entrance)entrance.clone();
+    }
+
+    public void addTower(int t){
+        towers += t;
+    }
+
+    public void removeTower(int t){
+        towers -= t;
+    }
+
+    public Card getGraveyard(){
+        return (Card)graveyard.clone();
+    }
+
+    public void setGraveyard(Card c){
+        graveyard = c;
     }
 }

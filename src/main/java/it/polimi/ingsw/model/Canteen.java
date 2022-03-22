@@ -59,6 +59,7 @@ public class Canteen implements Movable{
         }
     }
 
+    //IndexOf!!!!!!!!!!!!!!!!!!!!!!!!!!
     public Student removeStudent(int id) throws NoSuchStudentException {
         Student s = null;
         for(int i=0; i < blue.size(); i++){
