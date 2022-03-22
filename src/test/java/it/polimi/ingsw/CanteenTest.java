@@ -3,13 +3,13 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.model.Canteen;
 import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.Student;
+import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CanteenTest {
     private Canteen canteen;
@@ -54,12 +54,10 @@ public class CanteenTest {
             assertEquals(0, canteen.getNumberStudentColor(Color.GREEN));
             canteen.removeStudent(4);
             assertEquals(0, canteen.getNumberStudentColor(Color.PINK));
-        }
-        catch(Exception e){fail();}
-        try{
-            canteen.removeStudent(0);
+        } catch(Exception e){
             fail();
         }
-        catch(Exception e){e.printStackTrace();}
+
+        assertThrows(NoSuchStudentException.class, () -> canteen.removeStudent(0));
     }
 }

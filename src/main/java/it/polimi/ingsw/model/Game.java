@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
@@ -49,8 +51,21 @@ public class Game {
         }
     }
 
-    public void addPlayer(String NickName){
-        players.add(new Player(NickName));
+    public void addPlayer(String nickname){
+        int numberOfStudents = this.numPlayers != 3 ? 7 : 9;
+        ArrayList<Student> entranceStudents = new ArrayList<>();
+        for(int i= 0; i<numberOfStudents; i++){
+            try {
+                Student s = this.bag.getRandomStudent();
+                entranceStudents.add(s);
+            } catch (NoMoreStudentsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Player newPlayer = new Player(nickname, entranceStudents);
+
+        players.add(newPlayer);
     }
 
     public int getGameState(){  // return 1 if the game is full, 2 if can contain further player

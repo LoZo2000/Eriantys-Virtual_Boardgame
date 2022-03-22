@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import java.util.ArrayList;
+
 public class Dashboard implements Cloneable{
     Card graveyard;
     Canteen canteen;
@@ -7,9 +9,9 @@ public class Dashboard implements Cloneable{
     int towers;
 
     //students will be inizialized when the game start not when the players are created
-    public Dashboard() {
+    public Dashboard(ArrayList<Student> entranceStudents) {
         canteen = new Canteen();
-        entrance = new Entrance();
+        entrance = new Entrance(entranceStudents);
         this.towers = 8;
     }
 

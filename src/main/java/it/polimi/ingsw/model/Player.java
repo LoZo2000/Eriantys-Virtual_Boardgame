@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import java.util.ArrayList;
+
 public class Player implements Cloneable {
     final private Hand hand;
     final private Dashboard dashboard;
@@ -14,10 +16,10 @@ public class Player implements Cloneable {
         return null;
     }
 
-    public Player(String nickname) {
+    public Player(String nickname, ArrayList<Student> entranceStudents) {
         this.nickname = nickname;
         this.hand = new Hand();
-        this.dashboard = new Dashboard();
+        this.dashboard = new Dashboard(entranceStudents);
     }
 
     public Hand getHand(){

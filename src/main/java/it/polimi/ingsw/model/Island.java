@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model;
 
-import java.util.ArrayList;
+import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 
-public class Island implements Movable, Cloneable{
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
+public class Island implements Cloneable, Movable{
     private final int id;
     private ArrayList<Student> students;
     private boolean prohibitionToken = false;
@@ -88,15 +91,19 @@ public class Island implements Movable, Cloneable{
         students.add(s);
     }
 
-    public Student removeStudent(int id){
-        for(int i=0; i<students.size(); i++){
-            if(students.get(i).getId() == id){
-                Student s = students.get(i);
-                students.remove(i);
-                return s;
-            }
+    public Student removeStudent(int id) throws NoSuchStudentException {
+        //Random color because it doesn't matter for the equals method (Each Student has a unique id)
+        Student tempStudent = new Student(id, Color.RED);
+        int positionInList = this.students.indexOf(tempStudent);
+
+        if(positionInList == -1){
+            throw new NoSuchStudentException("There isn't any Student with that id in the list");
         }
-        return null;
+
+        Student removedStudent = this.students.get(positionInList);
+        this.students.remove(positionInList);
+
+        return removedStudent;
     }
 
     //Change the owner of the island
