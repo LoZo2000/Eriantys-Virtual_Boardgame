@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class HandTest {
     private Hand hand;
 
-    @BeforeEach
+    /*@BeforeEach
     public void init(){
         hand = new Hand();
     }
@@ -23,7 +23,7 @@ public class HandTest {
 
 
     //Checks 'getNumCard' and a correct extraction and if exception is triggered
-    /*@Test
+    @Test
     public void getNumCardTest(){
         for(int i=0; i <10; i++){
             assertEquals(10-i, hand.getNumCards());
@@ -109,6 +109,5 @@ public class HandTest {
         assertEquals(5, cards.get(8).getMovement());
         assertEquals(10, cards.get(9).getInitiative());
         assertEquals(5, cards.get(9).getMovement());
-    }
+    }*/
 }
- */

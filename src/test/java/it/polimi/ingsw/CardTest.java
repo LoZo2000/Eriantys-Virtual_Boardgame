@@ -12,7 +12,7 @@ public class CardTest{
         for(int i=1; i<10; i++){
             for(int j=1; j<5; j++){
                 Card c = new Card(i,j);
-                assertEquals(i, c.getInitiative());
+                assertEquals(i, c.getPriority());
                 assertEquals(j, c.getMovement());
             }
         }

@@ -10,7 +10,7 @@ public class Bag {
 
     public Bag(ArrayList<Student> students){
         this.students = (ArrayList<Student>) students.clone();
-        Collections.shuffle(students);
+        Collections.shuffle(this.students);
     }
 
     public Student getRandomStudent() throws NoMoreStudentsException {

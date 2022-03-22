@@ -3,10 +3,9 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Entrance implements Movable, Cloneable {
-    List<Student> students;
+    ArrayList<Student> students;
 
     public Entrance(){
         students = new ArrayList<>();
@@ -35,5 +34,9 @@ public class Entrance implements Movable, Cloneable {
             }
         }
         throw new NoSuchStudentException();
+    }
+
+    public ArrayList<Student> getAllStudents(){
+        return (ArrayList<Student>)students.clone();
     }
 }

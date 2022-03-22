@@ -1,21 +1,23 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.Color;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Island;
-import it.polimi.ingsw.model.Student;
-import org.junit.jupiter.api.Test;
+import it.polimi.ingsw.model.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class CLItest {
 
-    @Test
-    public void play(){
+    public static void main(String[] args){
         Scanner sc=new Scanner(System.in);
         int opz;
-        Game game;
+        Game game=null;
+        LinkedList<Island> islands;
+        ArrayList<Student> students;
+        ArrayList<Card> cards;
+        int islandId;
+        int studentId;
+        String playerNick;
 
         while(true) {
             System.out.println("\n\nSELECT ONE OF THE FOLLOWING OPTIONS:");
@@ -38,36 +40,34 @@ public class CLItest {
             switch(opz){
                 case 0:
                     game = new Game(false, 3);
-                    //game.addPlayer("player1");
-                    //game.addPlayer("player2");
-                    //game.addPlayer("player3");
-                    //game.addPlayer("");
+                    game.addPlayer("player1");
+                    game.addPlayer("player2");
+                    game.addPlayer("player3");
                     break;
                 case 1:
-                    //ArrayList<Island> islands = game.getIslands();
-                    //for(Island i : islands) System.out.println(i.getId());
+                    islands = game.getAllIslands();
+                    for(Island i : islands) System.out.println(i.getId());
                     break;
                 case 2:
-                    //System.out.println(game.getMotherNaturePosition().getId());
+                    System.out.println(game.getMotherNaturePosition().getId());
                     break;
                 case 3:
                     System.out.println("Insert id island:");
-                    int islandId;
                     islandId = sc.nextInt();
-                    //ArrayList<Student> students = game.getIsland(islandId).getAllStudents();
-                    //for(Student s : students) System.out.println(s.getId());
+                    students = game.getIsland(islandId).getAllStudents();
+                    for(Student s : students) System.out.println(s.getId());
                     break;
                 case 4:
+                    sc.nextLine();
                     System.out.println("Insert id player:");
-                    int playerId;
-                    playerId = sc.nextInt();
-                    //ArrayList<Student> students = game.getPlayer(playerId).getDashboard().getEntrance().getAllStudents();
-                    //for(Student s : students) System.out.println(s.getId());
+                    playerNick = sc.nextLine();
+                    students = game.getPlayer(playerNick).getDashboard().getEntrance().getAllStudents();
+                    for(Student s : students) System.out.println(s.getId());
                     break;
                 case 5:
+                    sc.nextLine();
                     System.out.println("Insert id player & color:");
-                    int playerId;
-                    playerId = sc.nextInt();
+                    playerNick = sc.nextLine();
                     String color;
                     Color c;
                     color = sc.nextLine();
@@ -77,22 +77,28 @@ public class CLItest {
                         case "red" -> c=Color.RED;
                         case "green" -> c=Color.GREEN;
                         case "pink" -> c=Color.PINK;
+                        default -> c=null;
                     }
-                    //ArrayList<Student> students = game.getPlayer(playerId).getDashboard().getCanteen().getStudents(c);
-                    //for(Student s : students) System.out.println(s.getId());
+                    students = game.getPlayer(playerNick).getDashboard().getCanteen().getStudents(c);
+                    for(Student s : students) System.out.println(s.getId());
                     break;
                 case 6:
+                    sc.nextLine();
                     System.out.println("Insert id player:");
-                    int playerId;
-                    playerId = sc.nextInt();
-                    //ArrayList<Card> cards = game.getPlayer(playerId).getHand().getAllCards;
-                    //for(Card c : cards){
-                        // System.out.println(c.getPriority());
-                        // System.out.println(c.getMovement());
+                    playerNick = sc.nextLine();
+                    cards = game.getPlayer(playerNick).getHand().getAllCards();
+                    for(Card car : cards) {
+                        System.out.println(car.getPriority());
+                        System.out.println(car.getMovement());
+                    }
                     break;
-                case 7:
+                /*case 7:
+                    System.out.println("Where is the student?");
+                    System.out.println("Where do you want to move it?");
+                    System.out.println("What is student's id?");
+                    studentId =
                     break;
-                case 8:
+                /*case 8:
                     break;
                 case 9:
                     System.out.println("Insert id first island:");
@@ -115,7 +121,7 @@ public class CLItest {
                 case 11:
                     break;
                 case 12:
-                    break;
+                    break;*/
                 default:
                     System.out.println("This option doesn't exist...");
             }

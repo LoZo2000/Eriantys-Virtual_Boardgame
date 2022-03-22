@@ -27,4 +27,8 @@ public class Player implements Cloneable {
     public Dashboard getDashboard(){
         return dashboard.getDashboard();
     }
+
+    public String getNickname(){
+        return new String(nickname);
+    }
 }

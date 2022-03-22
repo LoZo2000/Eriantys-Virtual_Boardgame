@@ -14,6 +14,6 @@ public class MotherNature {
 
     //Remember: this method returns the island on which motherNature is, not a copied object!!!
     public Island getPosition(){
-        return position;
+        return position.getIsland();
     }
 }
