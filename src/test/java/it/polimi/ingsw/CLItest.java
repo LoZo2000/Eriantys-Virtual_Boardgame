@@ -32,7 +32,7 @@ public class CLItest {
 
             switch(opz){
                 case 0:
-                    game = new Game("myGame", 3, "player1");
+                    game = new Game("myGame", 3);
                     game.addPlayer("player2");
                     game.addPlayer("");
                     //game.init(3);

@@ -1,22 +1,52 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class Game {
+    private boolean gameType;
     private int lastPlayed;
     private final int numPlayers;
-    ArrayList <Island> islands = new ArrayList<>();
-    MotherNature motherNature;
-    private ArrayList<Player> players = new ArrayList<Player>();
-    Cloud[] clouds;
-    Card[] playedCards;
+    LinkedList <Island> islands = new LinkedList<>();
+    private MotherNature motherNature;
+    private ArrayList<Player> players = new ArrayList<>();
+    private Cloud[] clouds;
+    //private Team[] teams;
+    //private Player[] players;
+    private Card[] playedCards;
+    private Bag bag;
+    private Bag initBag;
+    private Character[] CharactersCards;
+    private Map<Color, Player> professors;
+    private Rule currentRule;
 
-    //Create game and add the first player
-    public Game(String Gametype, int numPlayers, String nickFirstPlayer){
+
+    //Create game but no players are added;
+    public Game(boolean gameType, int numPlayers){
         this.numPlayers=numPlayers;
-        this.addPlayer(nickFirstPlayer);
+        this.gameType=gameType;
         lastPlayed=0;
+        initIslands();
+        motherNature= new MotherNature();
+        clouds = new Cloud[3];
+        FactoryBag fb = new FactoryBag();
+        bag = fb.getBag();
+        initBag = fb.getInitBag();
     }
+
+    private void initIslands(){
+        for(int i=0; i<12; i++){
+            islands.add(new Island(i));
+        }
+    }
+
+    public addPlayer(String NickName){
+        players.add(new Player(NickName));
+    }
+
+
+
 
     //create player, dashboard and hand (hand not inizialized)
    // private Player createPlayer(String nickName) {
