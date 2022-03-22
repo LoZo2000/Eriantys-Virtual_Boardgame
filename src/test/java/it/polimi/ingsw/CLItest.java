@@ -169,23 +169,28 @@ public class CLItest {
                         }
                     }
                     break;
-                /*case 9:
+                case 9:
                     System.out.println("Insert id first island:");
                     int i1Id;
                     i1Id = sc.nextInt();
                     System.out.println("Insert id second island:");
                     int i2Id;
                     i2Id = sc.nextInt();
-                    Island i1;
-                    Island i2;
-                    //ArrayList<Island> islands = game.getAllIslands();
-                    //for(Island i : islands){
-                    //    if(i.getId() == i1Id) i1 = i;
-                    //    if(i.getId() == i2Id) i2 = i;
-                    //}
-                    //game.mergeIsland(i1, i2);
+                    Island i1=null;
+                    Island i2=null;
+                    LinkedList<Island> islandstemp = game.getAllIslands();
+                    for(Island i : islandstemp){
+                        if(i.getId() == i1Id) i1 = i;
+                        if(i.getId() == i2Id) i2 = i;
+                    }
+                    try {
+                        game.mergeIsland(i1, i2);
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
                     break;
-                case 10:
+                /*case 10:
                     break;
                 case 11:
                     break;

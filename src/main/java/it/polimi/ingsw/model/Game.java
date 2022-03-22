@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 
+import it.polimi.ingsw.model.exceptions.NoContiguousIslandException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
@@ -116,5 +117,17 @@ public class Game {
 
     public void moveMotherNature(Island island){
         motherNature.movement(island);
+    }
+
+    public void mergeIsland(Island i1, Island i2) throws NoContiguousIslandException {
+        int indx1=islands.indexOf(i1);
+        int indx2=islands.indexOf(i2);
+        if(indx1-indx2==1 || indx1-indx2==-1 || (indx1==0 && indx2== islands.size()-1) || (indx1== islands.size()-1 && indx2==0)){
+            Island temp= new Island(i1, i2);
+            islands.add(indx1, temp);
+            islands.remove(i1);
+            islands.remove(i2);
+        }
+        else throw new NoContiguousIslandException("Islands are not Contiguous");
     }
 }
