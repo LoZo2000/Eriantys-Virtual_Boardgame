@@ -7,10 +7,10 @@ public class Dashboard implements Cloneable{
     int towers;
 
     //students will be inizialized when the game start not when the players are created
-    public Dashboard(int towers) {
+    public Dashboard() {
         canteen = new Canteen();
         entrance = new Entrance();
-        this.towers = towers;
+        this.towers = 8;
     }
 
     public Dashboard getDashboard(){

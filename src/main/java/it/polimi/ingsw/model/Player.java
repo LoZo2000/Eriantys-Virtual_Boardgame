@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model;
 
 public class Player implements Cloneable {
-    Hand hand;
-    Dashboard dashboard;
-    final String nickname;
+    final private Hand hand;
+    final private Dashboard dashboard;
+    final private String nickname;
 
     public Player getPlayer(){
         try {
@@ -14,16 +14,17 @@ public class Player implements Cloneable {
         return null;
     }
 
-
     public Player(String nickname) {
         this.nickname = nickname;
         this.hand = new Hand();
-        this.dashboard = new Dashboard(7);
+        this.dashboard = new Dashboard();
     }
 
-    public Player(Player player) {
-        this.nickname = player.nickname;
-        this.dashboard = player.dashboard;
-        this.hand = new Hand(); // da creare costruttore che duplica
+    public Hand getHand(){
+        return hand.getHand();
+    }
+
+    public Dashboard getDashboard(){
+        return dashboard.getDashboard();
     }
 }
