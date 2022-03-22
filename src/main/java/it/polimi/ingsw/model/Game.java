@@ -19,18 +19,10 @@ public class Game {
     }
 
     //create player, dashboard and hand (hand not inizialized)
-    private Player createPlayer(String nickName) {
-        Dashboard dashboard = new Dashboard(numPlayers, players.size());
-        return new Player (nickName, dashboard);
-    }
-
-    public void addPlayer(String nickName){
-        if(players.size()>numPlayers) ; //throw TooManyPlayersException;
-        else{
-            players.add(createPlayer(nickName));
-        }
-
-    }
+   // private Player createPlayer(String nickName) {
+     //   Dashboard dashboard = new Dashboard(numPlayers, players.size());
+       // return new Player (nickName, dashboard);
+    //}
 
     public int getGameState(){  // return 1 if the game is full, 2 if can contain further player
         if (players.size() == numPlayers) {

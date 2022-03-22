@@ -13,6 +13,15 @@ public class Cloud implements Cloneable{
         students = new ArrayList<Student>();
     }
 
+    public Cloud getCloud(){
+        try {
+            return (Cloud)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     //To pass students one at a time
     public void updateStudents(Student student) throws TooManyStudentsException {
         if(students.size()<maxStudents) students.add(student);

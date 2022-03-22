@@ -11,7 +11,16 @@ public class Card implements Cloneable {
         //this.back=back;
     }
 
-    public int getInitiative(){
+    public Card getCard(){
+        try {
+            return (Card)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int getPriority(){
         return priority;
     }
     public int getMovement(){
@@ -20,7 +29,7 @@ public class Card implements Cloneable {
 
     public boolean equals(Object o){
         if(o instanceof Card){
-            if(((Card)o).getInitiative() == initiative) return true;
+            if(((Card)o).getPriority() == priority) return true;
         }
         return false;
     }

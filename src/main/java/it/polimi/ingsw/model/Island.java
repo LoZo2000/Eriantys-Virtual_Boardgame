@@ -28,8 +28,17 @@ public class Island implements Cloneable{
         return id;
     }
 
-    private ArrayList<int> getStudentsId (Color color, int numberOfStudents){
-        ArrayList<int> ids = new ArrayList<int>();
+    public Island getIsland(){
+        try {
+            return (Island)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private ArrayList<Integer> getStudentsId (Color color, int numberOfStudents){
+        ArrayList<Integer> ids = new ArrayList<Integer>();
         int cont=0;
         for(Student s : students){
             if(cont>numberOfStudents) break;

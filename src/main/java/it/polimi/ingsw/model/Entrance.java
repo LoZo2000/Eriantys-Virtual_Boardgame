@@ -12,6 +12,15 @@ public class Entrance implements Movable, Cloneable {
         students = new ArrayList<>();
     }
 
+    public Entrance getEntrance(){
+        try {
+            return (Entrance)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void addStudent(Student s){
         students.add(s);
     }

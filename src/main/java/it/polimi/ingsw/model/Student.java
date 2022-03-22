@@ -9,6 +9,15 @@ public class Student implements Cloneable {
         this.color = color;
     }
 
+    public Student getStudent(){
+        try {
+            return (Student)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public int getId(){
         return id;
     }

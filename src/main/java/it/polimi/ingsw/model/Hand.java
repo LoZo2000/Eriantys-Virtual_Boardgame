@@ -14,6 +14,15 @@ public class Hand implements Cloneable{
             cards.add(new Card(i+1,i/2+1));
     }
 
+    public Hand getHand(){
+        try {
+            return (Hand)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public int getNumCards(){
         return cards.size();
     }

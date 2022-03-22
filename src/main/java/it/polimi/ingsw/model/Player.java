@@ -5,6 +5,15 @@ public class Player implements Cloneable {
     Dashboard dashboard;
     final String nickname;
 
+    public Player getPlayer(){
+        try {
+            return (Player)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public Player(String nickname) {
         this.nickname = nickname;

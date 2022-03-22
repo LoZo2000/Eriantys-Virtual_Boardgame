@@ -13,12 +13,21 @@ public class Dashboard implements Cloneable{
         this.towers = towers;
     }
 
+    public Dashboard getDashboard(){
+        try {
+            return (Dashboard) this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Canteen getCanteen(){
-        return (Canteen)canteen.clone();
+        return canteen.getCanteen();
     }
 
     public Entrance getEntrance(){
-        return (Entrance)entrance.clone();
+        return entrance.getEntrance();
     }
 
     public void addTower(int t){
@@ -30,7 +39,7 @@ public class Dashboard implements Cloneable{
     }
 
     public Card getGraveyard(){
-        return (Card)graveyard.clone();
+        return graveyard.getCard();
     }
 
     public void setGraveyard(Card c){
