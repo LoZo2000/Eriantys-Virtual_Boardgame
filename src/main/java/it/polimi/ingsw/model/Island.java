@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Island implements Cloneable{
+public class Island implements Movable, Cloneable{
     private final int id;
     private ArrayList<Student> students;
     private boolean prohibitionToken = false;
@@ -88,7 +88,16 @@ public class Island implements Cloneable{
         students.add(s);
     }
 
-    public void removeStudent(Student s){ students.remove(s); }
+    public Student removeStudent(int id){
+        for(int i=0; i<students.size(); i++){
+            if(students.get(i).getId() == id){
+                Student s = students.get(i);
+                students.remove(i);
+                return s;
+            }
+        }
+        return null;
+    }
 
     //Change the owner of the island
     public void conquest(ColorTower t) {

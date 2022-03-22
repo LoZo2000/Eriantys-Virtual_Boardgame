@@ -98,4 +98,8 @@ public class Game {
         }
         return null;
     }
+
+    public void moveMotherNature(Island island){
+        motherNature.movement(island);
+    }
 }

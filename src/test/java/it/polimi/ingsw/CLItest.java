@@ -92,15 +92,84 @@ public class CLItest {
                         System.out.println(car.getMovement());
                     }
                     break;
-                /*case 7:
-                    System.out.println("Where is the student?");
-                    System.out.println("Where do you want to move it?");
+                case 7:
+                    int from, to, id;
+                    Movable departure;
+                    Movable arrival;
+
                     System.out.println("What is student's id?");
-                    studentId =
+                    id = sc.nextInt();
+
+                    System.out.println("Locations: 0=entrance, 1=canteen, 2=island");
+                    System.out.println("Where is the student (select location)?");
+                    from = sc.nextInt();
+                    switch(from){
+                        case 0:
+                            sc.nextLine();
+                            System.out.println("Select player:");
+                            playerNick = sc.nextLine();
+                            departure = game.getPlayer(playerNick).getDashboard().getEntrance();
+                            break;
+                        case 1:
+                            sc.nextLine();
+                            System.out.println("Select player:");
+                            playerNick = sc.nextLine();
+                            departure = game.getPlayer(playerNick).getDashboard().getCanteen();
+                            break;
+                        case 2:
+                            System.out.println("Select island:");
+                            islandId = sc.nextInt();
+                            departure = game.getIsland(islandId);
+                            break;
+                        default:
+                            departure = null;
+                            System.out.println("Something has gone wrong...");
+                    }
+
+                    System.out.println("Where do you want to move it (select location)?");
+                    to = sc.nextInt();
+                    switch(to){
+                        case 0:
+                            sc.nextLine();
+                            System.out.println("Select player:");
+                            playerNick = sc.nextLine();
+                            arrival = game.getPlayer(playerNick).getDashboard().getEntrance();
+                            break;
+                        case 1:
+                            sc.nextLine();
+                            System.out.println("Select player:");
+                            playerNick = sc.nextLine();
+                            arrival = game.getPlayer(playerNick).getDashboard().getCanteen();
+                            break;
+                        case 2:
+                            System.out.println("Select island:");
+                            islandId = sc.nextInt();
+                            arrival = game.getIsland(islandId);
+                            break;
+                        default:
+                            arrival = null;
+                            System.out.println("Something has gone wrong...");
+                    }
+
+                    Student s;
+                    try{
+                        s = departure.removeStudent(id);
+                        arrival.addStudent(s);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                     break;
-                /*case 8:
+                case 8:
+                    System.out.println("Select new position of MotherNature:");
+                    islandId = sc.nextInt();
+                    islands = game.getAllIslands();
+                    for(Island i : islands){
+                        if(i.getId() == islandId){
+                            game.moveMotherNature(i);
+                        }
+                    }
                     break;
-                case 9:
+                /*case 9:
                     System.out.println("Insert id first island:");
                     int i1Id;
                     i1Id = sc.nextInt();

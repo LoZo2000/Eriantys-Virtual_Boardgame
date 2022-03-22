@@ -19,15 +19,6 @@ public class Canteen implements Movable, Cloneable{
         pink = new ArrayList<>();
     }
 
-    public Canteen getCanteen() {
-        try {
-            return (Canteen)this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public void addStudent(Student s){
         switch (s.getColor()){
             case BLUE -> blue.add(s);
@@ -103,5 +94,14 @@ public class Canteen implements Movable, Cloneable{
         }
         if(s == null) throw new NoSuchStudentException();
         return s;
+    }
+
+    public Canteen getCanteen() {
+        try {
+            return (Canteen)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
