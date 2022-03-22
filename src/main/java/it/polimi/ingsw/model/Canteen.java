@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 
 import java.util.ArrayList;
 
-public class Canteen implements Movable{
+public class Canteen implements Movable, Cloneable{
     ArrayList<Student> blue;
     ArrayList<Student> yellow;
     ArrayList<Student> red;

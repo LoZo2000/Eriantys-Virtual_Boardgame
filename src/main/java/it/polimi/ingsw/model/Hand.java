@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.exceptions.OverflowCardException;
 
 import java.util.ArrayList;
 
-public class Hand {
+public class Hand implements Cloneable{
     private ArrayList<Card> cards;
 
     public Hand(){
@@ -16,13 +16,6 @@ public class Hand {
 
     public int getNumCards(){
         return cards.size();
-    }
-
-    public Card getCard(int pos) throws OverflowCardException {
-        if(pos<cards.size() && pos>=0)
-            return new Card(cards.get(pos).getInitiative(), cards.get(pos).getMovement());
-        else
-            throw new OverflowCardException();
     }
 
     public ArrayList<Card> getAllCards(){

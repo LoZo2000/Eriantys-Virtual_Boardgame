@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
 
 import java.util.ArrayList;
 
-public class Cloud {
+public class Cloud implements Cloneable{
     private final int maxStudents;
     ArrayList<Student> students;
 

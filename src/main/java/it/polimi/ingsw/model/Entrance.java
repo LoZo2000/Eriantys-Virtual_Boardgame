@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Entrance implements Movable{
+public class Entrance implements Movable, Cloneable {
     List<Student> students;
 
     public Entrance(){

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class Student {
+public class Student implements Cloneable {
     private final int id;
     private Color color;
 

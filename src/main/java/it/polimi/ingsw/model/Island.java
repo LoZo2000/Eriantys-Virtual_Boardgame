@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Island {
+public class Island implements Cloneable{
     private final int id;
     private ArrayList<Student> students;
     private boolean prohibitionToken = false;
@@ -26,6 +26,19 @@ public class Island {
 
     public int getId(){
         return id;
+    }
+
+    private ArrayList<int> getStudentsId (Color color, int numberOfStudents){
+        ArrayList<int> ids = new ArrayList<int>();
+        int cont=0;
+        for(Student s : students){
+            if(cont>numberOfStudents) break;
+            if(s.getColor() == color){
+                ids.add(s.getId());
+                cont++;
+            }
+        }
+        return ids;
     }
 
     public Report getReport(){

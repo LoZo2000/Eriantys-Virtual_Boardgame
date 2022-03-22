@@ -1,16 +1,18 @@
 package it.polimi.ingsw.model;
 
-public class Card {
-    private int initiative;
-    private int movement;
+public class Card implements Cloneable {
+    private final int priority;
+    private final int movement;
+    //private final int back;
 
-    public Card(int initiative, int movement){
-        this.initiative = initiative;
+    public Card(int priority, int movement){
+        this.priority = priority;
         this.movement = movement;
+        //this.back=back;
     }
 
     public int getInitiative(){
-        return initiative;
+        return priority;
     }
     public int getMovement(){
         return movement;

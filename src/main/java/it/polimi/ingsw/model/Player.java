@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class Player {
+public class Player implements Cloneable {
     Hand hand;
     Dashboard dashboard;
     final String nickname;
