@@ -4,12 +4,10 @@ import it.polimi.ingsw.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IslandTest {
-    /*private Island island;
+    private Island island;
 
     @BeforeEach
     public void init(){
@@ -19,96 +17,56 @@ public class IslandTest {
     @Test
     public void getterTest(){
         assertEquals(0, island.getId());
-        assertEquals(1, island.getMaxTowers());
+        assertEquals(0, island.getReport().getTowerNumbers());
         assertEquals(0, island.getAllStudents().size());
-        assertEquals(0, island.getAllTowers().size());
-        assertNull(island.getCurrentOwner());
-        for(Color c : Color.values()) assertEquals(0, island.getNumberStudentColor(c));
+        assertEquals(0, island.getReport().getTowerNumbers());
+        assertNull(island.getReport().getOwner());
+        for(Color c : Color.values()) assertEquals(0, island.getReport().getColorStudents(c));
     }
 
     @Test
-    //public void addingTest(){
-    //    island.addStudent(new Student(0, Color.BLUE));
-            //   try {
-    ////    }catch(Exception e){
-    //        fail();
-     //   }
-     //   assertEquals(1, island.getAllStudents().size());
-     //   assertEquals(0, island.getAllStudents().get(0).getId());
-    //    assertEquals(1, island.getAllTowers().size());
-     //   assertEquals(0, island.getAllTowers().get(0).getId());
-    //    assertEquals(ColorTower.BLACK, island.getCurrentOwner());
-    //    try {
-   //         island.conquest(new Tower(1, ColorTower.BLACK));
-      //      fail();
-      //  }catch(Exception e){
-    //        e.printStackTrace();
-     //   }
-     //   try {
-     //       island.conquest(new Tower(0, ColorTower.WHITE));
-     //   }catch(Exception e){
-      //      fail();
-    //    }
-   // }
+    public void addingTest(){
+        island.addStudent(new Student(0, Color.BLUE));
+        island.addStudent(new Student(1, Color.YELLOW));
+        island.addStudent(new Student(2, Color.RED));
+        island.addStudent(new Student(3, Color.GREEN));
+        island.addStudent(new Student(4, Color.PINK));
+        island.conquest(ColorTower.BLACK);
+        assertEquals(5, island.getAllStudents().size());
+        assertEquals(0, island.getAllStudents().get(0).getId());
+        assertEquals(1, island.getReport().getTowerNumbers());
+        assertEquals(ColorTower.BLACK, island.getReport().getOwner());
+
+        for(Color c : Color.values()) assertEquals(1, island.getReport().getColorStudents(c));
+
+        try{
+            Student s = island.removeStudent(0);
+        }catch(Exception e){
+            fail();
+        }
+        try{
+            Student s = island.removeStudent(0);
+            fail();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void createFromMerging(){
         island.addStudent(new Student(2, Color.BLUE));
+        island.conquest(ColorTower.BLACK);
         Island i2 = new Island(1);
         i2.addStudent(new Student(3, Color.YELLOW));
-        try {
-           // island.conquest(new Tower(4, ColorTower.BLACK));
-          //  i2.conquest(new Tower(5, ColorTower.BLACK));
-        }catch(Exception e){
-            fail();
-        }
+        i2.conquest(ColorTower.BLACK);
+
         Island newIsland = new Island(island, i2);
         assertEquals(0, newIsland.getId());
         assertEquals(2, newIsland.getAllStudents().size());
         assertEquals(2, newIsland.getAllStudents().get(0).getId());
         assertEquals(3, newIsland.getAllStudents().get(1).getId());
-     //   assertEquals(2, newIsland.getAllTowers().size());
-       // assertEquals(4, newIsland.getAllTowers().get(0).getId());
-      //  assertEquals(5, newIsland.getAllTowers().get(1).getId());
-        assertEquals(ColorTower.BLACK, island.getCurrentOwner());
-
-        ArrayList<Tower> winnersTowers = new ArrayList<Tower>();
-        winnersTowers.add(new Tower(6, ColorTower.WHITE));
-        winnersTowers.add(new Tower(7, ColorTower.WHITE));
-        try {
-            newIsland.conquest(winnersTowers);
-        }catch(Exception e){
-            fail();
-        }
-
-        ArrayList<Tower> winnersTowers2 = new ArrayList<Tower>();
-        winnersTowers2.add(new Tower(8, ColorTower.WHITE));
-        winnersTowers2.add(new Tower(9, ColorTower.WHITE));
-        try {
-            newIsland.conquest(winnersTowers2);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        ArrayList<Tower> winnersTowers3 = new ArrayList<Tower>();
-        winnersTowers3.add(new Tower(8, ColorTower.GREY));
-        winnersTowers3.add(new Tower(9, ColorTower.BLACK));
-        try {
-            newIsland.conquest(winnersTowers3);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        ArrayList<Tower> winnersTowers4 = new ArrayList<Tower>();
-        winnersTowers4.add(new Tower(8, ColorTower.BLACK));
-        try {
-            newIsland.conquest(winnersTowers4);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        assertEquals(2, newIsland.getReport().getTowerNumbers());
+        assertEquals(ColorTower.BLACK, island.getReport().getOwner());
     }
 
     @Test
@@ -118,21 +76,13 @@ public class IslandTest {
         assertTrue(island.getProhibition());
     }
 
-    @Test void getNumberStudentColor(){
-        int blue = (int)(Math.random()*10);
-        for(int i=0; i<blue; i++) island.addStudent(new Student(i, Color.BLUE));
-        int yellow = (int)(Math.random()*10);
-        for(int i=0; i<yellow; i++) island.addStudent(new Student(i, Color.YELLOW));
-        int red = (int)(Math.random()*10);
-        for(int i=0; i<red; i++) island.addStudent(new Student(i, Color.RED));
-        int green = (int)(Math.random()*10);
-        for(int i=0; i<green; i++) island.addStudent(new Student(i, Color.GREEN));
-        int pink = (int)(Math.random()*10);
-        for(int i=0; i<pink; i++) island.addStudent(new Student(i, Color.PINK));
-        assertEquals(blue, island.getNumberStudentColor(Color.BLUE));
-        assertEquals(yellow, island.getNumberStudentColor(Color.YELLOW));
-        assertEquals(red, island.getNumberStudentColor(Color.RED));
-        assertEquals(green, island.getNumberStudentColor(Color.GREEN));
-        assertEquals(pink, island.getNumberStudentColor(Color.PINK));
-    }*/
+    @Test
+    public void equalsTest(){
+        Island i2 = new Island(0);
+        Island i3 = new Island(1);
+        assertEquals(island, i2);
+        assertEquals(i2, island);
+        assertNotEquals(island, i3);
+        assertNotEquals(i3, island);
+    }
 }

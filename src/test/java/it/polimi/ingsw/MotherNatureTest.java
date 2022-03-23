@@ -30,4 +30,11 @@ public class MotherNatureTest {
         motherNature.movement(i0);
         assertEquals(i0, motherNature.getPosition());
     }
+
+    @Test
+    public void createMNTest(){
+        Island i1 = new Island(1);
+        MotherNature mn1 = new MotherNature(i1);
+        assertEquals(i1, mn1.getPosition());
+    }
 }

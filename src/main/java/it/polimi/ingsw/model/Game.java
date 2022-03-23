@@ -85,8 +85,7 @@ public class Game {
     }
 
     public Player getPlayerNum(int i){
-        Player temp = players.get(i);
-        return temp;
+        return players.get(i);
     }
 
     public void setLastPlayed(int lastPlayed) {
@@ -103,14 +102,14 @@ public class Game {
 
     public Island getIsland(int id){
         for(Island i : islands){
-            if(i.getId() == id) return i.getIsland();
+            if(i.getId() == id) return i;
         }
         return null;
     }
 
     public Player getPlayer(String nickName){
         for(Player p : players){
-            if(p.getNickname().equals(nickName)) return p.getPlayer();
+            if(p.getNickname().equals(nickName)) return p;
         }
         return null;
     }
@@ -124,9 +123,9 @@ public class Game {
         int indx2=islands.indexOf(i2);
         if(indx1-indx2==1 || indx1-indx2==-1 || (indx1==0 && indx2== islands.size()-1) || (indx1== islands.size()-1 && indx2==0)){
             Island temp= new Island(i1, i2);
-            islands.add(indx1, temp);
             islands.remove(i1);
             islands.remove(i2);
+            islands.add(indx1, temp);
         }
         else throw new NoContiguousIslandException("Islands are not Contiguous");
     }

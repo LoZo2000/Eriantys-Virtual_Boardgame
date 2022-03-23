@@ -11,26 +11,30 @@ public class Report {
 
     public Report(ColorTower owner, int towerNumbers, int blueStudents, int yellowStudents, int redStudents, int greenStudents, int pinkStudents){
         this.owner= owner;
+        this.towerNumbers=towerNumbers;
         this.blueStudents= blueStudents;
         this.yellowStudents= yellowStudents;
         this.redStudents=redStudents;
         this.greenStudents=greenStudents;
         this.pinkStudents=pinkStudents;
-        this.towerNumbers=towerNumbers;
     }
 
     public ColorTower getOwner(){ return owner; }
 
     public int getTowerNumbers(){ return towerNumbers; }
 
-    public int getBlueStudents(){ return blueStudents; }
-
-    public int getYellowStudents(){ return yellowStudents; }
-
-    public int getRedStudents(){ return redStudents; }
-
-    public int getGreenStudents(){ return greenStudents; }
-
-    public int getPinkStudents(){ return pinkStudents;}
-
+    public int getColorStudents(Color c){
+        switch(c){
+            case BLUE:
+                return blueStudents;
+            case YELLOW:
+                return yellowStudents;
+            case RED:
+                return redStudents;
+            case GREEN:
+                return greenStudents;
+            default: //case PINK
+                return pinkStudents;
+        }
+    }
 }

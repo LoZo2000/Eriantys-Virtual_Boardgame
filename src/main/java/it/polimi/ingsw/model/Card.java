@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class Card implements Cloneable {
+public class Card{
     private final int priority;
     private final int movement;
     //private final int back;
@@ -9,15 +9,6 @@ public class Card implements Cloneable {
         this.priority = priority;
         this.movement = movement;
         //this.back=back;
-    }
-
-    public Card getCard(){
-        try {
-            return (Card)this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public int getPriority(){

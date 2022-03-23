@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 
 import java.util.ArrayList;
 
-public class Canteen implements Movable, Cloneable{
+public class Canteen implements Movable{
     ArrayList<Student> blue;
     ArrayList<Student> yellow;
     ArrayList<Student> red;
@@ -60,41 +60,6 @@ public class Canteen implements Movable, Cloneable{
     }
 
     //IndexOf!!!!!!!!!!!!!!!!!!!!!!!!!!
-    /*public Student removeStudent(int id) throws NoSuchStudentException {
-        Student s = null;
-        for(int i=0; i < blue.size(); i++){
-            if (blue.get(i).getId() == id){
-                s = blue.get(i);
-                blue.remove(i);
-            }
-        }
-        for(int i=0; i < yellow.size(); i++){
-            if (yellow.get(i).getId() == id){
-                s = yellow.get(i);
-                yellow.remove(i);
-            }
-        }
-        for(int i=0; i < red.size(); i++){
-            if (red.get(i).getId() == id){
-                s = red.get(i);
-                red.remove(i);
-            }
-        }
-        for(int i=0; i < green.size(); i++){
-            if (green.get(i).getId() == id){
-                s = green.get(i);
-                green.remove(i);
-            }
-        }
-        for(int i=0; i< pink.size(); i++){
-            if (pink.get(i).getId() == id){
-                s = pink.get(i);
-                pink.remove(i);
-            }
-        }
-        if(s == null) throw new NoSuchStudentException();
-        return s;
-    }*/
     public Student removeStudent(int id) throws NoSuchStudentException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent;
@@ -141,14 +106,5 @@ public class Canteen implements Movable, Cloneable{
         }
 
         throw new NoSuchStudentException("There isn't any Student with that id in the lists");
-    }
-
-    public Canteen getCanteen() {
-        try {
-            return (Canteen)this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

@@ -4,34 +4,18 @@ import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
 
 import java.util.ArrayList;
 
-public class Cloud implements Cloneable{
+public class Cloud{
     private final int maxStudents;
     ArrayList<Student> students;
 
     public Cloud(int maxStudents){
         this.maxStudents = maxStudents;
-        students = new ArrayList<Student>();
-    }
-
-    public Cloud getCloud(){
-        try {
-            return (Cloud)this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
+        students = new ArrayList<>();
     }
 
     //To pass students one at a time
-    public void updateStudents(Student student) throws TooManyStudentsException {
+    public void addStudent(Student student) throws TooManyStudentsException {
         if(students.size()<maxStudents) students.add(student);
-        else throw new TooManyStudentsException();
-    }
-
-    //To pass all the students in a single call
-    public void updateStudents(ArrayList<Student> students) throws TooManyStudentsException{
-        if(students.size()==maxStudents)
-            this.students = students;
         else throw new TooManyStudentsException();
     }
 

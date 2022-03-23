@@ -1,47 +1,48 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.WrongNumberOfTowersException;
+
 import java.util.ArrayList;
 
-public class Dashboard implements Cloneable{
-    Card graveyard;
-    Canteen canteen;
-    Entrance entrance;
-    int towers;
+public class Dashboard{
+    private Card graveyard;
+    private Canteen canteen;
+    private Entrance entrance;
+    final private int maxTowers;
+    private int towers;
 
     //students will be inizialized when the game start not when the players are created
     public Dashboard(ArrayList<Student> entranceStudents) {
         canteen = new Canteen();
         entrance = new Entrance(entranceStudents);
-        this.towers = 8;
-    }
-
-    public Dashboard getDashboard(){
-        try {
-            return (Dashboard) this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
+        maxTowers = 8;
+        towers = maxTowers;
     }
 
     public Canteen getCanteen(){
-        return canteen.getCanteen();
+        return canteen;
     }
 
     public Entrance getEntrance(){
-        return entrance.getEntrance();
+        return entrance;
     }
 
-    public void addTower(int t){
-        towers += t;
+    public int getTowers(){
+        return towers;
     }
 
-    public void removeTower(int t){
-        towers -= t;
+    public void addTowers(int towers) throws WrongNumberOfTowersException {
+        if(towers<0 || this.towers+towers > maxTowers) throw new WrongNumberOfTowersException();
+        this.towers += towers;
+    }
+
+    public void removeTowers(int towers) throws WrongNumberOfTowersException {
+        if(towers<0 || this.towers-towers <0) throw new WrongNumberOfTowersException();
+        this.towers -= towers;
     }
 
     public Card getGraveyard(){
-        return graveyard.getCard();
+        return graveyard;
     }
 
     public void setGraveyard(Card c){

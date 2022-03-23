@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class Island implements Cloneable, Movable{
+public class Island implements Movable{
     private final int id;
     private ArrayList<Student> students;
     private boolean prohibitionToken = false;
@@ -14,7 +14,7 @@ public class Island implements Cloneable, Movable{
 
     public Island(int id){
         this.id = id;
-        students = new ArrayList<Student>();
+        students = new ArrayList<>();
         maxTowers = 1;
     }
 
@@ -24,33 +24,12 @@ public class Island implements Cloneable, Movable{
         this(i1.getId());
         students.addAll(i1.getAllStudents());
         students.addAll(i2.getAllStudents());
-        maxTowers = i1.getMaxTowers() + i2.getMaxTowers();
+        maxTowers = i1.getReport().getTowerNumbers() + i2.getReport().getTowerNumbers();
+        owner = i1.getReport().getOwner();
     }
 
     public int getId(){
         return id;
-    }
-
-    public Island getIsland(){
-        try {
-            return (Island)this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private ArrayList<Integer> getStudentsId (Color color, int numberOfStudents){
-        ArrayList<Integer> ids = new ArrayList<Integer>();
-        int cont=0;
-        for(Student s : students){
-            if(cont>numberOfStudents) break;
-            if(s.getColor() == color){
-                ids.add(s.getId());
-                cont++;
-            }
-        }
-        return ids;
     }
 
     public Report getReport(){
@@ -60,31 +39,21 @@ public class Island implements Cloneable, Movable{
         }
         else { numTowers=maxTowers;}
 
-        return new Report( owner, numTowers, getNumberStudentColor(Color.BLUE), getNumberStudentColor(Color.YELLOW),
-                           getNumberStudentColor(Color.RED), getNumberStudentColor(Color.GREEN), getNumberStudentColor(Color.PINK));
-    }
-
-
-    public int getMaxTowers(){
-        return maxTowers;
+        int[] colors = {0,0,0,0,0};
+        for(Student s : students){
+            switch (s.getColor()){
+                case BLUE -> colors[0]++;
+                case YELLOW -> colors[1]++;
+                case RED -> colors[2]++;
+                case GREEN -> colors[3]++;
+                case PINK -> colors[4]++;
+            }
+        }
+        return new Report(owner, numTowers, colors[0], colors[1], colors[2], colors[3], colors[4]);
     }
 
     public ArrayList<Student> getAllStudents(){
         return (ArrayList<Student>)students.clone();
-    }
-
-    //Returns the color of the player who currently owns the island (null if the island is still free)
-    public ColorTower getCurrentOwner(){
-        return owner;
-    }
-
-    //Returns the number of students (to change in a private method probably)
-    public int getNumberStudentColor(Color color){
-        int cont = 0;
-        for(Student s : students){
-            if(s.getColor() == color) cont++;
-        }
-        return cont;
     }
 
     public void addStudent(Student s){
@@ -117,5 +86,12 @@ public class Island implements Cloneable, Movable{
 
     public boolean getProhibition(){
         return prohibitionToken;
+    }
+
+    public boolean equals(Object o){
+        if(o instanceof Island){
+            if(((Island)o).getId()==id) return true;
+        }
+        return false;
     }
 }

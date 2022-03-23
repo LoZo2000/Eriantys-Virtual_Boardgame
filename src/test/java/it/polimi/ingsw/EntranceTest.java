@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EntranceTest {
     Entrance entrance;
@@ -37,7 +36,7 @@ public class EntranceTest {
     }
 
     @Test
-    public void getStudents(){
+    public void getStudentsTest(){
         ArrayList<Student> students = entrance.getAllStudents();
         for(Student s : students){
             System.out.println(s.getId() + ", " + s.getColor());
@@ -52,17 +51,21 @@ public class EntranceTest {
 
     @Test
     public void setRemoveTest(){
-        entrance.addStudent(new Student(0, Color.BLUE));
+        assertEquals(7, entrance.getAllStudents().size());
         try{
             entrance.removeStudent(0);
         }catch (Exception e){
             fail();
         }
+        assertEquals(6, entrance.getAllStudents().size());
+        entrance.addStudent(new Student(8, Color.PINK));
+        assertEquals(7, entrance.getAllStudents().size());
         try{
             entrance.removeStudent(0);
             fail();
         }catch (Exception e){
             e.printStackTrace();
         }
+        assertEquals(7, entrance.getAllStudents().size());
     }
 }

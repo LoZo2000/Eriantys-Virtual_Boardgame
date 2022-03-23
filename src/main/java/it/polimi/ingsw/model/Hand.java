@@ -4,23 +4,14 @@ import it.polimi.ingsw.model.exceptions.OverflowCardException;
 
 import java.util.ArrayList;
 
-public class Hand implements Cloneable{
+public class Hand{
     private ArrayList<Card> cards;
 
     public Hand(){
-        cards = new ArrayList<Card>();
+        cards = new ArrayList<>();
 
         for(int i=0; i<10; i++)
             cards.add(new Card(i+1,i/2+1));
-    }
-
-    public Hand getHand(){
-        try {
-            return (Hand)this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public int getNumCards(){

@@ -2,19 +2,10 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Player implements Cloneable {
+public class Player{
     final private Hand hand;
     final private Dashboard dashboard;
     final private String nickname;
-
-    public Player getPlayer(){
-        try {
-            return (Player)this.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public Player(String nickname, ArrayList<Student> entranceStudents) {
         this.nickname = nickname;
@@ -23,11 +14,11 @@ public class Player implements Cloneable {
     }
 
     public Hand getHand(){
-        return hand.getHand();
+        return hand;
     }
 
     public Dashboard getDashboard(){
-        return dashboard.getDashboard();
+        return dashboard;
     }
 
     public String getNickname(){
