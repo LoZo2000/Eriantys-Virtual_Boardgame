@@ -32,6 +32,19 @@ public class Island implements Movable{
         return id;
     }
 
+    private ArrayList<Integer> getStudentsId(Color color, int numberOfStudents){
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+        int cont=0;
+        for(Student s : students){
+            if(cont>=numberOfStudents) break;
+            if(s.getColor() == color) {
+                ids.add(s.getId());
+                cont++;
+            }
+        }
+        return ids;
+    }
+
     public Report getReport(){
         int numTowers;
         if(owner==null){
