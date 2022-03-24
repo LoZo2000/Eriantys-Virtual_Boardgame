@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model;
 
 public class Report {
-    private ColorTower owner;
-    private int towerNumbers;
-    private int blueStudents;
-    private int yellowStudents;
-    private int redStudents;
-    private int greenStudents;
-    private int pinkStudents;
+    private final ColorTower owner;
+    private final int towerNumbers;
+    private final int blueStudents;
+    private final int yellowStudents;
+    private final int redStudents;
+    private final int greenStudents;
+    private final int pinkStudents;
 
     public Report(ColorTower owner, int towerNumbers, int blueStudents, int yellowStudents, int redStudents, int greenStudents, int pinkStudents){
         this.owner= owner;

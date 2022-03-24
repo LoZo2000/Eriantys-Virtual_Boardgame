@@ -17,7 +17,7 @@ public class Game {
     private ArrayList<Player> players = new ArrayList<>();
     private Card[] playedCards;
     private Bag bag;
-    private Bag initBag;
+    //private Bag initBag;
     private Character[] CharactersCards;
     private Map<Color, Player> professors;
     private Rule currentRule;
@@ -34,8 +34,8 @@ public class Game {
         this.completeRules=completeRules;
         FactoryBag fb = new FactoryBag();
         bag = fb.getBag();
-        initBag = fb.getInitBag();
-        initIslands();
+        Bag initBag = fb.getInitBag();
+        initIslands(initBag);
         motherNature = new MotherNature();
         motherNature.movement(islands.get(0));
         try{
@@ -62,14 +62,14 @@ public class Game {
                 clouds= new Cloud[numPlayers];
                 for(int i=0; i<numPlayers; i++){
                     clouds[i]= new Cloud(3);
-                    clouds[i].fillCloud(bag);
+                    clouds[i].fillCloud(bag.getRandomStudent(numPlayers));
                 }
                 break;
             case 3:
                 clouds= new Cloud[numPlayers];
                 for(int i=0; i<numPlayers; i++){
                     clouds[i]= new Cloud(4);
-                    clouds[i].fillCloud(bag);
+                    clouds[i].fillCloud(bag.getRandomStudent(numPlayers));
                 }
                 break;
             default:
@@ -77,7 +77,7 @@ public class Game {
         }
     }
 
-    private void initIslands(){
+    private void initIslands(Bag initBag){
         for(int i=0; i<12; i++){
             islands.add(new Island(i));
             if(i!=0 && i!=6) {

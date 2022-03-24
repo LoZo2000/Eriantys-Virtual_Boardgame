@@ -14,9 +14,9 @@ public class Cloud{
         students = new ArrayList<>();
     }
 
-    public void fillCloud(Bag bag) throws NoMoreStudentsException, TooManyStudentsException {
-        for(int i=0; i<maxStudents; i++){
-            addStudent(bag.getRandomStudent());
+    public void fillCloud(ArrayList<Student> newStudents) throws NoMoreStudentsException, TooManyStudentsException {
+        for(Student s : newStudents){
+            addStudent(s);
         }
     }
 

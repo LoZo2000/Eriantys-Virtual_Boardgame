@@ -1,19 +1,20 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class FactoryBag {
-    ArrayList<Student> students;
+    Stack<Student> students;
     Bag bag;
     Bag initBag;
 
     public FactoryBag(){
-        students = new ArrayList<>();
+        students = new Stack<>();
         int id = 0;
 
         for(Color c : Color.values()){
-            students.add(new Student(id, c));
-            students.add(new Student(id+1, c));
+            students.push(new Student(id, c));
+            students.push(new Student(id+1, c));
             id += 2;
         }
         initBag = new Bag(students);
@@ -21,7 +22,7 @@ public class FactoryBag {
         students.clear();
         for(Color c : Color.values()){
             for(int i=0; i<24; i++){
-                students.add(new Student(id, c));
+                students.push(new Student(id, c));
                 id++;
             }
         }
