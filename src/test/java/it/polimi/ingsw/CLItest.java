@@ -190,11 +190,26 @@ public class CLItest {
                         e.printStackTrace();
                     }
                     break;
-                /*case 10:
+                case 10:
+                    System.out.println("There are "+ game.getNumberOfClouds()+" clouds");
+                    for (int i=0; i< game.getNumberOfClouds(); i++){
+                        System.out.println("In the cloud number "+i);
+                        System.out.println("There are "+game.getNumberOfStudentPerColor(i, Color.BLUE)+" blue students");
+                        System.out.println("There are "+game.getNumberOfStudentPerColor(i, Color.YELLOW)+" yellow students");
+                        System.out.println("There are "+game.getNumberOfStudentPerColor(i, Color.RED)+" red students");
+                        System.out.println("There are "+game.getNumberOfStudentPerColor(i, Color.GREEN)+" green students");
+                        System.out.println("There are "+game.getNumberOfStudentPerColor(i, Color.PINK)+" pink students");
+                    }
                     break;
                 case 11:
+                    System.out.println("Insert id player:");
+                    playerNick = sc.nextLine();
+                    System.out.println("Choose a cloud (by number)");
+                    int choosenCloud = sc.nextInt();
+
+
                     break;
-                case 12:
+                /*case 12:
                     break;*/
                 default:
                     System.out.println("This option doesn't exist...");

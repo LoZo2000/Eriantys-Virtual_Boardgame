@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 
 import it.polimi.ingsw.model.exceptions.NoContiguousIslandException;
+import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
@@ -36,7 +38,43 @@ public class Game {
         initIslands();
         motherNature = new MotherNature();
         motherNature.movement(islands.get(0));
-        clouds = new Cloud[3];
+        try{
+            initClouds(numPlayers);
+        } catch (NoMoreStudentsException e ) {
+            e.printStackTrace();
+        } catch (TooManyStudentsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getNumberOfStudentPerColor(int i, Color color){
+        return clouds[i].getNumberOfStudentPerColor(color);
+    }
+
+    public int getNumberOfClouds(){
+        return clouds.length;
+    }
+
+    private void initClouds(int numPlayers) throws NoMoreStudentsException, TooManyStudentsException {
+        switch(numPlayers){
+            case 2:
+            case 4:
+                clouds= new Cloud[numPlayers];
+                for(int i=0; i<numPlayers; i++){
+                    clouds[i]= new Cloud(3);
+                    clouds[i].fillCloud(bag);
+                }
+                break;
+            case 3:
+                clouds= new Cloud[numPlayers];
+                for(int i=0; i<numPlayers; i++){
+                    clouds[i]= new Cloud(4);
+                    clouds[i].fillCloud(bag);
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value of Players: " + numPlayers);
+        }
     }
 
     private void initIslands(){
