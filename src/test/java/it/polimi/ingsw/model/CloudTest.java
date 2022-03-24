@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
+import it.polimi.ingsw.model.exceptions.StillStudentException;
 import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +27,9 @@ class CloudTest {
     }
 
     @Test
-    void fillCloud() {
+    void refillCloud() {
         try {
-            this.cloud.fillCloud(newStudents);
+            this.cloud.refillCloud(newStudents);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -36,13 +37,13 @@ class CloudTest {
 
         assertEquals(this.newStudents, this.cloud.getStudents());
 
-        assertThrows(TooManyStudentsException.class, () -> {this.cloud.fillCloud(newStudents);});
+        assertThrows(StillStudentException.class, () -> {this.cloud.refillCloud(newStudents);});
     }
 
     @Test
     void getNumberOfStudentPerColor() {
         try {
-            this.cloud.fillCloud(newStudents);
+            this.cloud.refillCloud(newStudents);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -81,7 +82,7 @@ class CloudTest {
     @Test
     void chooseCloud() {
         try {
-            this.cloud.fillCloud(newStudents);
+            this.cloud.refillCloud(newStudents);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
