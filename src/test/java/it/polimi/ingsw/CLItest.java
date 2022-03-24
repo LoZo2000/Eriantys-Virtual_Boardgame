@@ -1,6 +1,9 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
+import it.polimi.ingsw.model.exceptions.StillStudentException;
+import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -202,15 +205,27 @@ public class CLItest {
                     }
                     break;
                 case 11:
+                    sc.nextLine();
                     System.out.println("Insert id player:");
                     playerNick = sc.nextLine();
                     System.out.println("Choose a cloud (by number)");
                     int choosenCloud = sc.nextInt();
+                    game.moveStudent(choosenCloud, playerNick );
+                    break;
+                case 12:
+                    try{
+                        game.refillClouds();
+                    } catch (NoMoreStudentsException e) {
+                        e.printStackTrace();
+                    } catch (TooManyStudentsException e) {
+                        e.printStackTrace();
+                    } catch (StillStudentException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Clouds have been refilled");
 
 
                     break;
-                /*case 12:
-                    break;*/
                 default:
                     System.out.println("This option doesn't exist...");
             }

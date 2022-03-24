@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
+import it.polimi.ingsw.model.exceptions.StillStudentException;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,8 @@ public class Cloud{
         students = new ArrayList<>();
     }
 
-    public void fillCloud(ArrayList<Student> newStudents) throws TooManyStudentsException {
+    public void refillCloud(ArrayList<Student> newStudents) throws TooManyStudentsException, StillStudentException {
+        if(students.size()!=0) throw new StillStudentException("Clouds are not empty");
         for(Student s : newStudents){
             addStudent(s);
         }

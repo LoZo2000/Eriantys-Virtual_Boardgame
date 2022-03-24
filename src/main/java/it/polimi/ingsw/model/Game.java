@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 
 import it.polimi.ingsw.model.exceptions.NoContiguousIslandException;
+import it.polimi.ingsw.model.exceptions.StillStudentException;
 import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
 
 import java.util.ArrayList;
@@ -40,9 +41,7 @@ public class Game {
         motherNature.movement(islands.get(0));
         try{
             initClouds(numPlayers);
-        } catch (NoMoreStudentsException e ) {
-            e.printStackTrace();
-        } catch (TooManyStudentsException e) {
+        } catch (Exception e ) {
             e.printStackTrace();
         }
     }
@@ -55,21 +54,21 @@ public class Game {
         return clouds.length;
     }
 
-    private void initClouds(int numPlayers) throws NoMoreStudentsException, TooManyStudentsException {
+    private void initClouds(int numPlayers) throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
         switch(numPlayers){
             case 2:
             case 4:
                 clouds= new Cloud[numPlayers];
                 for(int i=0; i<numPlayers; i++){
                     clouds[i]= new Cloud(3);
-                    clouds[i].fillCloud(bag.getRandomStudent(numPlayers));
+                    clouds[i].refillCloud(bag.getRandomStudent(3));
                 }
                 break;
             case 3:
                 clouds= new Cloud[numPlayers];
                 for(int i=0; i<numPlayers; i++){
                     clouds[i]= new Cloud(4);
-                    clouds[i].fillCloud(bag.getRandomStudent(numPlayers));
+                    clouds[i].refillCloud(bag.getRandomStudent(4));
                 }
                 break;
             default:
@@ -167,4 +166,20 @@ public class Game {
         }
         else throw new NoContiguousIslandException("Islands are not Contiguous");
     }
+    // this method is temporary because i have to discuss with others about movement
+    public void moveStudent( int CloudNumber, String nickName){
+        Entrance to = getPlayer(nickName).getDashboard().getEntrance();
+        ArrayList<Student> from = clouds[CloudNumber].chooseCloud();
+        for (Student s : from){
+            to.addStudent(s);
+        }
+    }
+
+    public void refillClouds() throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
+        for (int i=0; i<clouds.length; i++){
+            if (numPlayers==3) clouds[i].refillCloud(bag.getRandomStudent(4));
+            else clouds[i].refillCloud(bag.getRandomStudent(3));
+        }
+    }
+
 }
