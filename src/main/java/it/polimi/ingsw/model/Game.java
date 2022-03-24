@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class Game {
     private MotherNature motherNature;
-    LinkedList <Island> islands = new LinkedList<>();
+    private LinkedList <Island> islands = new LinkedList<>();
     private Cloud[] clouds;
     //private Team[] teams;
     private ArrayList<Player> players = new ArrayList<>();

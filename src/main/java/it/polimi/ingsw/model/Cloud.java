@@ -14,31 +14,17 @@ public class Cloud{
         students = new ArrayList<>();
     }
 
-    public void fillCloud(ArrayList<Student> newStudents) throws NoMoreStudentsException, TooManyStudentsException {
+    public void fillCloud(ArrayList<Student> newStudents) throws TooManyStudentsException {
         for(Student s : newStudents){
             addStudent(s);
         }
     }
 
     public int getNumberOfStudentPerColor(Color color){
-        int[] colors = {0,0,0,0,0};
-        for(Student s : students){
-            switch (s.getColor()){
-                case BLUE -> colors[0]++;
-                case YELLOW -> colors[1]++;
-                case RED -> colors[2]++;
-                case GREEN -> colors[3]++;
-                case PINK -> colors[4]++;
-            }
-        }
-        switch(color){
-            case BLUE: return colors[0];
-            case YELLOW: return colors[1];
-            case RED: return colors[2];
-            case GREEN: return colors[3];
-            case PINK: return colors[4];
-            default: return 1;
-        }
+        long contStudents = this.students.stream()
+                .filter((s) -> s.getColor() == color)
+                .count();
+        return (int) contStudents;
     }
 
     //To pass students one at a time
