@@ -65,7 +65,7 @@ public class CLItest {
                     System.out.println("Insert id player:");
                     playerNick = sc.nextLine();
                     students = game.getPlayer(playerNick).getDashboard().getEntrance().getAllStudents();
-                    for(Student s : students) System.out.println(s.getId());
+                    for(Student s : students) System.out.println(s.getId()+" "+s.getColor());
                     break;
                 case 5:
                     sc.nextLine();
@@ -210,7 +210,7 @@ public class CLItest {
                     playerNick = sc.nextLine();
                     System.out.println("Choose a cloud (by number)");
                     int choosenCloud = sc.nextInt();
-                    game.moveStudent(choosenCloud, playerNick );
+                    game.takeStudentsFromIsland(choosenCloud, playerNick);
                     break;
                 case 12:
                     try{

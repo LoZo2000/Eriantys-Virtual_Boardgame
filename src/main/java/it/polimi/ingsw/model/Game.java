@@ -167,11 +167,109 @@ public class Game {
         else throw new NoContiguousIslandException("Islands are not Contiguous");
     }
     // this method is temporary because i have to discuss with others about movement
-    public void moveStudent( int CloudNumber, String nickName){
+    public void takeStudentsFromIsland( int CloudNumber, String nickName){
         Entrance to = getPlayer(nickName).getDashboard().getEntrance();
         ArrayList<Student> from = clouds[CloudNumber].chooseCloud();
         for (Student s : from){
             to.addStudent(s);
+        }
+    }
+    //MOVE FUNCTIONS
+    //function move written in a view where the parameters are message received by a client (temporary)
+    public void moveStudent(int from, int to, String playerNick, int studentId, int islandId){
+        //Locations: 0=entrance, 1=canteen, 2=island
+        Movable departure;
+        Movable arrival;
+        switch(from){
+            case 0:
+                departure = getPlayer(playerNick).getDashboard().getEntrance();
+                break;
+            case 1:
+                departure = getPlayer(playerNick).getDashboard().getCanteen();
+                break;
+            case 2:
+
+                departure = getIsland(islandId);
+                break;
+            default:
+                departure = null;
+                System.out.println("Something has gone wrong...");
+        }
+        switch(to) {
+            case 0:
+                arrival = getPlayer(playerNick).getDashboard().getEntrance();
+                break;
+            case 1:
+                arrival = getPlayer(playerNick).getDashboard().getCanteen();
+                break;
+            case 2:
+                arrival = getIsland(islandId);
+                break;
+            default:
+                arrival = null;
+                System.out.println("Something has gone wrong...");
+        }
+        Student temp;
+        try{
+            temp = departure.removeStudent(studentId);
+            arrival.addStudent(temp);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void moveStudent(int from, int to, String playerNick, int studentId){
+        //Locations: 0=entrance, 1=canteen, 2=island
+        Movable departure;
+        Movable arrival;
+        switch(from){
+            case 0:
+                departure = getPlayer(playerNick).getDashboard().getEntrance();
+                break;
+            case 1:
+                departure = getPlayer(playerNick).getDashboard().getCanteen();
+                break;
+            case 2:
+                departure = null;
+                System.out.println("Insert the Island id");
+                break;
+            default:
+                departure = null;
+                System.out.println("Something has gone wrong...");
+        }
+        switch(to) {
+            case 0:
+                arrival = getPlayer(playerNick).getDashboard().getEntrance();
+                break;
+            case 1:
+                arrival = getPlayer(playerNick).getDashboard().getCanteen();
+                break;
+            case 2:
+                arrival = null;
+                System.out.println("Insert the Island id");
+                break;
+            default:
+                arrival = null;
+                System.out.println("Something has gone wrong...");
+        }
+        Student temp;
+        try{
+            temp = departure.removeStudent(studentId);
+            arrival.addStudent(temp);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void moveStudent(int from, int to, String playerNick, int[] studentId, int islandId){
+        for (int i=0; i<studentId.length; i++){
+            moveStudent(from, to, playerNick, studentId[i],  islandId);
+        }
+    }
+
+    public void moveStudent(int from, int to, String playerNick, int[] studentId){
+        for (int i=0; i<studentId.length; i++){
+            moveStudent(from, to, playerNick, studentId[i]);
         }
     }
 
