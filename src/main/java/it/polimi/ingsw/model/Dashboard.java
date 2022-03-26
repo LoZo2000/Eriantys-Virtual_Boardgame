@@ -12,10 +12,10 @@ public class Dashboard{
     private int towers;
 
     //students will be inizialized when the game start not when the players are created
-    public Dashboard(ArrayList<Student> entranceStudents) {
+    public Dashboard(int numPlayers, ArrayList<Student> entranceStudents) {
         canteen = new Canteen();
         entrance = new Entrance(entranceStudents);
-        maxTowers = 8;
+        maxTowers = numPlayers != 3 ? 8 : 6;
         towers = maxTowers;
     }
 

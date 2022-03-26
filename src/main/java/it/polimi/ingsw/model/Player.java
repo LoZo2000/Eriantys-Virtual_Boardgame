@@ -7,10 +7,10 @@ public class Player{
     final private Dashboard dashboard;
     final private String nickname;
 
-    public Player(String nickname, ArrayList<Student> entranceStudents) {
+    public Player(String nickname, int numPlayers, ArrayList<Student> entranceStudents) {
         this.nickname = nickname;
         this.hand = new Hand();
-        this.dashboard = new Dashboard(entranceStudents);
+        this.dashboard = new Dashboard(numPlayers, entranceStudents);
     }
 
     public Hand getHand(){

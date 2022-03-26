@@ -101,19 +101,19 @@ public class Game {
             }
         }
 
-        Player newPlayer = new Player(nickname, entranceStudents);
+        Player newPlayer = new Player(nickname, numPlayers, entranceStudents);
 
         players.add(newPlayer);
     }
 
-    public int getGameState(){  // return 1 if the game is full, 2 if can contain further player
+    /*public int getGameState(){  // return 1 if the game is full, 2 if can contain further player
         if (players.size() == numPlayers) {
             return 1;
         }
         else return 2;
-    }
+    }*/
 
-    public int getNumPlayers(){
+    /*public int getNumPlayers(){
         return numPlayers;
     }
 
@@ -127,7 +127,7 @@ public class Game {
 
     public void setLastPlayed(int lastPlayed) {
         this.lastPlayed = lastPlayed;
-    }
+    }*/
 
     public LinkedList<Island> getAllIslands(){
         return (LinkedList<Island>)islands.clone();
@@ -166,17 +166,28 @@ public class Game {
         }
         else throw new NoContiguousIslandException("Islands are not Contiguous");
     }
+
     // this method is temporary because i have to discuss with others about movement
-    public void takeStudentsFromIsland( int CloudNumber, String nickName){
+    public void takeStudentsFromIsland(int CloudNumber, String nickName){
         Entrance to = getPlayer(nickName).getDashboard().getEntrance();
         ArrayList<Student> from = clouds[CloudNumber].chooseCloud();
         for (Student s : from){
             to.addStudent(s);
         }
     }
+
     //MOVE FUNCTIONS
     //function move written in a view where the parameters are message received by a client (temporary)
-    public void moveStudent(int from, int to, String playerNick, int studentId, int islandId){
+    public void moveStudent(int studentId, Movable arrival, Movable departure){
+        Student s;
+        try{
+            s = departure.removeStudent(studentId);
+            arrival.addStudent(s);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    /*public void moveStudent(int from, int to, String playerNick, int studentId, int islandId){
         //Locations: 0=entrance, 1=canteen, 2=island
         Movable departure;
         Movable arrival;
@@ -271,7 +282,7 @@ public class Game {
         for (int i=0; i<studentId.length; i++){
             moveStudent(from, to, playerNick, studentId[i]);
         }
-    }
+    }*/
 
     public void refillClouds() throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
         for (int i=0; i<clouds.length; i++){
@@ -280,4 +291,12 @@ public class Game {
         }
     }
 
+    public void selectCloud(String playerNick, Cloud cloud){
+        ArrayList<Student> students = cloud.chooseCloud();
+        for(Student s : students) getPlayer(playerNick).getDashboard().getEntrance().addStudent(s);
+    }
+
+    public Cloud[] getAllClouds(){
+        return clouds;
+    }
 }
