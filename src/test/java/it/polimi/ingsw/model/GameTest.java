@@ -22,7 +22,7 @@ class GameTest {
         students1.add(new Student(6, Color.BLUE));
         students1.add(new Student(7, Color.BLUE));
 
-        Player player1 = new Player("player1", ColorTower.BLACK, students1);
+        Player player1 = new Player("player1",2, ColorTower.BLACK, students1);
 
         ArrayList<Student> students2 = new ArrayList<>();
         students2.add(new Student(8, Color.RED));
@@ -33,7 +33,7 @@ class GameTest {
         students2.add(new Student(13, Color.RED));
         students2.add(new Student(14, Color.BLUE));
 
-        Player player2 = new Player("player2", ColorTower.WHITE, students2);
+        Player player2 = new Player("player2", 2, ColorTower.WHITE, students2);
 
         this.game = new Game(false, 2);
 
@@ -43,18 +43,22 @@ class GameTest {
 
     @Test
     void moveMotherNature() {
-        this.game.moveStudent(0, 1, "player1", 6, 0);
-        this.game.moveStudent(0, 2, "player1", 2, 3);
-        this.game.moveStudent(0, 2, "player1", 7, 3);
-
+        Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
+        Canteen c = this.game.getPlayer("player1").getDashboard().getCanteen();
         Island i = this.game.getIsland(3);
+
+        this.game.moveStudent(6, c, e);
+        this.game.moveStudent(2, i, e);
+        this.game.moveStudent(7, i, e);
+
         this.game.moveMotherNature(i);
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());
 
-        this.game.moveStudent(0, 2, "player1", 5, 4);
         i = this.game.getIsland(4);
+        this.game.moveStudent(5, i, e);
+
         this.game.moveMotherNature(i);
 
         assertEquals(11, this.game.getAllIslands().size());
@@ -62,7 +66,9 @@ class GameTest {
 
     @Test
     void updateProfessorsMoveToCanteen(){
-        this.game.moveStudent(0, 1, "player1", 2, 0);
+        Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
+        Canteen c = this.game.getPlayer("player1").getDashboard().getCanteen();
+        this.game.moveStudent(2, c, e);
         Map<Color, Player> professors = this.game.getProfessors();
 
         assertEquals(this.game.getPlayer("player1"), professors.get(Color.BLUE));
@@ -70,7 +76,9 @@ class GameTest {
 
     @Test
     void updateProfessorsNotMoveToCanteen(){
-        this.game.moveStudent(0, 2, "player1", 2, 0);
+        Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
+        Island i = this.game.getIsland(0);
+        this.game.moveStudent(2, i, e);
         Map<Color, Player> professors = this.game.getProfessors();
 
         assertNull(professors.get(Color.BLUE));
@@ -78,13 +86,19 @@ class GameTest {
 
     @Test
     void updateProfessorsChangeOwnership(){
-        this.game.moveStudent(0, 1, "player1", 2, 0);
+        Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
+        Canteen c = this.game.getPlayer("player1").getDashboard().getCanteen();
+
+        this.game.moveStudent(2, c, e);
         Map<Color, Player> professors = this.game.getProfessors();
 
         assertEquals(this.game.getPlayer("player1"), professors.get(Color.BLUE));
 
-        this.game.moveStudent(0, 1, "player2", 9, 0);
-        this.game.moveStudent(0, 1, "player2", 14, 0);
+        e = this.game.getPlayer("player2").getDashboard().getEntrance();
+        c = this.game.getPlayer("player2").getDashboard().getCanteen();
+
+        this.game.moveStudent(9, c, e);
+        this.game.moveStudent(14, c, e);
         professors = this.game.getProfessors();
 
         assertEquals(this.game.getPlayer("player2"), professors.get(Color.BLUE));

@@ -1,10 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
-
-import it.polimi.ingsw.model.exceptions.NoContiguousIslandException;
-import it.polimi.ingsw.model.exceptions.StillStudentException;
-import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
+import it.polimi.ingsw.model.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,11 +126,15 @@ public class Game {
         else return 2;
     }*/
 
-    /*public int getNumPlayers(){
-        return numPlayers;
+    public int getNumPlayers(){
+        return this.numPlayers;
     }
 
-    public int getLastPlayed(){
+    public int getRegisteredNumPlayers(){
+        return this.players.size();
+    }
+
+    /*public int getLastPlayed(){
         return lastPlayed;
     }
 

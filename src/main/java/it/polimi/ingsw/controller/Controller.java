@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.*;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 
 public class Controller {
@@ -19,7 +20,12 @@ public class Controller {
 
 
             case ADDME:             //Object format: <playerId>
-                game.addPlayer(playerNick);
+                if(game.getRegisteredNumPlayers() == 1)
+                    game.addPlayer(playerNick, ColorTower.WHITE);
+                else if(game.getRegisteredNumPlayers() == 0 && game.getNumPlayers() == 3)
+                    game.addPlayer(playerNick, ColorTower.GREY);
+                else
+                    game.addPlayer(playerNick, ColorTower.BLACK);
                 break;
 
 

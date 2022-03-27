@@ -29,7 +29,7 @@ public class PlayerTest {
             students.add(s);
         }
         Collections.shuffle(students);
-        player = new Player("player1", 2, students);
+        player = new Player("player1", 2, ColorTower.BLACK, students);
     }
 
     @Test
