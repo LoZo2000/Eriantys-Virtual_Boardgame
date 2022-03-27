@@ -13,12 +13,11 @@ public class Dashboard{
     private int towers;
 
     //students will be inizialized when the game start not when the players are created
-    public Dashboard(ArrayList<Student> entranceStudents, ColorTower color) {
+    public Dashboard(int numPlayers, ArrayList<Student> entranceStudents, ColorTower color) {
         this.color = color;
         canteen = new Canteen();
         entrance = new Entrance(entranceStudents);
-        //TODO numPlayer as parameter to change maxTowers
-        maxTowers = 8;
+        maxTowers = numPlayers != 3 ? 8 : 6;
         towers = maxTowers;
     }
 

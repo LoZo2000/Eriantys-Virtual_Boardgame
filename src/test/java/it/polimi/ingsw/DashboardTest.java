@@ -29,7 +29,7 @@ public class DashboardTest {
             students.add(s);
         }
         Collections.shuffle(students);
-        dashboard = new Dashboard(students, ColorTower.BLACK);
+        dashboard = new Dashboard(2, students, ColorTower.BLACK);
     }
 
     @Test
