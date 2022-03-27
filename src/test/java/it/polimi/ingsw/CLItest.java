@@ -43,9 +43,9 @@ public class CLItest {
             switch(opz){
                 case 0:
                     game = new Game(false, 3);
-                    game.addPlayer("player1");
-                    game.addPlayer("player2");
-                    game.addPlayer("player3");
+                    game.addPlayer("player1", ColorTower.BLACK);
+                    game.addPlayer("player2", ColorTower.WHITE);
+                    game.addPlayer("player3", ColorTower.GREY);
                     break;
                 case 1:
                     islands = game.getAllIslands();

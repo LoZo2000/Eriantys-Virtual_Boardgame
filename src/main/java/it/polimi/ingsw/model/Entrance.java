@@ -19,7 +19,6 @@ public class Entrance implements Movable {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent = new Student(id, Color.RED);
         int positionInList = this.students.indexOf(tempStudent);
-        System.out.println(positionInList);
 
         if(positionInList == -1){
             throw new NoSuchStudentException("There isn't any Student with that id in the list");

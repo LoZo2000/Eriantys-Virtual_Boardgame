@@ -59,7 +59,6 @@ public class Canteen implements Movable{
         }
     }
 
-    //IndexOf!!!!!!!!!!!!!!!!!!!!!!!!!!
     public Student removeStudent(int id) throws NoSuchStudentException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent;

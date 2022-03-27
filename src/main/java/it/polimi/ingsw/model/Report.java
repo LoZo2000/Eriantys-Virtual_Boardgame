@@ -1,22 +1,16 @@
 package it.polimi.ingsw.model;
 
+import java.util.Map;
+
 public class Report {
     private final ColorTower owner;
     private final int towerNumbers;
-    private final int blueStudents;
-    private final int yellowStudents;
-    private final int redStudents;
-    private final int greenStudents;
-    private final int pinkStudents;
+    private final Map<Color, Integer> students;
 
-    public Report(ColorTower owner, int towerNumbers, int blueStudents, int yellowStudents, int redStudents, int greenStudents, int pinkStudents){
+    public Report(ColorTower owner, int towerNumbers, Map<Color, Integer> students){
         this.owner= owner;
         this.towerNumbers=towerNumbers;
-        this.blueStudents= blueStudents;
-        this.yellowStudents= yellowStudents;
-        this.redStudents=redStudents;
-        this.greenStudents=greenStudents;
-        this.pinkStudents=pinkStudents;
+        this.students= students;
     }
 
     public ColorTower getOwner(){ return owner; }
@@ -24,17 +18,6 @@ public class Report {
     public int getTowerNumbers(){ return towerNumbers; }
 
     public int getColorStudents(Color c){
-        switch(c){
-            case BLUE:
-                return blueStudents;
-            case YELLOW:
-                return yellowStudents;
-            case RED:
-                return redStudents;
-            case GREEN:
-                return greenStudents;
-            default: //case PINK
-                return pinkStudents;
-        }
+        return students.get(c);
     }
 }

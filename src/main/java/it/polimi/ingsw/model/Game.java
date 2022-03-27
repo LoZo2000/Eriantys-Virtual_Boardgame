@@ -1,14 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
+import it.polimi.ingsw.model.exceptions.*;
 
-import it.polimi.ingsw.model.exceptions.NoContiguousIslandException;
-import it.polimi.ingsw.model.exceptions.StillStudentException;
-import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class Game {
     private MotherNature motherNature;
@@ -18,7 +12,6 @@ public class Game {
     private ArrayList<Player> players = new ArrayList<>();
     private Card[] playedCards;
     private Bag bag;
-    //private Bag initBag;
     private Character[] CharactersCards;
     private Map<Color, Player> professors;
     private Rule currentRule;
@@ -43,6 +36,13 @@ public class Game {
             initClouds(numPlayers);
         } catch (Exception e ) {
             e.printStackTrace();
+        }
+
+        this.currentRule = new DefaultRule();
+        this.professors = new HashMap<>();
+
+        for(Color c: Color.values()){
+            this.professors.put(c, null);
         }
     }
 
@@ -89,10 +89,20 @@ public class Game {
         }
     }
 
-    public void addPlayer(String nickname){
+    //TODO TEMPORARY METHOD
+    public void addPlayer(Player p){
+        this.players.add(p);
+    }
+
+    //TODO TEMPORARY METHOD
+    public Map<Color, Player> getProfessors(){
+        return this.professors;
+    }
+
+    public void addPlayer(String nickname, ColorTower color){
         int numberOfStudents = this.numPlayers != 3 ? 7 : 9;
         ArrayList<Student> entranceStudents = new ArrayList<>();
-        for(int i= 0; i<numberOfStudents; i++){
+        for(int i= 0; i<numberOfStudents; i++) {
             try {
                 Student s = this.bag.getRandomStudent();
                 entranceStudents.add(s);
@@ -101,7 +111,7 @@ public class Game {
             }
         }
 
-        Player newPlayer = new Player(nickname, entranceStudents);
+        Player newPlayer = new Player(nickname, color, entranceStudents);
 
         players.add(newPlayer);
     }
@@ -153,6 +163,54 @@ public class Game {
 
     public void moveMotherNature(Island island){
         motherNature.movement(island);
+        Report report = island.getReport();
+
+        ColorTower higherInfluence = influence(report);
+
+        if(higherInfluence != report.getOwner()){
+            island.conquest(higherInfluence);
+            //TODO Necesario passare per Team
+            for(Player p: this.players){
+                if(p.getColor() == report.getOwner()){
+                    try {
+                        p.getDashboard().addTowers(report.getTowerNumbers());
+                    } catch (WrongNumberOfTowersException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(p.getColor() == higherInfluence){
+                    try {
+                        p.getDashboard().removeTowers(report.getTowerNumbers());
+                    } catch (WrongNumberOfTowersException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            int islandNumber = this.islands.indexOf(island);
+            int previousPosition = (islandNumber - 1) % this.islands.size();
+            if(previousPosition<0) previousPosition += this.islands.size();
+
+            if(this.islands.get(previousPosition).getOwner() == island.getOwner()){
+                try {
+                    mergeIsland(this.islands.get(previousPosition), island);
+                } catch (NoContiguousIslandException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            islandNumber = this.islands.indexOf(island);
+            int successivePosition = (islandNumber + 1) % this.islands.size();
+
+            if(this.islands.get(successivePosition).getOwner() == island.getOwner()){
+                try {
+                    mergeIsland(this.islands.get(successivePosition), island);
+                } catch (NoContiguousIslandException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     public void mergeIsland(Island i1, Island i2) throws NoContiguousIslandException {
@@ -213,6 +271,8 @@ public class Game {
         try{
             temp = departure.removeStudent(studentId);
             arrival.addStudent(temp);
+
+            this.updateProfessors();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -256,6 +316,8 @@ public class Game {
         try{
             temp = departure.removeStudent(studentId);
             arrival.addStudent(temp);
+
+            this.updateProfessors();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -270,6 +332,50 @@ public class Game {
     public void moveStudent(int from, int to, String playerNick, int[] studentId){
         for (int i=0; i<studentId.length; i++){
             moveStudent(from, to, playerNick, studentId[i]);
+        }
+    }
+
+    private ColorTower influence(Report report){
+        //TODO Costruzione Mappa Professori da quella con Player
+
+        //Map with the information about the Color of the professor and the Color of the Tower of the player or team who
+        //has the professor
+        HashMap<Color, ColorTower> profAndPlayer = new HashMap<>();
+        for(Color c: Color.values()){
+            Player owner = this.professors.get(c);
+            if(owner == null)
+                profAndPlayer.put(c, null);
+            else
+                profAndPlayer.put(c, owner.getColor());
+        }
+
+        return this.currentRule.calculateInfluence(report, profAndPlayer);
+    }
+
+    private void updateProfessors(){
+        for(Color c: Color.values()){
+            HashMap<String, Integer> counterCanteen = new HashMap<>();
+            for(Player p: this.players){
+                int numberStudents = p.getDashboard().getCanteen().getNumberStudentColor(c);
+                counterCanteen.put(p.getNickname(), numberStudents);
+            }
+            Player currentOwner = this.professors.get(c);
+
+            String currentOwnerNickname;
+            if(currentOwner == null){
+                currentOwnerNickname = null;
+            } else{
+                currentOwnerNickname = currentOwner.getNickname();
+            }
+
+            String newOwnerNickname = this.currentRule.updateProfessor(currentOwnerNickname, counterCanteen);
+
+            Player newOwner = this.players.stream()
+                    .filter(player -> player.getNickname().equals(newOwnerNickname))
+                    .findAny()
+                    .orElse(null);
+
+            this.professors.put(c, newOwner);
         }
     }
 
