@@ -8,7 +8,7 @@ public interface Rule {
      * @param report Report with the status of the Island on which we are calculating the influence.
      * @param professors Map which has the Color of the professor as key and as value the ColorTower that is the team
      *                   that has the professor.
-     * @return Returns the Color of the tower (So the color of the team) that has the higher influence on the island.
+     * @return Returns the Color of the tower (So the color of the team) that has the highest influence on the island.
      * The returned value can be null if there isn't any player that has the professors of the students on the island.
      */
     public ColorTower calculateInfluence(Report report, Map<Color, ColorTower> professors);

@@ -116,10 +116,18 @@ public class Island implements Movable{
         return prohibitionToken;
     }
 
+    public int getMaxTowers(){
+        return maxTowers;
+    }
+
     public boolean equals(Object o){
         if(o instanceof Island){
             if(((Island)o).getId()==id) return true;
         }
         return false;
+    }
+
+    public String toString(){
+        return String.valueOf(id);
     }
 }

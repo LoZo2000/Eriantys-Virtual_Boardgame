@@ -24,4 +24,8 @@ public class Card{
         }
         return false;
     }
+
+    public String toString(){
+        return "(p:"+priority+", m:"+movement+")";
+    }
 }

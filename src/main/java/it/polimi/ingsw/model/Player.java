@@ -41,4 +41,8 @@ public class Player{
 
         return this.nickname.equals(p.nickname);
     }
+
+    public String toString(){
+        return nickname;
+    }
 }

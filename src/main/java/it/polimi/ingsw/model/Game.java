@@ -49,7 +49,7 @@ public class Game {
         }
     }
 
-    public int getNumberOfStudentPerColor(int i, Color color){
+    public int getNumberOfStudentPerColorOnCloud(int i, Color color){
         return clouds[i].getNumberOfStudentPerColor(color);
     }
 
@@ -166,6 +166,10 @@ public class Game {
             if(p.getNickname().equals(nickName)) return p;
         }
         return null;
+    }
+
+    public ArrayList<Player> getAllPlayers(){
+        return (ArrayList<Player>) players.clone();
     }
 
     public void moveMotherNature(Island island){

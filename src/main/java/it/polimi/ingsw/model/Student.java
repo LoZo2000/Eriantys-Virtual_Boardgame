@@ -22,4 +22,16 @@ public class Student{
         }
         return false;
     }
+
+    public String toString(){
+        String c = "";
+        switch (color){
+            case BLUE -> c = "\u001B[34m";
+            case YELLOW -> c = "\u001B[33m";
+            case RED -> c = "\u001B[31m";
+            case GREEN -> c = "\u001B[32m";
+            case PINK -> c = "\u001B[36m";
+        }
+        return c+String.valueOf(id)+"\u001B[0m";
+    }
 }
