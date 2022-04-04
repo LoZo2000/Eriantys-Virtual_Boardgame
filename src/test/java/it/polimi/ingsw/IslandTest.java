@@ -21,6 +21,10 @@ public class IslandTest {
         assertEquals(0, island.getAllStudents().size());
         assertEquals(0, island.getReport().getTowerNumbers());
         assertNull(island.getReport().getOwner());
+        island.conquest(ColorTower.BLACK);
+        assertEquals(ColorTower.BLACK, island.getOwner());
+        assertEquals(1, island.getReport().getTowerNumbers());
+
         for(Color c : Color.values()) assertEquals(0, island.getReport().getColorStudents(c));
     }
 
@@ -84,5 +88,10 @@ public class IslandTest {
         assertEquals(i2, island);
         assertNotEquals(island, i3);
         assertNotEquals(i3, island);
+    }
+
+    @Test
+    public void toStringTest(){
+        System.out.println("The id of the island is "+island);
     }
 }

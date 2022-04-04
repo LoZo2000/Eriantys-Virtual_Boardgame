@@ -180,7 +180,7 @@ public class Game {
 
         if(higherInfluence != report.getOwner()){
             island.conquest(higherInfluence);
-            //TODO Necesario passare per Team
+            //TODO Necessario passare per Team
             for(Player p: this.players){
                 if(p.getColor() == report.getOwner()){
                     try {
