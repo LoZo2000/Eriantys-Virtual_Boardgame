@@ -2,8 +2,12 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.*;
 import it.polimi.ingsw.messages.Message;
+import it.polimi.ingsw.model.exceptions.NoActiveCardException;
+import it.polimi.ingsw.model.exceptions.NoCharacterSelectedException;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class GameHandler {
     private ArrayList<String> players;
@@ -16,7 +20,9 @@ public class GameHandler {
     private int maxMoveStudent = 3;
     private int actualMoveStudent = 0;
     private boolean completeRules = false;
+
     private Action currentPhase = Action.ADDME;
+    private Action oldPhase;
 
     private Translator translator;
 
@@ -28,8 +34,8 @@ public class GameHandler {
     }
 
 
-
-    public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException {
+    //IOException because it can be thrown by Game if the characters.json file isn't in the FileSystem
+    public void execute(Message message) throws IOException, IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, NoActiveCardException, NoCharacterSelectedException {
         switch (message.getAction()){
 
             case ADDME:
@@ -90,6 +96,40 @@ public class GameHandler {
                 }
                 break;
 
+            case USEPOWER:
+                if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
+                if(currentPhase!=Action.MOVESTUDENT && currentPhase!=Action.MOVEMOTHERNATURE) throw new IllegalMoveException("Wrong move: can't activate powers now!");
+
+                boolean isActive = translator.translateThis(message);
+
+                if(isActive){
+                    this.oldPhase = this.currentPhase;
+                    this.currentPhase = Action.ACTIVECARD;
+                }
+
+                break;
+
+            case EXCHANGESTUDENT:
+                if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
+                if(currentPhase != Action.ACTIVECARD)
+                    throw new IllegalMoveException("Wrong move: you have to use the effect on the active card!");
+
+                Action requestedActiveAction = translator.getRequestedAction();
+                if(requestedActiveAction != Action.EXCHANGESTUDENT)
+                    throw new IllegalMoveException("Wrong move: you should not exchange students now!");
+
+                if(!checkMovementLocations(message))
+                    throw new IllegalMoveException("You can't move students from these locations");
+
+                translator.translateThis(message);
+                try{
+                    translator.getRequestedAction();
+                } catch(Exception e){
+                    this.currentPhase = this.oldPhase;
+                }
+
+                break;
+
             case MOVEMOTHERNATURE:
                 if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
                 else if(currentPhase!=Action.MOVEMOTHERNATURE) throw new IllegalMoveException("Wrong move: you should not move Mother Nature now!");
@@ -139,102 +179,24 @@ public class GameHandler {
         return newOrder;
     }
 
-    /*private boolean CharacterPlayed;
-    private final Game game;
-    private final int numPlayers;
-    private int currentPlayer;
+    private boolean checkMovementLocations(Message m){
+        try {
+            Set<Location> allowedLocations = this.translator.getAllowedDepartures();
+            if(!allowedLocations.contains(m.getDepartureType()))
+                return false;
 
-    public GameHandler(Game game) {
-        this.game= game;
-        this.numPlayers= game.getNumPlayers();
-        CharacterPlayed=false;
-    }
+            allowedLocations = this.translator.getAllowedArrivals();
+            if(!(allowedLocations.contains(m.getArrivalType())))
+                return false;
 
-    public void Turn(){
-        PreTurn();
-        MiddleTurn();
-        //EndTurn();
-    }
+            if(m.getArrivalType() == m.getDepartureType())
+                return false;
 
-
-    private void PreTurn(){
-        int first = game.getLastPlayed();
-        for(int i=0; i<numPlayers; i++){
-            //tutti i metodi non ritornano nulla in quanto sono da implementare
-            ThrowCard(game.getPlayerNum(i));
-            for(int j=1; j<(numPlayers); j++) {
-                WaitForThrownCard(game.getPlayerNum(i + j));
-            }
-
-            WaitForUserCard();
-
-            SaveCard();
-
-            WaitForThrownCard(game.getPlayerNum(i));
-            for(int j=1; j<(numPlayers); j++) {
-                SendCard(game.getPlayerNum(i+1));
-            }
-
+        } catch (Exception e) {
+            return false;
         }
-        currentPlayer=WhoPlays();
-        game.setLastPlayed(currentPlayer);
+
+        return true;
     }
-
-    private void MiddleTurn(){
-        for(int i=0; i<numPlayers; i++){
-            StartTurn(game.getPlayerNum(currentPlayer));
-            for(int j=1; j<(numPlayers); j++) {
-                WaitTurn(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitStudents();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyStudent(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitMotherNature();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyMotherNature(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitCloud();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyCloud(game.getPlayerNum(currentPlayer+j));
-            }
-            currentPlayer++;
-        }
-    }
-
-    //da implementare
-    private void ThrowCard(Player player){}
-
-    private void WaitForThrownCard(Player player){}
-
-    private void WaitForUserCard(){}
-
-    private void SendCard(Player player){}
-
-    private void SaveCard(){}
-
-    private int WhoPlays(){}
-
-    private void StartTurn(Player currentPlayer){}
-
-    private void WaitTurn(Player nonCurrentPlayer){}
-
-    private void WaitStudents(){}
-
-    private void NotifyStudent(Player player){}
-
-    private void WaitMotherNature(){}
-
-    private void NotifyMotherNature(Player player){}
-
-    private void WaitCloud(){}
-
-    private void NotifyCloud(Player player){}*/
 
 }

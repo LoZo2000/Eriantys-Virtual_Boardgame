@@ -1,31 +1,43 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.model.characters.Character;
+import it.polimi.ingsw.model.characters.InfluenceCharacter;
+import it.polimi.ingsw.model.characters.JSONCharacter;
+import it.polimi.ingsw.model.characters.MovementCharacter;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.rules.DefaultRule;
+import it.polimi.ingsw.model.rules.Rule;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.*;
 
 public class Game {
     private MotherNature motherNature;
     private LinkedList <Island> islands = new LinkedList<>();
     private Cloud[] clouds;
-    //private Team[] teams;
     private ArrayList<Player> players = new ArrayList<>();
     private Card[] playedCards;
     private Bag bag;
-    private Character[] CharactersCards;
     private Map<Color, Player> professors;
     private Rule currentRule;
     private final int numPlayers;
     private boolean completeRules;
     private int lastPlayed;
 
+    private int activeCard;
+    private final Character[] charactersCards;
+
+    private final String JSON_PATH = "characters.json";
 
 
     //Create game but no players are added;
-    public Game(boolean completeRules, int numPlayers){
+    public Game(boolean completeRules, int numPlayers) throws IOException{
         lastPlayed = 0;
         this.numPlayers=numPlayers;
         this.completeRules=completeRules;
@@ -46,6 +58,16 @@ public class Game {
 
         for(Color c: Color.values()){
             this.professors.put(c, null);
+        }
+
+        if(this.completeRules){
+            this.activeCard = -1;
+            this.charactersCards = initCardsFromJSON();
+            Arrays.stream(charactersCards).map(Character::toString)
+                    .forEach(System.out::println);
+        } else{
+            this.activeCard = -1;
+            this.charactersCards = null;
         }
     }
 
@@ -104,27 +126,12 @@ public class Game {
 
     public void addPlayer(String nickname, ColorTower color){
         int numberOfStudents = this.numPlayers != 3 ? 7 : 9;
-        ArrayList<Student> entranceStudents = new ArrayList<>();
-        for(int i= 0; i<numberOfStudents; i++){
-            try {
-                Student s = this.bag.getRandomStudent();
-                entranceStudents.add(s);
-            } catch (NoMoreStudentsException e) {
-                e.printStackTrace();
-            }
-        }
+        ArrayList<Student> entranceStudents = extractFromBag(numberOfStudents);
 
         Player newPlayer = new Player(nickname, numPlayers, color, entranceStudents);
 
         players.add(newPlayer);
     }
-
-    /*public int getGameState(){  // return 1 if the game is full, 2 if can contain further player
-        if (players.size() == numPlayers) {
-            return 1;
-        }
-        else return 2;
-    }*/
 
     public int getNumPlayers(){
         return this.numPlayers;
@@ -133,18 +140,6 @@ public class Game {
     public int getRegisteredNumPlayers(){
         return this.players.size();
     }
-
-    /*public int getLastPlayed(){
-        return lastPlayed;
-    }
-
-    public Player getPlayerNum(int i){
-        return players.get(i);
-    }
-
-    public void setLastPlayed(int lastPlayed) {
-        this.lastPlayed = lastPlayed;
-    }*/
 
     public LinkedList<Island> getAllIslands(){
         return (LinkedList<Island>)islands.clone();
@@ -245,120 +240,6 @@ public class Game {
         }
     }
 
-    //MOVE FUNCTIONS
-    //function move written in a view where the parameters are message received by a client (temporary)
-    public void moveStudent(int studentId, Movable arrival, Movable departure){
-        Student s;
-        try{
-            s = departure.removeStudent(studentId);
-            arrival.addStudent(s);
-
-            this.updateProfessors();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-    /*public void moveStudent(int from, int to, String playerNick, int studentId, int islandId){
-        //Locations: 0=entrance, 1=canteen, 2=island
-        Movable departure;
-        Movable arrival;
-        switch(from){
-            case 0:
-                departure = getPlayer(playerNick).getDashboard().getEntrance();
-                break;
-            case 1:
-                departure = getPlayer(playerNick).getDashboard().getCanteen();
-                break;
-            case 2:
-
-                departure = getIsland(islandId);
-                break;
-            default:
-                departure = null;
-                System.out.println("Something has gone wrong...");
-        }
-        switch(to) {
-            case 0:
-                arrival = getPlayer(playerNick).getDashboard().getEntrance();
-                break;
-            case 1:
-                arrival = getPlayer(playerNick).getDashboard().getCanteen();
-                break;
-            case 2:
-                arrival = getIsland(islandId);
-                break;
-            default:
-                arrival = null;
-                System.out.println("Something has gone wrong...");
-        }
-        Student temp;
-        try{
-            temp = departure.removeStudent(studentId);
-            arrival.addStudent(temp);
-
-            this.updateProfessors();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void moveStudent(int from, int to, String playerNick, int studentId){
-        //Locations: 0=entrance, 1=canteen, 2=island
-        Movable departure;
-        Movable arrival;
-        switch(from){
-            case 0:
-                departure = getPlayer(playerNick).getDashboard().getEntrance();
-                break;
-            case 1:
-                departure = getPlayer(playerNick).getDashboard().getCanteen();
-                break;
-            case 2:
-                departure = null;
-                System.out.println("Insert the Island id");
-                break;
-            default:
-                departure = null;
-                System.out.println("Something has gone wrong...");
-        }
-        switch(to) {
-            case 0:
-                arrival = getPlayer(playerNick).getDashboard().getEntrance();
-                break;
-            case 1:
-                arrival = getPlayer(playerNick).getDashboard().getCanteen();
-                break;
-            case 2:
-                arrival = null;
-                System.out.println("Insert the Island id");
-                break;
-            default:
-                arrival = null;
-                System.out.println("Something has gone wrong...");
-        }
-        Student temp;
-        try{
-            temp = departure.removeStudent(studentId);
-            arrival.addStudent(temp);
-
-            this.updateProfessors();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void moveStudent(int from, int to, String playerNick, int[] studentId, int islandId){
-        for (int i=0; i<studentId.length; i++){
-            moveStudent(from, to, playerNick, studentId[i],  islandId);
-        }
-    }
-
-    public void moveStudent(int from, int to, String playerNick, int[] studentId){
-        for (int i=0; i<studentId.length; i++){
-            moveStudent(from, to, playerNick, studentId[i]);
-        }
-    }*/
-
     private ColorTower influence(Report report){
         //TODO Costruzione Mappa Professori da quella con Player
 
@@ -403,6 +284,41 @@ public class Game {
         }
     }
 
+    //MOVE FUNCTIONS
+    //function move written in a view where the parameters are message received by a client (temporary)
+    public void moveStudent(int studentId, Movable arrival, Movable departure){
+        Student s;
+        try{
+            s = departure.removeStudent(studentId);
+            arrival.addStudent(s);
+
+            this.updateProfessors();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure){
+        Student s1, s2;
+        try{
+            s1 = departure.removeStudent(studentId1);
+            s2 = arrival.removeStudent(studentId2);
+
+            arrival.addStudent(s1);
+            departure.addStudent(s2);
+
+            this.updateProfessors();
+
+            //TODO Reminder: Use this snippet at the end of each method that can be called when there is an active card
+            if(this.activeCard != -1){
+                this.activeCard = -1;
+                this.currentRule = new DefaultRule();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void refillClouds() throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
         for (int i=0; i<clouds.length; i++){
             if (numPlayers==3) clouds[i].refillCloud(bag.getRandomStudent(4));
@@ -417,5 +333,118 @@ public class Game {
 
     public Cloud[] getAllClouds(){
         return clouds;
+    }
+
+    //-------------------------------------------------------------------------------------
+    //|                                     CHARACTERS                                    |
+    //-------------------------------------------------------------------------------------
+
+    public Character[] initCardsFromJSON() throws IOException{
+        Reader reader = new FileReader(JSON_PATH);
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+
+        List<JSONCharacter> jsonCharacters = Arrays.asList(gson.fromJson(reader, JSONCharacter[].class));
+        List<Character> allCharacters = new ArrayList<>();
+        for(int i=0; i<jsonCharacters.size(); i++){
+            JSONCharacter jc = jsonCharacters.get(i);
+            switch (jc.getTypeCharacter()){
+                case MOVEMENT:
+                    ArrayList<Student> s = extractFromBag(jc.getParams().getNumThingOnIt());
+                    allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), s, jc.getParams()));
+                    break;
+
+                case INFLUENCE:
+                    allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    break;
+
+                default:
+                    allCharacters.add(new Character(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost()) {
+                        @Override
+                        public Rule usePower(Player player) {
+                            return null;
+                        }
+                    });
+            }
+        }
+
+        Character[] selectedCharacter = new Character[3];
+        for(int i=0; i<3; i++){
+            Random rand = new Random();
+            int randomPos = rand.nextInt(allCharacters.size());
+            selectedCharacter[i] = allCharacters.get(randomPos);
+            allCharacters.remove(randomPos);
+        }
+
+        return selectedCharacter;
+    }
+
+    public int getActiveCard(){
+        return this.activeCard;
+    }
+
+    public Character[] getCharactersCards(){
+        return this.charactersCards.clone();
+    }
+
+    public boolean usePower(Player activePlayer, int card) throws NoCharacterSelectedException{
+        if(card <= -1 || card > 2){
+            throw new NoCharacterSelectedException("No character selected to use its power");
+        }
+
+        //TODO Check Monete
+
+        Character c = this.charactersCards[card];
+        this.currentRule = c.usePower(activePlayer);
+
+        if(this.currentRule.isActionNeeded()){
+            this.activeCard = card;
+        }
+
+        return this.currentRule.isActionNeeded();
+
+    }
+
+    public Action getRequestedAction() throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        MovementCharacter c1 = (MovementCharacter) this.charactersCards[activeCard];
+
+        return c1.getType();
+    }
+
+    public Set<Location> getAllowedDepartures() throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        MovementCharacter c1 = (MovementCharacter) this.charactersCards[activeCard];
+
+        return c1.getAllowedDepartures();
+    }
+
+    public Set<Location> getAllowedArrivals() throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        MovementCharacter c1 = (MovementCharacter) this.charactersCards[activeCard];
+
+        return c1.getAllowedArrivals();
+    }
+
+    //--------------------------------------------------------------------------------------------
+    //|                                             UTILS                                        |
+    //--------------------------------------------------------------------------------------------
+
+    private ArrayList<Student> extractFromBag(int numStudents){
+        ArrayList<Student> students = new ArrayList<>();
+        for(int i= 0; i<numStudents; i++){
+            try {
+                Student s = this.bag.getRandomStudent();
+                students.add(s);
+            } catch (NoMoreStudentsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return students;
     }
 }

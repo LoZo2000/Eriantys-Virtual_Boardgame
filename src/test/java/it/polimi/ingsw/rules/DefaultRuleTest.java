@@ -1,5 +1,9 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.rules;
 
+import it.polimi.ingsw.model.Color;
+import it.polimi.ingsw.model.ColorTower;
+import it.polimi.ingsw.model.Report;
+import it.polimi.ingsw.model.rules.DefaultRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +33,7 @@ class DefaultRuleTest {
         students.put(Color.PINK, 1);
         students.put(Color.GREEN, 3);
 
-        this.rep = new Report(ColorTower.BLACK, 3, students);
+        this.rep = new Report(ColorTower.BLACK, 3, students, null, 0);
 
         this.professors.put(Color.BLUE, ColorTower.WHITE);
         this.professors.put(Color.PINK, ColorTower.BLACK);
@@ -51,7 +55,7 @@ class DefaultRuleTest {
         students.put(Color.PINK, 1);
         students.put(Color.GREEN, 3);
 
-        this.rep = new Report(ColorTower.BLACK, 3, students);
+        this.rep = new Report(ColorTower.BLACK, 3, students, null, 0);
 
         this.professors.put(Color.BLUE, ColorTower.WHITE);
         this.professors.put(Color.PINK, ColorTower.BLACK);
@@ -65,7 +69,7 @@ class DefaultRuleTest {
     }
 
     @Test
-    void calculateInfluenceDrawWinner() {
+    void calculateInfluenceTieWinner() {
         HashMap<Color, Integer> students = new HashMap<>();
         students.put(Color.BLUE, 4);
         students.put(Color.RED, 3);
@@ -73,7 +77,7 @@ class DefaultRuleTest {
         students.put(Color.PINK, 1);
         students.put(Color.GREEN, 3);
 
-        this.rep = new Report(ColorTower.BLACK, 3, students);
+        this.rep = new Report(ColorTower.BLACK, 3, students, null, 0);
 
         this.professors.put(Color.BLUE, ColorTower.WHITE);
         this.professors.put(Color.PINK, ColorTower.BLACK);
@@ -95,7 +99,7 @@ class DefaultRuleTest {
         students.put(Color.PINK, 1);
         students.put(Color.GREEN, 3);
 
-        this.rep = new Report(null, 0, students);
+        this.rep = new Report(null, 0, students, null ,0);
 
         this.professors.put(Color.BLUE, ColorTower.WHITE);
         this.professors.put(Color.PINK, ColorTower.BLACK);
@@ -109,7 +113,7 @@ class DefaultRuleTest {
     }
 
     @Test
-    void calculateInfluenceDrawNoInfluence() {
+    void calculateInfluenceTieNoInfluence() {
         HashMap<Color, Integer> students = new HashMap<>();
         students.put(Color.BLUE, 4);
         students.put(Color.RED, 1);
@@ -117,7 +121,7 @@ class DefaultRuleTest {
         students.put(Color.PINK, 1);
         students.put(Color.GREEN, 4);
 
-        this.rep = new Report(null, 0, students);
+        this.rep = new Report(null, 0, students, null ,0);
 
         this.professors.put(Color.BLUE, ColorTower.WHITE);
         this.professors.put(Color.PINK, ColorTower.BLACK);
@@ -131,7 +135,7 @@ class DefaultRuleTest {
     }
 
     @Test
-    void calculateInfluenceDrawNoChange() {
+    void calculateInfluenceTieNoChange() {
         HashMap<Color, Integer> students = new HashMap<>();
         students.put(Color.BLUE, 4);
         students.put(Color.RED, 1);
@@ -139,7 +143,7 @@ class DefaultRuleTest {
         students.put(Color.PINK, 1);
         students.put(Color.GREEN, 4);
 
-        this.rep = new Report(ColorTower.GREY, 1, students);
+        this.rep = new Report(ColorTower.GREY, 1, students, null, 0);
 
         this.professors.put(Color.BLUE, ColorTower.WHITE);
         this.professors.put(Color.PINK, ColorTower.BLACK);
@@ -150,6 +154,28 @@ class DefaultRuleTest {
         ColorTower winner = this.rule.calculateInfluence(this.rep, this.professors);
 
         assertEquals(ColorTower.GREY, winner);
+    }
+
+    @Test
+    void calculateInfluenceWithExtraPoints() {
+        HashMap<Color, Integer> students = new HashMap<>();
+        students.put(Color.BLUE, 4);
+        students.put(Color.RED, 1);
+        students.put(Color.YELLOW, 2);
+        students.put(Color.PINK, 1);
+        students.put(Color.GREEN, 4);
+
+        this.rep = new Report(ColorTower.GREY, 1, students, ColorTower.BLACK, 2);
+
+        this.professors.put(Color.BLUE, ColorTower.WHITE);
+        this.professors.put(Color.PINK, ColorTower.BLACK);
+        this.professors.put(Color.RED, ColorTower.WHITE);
+        this.professors.put(Color.YELLOW, ColorTower.GREY);
+        this.professors.put(Color.GREEN, ColorTower.BLACK);
+
+        ColorTower winner = this.rule.calculateInfluence(this.rep, this.professors);
+
+        assertEquals(ColorTower.BLACK, winner);
     }
 
     @Test
@@ -165,7 +191,7 @@ class DefaultRuleTest {
     }
 
     @Test
-    void updateProfessor2PlayersDraw(){
+    void updateProfessor2PlayersTie(){
         String owner = "player1";
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 6);
@@ -177,7 +203,7 @@ class DefaultRuleTest {
     }
 
     @Test
-    void updateProfessor3PlayersDraw(){
+    void updateProfessor3PlayersTie(){
         String owner = "player1";
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 6);
@@ -202,7 +228,7 @@ class DefaultRuleTest {
     }
 
     @Test
-    void updateProfessor3PlayersNoOwnerDraw(){
+    void updateProfessor3PlayersNoOwnerTie(){
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 0);
         counterPerColor.put("player2", 0);
@@ -211,5 +237,10 @@ class DefaultRuleTest {
         String winner = this.rule.updateProfessor(null, counterPerColor);
 
         assertNull(winner);
+    }
+
+    @Test
+    void isActionNeededDefault(){
+        assertFalse(this.rule.isActionNeeded());
     }
 }

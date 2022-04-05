@@ -7,10 +7,15 @@ public class Report {
     private final int towerNumbers;
     private final Map<Color, Integer> students;
 
-    public Report(ColorTower owner, int towerNumbers, Map<Color, Integer> students){
+    private final ColorTower extraPointReceiver;
+    private final int extraPoint;
+
+    public Report(ColorTower owner, int towerNumbers, Map<Color, Integer> students, ColorTower extraPointReceiver, int extrapoints){
         this.owner= owner;
         this.towerNumbers=towerNumbers;
         this.students= students;
+        this.extraPointReceiver = extraPointReceiver;
+        this.extraPoint = extrapoints;
     }
 
     public ColorTower getOwner(){ return owner; }
@@ -19,5 +24,13 @@ public class Report {
 
     public int getColorStudents(Color c){
         return students.get(c);
+    }
+
+    public ColorTower getExtraPointReceiver(){
+        return extraPointReceiver;
+    }
+
+    public int getExtraPoint(){
+        return extraPoint;
     }
 }

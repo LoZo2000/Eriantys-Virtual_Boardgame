@@ -77,7 +77,7 @@ public class Island implements Movable{
             colors.put(possibleColors[i], colorsCont[i]);
         }
 
-        return new Report(owner, numTowers, colors);
+        return new Report(owner, numTowers, colors, null, 0);
     }
 
     public ArrayList<Student> getAllStudents(){

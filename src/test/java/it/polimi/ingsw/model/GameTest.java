@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -35,7 +36,11 @@ class GameTest {
 
         Player player2 = new Player("player2", 2, ColorTower.WHITE, students2);
 
-        this.game = new Game(false, 2);
+        try {
+            this.game = new Game(false, 2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         this.game.addPlayer(player1);
         this.game.addPlayer(player2);
