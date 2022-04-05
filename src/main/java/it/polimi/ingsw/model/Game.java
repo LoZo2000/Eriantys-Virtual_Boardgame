@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,13 +120,6 @@ public class Game {
         players.add(newPlayer);
     }
 
-    /*public int getGameState(){  // return 1 if the game is full, 2 if can contain further player
-        if (players.size() == numPlayers) {
-            return 1;
-        }
-        else return 2;
-    }*/
-
     public int getNumPlayers(){
         return this.numPlayers;
     }
@@ -133,18 +127,6 @@ public class Game {
     public int getRegisteredNumPlayers(){
         return this.players.size();
     }
-
-    /*public int getLastPlayed(){
-        return lastPlayed;
-    }
-
-    public Player getPlayerNum(int i){
-        return players.get(i);
-    }
-
-    public void setLastPlayed(int lastPlayed) {
-        this.lastPlayed = lastPlayed;
-    }*/
 
     public LinkedList<Island> getAllIslands(){
         return (LinkedList<Island>)islands.clone();
@@ -154,18 +136,20 @@ public class Game {
         return motherNature.getPosition();
     }
 
-    public Island getIsland(int id){
+    //TODO: new Exception added!!!!!
+    public Island getIsland(int id) throws NoIslandException{
         for(Island i : islands){
             if(i.getId() == id) return i;
         }
-        return null;
+        throw new NoIslandException();
     }
 
-    public Player getPlayer(String nickName){
+    //TODO: new Exception added!!!!!
+    public Player getPlayer(String nickName) throws NoPlayerException{
         for(Player p : players){
             if(p.getNickname().equals(nickName)) return p;
         }
-        return null;
+        throw new NoPlayerException();
     }
 
     public ArrayList<Player> getAllPlayers(){
@@ -215,13 +199,12 @@ public class Game {
 
             if(this.islands.get(successivePosition).getOwner() == island.getOwner()){
                 try {
-                    mergeIsland(this.islands.get(successivePosition), island);
+                    mergeIsland(island, this.islands.get(successivePosition));
                 } catch (NoContiguousIslandException e) {
                     e.printStackTrace();
                 }
             }
         }
-
     }
 
     public void mergeIsland(Island i1, Island i2) throws NoContiguousIslandException {
@@ -236,128 +219,15 @@ public class Game {
         else throw new NoContiguousIslandException("Islands are not Contiguous");
     }
 
-    // this method is temporary because i have to discuss with others about movement
-    public void takeStudentsFromIsland(int CloudNumber, String nickName){
-        Entrance to = getPlayer(nickName).getDashboard().getEntrance();
-        ArrayList<Student> from = clouds[CloudNumber].chooseCloud();
-        for (Student s : from){
-            to.addStudent(s);
-        }
-    }
-
     //MOVE FUNCTIONS
     //function move written in a view where the parameters are message received by a client (temporary)
-    public void moveStudent(int studentId, Movable arrival, Movable departure){
-        Student s;
-        try{
-            s = departure.removeStudent(studentId);
-            arrival.addStudent(s);
+    //TODO: new Exception added!!!!!
+    public void moveStudent(int studentId, Movable arrival, Movable departure) throws NoSuchStudentException{
+        Student s = departure.removeStudent(studentId);
+        arrival.addStudent(s);
 
-            this.updateProfessors();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        this.updateProfessors();
     }
-    /*public void moveStudent(int from, int to, String playerNick, int studentId, int islandId){
-        //Locations: 0=entrance, 1=canteen, 2=island
-        Movable departure;
-        Movable arrival;
-        switch(from){
-            case 0:
-                departure = getPlayer(playerNick).getDashboard().getEntrance();
-                break;
-            case 1:
-                departure = getPlayer(playerNick).getDashboard().getCanteen();
-                break;
-            case 2:
-
-                departure = getIsland(islandId);
-                break;
-            default:
-                departure = null;
-                System.out.println("Something has gone wrong...");
-        }
-        switch(to) {
-            case 0:
-                arrival = getPlayer(playerNick).getDashboard().getEntrance();
-                break;
-            case 1:
-                arrival = getPlayer(playerNick).getDashboard().getCanteen();
-                break;
-            case 2:
-                arrival = getIsland(islandId);
-                break;
-            default:
-                arrival = null;
-                System.out.println("Something has gone wrong...");
-        }
-        Student temp;
-        try{
-            temp = departure.removeStudent(studentId);
-            arrival.addStudent(temp);
-
-            this.updateProfessors();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void moveStudent(int from, int to, String playerNick, int studentId){
-        //Locations: 0=entrance, 1=canteen, 2=island
-        Movable departure;
-        Movable arrival;
-        switch(from){
-            case 0:
-                departure = getPlayer(playerNick).getDashboard().getEntrance();
-                break;
-            case 1:
-                departure = getPlayer(playerNick).getDashboard().getCanteen();
-                break;
-            case 2:
-                departure = null;
-                System.out.println("Insert the Island id");
-                break;
-            default:
-                departure = null;
-                System.out.println("Something has gone wrong...");
-        }
-        switch(to) {
-            case 0:
-                arrival = getPlayer(playerNick).getDashboard().getEntrance();
-                break;
-            case 1:
-                arrival = getPlayer(playerNick).getDashboard().getCanteen();
-                break;
-            case 2:
-                arrival = null;
-                System.out.println("Insert the Island id");
-                break;
-            default:
-                arrival = null;
-                System.out.println("Something has gone wrong...");
-        }
-        Student temp;
-        try{
-            temp = departure.removeStudent(studentId);
-            arrival.addStudent(temp);
-
-            this.updateProfessors();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void moveStudent(int from, int to, String playerNick, int[] studentId, int islandId){
-        for (int i=0; i<studentId.length; i++){
-            moveStudent(from, to, playerNick, studentId[i],  islandId);
-        }
-    }
-
-    public void moveStudent(int from, int to, String playerNick, int[] studentId){
-        for (int i=0; i<studentId.length; i++){
-            moveStudent(from, to, playerNick, studentId[i]);
-        }
-    }*/
 
     private ColorTower influence(Report report){
         //TODO Costruzione Mappa Professori da quella con Player
@@ -410,9 +280,10 @@ public class Game {
         }
     }
 
-    public void selectCloud(String playerNick, Cloud cloud){
+    //TODO: new Exception added!!!!!
+    public void selectCloud(String playerNick, Cloud cloud) throws NoPlayerException{
         ArrayList<Student> students = cloud.chooseCloud();
-        for(Student s : students) getPlayer(playerNick).getDashboard().getEntrance().addStudent(s);
+        for (Student s : students) getPlayer(playerNick).getDashboard().getEntrance().addStudent(s);
     }
 
     public Cloud[] getAllClouds(){

@@ -48,34 +48,62 @@ public class Translator {
 
 
             case MOVESTUDENT:
-                Movable departure, arrival;
+                Movable departure=null, arrival=null;
                 switch(message.getDepartureType()){
                     case ENTRANCE:
-                        departure = game.getPlayer(message.getSender()).getDashboard().getEntrance();
+                        try {
+                            departure = game.getPlayer(message.getSender()).getDashboard().getEntrance();
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                     case CANTEEN:
-                        departure = game.getPlayer(message.getSender()).getDashboard().getCanteen();
+                        try{
+                            departure = game.getPlayer(message.getSender()).getDashboard().getCanteen();
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                     case ISLAND:
-                        departure = game.getIsland(message.getDepartureId());
+                        try {
+                            departure = game.getIsland(message.getDepartureId());
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                     default:
                         departure = null;
                 }
                 switch(message.getArrivalType()){
                     case ENTRANCE:
-                        arrival = game.getPlayer(message.getSender()).getDashboard().getEntrance();
+                        try {
+                            arrival = game.getPlayer(message.getSender()).getDashboard().getEntrance();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                     case CANTEEN:
-                        arrival = game.getPlayer(message.getSender()).getDashboard().getCanteen();
+                        try{
+                            arrival = game.getPlayer(message.getSender()).getDashboard().getCanteen();
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                     case ISLAND:
-                        arrival = game.getIsland(message.getArrivalId());
+                        try{
+                            arrival = game.getIsland(message.getArrivalId());
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         break;
                     default:
                         arrival = null;
                 }
-                game.moveStudent(message.getStudentId(), arrival, departure);
+                try {
+                    game.moveStudent(message.getStudentId(), arrival, departure);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
 
 
@@ -92,7 +120,11 @@ public class Translator {
 
             case SELECTCLOUD:
                 Cloud[] clouds = game.getAllClouds();
-                game.selectCloud(message.getSender(), clouds[message.getCloudPosition()]);
+                try{
+                    game.selectCloud(message.getSender(), clouds[message.getCloudPosition()]);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
                 break;
 
 

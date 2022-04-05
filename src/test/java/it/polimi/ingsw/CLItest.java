@@ -5,6 +5,7 @@ import it.polimi.ingsw.controller.GameHandler;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.exceptions.EndGameException;
 import it.polimi.ingsw.messages.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Scanner;
 
