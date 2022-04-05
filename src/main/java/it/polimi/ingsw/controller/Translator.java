@@ -4,12 +4,11 @@ import it.polimi.ingsw.controller.exceptions.EndGameException;
 import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
-import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
 
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
+
 
 
 public class Translator {
@@ -22,7 +21,7 @@ public class Translator {
     public void translateThis(Message message){
 
         switch(message.getAction()){
-            case ADDME:
+            case ADDME:         //To add a player in the current match
                 //TODO Fix
                 if(game.getRegisteredNumPlayers() == 1)
                     game.addPlayer(message.getSender(), ColorTower.WHITE);
@@ -34,7 +33,7 @@ public class Translator {
 
 
 
-            case PLAYCARD:
+            case PLAYCARD:      //To play the assistant card
                 Card c;
                 try {
                     c = game.getPlayer(message.getSender()).getHand().playCard(message.getPriority());
@@ -47,7 +46,7 @@ public class Translator {
 
 
 
-            case MOVESTUDENT:
+            case MOVESTUDENT:   //To move a student (from ENTRANCE to ISLAND or CANTEEN)
                 Movable departure=null, arrival=null;
                 switch(message.getDepartureType()){
                     case ENTRANCE:
@@ -108,7 +107,7 @@ public class Translator {
 
 
 
-            case MOVEMOTHERNATURE:
+            case MOVEMOTHERNATURE:  //To move MotherNature
                 LinkedList<Island> islands = game.getAllIslands();
                 int currentMNposition = islands.indexOf(game.getMotherNaturePosition());
                 int numIslands = islands.size();
@@ -118,7 +117,7 @@ public class Translator {
 
 
 
-            case SELECTCLOUD:
+            case SELECTCLOUD:       //To select a cloud
                 Cloud[] clouds = game.getAllClouds();
                 try{
                     game.selectCloud(message.getSender(), clouds[message.getCloudPosition()]);
@@ -129,7 +128,7 @@ public class Translator {
 
 
 
-            case SHOWME:
+            case SHOWME:        //To print the current model (temporary)
                 System.out.println("");
                 System.out.println("");
                 System.out.println("CURRENT BOARD:");
@@ -177,6 +176,9 @@ public class Translator {
         }
     }
 
+    //Function called when the game ends
+    //By now, the only ending condition implemented is:
+    //                                      -when there are no more students in the bag
     public void endTurn() throws EndGameException{
         try {
             game.refillClouds();
@@ -187,6 +189,7 @@ public class Translator {
         }
     }
 
+    //Check the winner counting the number of towers in the game:
     private ColorTower getWinner(){
         int black=0;
         int white=0;

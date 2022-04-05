@@ -30,9 +30,9 @@ class GameTest {
         ArrayList<Student> students2 = new ArrayList<>();
         students2.add(new Student(8, Color.RED));
         students2.add(new Student(9, Color.BLUE));
-        students2.add(new Student(10, Color.GREEN));
-        students2.add(new Student(11, Color.PINK));
-        students2.add(new Student(12, Color.YELLOW));
+        students2.add(new Student(10, Color.RED));
+        students2.add(new Student(11, Color.RED));
+        students2.add(new Student(12, Color.RED));
         students2.add(new Student(13, Color.RED));
         students2.add(new Student(14, Color.BLUE));
 
@@ -244,10 +244,16 @@ class GameTest {
             game.moveMotherNature(game.getIsland(5));
             game.moveMotherNature(game.getIsland(4));
             game.moveMotherNature(game.getIsland(7));
-            for(int i=8; i<15; i++)
+            game.moveMotherNature(game.getIsland(9));
+            game.moveMotherNature(game.getIsland(11));
+            for(int i=8; i<13; i++)
                 game.moveStudent(i, game.getPlayer("player2").getDashboard().getCanteen(), game.getPlayer("player2").getDashboard().getEntrance());
+            game.moveStudent(13, game.getIsland(7), game.getPlayer("player2").getDashboard().getEntrance());
+            game.moveStudent(14, game.getPlayer("player2").getDashboard().getCanteen(), game.getPlayer("player2").getDashboard().getEntrance());
             game.moveMotherNature(game.getIsland(1));
             game.moveMotherNature(game.getIsland(7));
+            game.moveMotherNature(game.getIsland(9));
+            game.moveMotherNature(game.getIsland(11));
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.WrongNumberOfTowersException;
-
 import java.util.ArrayList;
 
 public class Dashboard{
@@ -33,13 +31,11 @@ public class Dashboard{
         return towers;
     }
 
-    public void addTowers(int towers) throws WrongNumberOfTowersException {
-        if(towers<0 || this.towers+towers > maxTowers) throw new WrongNumberOfTowersException();
+    public void addTowers(int towers){
         this.towers += towers;
     }
 
-    public void removeTowers(int towers) throws WrongNumberOfTowersException {
-        if(towers<0 || this.towers-towers <0) throw new WrongNumberOfTowersException();
+    public void removeTowers(int towers){
         this.towers -= towers;
     }
 

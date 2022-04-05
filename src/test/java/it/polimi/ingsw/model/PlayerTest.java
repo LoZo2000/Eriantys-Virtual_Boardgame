@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
     Player player;
@@ -41,8 +41,8 @@ public class PlayerTest {
 
     @Test
     public void equalsTest(){
-        assertEquals( true, player.equals(player));
-        assertEquals( false, player.equals(new Student(3, Color.BLUE)));
+        assertTrue(player.equals(player));
+        assertFalse(player.equals(new Student(3, Color.BLUE)));
 
         ArrayList<Student> students = new ArrayList<>();
         for(int i=7; i<14; i++){
@@ -60,7 +60,7 @@ public class PlayerTest {
         }
 
         Player temp = new Player("player2", 2, ColorTower.WHITE, students);
-        assertEquals( false, player.equals(temp));
+        assertFalse(player.equals(temp));
     }
 
     @Test

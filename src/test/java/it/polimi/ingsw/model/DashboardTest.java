@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,31 +35,10 @@ public class DashboardTest {
     @Test
     public void towersTest(){
         assertEquals(8, dashboard.getTowers());
-        try{
-            dashboard.removeTowers(1);
-        }catch (Exception e){
-            fail();
-        }
+        dashboard.removeTowers(1);
         assertEquals(7, dashboard.getTowers());
-        try{
-            dashboard.addTowers(1);
-        }catch(Exception e){
-            fail();
-        }
+        dashboard.addTowers(1);
         assertEquals(8, dashboard.getTowers());
-
-        try{
-            dashboard.removeTowers(9);
-            fail();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        try{
-            dashboard.addTowers(1);
-            fail();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     @Test

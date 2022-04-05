@@ -6,17 +6,17 @@ import it.polimi.ingsw.messages.Message;
 import java.util.ArrayList;
 
 public class GameHandler {
-    private ArrayList<String> players;
-    private int[] priority = {0,0,0,0};
-    private ArrayList<String> orderPlayers;
-    private int maxPlayers = 0;
-    private int numPlayers = 0;
-    private int currentPlayer = -1;
-    private int firstPlayer = -1;
-    private int maxMoveStudent = 3;
-    private int actualMoveStudent = 0;
+    private ArrayList<String> players;          //List of player in the game (it's "final": after all the player have joined, this list will not be modified). It is necessary to remember the order of the players during the PLAYCARD phase
+    private int[] priority = {0,0,0,0};         //Priority of the card played by the player with the same index in "players"
+    private ArrayList<String> orderPlayers;     //This list will be created every turn after the players have played their cards. The game will accept only moves made by the player in position 0. After he/she has selected a cloud, the player in postion 0 is removed
+    private int maxPlayers = 0;                 //Number of players expected to join the match (choosen by the first player)
+    private int numPlayers = 0;                 //Number of player currently enrolled in our match
+    private int currentPlayer = -1;             //Player who is expected to play now
+    private int firstPlayer = -1;               //Player who played the card with the lowest priority (who will have to play a card by first the next turn)
+    private int maxMoveStudent = 3;             //Number of students a player is allowed to move every turn
+    private int actualMoveStudent = 0;          //Number of students the current player has already moved in this turn
     private boolean completeRules = false;
-    private Action currentPhase = Action.ADDME;
+    private Action currentPhase = Action.ADDME; //First phase is ADDME: we wait for some players to join
 
     private Translator translator;
 
@@ -32,8 +32,8 @@ public class GameHandler {
     public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException {
         switch (message.getAction()){
 
-            case ADDME:
-                if(numPlayers==0){
+            case ADDME:     //To add a new player
+                if(numPlayers==0){      //If he/she is the first player, he/she has the right to decide the rules of the match
                     players.add(message.getSender());
                     if(message.getCompleteRules()) completeRules = true;
                     maxPlayers = message.getNumPlayers();
@@ -51,7 +51,7 @@ public class GameHandler {
                     orderPlayers.add(message.getSender());
                     numPlayers++;
                     translator.translateThis(message);
-                    if(numPlayers==maxPlayers){
+                    if(numPlayers==maxPlayers){     //If it is ture, it means that all the players have joined: time to change phase
                         currentPhase = Action.PLAYCARD;
                         currentPlayer = 0;
                         firstPlayer = 0;
@@ -66,8 +66,8 @@ public class GameHandler {
                     priority[currentPlayer] = message.getPriority();
                     translator.translateThis(message);
                     currentPlayer = (currentPlayer+1)%maxPlayers;
-                    if(currentPlayer==firstPlayer){
-                        orderPlayers = sort();
+                    if(currentPlayer==firstPlayer){     //If it is true, this means that all the players have already played their cards: time to change phase
+                        orderPlayers = sort();          //New order according to the cards played
                         firstPlayer = players.indexOf(orderPlayers.get(0));
                         actualMoveStudent = 0;
                         currentPhase = Action.MOVESTUDENT;
@@ -83,7 +83,7 @@ public class GameHandler {
                 else{
                     translator.translateThis(message);
                     actualMoveStudent++;
-                    if(actualMoveStudent==maxMoveStudent){
+                    if(actualMoveStudent==maxMoveStudent){      //After 3 or 4 students have been moved, it is time to move MotherNature
                         currentPhase = Action.MOVEMOTHERNATURE;
                         actualMoveStudent = 0;
                     }
@@ -105,10 +105,10 @@ public class GameHandler {
                 else{
                     translator.translateThis(message);
                     orderPlayers.remove(0);
-                    if(orderPlayers.size()>0){
+                    if(orderPlayers.size()>0) {     //It is time for the following player to move students!
                         currentPhase = Action.MOVESTUDENT;
                     }
-                    else{
+                    else{                           //Else, if orderPlayers is empty: all the players have played their turns: it is time to play a card!
                         currentPhase = Action.PLAYCARD;
                         currentPlayer = firstPlayer;
                         translator.endTurn();
@@ -116,7 +116,7 @@ public class GameHandler {
                 }
                 break;
 
-            case SHOWME:
+            case SHOWME:    //Every player in every moment of the match (after all the players have joined) can call SHOWME to give a look to the board
                 if(numPlayers==0 || numPlayers!=maxPlayers) throw new IllegalMoveException("Wait until all the players join the match...");
                 else translator.translateThis(message);
                 break;
@@ -128,6 +128,7 @@ public class GameHandler {
 
 
 
+    //Return playerOrder after all the players have played their cards
     private ArrayList<String> sort(){
         ArrayList<String> newOrder = new ArrayList<>();
         for(int i=0; i<maxPlayers; i++){
@@ -138,103 +139,4 @@ public class GameHandler {
         }
         return newOrder;
     }
-
-    /*private boolean CharacterPlayed;
-    private final Game game;
-    private final int numPlayers;
-    private int currentPlayer;
-
-    public GameHandler(Game game) {
-        this.game= game;
-        this.numPlayers= game.getNumPlayers();
-        CharacterPlayed=false;
-    }
-
-    public void Turn(){
-        PreTurn();
-        MiddleTurn();
-        //EndTurn();
-    }
-
-
-    private void PreTurn(){
-        int first = game.getLastPlayed();
-        for(int i=0; i<numPlayers; i++){
-            //tutti i metodi non ritornano nulla in quanto sono da implementare
-            ThrowCard(game.getPlayerNum(i));
-            for(int j=1; j<(numPlayers); j++) {
-                WaitForThrownCard(game.getPlayerNum(i + j));
-            }
-
-            WaitForUserCard();
-
-            SaveCard();
-
-            WaitForThrownCard(game.getPlayerNum(i));
-            for(int j=1; j<(numPlayers); j++) {
-                SendCard(game.getPlayerNum(i+1));
-            }
-
-        }
-        currentPlayer=WhoPlays();
-        game.setLastPlayed(currentPlayer);
-    }
-
-    private void MiddleTurn(){
-        for(int i=0; i<numPlayers; i++){
-            StartTurn(game.getPlayerNum(currentPlayer));
-            for(int j=1; j<(numPlayers); j++) {
-                WaitTurn(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitStudents();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyStudent(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitMotherNature();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyMotherNature(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitCloud();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyCloud(game.getPlayerNum(currentPlayer+j));
-            }
-            currentPlayer++;
-        }
-    }
-
-    //da implementare
-    private void ThrowCard(Player player){}
-
-    private void WaitForThrownCard(Player player){}
-
-    private void WaitForUserCard(){}
-
-    private void SendCard(Player player){}
-
-    private void SaveCard(){}
-
-    private int WhoPlays(){}
-
-    private void StartTurn(Player currentPlayer){}
-
-    private void WaitTurn(Player nonCurrentPlayer){}
-
-    private void WaitStudents(){}
-
-    private void NotifyStudent(Player player){}
-
-    private void WaitMotherNature(){}
-
-    private void NotifyMotherNature(Player player){}
-
-    private void WaitCloud(){}
-
-    private void NotifyCloud(Player player){}*/
-
 }

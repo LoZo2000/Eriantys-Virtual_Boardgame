@@ -167,18 +167,10 @@ public class Game {
             //TODO Necessario passare per Team
             for(Player p: this.players){
                 if(p.getColor() == report.getOwner()){
-                    try {
-                        p.getDashboard().addTowers(report.getTowerNumbers());
-                    } catch (WrongNumberOfTowersException e) {
-                        e.printStackTrace();
-                    }
+                    p.getDashboard().addTowers(report.getTowerNumbers());
                 }
                 if(p.getColor() == higherInfluence){
-                    try {
-                        p.getDashboard().removeTowers(report.getTowerNumbers());
-                    } catch (WrongNumberOfTowersException e) {
-                        e.printStackTrace();
-                    }
+                    p.getDashboard().removeTowers(report.getTowerNumbers());
                 }
             }
 

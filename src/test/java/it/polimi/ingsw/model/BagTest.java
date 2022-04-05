@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.Color;
@@ -53,8 +53,7 @@ public class BagTest{
             e.printStackTrace();
         }
         try{
-            ArrayList<Student> s= new ArrayList<Student>();
-            s = bag.getRandomStudent(2);
+            bag.getRandomStudent(2);
             fail();
         } catch (NoMoreStudentsException e) {
             e.printStackTrace();

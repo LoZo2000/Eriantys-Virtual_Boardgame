@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 import it.polimi.ingsw.model.exceptions.StillStudentException;
 import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,5 +91,36 @@ class CloudTest {
 
         assertEquals(this.newStudents, students);
         assertEquals(0, this.cloud.getStudents().size());
+    }
+
+    @Test
+    public void fillTest(){
+        try{
+            cloud.addStudent(new Student(0, Color.BLUE));
+            cloud.addStudent(new Student(1, Color.BLUE));
+            cloud.addStudent(new Student(2, Color.BLUE));
+        }
+        catch(Exception e){fail();}
+        try{
+            cloud.addStudent(new Student(3, Color.BLUE));
+            fail();
+        }
+        catch (Exception e){e.printStackTrace();}
+
+        ArrayList<Student> s1 = cloud.getStudents();
+        for(int i=0; i<3; i++)
+            assertEquals(Color.BLUE, s1.get(i).getColor());
+
+        ArrayList<Student> s2 = cloud.chooseCloud();
+        for(int i=0; i<3; i++)
+            assertEquals(Color.BLUE, s2.get(i).getColor());
+
+        ArrayList<Student> s3 = cloud.getStudents();
+        assertEquals(0, s3.size());
+
+        try{
+            cloud.addStudent(new Student(4, Color.BLUE));
+        }
+        catch(Exception e){fail();}
     }
 }
