@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IslandTest {
@@ -21,6 +23,10 @@ public class IslandTest {
         assertEquals(0, island.getAllStudents().size());
         assertEquals(0, island.getReport().getTowerNumbers());
         assertNull(island.getReport().getOwner());
+        island.conquest(ColorTower.BLACK);
+        assertEquals(ColorTower.BLACK, island.getOwner());
+        assertEquals(1, island.getReport().getTowerNumbers());
+
         for(Color c : Color.values()) assertEquals(0, island.getReport().getColorStudents(c));
     }
 
@@ -85,4 +91,25 @@ public class IslandTest {
         assertNotEquals(island, i3);
         assertNotEquals(i3, island);
     }
+
+    @Test
+    public void toStringTest(){
+        System.out.println("The id of the island is "+island);
+    }
+
+    @Test
+    public void getStudentsIdTest(){
+        ArrayList<Integer> ids;
+
+        island.addStudent(new Student(0, Color.BLUE));
+        island.addStudent(new Student(1, Color.YELLOW));
+        island.addStudent(new Student(2, Color.RED));
+        island.addStudent(new Student(3, Color.GREEN));
+        island.addStudent(new Student(4, Color.PINK));
+        ids = island.getStudentsId(Color.BLUE, 1);
+
+        assertEquals(0, ids.get(0));
+
+    }
+
 }

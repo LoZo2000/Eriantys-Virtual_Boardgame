@@ -29,4 +29,19 @@ public class StudentTest{
         assertNotEquals(s1,s3);
         assertNotEquals(s3,s1);
     }
+
+    @Test
+    public void toStringTest(){
+        Student s1 = new Student(0, Color.BLUE);
+        Student s2 = new Student(1, Color.YELLOW);
+        Student s3 = new Student(2, Color.RED);
+        Student s4 = new Student(3, Color.GREEN);
+        Student s5 = new Student(4, Color.PINK);
+        System.out.println("The student is "+s1);
+        System.out.println("The student is "+s2);
+        System.out.println("The student is "+s3);
+        System.out.println("The student is "+s4);
+        System.out.println("The student is "+s5);
+
+    }
 }

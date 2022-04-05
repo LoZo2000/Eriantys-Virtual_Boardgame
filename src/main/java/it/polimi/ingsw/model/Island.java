@@ -35,12 +35,12 @@ public class Island implements Movable{
         return id;
     }
 
-    private ArrayList<Integer> getStudentsId(Color color, int numberOfStudents){
+    public ArrayList<Integer> getStudentsId(Color color, int numberOfStudents){
         ArrayList<Integer> ids = new ArrayList<Integer>();
         int cont=0;
         for(Student s : students){
             if(cont>=numberOfStudents) break;
-            if(s.getColor() == color) {
+            if(s.getColor() == color){
                 ids.add(s.getId());
                 cont++;
             }
@@ -54,11 +54,10 @@ public class Island implements Movable{
 
     public Report getReport(){
         int numTowers;
-        /*if(owner==null){
+        if(owner==null){
             numTowers=0;
         }
-        else { numTowers=maxTowers;}*/
-        numTowers = maxTowers;
+        else { numTowers=maxTowers;}
 
         Map<Color, Integer> colors = new HashMap<>();
         int[] colorsCont = {0, 0, 0, 0, 0};
@@ -90,7 +89,7 @@ public class Island implements Movable{
 
     public Student removeStudent(int id) throws NoSuchStudentException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
-        Student tempStudent = new Student(id, Color.RED);
+        Student tempStudent = new Student(id, Color.BLUE);
         int positionInList = this.students.indexOf(tempStudent);
 
         if(positionInList == -1){
@@ -116,9 +115,6 @@ public class Island implements Movable{
         return prohibitionToken;
     }
 
-    public int getMaxTowers(){
-        return maxTowers;
-    }
 
     public boolean equals(Object o){
         if(o instanceof Island){
@@ -127,7 +123,6 @@ public class Island implements Movable{
         return false;
     }
 
-    public String toString(){
-        return String.valueOf(id);
-    }
+    public String toString(){   return String.valueOf(id);  }
+
 }

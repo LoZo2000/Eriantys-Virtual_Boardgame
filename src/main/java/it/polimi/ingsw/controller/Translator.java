@@ -195,9 +195,9 @@ public class Translator {
         for(Island i : islands){
             if(i.getOwner()!=null){
                 switch (i.getOwner()){
-                    case BLACK -> black += i.getMaxTowers();
-                    case WHITE -> white += i.getMaxTowers();
-                    case GREY -> grey += i.getMaxTowers();
+                    case BLACK -> black += i.getReport().getTowerNumbers();
+                    case WHITE -> white += i.getReport().getTowerNumbers();
+                    case GREY -> grey += i.getReport().getTowerNumbers();
                 }
             }
         }

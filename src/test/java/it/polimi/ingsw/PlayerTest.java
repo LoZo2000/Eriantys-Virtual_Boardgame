@@ -38,4 +38,33 @@ public class PlayerTest {
         assertEquals(8, player.getDashboard().getTowers());
         assertEquals(10, player.getHand().getNumCards());
     }
+
+    @Test
+    public void equalsTest(){
+        assertEquals( true, player.equals(player));
+        assertEquals( false, player.equals(new Student(3, Color.BLUE)));
+
+        ArrayList<Student> students = new ArrayList<>();
+        for(int i=7; i<14; i++){
+            Color c = null;
+            int caseColor = i%5;
+            switch (caseColor) {
+                case 0 -> c = Color.RED;
+                case 1 -> c = Color.BLUE;
+                case 2 -> c = Color.GREEN;
+                case 3 -> c = Color.PINK;
+                case 4 -> c = Color.YELLOW;
+            }
+            Student s = new Student(i, c);
+            students.add(s);
+        }
+
+        Player temp = new Player("player2", 2, ColorTower.WHITE, students);
+        assertEquals( false, player.equals(temp));
+    }
+
+    @Test
+    public void toStringTest(){
+        System.out.println("The player is "+player);
+    }
 }

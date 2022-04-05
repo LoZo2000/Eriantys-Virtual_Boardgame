@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -45,6 +46,18 @@ public class BagTest{
         }
         assertEquals(0, bag.getStudentsNum());
 
-        assertThrows(NoMoreStudentsException.class, () -> bag.getRandomStudent());
+        try{
+            Student s = bag.getRandomStudent();
+            fail();
+        } catch (NoMoreStudentsException e) {
+            e.printStackTrace();
+        }
+        try{
+            ArrayList<Student> s= new ArrayList<Student>();
+            s = bag.getRandomStudent(2);
+            fail();
+        } catch (NoMoreStudentsException e) {
+            e.printStackTrace();
+        }
     }
 }
