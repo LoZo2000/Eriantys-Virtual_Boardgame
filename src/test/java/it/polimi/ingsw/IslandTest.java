@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IslandTest {
@@ -94,4 +96,20 @@ public class IslandTest {
     public void toStringTest(){
         System.out.println("The id of the island is "+island);
     }
+
+    @Test
+    public void getStudentsIdTest(){
+        ArrayList<Integer> ids;
+
+        island.addStudent(new Student(0, Color.BLUE));
+        island.addStudent(new Student(1, Color.YELLOW));
+        island.addStudent(new Student(2, Color.RED));
+        island.addStudent(new Student(3, Color.GREEN));
+        island.addStudent(new Student(4, Color.PINK));
+        ids = island.getStudentsId(Color.BLUE, 1);
+
+        assertEquals(0, ids.get(0));
+
+    }
+
 }
