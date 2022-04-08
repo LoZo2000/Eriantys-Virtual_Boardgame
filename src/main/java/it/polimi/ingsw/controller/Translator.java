@@ -92,7 +92,7 @@ public class Translator {
                 int currentMNposition = islands.indexOf(game.getMotherNaturePosition());
                 int numIslands = islands.size();
                 int newMTposition = (currentMNposition + message.getMovement()) % numIslands;
-                game.moveMotherNature(islands.get(newMTposition));
+                game.moveMotherNature(islands.get(newMTposition), true);
                 return false;
 
 
@@ -211,12 +211,24 @@ public class Translator {
             System.out.print("Island "+i+", Owner "+owner+", Students: ");
             ArrayList<Student> students = i.getAllStudents();
             for(Student s : students) System.out.print(s+" ");
-            //if(game.getMotherNaturePosition().equals(i)) System.out.print("MN");
+            if(game.getMotherNaturePosition().equals(i)) System.out.print("MN");
             System.out.print("\n");
         }
+        Map<Color, Player> professors = game.getProfessors();
+        System.out.print("PROFESSORS: ");
+        for(Color co : Color.values()) System.out.print(co+": "+professors.get(co)+", ");
         ArrayList<Player> players = game.getAllPlayers();
+        System.out.print("\nCLOUDS:\n");
+        for(int i=0; i<game.getNumberOfClouds(); i++){
+            System.out.print("Cloud "+i+": ");
+            for(Color co : Color.values()) System.out.print(co+"="+game.getNumberOfStudentPerColorOnCloud(i,co)+", ");
+            System.out.print("\n");
+        }
         for(Player p : players){
             System.out.println("\nDASHBOARD of "+p+":");
+            System.out.print("CARDS: ");
+            ArrayList<Card> cards = p.getHand().getAllCards();
+            for(Card ca : cards) System.out.print(ca+" ");
             System.out.print("\nEntrance: ");
             ArrayList<Student> students = p.getDashboard().getEntrance().getAllStudents();
             for(Student s : students) System.out.print(s+" ");
@@ -245,6 +257,10 @@ public class Translator {
             }
         }
 
+        //TODO DEBUG
+        System.out.println();
+        System.out.println(game.getCurrentRule().toString());
+
         System.out.println("\n\n");
     }
 
@@ -256,3 +272,44 @@ public class Translator {
         return this.game.getAllowedArrivals();
     }
 }
+/*
+System.out.println("");
+                System.out.println("");
+                System.out.println("CURRENT BOARD:");
+                islands = game.getAllIslands();
+                for(Island i : islands){
+                    String owner = "nobody";
+                    if(i.getOwner() != null) owner = String.valueOf(i.getOwner());
+
+                    System.out.print("Island "+i+", Owner "+owner+", Students: ");
+                    ArrayList<Student> students = i.getAllStudents();
+                    for(Student s : students) System.out.print(s+" ");
+                    if(game.getMotherNaturePosition().equals(i)) System.out.print("MN");
+                    System.out.print("\n");
+                }
+                Map<Color, Player> professors = game.getProfessors();
+                System.out.print("PROFESSORS: ");
+                for(Color co : Color.values()) System.out.print(co+": "+professors.get(co)+", ");
+                ArrayList<Player> players = game.getAllPlayers();
+                System.out.print("\nCLOUDS:\n");
+                for(int i=0; i<game.getNumberOfClouds(); i++){
+                    System.out.print("Cloud "+i+": ");
+                    for(Color co : Color.values()) System.out.print(co+"="+game.getNumberOfStudentPerColorOnCloud(i,co)+", ");
+                    System.out.print("\n");
+                }
+                for(Player p : players){
+                    System.out.println("DASHBOARD of "+p+":");
+                    System.out.print("Cards: ");
+                    ArrayList<Card> cards = p.getHand().getAllCards();
+                    for(Card ca : cards) System.out.print(ca+" ");
+                    System.out.print("\nEntrance: ");
+                    ArrayList<Student> students = p.getDashboard().getEntrance().getAllStudents();
+                    for(Student s : students) System.out.print(s+" ");
+                    System.out.print("\nCanteen: ");
+                    for(Color col : Color.values()){
+                        System.out.print(col+": "+p.getDashboard().getCanteen().getNumberStudentColor(col)+" ");
+                    }
+                    System.out.println("");
+                }
+                System.out.println("\n\n");
+ */

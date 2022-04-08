@@ -6,10 +6,11 @@ import it.polimi.ingsw.model.Report;
 
 import java.util.Map;
 
-public class ActionRule extends DecoratedRule{
+public class MotherNatureRule extends DecoratedRule{
+    private final int extraMovement;
 
-    public ActionRule(){
-        super();
+    public MotherNatureRule(int extraMovement){
+        this.extraMovement = extraMovement;
     }
 
     @Override
@@ -24,11 +25,11 @@ public class ActionRule extends DecoratedRule{
 
     @Override
     public boolean isActionNeeded() {
-        return true;
+        return false;
     }
 
     @Override
     public int getMotherNatureExtraMovement() {
-        return this.defaultRules.getMotherNatureExtraMovement();
+        return this.extraMovement + this.defaultRules.getMotherNatureExtraMovement();
     }
 }

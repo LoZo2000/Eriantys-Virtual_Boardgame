@@ -1,4 +1,4 @@
-package it.polimi.ingsw.rules;
+package it.polimi.ingsw.model.rules;
 
 import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.ColorTower;

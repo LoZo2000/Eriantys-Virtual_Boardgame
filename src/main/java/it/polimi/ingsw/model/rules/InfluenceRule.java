@@ -9,11 +9,13 @@ import java.util.Map;
 
 public class InfluenceRule extends DecoratedRule{
     private final ColorTower playerWhoUsed;
+    private final Color blockedColor;
     private final int extraPoints;
     private final boolean disableTowers;
 
-    public InfluenceRule(ColorTower playerWhoUsed, int extraPoints, boolean disableTowers){
+    public InfluenceRule(ColorTower playerWhoUsed, Color blockedColor, int extraPoints, boolean disableTowers){
         this.playerWhoUsed = playerWhoUsed;
+        this.blockedColor = blockedColor;
         this.disableTowers = disableTowers;
         this.extraPoints = extraPoints;
     }
@@ -22,7 +24,10 @@ public class InfluenceRule extends DecoratedRule{
     public ColorTower calculateInfluence(Report report, Map<Color, ColorTower> professors) {
         HashMap<Color, Integer> students = new HashMap<>();
         for(Color c: Color.values()){
-            students.put(c, report.getColorStudents(c));
+            if(c == blockedColor)
+                students.put(c, 0);
+            else
+                students.put(c, report.getColorStudents(c));
         }
         Report newReport;
         if(disableTowers){
@@ -43,6 +48,11 @@ public class InfluenceRule extends DecoratedRule{
 
     @Override
     public boolean isActionNeeded() {
-        return true;
+        return false;
+    }
+
+    @Override
+    public int getMotherNatureExtraMovement() {
+        return this.defaultRules.getMotherNatureExtraMovement();
     }
 }

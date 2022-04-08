@@ -10,9 +10,7 @@ import it.polimi.ingsw.model.rules.Rule;
 import java.util.ArrayList;
 import java.util.Set;
 
-//Character that enables exchange between Card and Entrance
 public class MovementCharacter extends Character implements Movable {
-
     private final Action type;
     private final Location locationType;
     private final int numStudents;

@@ -2,15 +2,12 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Island implements Movable{
     private final int id;
     private ArrayList<Student> students;
-    private boolean prohibitionToken = false;
+    private boolean prohibitionToken;
     private int maxTowers;
     private ColorTower owner;
 
@@ -18,6 +15,7 @@ public class Island implements Movable{
         this.id = id;
         students = new ArrayList<>();
         maxTowers = 1;
+        prohibitionToken = false;
         this.owner = null;
     }
 
@@ -29,6 +27,7 @@ public class Island implements Movable{
         students.addAll(i2.students);
         maxTowers = i1.maxTowers + i2.maxTowers;
         owner = i1.owner;
+        prohibitionToken = i1.prohibitionToken || i2.prohibitionToken;
     }
 
     public int getId(){

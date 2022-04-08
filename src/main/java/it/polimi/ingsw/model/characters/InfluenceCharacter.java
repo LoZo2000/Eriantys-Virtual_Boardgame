@@ -25,7 +25,7 @@ public class InfluenceCharacter extends Character{
 
     @Override
     public Rule usePower(Player player) {
-        return new InfluenceRule(player.getColor(), extraPoints, towersDisabled);
+        return new InfluenceRule(player.getColor(), null, extraPoints, towersDisabled);
     }
 
     @Override

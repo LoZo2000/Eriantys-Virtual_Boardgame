@@ -6,10 +6,11 @@ import it.polimi.ingsw.model.Report;
 
 import java.util.Map;
 
-public class ActionRule extends DecoratedRule{
+public class ProfessorRule extends DecoratedRule{
+    private final String playerWhoUsed;
 
-    public ActionRule(){
-        super();
+    public ProfessorRule(String playerWhoUsed){
+        this.playerWhoUsed = playerWhoUsed;
     }
 
     @Override
@@ -19,12 +20,13 @@ public class ActionRule extends DecoratedRule{
 
     @Override
     public String updateProfessor(String nameOwner, Map<String, Integer> canteenStudents) {
+        canteenStudents.replace(this.playerWhoUsed, canteenStudents.get(this.playerWhoUsed) + 1);
         return this.defaultRules.updateProfessor(nameOwner, canteenStudents);
     }
 
     @Override
     public boolean isActionNeeded() {
-        return true;
+        return false;
     }
 
     @Override

@@ -5,11 +5,11 @@ import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import java.util.ArrayList;
 
 public class Canteen implements Movable{
-    ArrayList<Student> blue;
-    ArrayList<Student> yellow;
-    ArrayList<Student> red;
-    ArrayList<Student> green;
-    ArrayList<Student> pink;
+    private ArrayList<Student> blue;
+    private ArrayList<Student> yellow;
+    private ArrayList<Student> red;
+    private ArrayList<Student> green;
+    private ArrayList<Student> pink;
 
     public Canteen(){
         blue = new ArrayList<>();

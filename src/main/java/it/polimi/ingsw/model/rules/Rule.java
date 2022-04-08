@@ -7,6 +7,11 @@ import it.polimi.ingsw.model.Report;
 import java.util.Map;
 
 public interface Rule {
+    //TODO Change parameters: add interface object of Model that can change the number of prohibition tokens on card when mother nature is on that island
+    //Change ISLAND ID with String, but attention to id '1' and '10' because '1' is considered contained in '10'
+    //Try to use id like '01'
+    //To do that use "String.format("%02d", i)" in the initialization of the islands
+    //In the ID of Island the single ids need to be sorted from lower to higher => Check order in string
     /**
      * This method is used to establish the team that has the higher influence on the Island.
      * @param report Report with the status of the Island on which we are calculating the influence.
@@ -29,4 +34,6 @@ public interface Rule {
     String updateProfessor(String nameOwner, Map<String, Integer> canteenStudents);
 
     boolean isActionNeeded();
+
+    int getMotherNatureExtraMovement();
 }

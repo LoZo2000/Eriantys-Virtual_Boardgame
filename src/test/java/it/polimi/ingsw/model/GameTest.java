@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -56,7 +57,11 @@ class GameTest {
         this.game.moveStudent(2, i, e);
         this.game.moveStudent(7, i, e);
 
-        this.game.moveMotherNature(i);
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());
@@ -64,7 +69,11 @@ class GameTest {
         i = this.game.getIsland(4);
         this.game.moveStudent(5, i, e);
 
-        this.game.moveMotherNature(i);
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
 
         assertEquals(11, this.game.getAllIslands().size());
     }

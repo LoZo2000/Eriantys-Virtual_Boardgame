@@ -49,7 +49,7 @@ public class CLItest {
 
             else if(ac.equals("USEPOWER")){
                 //sc.nextLine();
-                System.out.print("Chose which card you want to activate (0,1,2): ");
+                System.out.print("Choose which card you want to activate (0,1,2): ");
                 numCard = sc.nextInt();
                 sc.nextLine();
                 message = new USEPOWERmessage(playerId, Action.USEPOWER, numCard);
@@ -60,7 +60,7 @@ public class CLItest {
                 studentId = sc.nextInt();
                 sc.nextLine();
                 System.out.println("Where the student is? (Location)");
-                lo = sc.nextLine();
+                lo = sc.nextLine().toUpperCase();
                 if(lo.equals("ISLAND")){
                     departureType=Location.ISLAND;
                     System.out.println("Choose island: (islandId)");
@@ -81,7 +81,7 @@ public class CLItest {
                 }
                 //sc.nextLine();
                 System.out.println("Where do you want to move the student? (Location)");
-                lo = sc.nextLine();
+                lo = sc.nextLine().toUpperCase();
                 if(lo.equals("ISLAND")){
                     arrivalType=Location.ISLAND;
                     System.out.println("Choose island: (islandId)");
@@ -109,7 +109,7 @@ public class CLItest {
                 sc.nextLine();
 
                 System.out.println("Where the student is? (Location) ");
-                lo = sc.nextLine().toUpperCase();;
+                lo = sc.nextLine().toUpperCase();
                 if(lo.equals("CARD")){
                     departureType=Location.CARD_EXCHANGE;
                     departureId = -1;

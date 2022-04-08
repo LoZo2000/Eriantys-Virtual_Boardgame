@@ -158,7 +158,10 @@ public class GameHandler {
 
             case SHOWME:
                 if(numPlayers==0 || numPlayers!=maxPlayers) throw new IllegalMoveException("Wait until all the players join the match...");
-                else translator.translateThis(message);
+                else {
+                    System.out.println(this.currentPhase);
+                    translator.translateThis(message);
+                }
                 break;
 
             default:

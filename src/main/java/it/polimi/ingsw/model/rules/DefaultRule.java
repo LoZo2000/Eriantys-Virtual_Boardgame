@@ -91,4 +91,9 @@ public class DefaultRule implements Rule{
     public boolean isActionNeeded(){
         return false;
     }
+
+    @Override
+    public int getMotherNatureExtraMovement() {
+        return 0;
+    }
 }

@@ -1,0 +1,57 @@
+package it.polimi.ingsw.model.characters;
+
+import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.Student;
+import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
+import it.polimi.ingsw.model.rules.ActionRule;
+import it.polimi.ingsw.model.rules.Rule;
+
+public class ActionCharacter extends Character{
+    private final Action type;
+    private final int maxNumTokens;
+    private int numTokens;
+
+    public ActionCharacter(int id, CharacterType type, String desc, int cost, JSONParams params){
+        super(id, type, desc, cost);
+
+        this.maxNumTokens = params.getNumThingOnIt();
+        this.numTokens = params.getNumThingOnIt();
+        this.type = params.getTypeAction();
+    }
+
+    public Action getType() {
+        return type;
+    }
+
+    public int getNumTokens(){
+        return numTokens;
+    }
+
+    public void removeToken() throws NoMoreTokensException {
+        if(numTokens == 0){
+            throw new NoMoreTokensException("There is no token left");
+        }
+        this.numTokens -= 1;
+    }
+
+    public void addToken() throws NoMoreTokensException {
+        if(numTokens == maxNumTokens){
+            throw new NoMoreTokensException("There is the maximum number of token on the card");
+        }
+        this.numTokens += 1;
+    }
+
+    @Override
+    public Rule usePower(Player player) {
+        return new ActionRule();
+    }
+
+    @Override
+    public String toString(){
+        String s = super.toString();
+        s += "\u001B[1mActionType:\u001B[0m " + this.type + " - \u001B[1mMaxNumTokens:\u001B[0m " + this.maxNumTokens + "\n";
+        s += "\u001B[1mActualNumTokens:\u001B[0m " + this.numTokens + "\n";
+        return s;
+    }
+}

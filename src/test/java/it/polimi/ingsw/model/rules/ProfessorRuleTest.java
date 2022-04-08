@@ -11,9 +11,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InfluenceRuleTest {
+class ProfessorRuleTest {
 
-    private InfluenceRule rule;
+    private ProfessorRule rule;
     private Report rep;
     private Map<Color, ColorTower> professors;
 
@@ -22,7 +22,7 @@ class InfluenceRuleTest {
         HashMap<Color, Integer> students = new HashMap<>();
         students.put(Color.BLUE, 4);
         students.put(Color.RED, 1);
-        students.put(Color.YELLOW, 4);
+        students.put(Color.YELLOW, 0);
         students.put(Color.PINK, 1);
         students.put(Color.GREEN, 3);
 
@@ -40,38 +40,26 @@ class InfluenceRuleTest {
 
     @Test
     void calculateInfluenceTowersDisabled() {
-        this.rule = new InfluenceRule(ColorTower.WHITE, null, 0, true);
+        this.rule = new ProfessorRule("player1");
 
         ColorTower winner = this.rule.calculateInfluence(this.rep, this.professors);
 
-        assertEquals(ColorTower.WHITE, winner);
+        assertEquals(ColorTower.BLACK, winner);
     }
 
     @Test
     void calculateInfluenceExtraPoints() {
-        this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
+        this.rule = new ProfessorRule("player1");
 
         ColorTower winner = this.rule.calculateInfluence(this.rep, this.professors);
 
-        assertEquals(ColorTower.WHITE, winner);
-    }
-
-    @Test
-    void calculateInfluenceBlockedColor() {
-        this.rule = new InfluenceRule(ColorTower.WHITE, Color.RED, 2, false);
-
-        ColorTower winner = this.rule.calculateInfluence(this.rep, this.professors);
         assertEquals(ColorTower.BLACK, winner);
-
-        this.rule = new InfluenceRule(ColorTower.WHITE, Color.GREEN, 2, false);
-
-        winner = this.rule.calculateInfluence(this.rep, this.professors);
-        assertEquals(ColorTower.WHITE, winner);
     }
 
     @Test
     void updateProfessor2Players(){
-        this.rule = new InfluenceRule(ColorTower.WHITE,null,2, false);
+        this.rule = new ProfessorRule("player1");
+
         String owner = "player1";
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 3);
@@ -84,7 +72,7 @@ class InfluenceRuleTest {
 
     @Test
     void updateProfessor2PlayersTie(){
-        this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
+        this.rule = new ProfessorRule("player2");
         String owner = "player1";
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 6);
@@ -92,12 +80,13 @@ class InfluenceRuleTest {
 
         String winner = this.rule.updateProfessor(owner, counterPerColor);
 
-        assertEquals("player1", winner);
+        assertEquals("player2", winner);
     }
 
     @Test
     void updateProfessor3PlayersTie(){
-        this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
+        this.rule = new ProfessorRule("player3");
+
         String owner = "player1";
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 6);
@@ -106,25 +95,25 @@ class InfluenceRuleTest {
 
         String winner = this.rule.updateProfessor(owner, counterPerColor);
 
-        assertEquals("player1", winner);
+        assertEquals("player3", winner);
     }
 
     @Test
-    void updateProfessor3PlayersNoOwner(){
-        this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
+    void updateProfessor3PlayersTieButNoChange(){
+        this.rule = new ProfessorRule("player1");
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 5);
-        counterPerColor.put("player2", 2);
-        counterPerColor.put("player3", 3);
+        counterPerColor.put("player2", 6);
+        counterPerColor.put("player3", 5);
 
-        String winner = this.rule.updateProfessor(null, counterPerColor);
+        String winner = this.rule.updateProfessor("player2", counterPerColor);
 
-        assertEquals("player1", winner);
+        assertEquals("player2", winner);
     }
 
     @Test
     void updateProfessor3PlayersNoOwnerTie(){
-        this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
+        this.rule = new ProfessorRule("player1");
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 0);
         counterPerColor.put("player2", 0);
@@ -132,12 +121,12 @@ class InfluenceRuleTest {
 
         String winner = this.rule.updateProfessor(null, counterPerColor);
 
-        assertNull(winner);
+        assertEquals("player1", winner);
     }
 
     @Test
     void isActionNeededInfluence(){
-        this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
+        this.rule = new ProfessorRule("player1");
         assertFalse(this.rule.isActionNeeded());
     }
 }

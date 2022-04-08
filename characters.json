@@ -42,7 +42,7 @@
     "typeCharacter": "MOTHERNATURE",
     "cost": 1,
     "params": {
-      "extraMNmovement": 2
+      "extraMNMovement": 2
     }
   },
   {
@@ -51,7 +51,7 @@
     "typeCharacter": "ACTION",
     "cost": 2,
     "params": {
-      "typeAction": "ISLAND_INFLUENCE",
+      "typeAction": "BLOCK_ISLAND",
       "numThingsOnIt": 4
     }
   },
@@ -108,11 +108,21 @@
   {
     "id": 10,
     "desc": "Exchange between students at the Entrance and students in the Canteen",
-    "typeCharacter": "ACTION",
+    "typeCharacter": "MOVEMENT",
     "cost": 1,
     "params": {
       "typeAction": "EXCHANGESTUDENT",
-      "numThingsOnIt": 0
+      "locationType": "CARD_EXCHANGE",
+      "numThingsOnIt": 0,
+      "refill": false,
+      "allowedDepartures": [
+        "ENTRANCE",
+        "CANTEEN"
+      ],
+      "allowedArrivals": [
+        "CANTEEN",
+        "ENTRANCE"
+      ]
     }
   },
   {
