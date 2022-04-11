@@ -202,17 +202,17 @@ public class GameHandler {
         return newOrder;
     }
 
-    private boolean checkMovementLocations(Message m){
+    private boolean checkMovementLocations(Message m) {
         try {
             Set<Location> allowedLocations = this.translator.getAllowedDepartures();
-            if(!allowedLocations.contains(m.getDepartureType()))
+            if (!allowedLocations.contains(m.getDepartureType()))
                 return false;
 
             allowedLocations = this.translator.getAllowedArrivals();
-            if(!(allowedLocations.contains(m.getArrivalType())))
+            if (!(allowedLocations.contains(m.getArrivalType())))
                 return false;
 
-            if(m.getArrivalType() == m.getDepartureType())
+            if (m.getArrivalType() == m.getDepartureType())
                 return false;
 
         } catch (Exception e) {
@@ -220,7 +220,7 @@ public class GameHandler {
         }
 
         return true;
-
+    }
 
     public Game getGame(){
         return translator.getGame();

@@ -105,7 +105,7 @@ public class GameHandler2 {
     }
 
 
-    public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, IllegalActionException {
+    public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException {
         if(isLegitPlayer(message.getSender())==false) throw new NotYourTurnException();
         if(isLegitAction(message.getAction())==false) throw new IllegalActionException();
 

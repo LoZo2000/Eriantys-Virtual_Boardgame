@@ -245,25 +245,25 @@ class GameTest {
     }
 
     @RepeatedTest(100)
-    public void moveMotherNatureTest(){
+    public void moveMotherNatureTest() throws Exception{
         try {
             for(int i=1; i<8; i++)
                 game.moveStudent(i, game.getPlayer("player1").getDashboard().getCanteen(), game.getPlayer("player1").getDashboard().getEntrance());
-            game.moveMotherNature(game.getIsland(1));
-            game.moveMotherNature(game.getIsland(2));
-            game.moveMotherNature(game.getIsland(5));
-            game.moveMotherNature(game.getIsland(4));
-            game.moveMotherNature(game.getIsland(7));
-            game.moveMotherNature(game.getIsland(9));
-            game.moveMotherNature(game.getIsland(11));
+            game.moveMotherNature(game.getIsland(1), true);
+            game.moveMotherNature(game.getIsland(2), true);
+            game.moveMotherNature(game.getIsland(5), true);
+            game.moveMotherNature(game.getIsland(4), true);
+            game.moveMotherNature(game.getIsland(7), true);
+            game.moveMotherNature(game.getIsland(9), true);
+            game.moveMotherNature(game.getIsland(11), true);
             for(int i=8; i<13; i++)
                 game.moveStudent(i, game.getPlayer("player2").getDashboard().getCanteen(), game.getPlayer("player2").getDashboard().getEntrance());
             game.moveStudent(13, game.getIsland(7), game.getPlayer("player2").getDashboard().getEntrance());
             game.moveStudent(14, game.getPlayer("player2").getDashboard().getCanteen(), game.getPlayer("player2").getDashboard().getEntrance());
-            game.moveMotherNature(game.getIsland(1));
-            game.moveMotherNature(game.getIsland(7));
-            game.moveMotherNature(game.getIsland(9));
-            game.moveMotherNature(game.getIsland(11));
+            game.moveMotherNature(game.getIsland(1), true);
+            game.moveMotherNature(game.getIsland(7), true);
+            game.moveMotherNature(game.getIsland(9), true);
+            game.moveMotherNature(game.getIsland(11), true);
         }catch (Exception e){
             e.printStackTrace();
         }

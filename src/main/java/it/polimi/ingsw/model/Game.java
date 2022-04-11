@@ -307,36 +307,26 @@ public class Game implements Serializable {
 
     //MOVE FUNCTIONS
     //function move written in a view where the parameters are message received by a client (temporary)
-    public void moveStudent(int studentId, Movable arrival, Movable departure){
-        Student s;
-        try{
-            s = departure.removeStudent(studentId);
-            arrival.addStudent(s);
+    public void moveStudent(int studentId, Movable arrival, Movable departure) throws NoSuchStudentException{
+        Student s = departure.removeStudent(studentId);
+        arrival.addStudent(s);
 
-            this.updateProfessors();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        this.updateProfessors();
     }
 
-    public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure){
+    public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure) throws NoSuchStudentException{
         Student s1, s2;
-        try{
-            s1 = departure.removeStudent(studentId1);
-            s2 = arrival.removeStudent(studentId2);
+        s1 = departure.removeStudent(studentId1);
+        s2 = arrival.removeStudent(studentId2);
 
-            arrival.addStudent(s1);
-            departure.addStudent(s2);
+        arrival.addStudent(s1);
+        departure.addStudent(s2);
 
-            this.updateProfessors();
+        this.updateProfessors();
 
-            //TODO Reminder: Use this snippet at the end of each method that can be called when there is an active card
-            if(this.activeCard != -1){
-                this.activeCard = -1;
-                this.currentRule = new DefaultRule();
-            }
-        }catch(Exception e){
-            e.printStackTrace();
+        if(this.activeCard != -1){
+            this.activeCard = -1;
+            this.currentRule = new DefaultRule();
         }
     }
 

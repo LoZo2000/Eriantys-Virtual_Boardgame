@@ -20,15 +20,13 @@ public class HandTest {
         hand = new Hand();
     }
 
-
-
     //Checks 'getNumCard' and a correct extraction and if exception is triggered
     @Test
     public void getNumCardTest(){
         for(int i=0; i <10; i++){
             assertEquals(10-i, hand.getNumCards());
             try{
-                hand.playCard(0);
+                hand.playCard(i+1);
             }
             catch(Exception e){
                 fail();
@@ -47,7 +45,7 @@ public class HandTest {
     @Test
     public void playOverflowCard(){
         for(int i = 0; i < 10; i++){
-            assertThrows(OverflowCardException.class, () -> hand.playCard(hand.getNumCards()));
+            assertThrows(OverflowCardException.class, () -> hand.playCard(hand.getNumCards()+1));
             try {
                 hand.playCard(0);
             } catch (OverflowCardException e) {e.printStackTrace();}
@@ -62,7 +60,7 @@ public class HandTest {
         assertEquals(10, hand.getNumCards());
         try {
             Card c = hand.getAllCards().get(rand);
-            Card c2 = hand.playCard(rand);
+            Card c2 = hand.playCard(rand+1);
             assertEquals(c, c2);
             assertEquals(9, hand.getNumCards());
         }

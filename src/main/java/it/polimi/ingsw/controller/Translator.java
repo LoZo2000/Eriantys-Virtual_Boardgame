@@ -1,18 +1,12 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.exceptions.EndGameException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.messages.Message;
-import it.polimi.ingsw.controller.exceptions.EndGameException;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.characters.CharacterType;
 import it.polimi.ingsw.model.characters.MovementCharacter;
-import it.polimi.ingsw.model.exceptions.NoActiveCardException;
-import it.polimi.ingsw.model.exceptions.NoCharacterSelectedException;
-import it.polimi.ingsw.model.exceptions.IllegalMoveException;
-import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
-import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -155,18 +149,30 @@ public class Translator {
 
             case USEPOWER:
                 USEPOWERmessage um = (USEPOWERmessage) message;
-                Player p = this.game.getPlayer(um.getSender());
+                Player p = null;
+                try {
+                    p = this.game.getPlayer(um.getSender());
+                }catch (NoPlayerException ex){
+                    ex.printStackTrace();
+                }
                 return this.game.usePower(p, um.getCharacterCard());
 
             case EXCHANGESTUDENT:
                 //Movable departure, arrival;
                 EXCHANGESTUDENTmessage exchangeMessage = (EXCHANGESTUDENTmessage) message;
+                p = null;
+                try {
+                    p = this.game.getPlayer(exchangeMessage.getSender());
+                }catch (NoPlayerException ex){
+                    ex.printStackTrace();
+                    return false;
+                }
                 switch(exchangeMessage.getDepartureType()){
                     case ENTRANCE:
-                        departure = game.getPlayer(exchangeMessage.getSender()).getDashboard().getEntrance();
+                        departure = p.getDashboard().getEntrance();
                         break;
                     case CANTEEN:
-                        departure = game.getPlayer(exchangeMessage.getSender()).getDashboard().getCanteen();
+                        departure = p.getDashboard().getCanteen();
                         break;
                     case CARD_EXCHANGE:
                         Character[] characters = this.game.getCharactersCards();
@@ -184,10 +190,10 @@ public class Translator {
                 }
                 switch(exchangeMessage.getArrivalType()){
                     case ENTRANCE:
-                        arrival = game.getPlayer(exchangeMessage.getSender()).getDashboard().getEntrance();
+                        arrival = p.getDashboard().getEntrance();
                         break;
                     case CANTEEN:
-                        arrival = game.getPlayer(exchangeMessage.getSender()).getDashboard().getCanteen();
+                        arrival = p.getDashboard().getCanteen();
                         break;
                     case CARD_EXCHANGE:
                         Character[] characters = this.game.getCharactersCards();
@@ -203,7 +209,11 @@ public class Translator {
                     default:
                         arrival = null;
                 }
-                game.exchangeStudent(exchangeMessage.getStudentId(), exchangeMessage.getStudentId2(), arrival, departure);
+                try {
+                    game.exchangeStudent(exchangeMessage.getStudentId(), exchangeMessage.getStudentId2(), arrival, departure);
+                } catch (NoSuchStudentException e) {
+                    e.printStackTrace();
+                }
                 return false;
 
             default:

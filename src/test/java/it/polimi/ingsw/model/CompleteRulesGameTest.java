@@ -4,13 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
-import it.polimi.ingsw.controller.exceptions.IllegalMoveException;
-import it.polimi.ingsw.controller.exceptions.NotYourTurnException;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
-import it.polimi.ingsw.model.exceptions.NoActiveCardException;
-import it.polimi.ingsw.model.exceptions.NoCharacterSelectedException;
-import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.rules.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -60,11 +56,7 @@ class CompleteRulesGameTest {
 
         Player player2 = new Player("player2", 2, ColorTower.WHITE, students2);
 
-        try {
-            this.game = new Game(true, 2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.game = new Game(true, 2);
 
         this.game.addPlayer(player1);
         this.game.addPlayer(player2);
@@ -77,14 +69,28 @@ class CompleteRulesGameTest {
         characters[0] = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
-        Player p1 = this.game.getPlayer("player1");
+        Player p1 = null;
+        try {
+            p1 = this.game.getPlayer("player1");
+        } catch (NoPlayerException e){
+            fail();
+        }
         Entrance e = p1.getDashboard().getEntrance();
         Canteen c = p1.getDashboard().getCanteen();
-        Island i = this.game.getIsland(3);
+        Island i = null;
+        try {
+            i = this.game.getIsland(3);
+        }catch (NoIslandException ex){
+            fail();
+        }
 
-        this.game.moveStudent(6, c, e);
-        this.game.moveStudent(2, i, e);
-        this.game.moveStudent(7, i, e);
+        try{
+            this.game.moveStudent(6, c, e);
+            this.game.moveStudent(2, i, e);
+            this.game.moveStudent(7, i, e);
+        }catch(NoSuchStudentException ex){
+            fail();
+        }
 
         try {
             this.game.moveMotherNature(i, true);
@@ -95,14 +101,25 @@ class CompleteRulesGameTest {
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());
 
-        Player p2 = this.game.getPlayer("player2");
+        Player p2 = null;
+        try{
+            p2 = this.game.getPlayer("player2");
+        } catch (NoPlayerException ex){
+            fail();
+        }
+
         e = p2.getDashboard().getEntrance();
         c = p2.getDashboard().getCanteen();
 
-        this.game.moveStudent(10, c, e);
-        this.game.moveStudent(11, i, e);
-        this.game.moveStudent(13, i, e);
-        this.game.moveStudent(16, i, e);
+        try{
+            this.game.moveStudent(10, c, e);
+            this.game.moveStudent(11, i, e);
+            this.game.moveStudent(13, i, e);
+            this.game.moveStudent(16, i, e);
+        } catch (NoSuchStudentException ex){
+            fail();
+        }
+
 
         try {
             this.game.moveMotherNature(i, true);
@@ -141,13 +158,27 @@ class CompleteRulesGameTest {
 
         //Objective: Merge 2 island and then the other player disables the towers to change the influence
 
-        Player p1 = this.game.getPlayer("player1");
+        Player p1 = null;
+        try {
+            p1 = this.game.getPlayer("player1");
+        } catch (NoPlayerException e){
+            fail();
+        }
         Entrance e = p1.getDashboard().getEntrance();
         Canteen c = p1.getDashboard().getCanteen();
-        Island i = this.game.getIsland(3);
+        Island i = null;
+        try {
+            i = this.game.getIsland(3);
+        }catch (NoIslandException ex){
+            fail();
+        }
 
-        this.game.moveStudent(6, c, e);
-        this.game.moveStudent(2, i, e);
+        try {
+            this.game.moveStudent(6, c, e);
+            this.game.moveStudent(2, i, e);
+        } catch (NoSuchStudentException ex){
+            fail();
+        }
 
         try {
             this.game.moveMotherNature(i, true);
@@ -155,8 +186,17 @@ class CompleteRulesGameTest {
             fail();
         }
 
-        i = this.game.getIsland(4);
-        this.game.moveStudent(7, i, e);
+        try{
+            i = this.game.getIsland(4);
+        }catch (NoIslandException ex){
+            fail();
+        }
+
+        try {
+            this.game.moveStudent(7, i, e);
+        } catch (NoSuchStudentException ex){
+            fail();
+        }
 
         try {
             this.game.moveMotherNature(i, true);
@@ -166,20 +206,33 @@ class CompleteRulesGameTest {
 
         //THE MERGED ISLAND HAS AN INFLUENCE OF 3 + 2 (Towers) + 2 Random Students
 
-        i = this.game.getIsland(3);
+        try {
+            i = this.game.getIsland(3);
+        } catch (NoIslandException ex){
+            fail();
+        }
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(2, i.getReport().getTowerNumbers());
 
-        Player p2 = this.game.getPlayer("player2");
+        Player p2 = null;
+        try{
+            p2 = this.game.getPlayer("player2");
+        } catch (NoPlayerException ex){
+            fail();
+        }
         e = p2.getDashboard().getEntrance();
         c = p2.getDashboard().getCanteen();
 
-        this.game.moveStudent(10, c, e);
-        this.game.moveStudent(11, i, e);
-        this.game.moveStudent(13, i, e);
-        this.game.moveStudent(9, i, e);
-        this.game.moveStudent(16, i, e);
-        this.game.moveStudent(15, i, e);
+        try {
+            this.game.moveStudent(10, c, e);
+            this.game.moveStudent(11, i, e);
+            this.game.moveStudent(13, i, e);
+            this.game.moveStudent(9, i, e);
+            this.game.moveStudent(16, i, e);
+            this.game.moveStudent(15, i, e);
+        } catch (NoSuchStudentException ex){
+            fail();
+        }
 
         try {
             this.game.moveMotherNature(i, true);
@@ -207,7 +260,7 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(100)
-    void updateProfessorsMoveToCanteen(){
+    void updateProfessorsMoveToCanteen() throws Exception{
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
         Canteen c = this.game.getPlayer("player1").getDashboard().getCanteen();
         this.game.moveStudent(2, c, e);
@@ -217,7 +270,7 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(100)
-    void updateProfessorsNotMoveToCanteen(){
+    void updateProfessorsNotMoveToCanteen() throws Exception{
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
         Island i = this.game.getIsland(0);
         this.game.moveStudent(2, i, e);
@@ -227,7 +280,7 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(100)
-    void updateProfessorsChangeOwnershipTieRule(){
+    void updateProfessorsChangeOwnershipTieRule() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(2, CharacterType.PROFESSOR, "Get the professor also if you have the same number of the others", 2, null, 0, null, false, null, null, false, 0, 0);
         characters[0] = new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost());
@@ -258,7 +311,7 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(100)
-    void useRulesDisableIsland() {
+    void useRulesDisableIsland() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
         //JSONParams params = new JSONParams(Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
@@ -338,7 +391,7 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(100)
-    void useRulesDisableIslandMerge2Tokens() {
+    void useRulesDisableIslandMerge2Tokens() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
         //JSONParams params = new JSONParams(Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
@@ -470,7 +523,7 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(100)
-    void usePowerBlockColor(){
+    void usePowerBlockColor() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(9, CharacterType.ACTION, "Block color", 3, Action.BLOCK_COLOR, 0, null, false, null, null, false, 0, 0);
         //JSONParams params = new JSONParams(Action.BLOCK_COLOR, 0, null, false, null, null, false, 0, 0);
@@ -531,7 +584,7 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(100)
-    void usePowerInfluenceIsland(){
+    void usePowerInfluenceIsland() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence w/o moving MN", 3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0);
         //JSONParams params = new JSONParams(Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0);
@@ -583,7 +636,7 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(100)
-    void usePowerPutBack(){
+    void usePowerPutBack() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(12, CharacterType.ACTION, "Put Back students", 3, Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
         //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
@@ -632,7 +685,7 @@ class CompleteRulesGameTest {
     }
 
     @Test
-    void motherNatureExtraMovement(){
+    void motherNatureExtraMovement() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(4, CharacterType.MOTHERNATURE, "Extra movement motherNature", 1, null, 0, null, false, null, null, false, 0, 2);
         //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
@@ -650,7 +703,7 @@ class CompleteRulesGameTest {
     }
 
     @Test
-    void exchangeStudent(){
+    void exchangeStudent() throws Exception{
         Character[] characters = new Character[1];
         Set<Location> allowedDepartures = Set.of(Location.ENTRANCE, Location.CARD_EXCHANGE);
         Set<Location> allowedArrivals = Set.of(Location.ENTRANCE, Location.CARD_EXCHANGE);
@@ -709,7 +762,7 @@ class CompleteRulesGameTest {
     }
 
     @Test
-    void checkRefillMovementCard(){
+    void checkRefillMovementCard() throws Exception{
         Character[] characters = new Character[1];
         Set<Location> allowedDepartures = Set.of(Location.CARD_ISLAND);
         Set<Location> allowedArrivals = Set.of(Location.ISLAND);
@@ -742,7 +795,7 @@ class CompleteRulesGameTest {
     }
 
     @Test
-    void checkRefillNoMovementCard(){
+    void checkRefillNoMovementCard() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(12, CharacterType.ACTION, "Put Back students", 3, Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
         //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
