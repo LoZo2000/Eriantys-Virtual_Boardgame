@@ -243,4 +243,9 @@ class DefaultRuleTest {
     void isActionNeededDefault(){
         assertFalse(this.rule.isActionNeeded());
     }
+
+    @Test
+    void getMotherNatureExtraMovement(){
+        assertEquals(0, this.rule.getMotherNatureExtraMovement());
+    }
 }

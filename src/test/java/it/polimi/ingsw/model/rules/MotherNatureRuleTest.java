@@ -11,9 +11,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProfessorRuleTest {
+class MotherNatureRuleTest {
 
-    private ProfessorRule rule;
+    private MotherNatureRule rule;
     private Report rep;
     private Map<Color, ColorTower> professors;
 
@@ -22,7 +22,7 @@ class ProfessorRuleTest {
         HashMap<Color, Integer> students = new HashMap<>();
         students.put(Color.BLUE, 4);
         students.put(Color.RED, 1);
-        students.put(Color.YELLOW, 0);
+        students.put(Color.YELLOW, 4);
         students.put(Color.PINK, 1);
         students.put(Color.GREEN, 3);
 
@@ -36,30 +36,18 @@ class ProfessorRuleTest {
         this.rep = new Report(ColorTower.BLACK, 2, students, null, 0);
         //BLACK: 4 + 2 (Towers)
         //WHITE: 5
+
+        this.rule = new MotherNatureRule(2);
     }
 
     @Test
-    void calculateInfluenceTowersDisabled() {
-        this.rule = new ProfessorRule("player1");
-
+    void calculateInfluence() {
         ColorTower winner = this.rule.calculateInfluence(this.rep, this.professors);
-
-        assertEquals(ColorTower.BLACK, winner);
-    }
-
-    @Test
-    void calculateInfluenceExtraPoints() {
-        this.rule = new ProfessorRule("player1");
-
-        ColorTower winner = this.rule.calculateInfluence(this.rep, this.professors);
-
         assertEquals(ColorTower.BLACK, winner);
     }
 
     @Test
     void updateProfessor2Players(){
-        this.rule = new ProfessorRule("player1");
-
         String owner = "player1";
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 3);
@@ -72,7 +60,6 @@ class ProfessorRuleTest {
 
     @Test
     void updateProfessor2PlayersTie(){
-        this.rule = new ProfessorRule("player2");
         String owner = "player1";
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 6);
@@ -80,13 +67,11 @@ class ProfessorRuleTest {
 
         String winner = this.rule.updateProfessor(owner, counterPerColor);
 
-        assertEquals("player2", winner);
+        assertEquals("player1", winner);
     }
 
     @Test
     void updateProfessor3PlayersTie(){
-        this.rule = new ProfessorRule("player3");
-
         String owner = "player1";
         HashMap<String, Integer> counterPerColor = new HashMap<>();
         counterPerColor.put("player1", 6);
@@ -95,44 +80,16 @@ class ProfessorRuleTest {
 
         String winner = this.rule.updateProfessor(owner, counterPerColor);
 
-        assertEquals("player3", winner);
-    }
-
-    @Test
-    void updateProfessor3PlayersTieButNoChange(){
-        this.rule = new ProfessorRule("player1");
-        HashMap<String, Integer> counterPerColor = new HashMap<>();
-        counterPerColor.put("player1", 5);
-        counterPerColor.put("player2", 6);
-        counterPerColor.put("player3", 5);
-
-        String winner = this.rule.updateProfessor("player2", counterPerColor);
-
-        assertEquals("player2", winner);
-    }
-
-    @Test
-    void updateProfessor3PlayersNoOwnerTie(){
-        this.rule = new ProfessorRule("player1");
-        HashMap<String, Integer> counterPerColor = new HashMap<>();
-        counterPerColor.put("player1", 0);
-        counterPerColor.put("player2", 0);
-        counterPerColor.put("player3", 0);
-
-        String winner = this.rule.updateProfessor(null, counterPerColor);
-
         assertEquals("player1", winner);
     }
 
     @Test
     void isActionNeededInfluence(){
-        this.rule = new ProfessorRule("player1");
         assertFalse(this.rule.isActionNeeded());
     }
 
     @Test
     void getMotherNatureExtraMovement(){
-        this.rule = new ProfessorRule("player1");
-        assertEquals(0, this.rule.getMotherNatureExtraMovement());
+        assertEquals(2, this.rule.getMotherNatureExtraMovement());
     }
 }

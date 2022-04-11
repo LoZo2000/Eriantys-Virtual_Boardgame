@@ -3,15 +3,15 @@ package it.polimi.ingsw.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.controller.exceptions.IllegalMoveException;
+import it.polimi.ingsw.controller.exceptions.NotYourTurnException;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 import it.polimi.ingsw.model.exceptions.NoCharacterSelectedException;
 import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
-import it.polimi.ingsw.model.rules.ActionRule;
-import it.polimi.ingsw.model.rules.DefaultRule;
-import it.polimi.ingsw.model.rules.InfluenceRule;
-import it.polimi.ingsw.model.rules.Rule;
+import it.polimi.ingsw.model.rules.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -19,10 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,11 +70,11 @@ class CompleteRulesGameTest {
         this.game.addPlayer(player2);
     }
 
-    @Test
+    @RepeatedTest(100)
     void useRulesExtraPoints() {
         Character[] characters = new Character[1];
-        JSONParams params = new JSONParams(null, 0, null, false, null, null, false, 2, 0);
-        characters[0] = new InfluenceCharacter(8, CharacterType.INFLUENCE, "Influence + 2", 2, params);
+        JSONCharacter jc = new JSONCharacter(8, CharacterType.INFLUENCE, "Influence + 2", 2, null, 0, null, false, null, null, false, 2, 0);
+        characters[0] = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
         Player p1 = this.game.getPlayer("player1");
@@ -105,6 +102,7 @@ class CompleteRulesGameTest {
         this.game.moveStudent(10, c, e);
         this.game.moveStudent(11, i, e);
         this.game.moveStudent(13, i, e);
+        this.game.moveStudent(16, i, e);
 
         try {
             this.game.moveMotherNature(i, true);
@@ -112,7 +110,6 @@ class CompleteRulesGameTest {
             fail();
         }
 
-        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());
 
         try {
@@ -134,11 +131,12 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
-    @Test
+    @RepeatedTest(100)
     void useRulesDisableTower() {
         Character[] characters = new Character[1];
-        JSONParams params = new JSONParams(null, 0, null, false, null, null, true, 0, 0);
-        characters[0] = new InfluenceCharacter(6, CharacterType.INFLUENCE, "Influence No Towers", 3, params);
+        JSONCharacter jc = new JSONCharacter(6, CharacterType.INFLUENCE, "Influence No Towers", 3, null, 0, null, false, null, null, true, 0, 0);
+        //JSONParams params = new JSONParams(null, 0, null, false, null, null, true, 0, 0);
+        characters[0] = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
         //Objective: Merge 2 island and then the other player disables the towers to change the influence
@@ -208,7 +206,7 @@ class CompleteRulesGameTest {
         assertEquals(2, i.getReport().getTowerNumbers());
     }
 
-    @Test
+    @RepeatedTest(100)
     void updateProfessorsMoveToCanteen(){
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
         Canteen c = this.game.getPlayer("player1").getDashboard().getCanteen();
@@ -218,7 +216,7 @@ class CompleteRulesGameTest {
         assertEquals(this.game.getPlayer("player1"), professors.get(Color.BLUE));
     }
 
-    @Test
+    @RepeatedTest(100)
     void updateProfessorsNotMoveToCanteen(){
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
         Island i = this.game.getIsland(0);
@@ -228,10 +226,11 @@ class CompleteRulesGameTest {
         assertNull(professors.get(Color.BLUE));
     }
 
-    @Test
+    @RepeatedTest(100)
     void updateProfessorsChangeOwnershipTieRule(){
         Character[] characters = new Character[1];
-        characters[0] = new ProfessorCharacter(2, CharacterType.PROFESSOR, "Get the professor also if you have the same number of the others", 2);
+        JSONCharacter jc = new JSONCharacter(2, CharacterType.PROFESSOR, "Get the professor also if you have the same number of the others", 2, null, 0, null, false, null, null, false, 0, 0);
+        characters[0] = new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost());
         this.game.setCharactersCards(characters);
 
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
@@ -258,11 +257,12 @@ class CompleteRulesGameTest {
         assertEquals(this.game.getPlayer("player2"), professors.get(Color.BLUE));
     }
 
-    @Test
+    @RepeatedTest(100)
     void useRulesDisableIsland() {
         Character[] characters = new Character[1];
-        JSONParams params = new JSONParams(Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(5, CharacterType.ACTION, "Block island", 2, params);
+        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
+        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
         Player p1 = this.game.getPlayer("player1");
@@ -337,11 +337,12 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
-    @Test
+    @RepeatedTest(100)
     void useRulesDisableIslandMerge2Tokens() {
         Character[] characters = new Character[1];
-        JSONParams params = new JSONParams(Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(5, CharacterType.ACTION, "Block island", 2, params);
+        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
+        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
         Player p1 = this.game.getPlayer("player1");
@@ -436,6 +437,7 @@ class CompleteRulesGameTest {
         this.game.moveStudent(20, i, e);
         this.game.moveStudent(21, i, e);
         this.game.moveStudent(22, i, e);
+        this.game.moveStudent(5, i, e);
 
         //Merge of island 3, 4, 5 (3 and 5 are blocked)
         try {
@@ -467,11 +469,12 @@ class CompleteRulesGameTest {
         assertEquals(4, ac.getNumTokens());
     }
 
-    @Test
+    @RepeatedTest(100)
     void usePowerBlockColor(){
         Character[] characters = new Character[1];
-        JSONParams params = new JSONParams(Action.BLOCK_COLOR, 0, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(9, CharacterType.ACTION, "Block color", 3, params);
+        JSONCharacter jc = new JSONCharacter(9, CharacterType.ACTION, "Block color", 3, Action.BLOCK_COLOR, 0, null, false, null, null, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.BLOCK_COLOR, 0, null, false, null, null, false, 0, 0);
+        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
         Player p1 = this.game.getPlayer("player1");
@@ -527,11 +530,12 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
-    @Test
+    @RepeatedTest(100)
     void usePowerInfluenceIsland(){
         Character[] characters = new Character[1];
-        JSONParams params = new JSONParams(Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(3, CharacterType.ACTION, "Calculate influence w/o moving MN", 3, params);
+        JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence w/o moving MN", 3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0);
+        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
         Player p1 = this.game.getPlayer("player1");
@@ -578,11 +582,12 @@ class CompleteRulesGameTest {
         assertEquals(i, game.getMotherNaturePosition());
     }
 
-    @Test
+    @RepeatedTest(100)
     void usePowerPutBack(){
         Character[] characters = new Character[1];
-        JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(12, CharacterType.ACTION, "Put Back students", 3, params);
+        JSONCharacter jc = new JSONCharacter(12, CharacterType.ACTION, "Put Back students", 3, Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
+        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
         Player p1 = this.game.getPlayer("player1");
@@ -625,4 +630,139 @@ class CompleteRulesGameTest {
         assertEquals(1, c1.getNumberStudentColor(Color.BLUE));
         assertEquals(0, c2.getNumberStudentColor(Color.BLUE));
     }
+
+    @Test
+    void motherNatureExtraMovement(){
+        Character[] characters = new Character[1];
+        JSONCharacter jc = new JSONCharacter(4, CharacterType.MOTHERNATURE, "Extra movement motherNature", 1, null, 0, null, false, null, null, false, 0, 2);
+        //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
+        characters[0] = new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        this.game.setCharactersCards(characters);
+
+        Player p1 = this.game.getPlayer("player1");
+        try {
+            this.game.usePower(p1, 0);
+        } catch (NoCharacterSelectedException ex) {
+            fail();
+        }
+
+        assertEquals(2, this.game.getMotherNatureExtraMovement());
+    }
+
+    @Test
+    void exchangeStudent(){
+        Character[] characters = new Character[1];
+        Set<Location> allowedDepartures = Set.of(Location.ENTRANCE, Location.CARD_EXCHANGE);
+        Set<Location> allowedArrivals = Set.of(Location.ENTRANCE, Location.CARD_EXCHANGE);
+
+        ArrayList<Student> students = new ArrayList<>();
+        students.add(new Student(31, Color.RED));
+        students.add(new Student(32, Color.BLUE));
+        students.add(new Student(33, Color.GREEN));
+        students.add(new Student(34, Color.PINK));
+        students.add(new Student(35, Color.BLUE));
+        students.add(new Student(36, Color.BLUE));
+
+        JSONCharacter jc = new JSONCharacter(7, CharacterType.MOVEMENT, "Exchange student between entrance and card", 1, Action.EXCHANGESTUDENT, 6, Location.CARD_EXCHANGE, false, allowedDepartures, allowedArrivals, false, 0, 0);
+        characters[0] = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
+        this.game.setCharactersCards(characters);
+
+        Player p1 = this.game.getPlayer("player1");
+        Entrance e1 = p1.getDashboard().getEntrance();
+        try {
+            this.game.usePower(p1, 0);
+        } catch (NoCharacterSelectedException ex) {
+            fail();
+        }
+
+        Action requestedActiveAction = null;
+        Set<Location> departures = null;
+        Set<Location> arrivals = null;
+        try {
+            requestedActiveAction = this.game.getRequestedAction();
+            departures = this.game.getAllowedDepartures();
+            arrivals = this.game.getAllowedArrivals();
+        } catch (NoActiveCardException e) {
+            fail();
+        }
+
+        if(requestedActiveAction != Action.EXCHANGESTUDENT)
+            fail();
+
+        if(!departures.contains(Location.ENTRANCE)){
+            fail();
+        }
+
+        if(!arrivals.contains(Location.CARD_EXCHANGE)){
+            fail();
+        }
+
+        MovementCharacter mc = (MovementCharacter) this.game.getCharactersCards()[this.game.getActiveCard()];
+
+        this.game.exchangeStudent(17, 32, mc, e1);
+
+        ArrayList<Student> studentCard = mc.getStudents();
+        ArrayList<Student> studentEntrance = e1.getAllStudents();
+
+        assertTrue(studentCard.contains(new Student(17, Color.BLUE)));
+        assertTrue(studentEntrance.contains(new Student(32, Color.BLUE)));
+    }
+
+    @Test
+    void checkRefillMovementCard(){
+        Character[] characters = new Character[1];
+        Set<Location> allowedDepartures = Set.of(Location.CARD_ISLAND);
+        Set<Location> allowedArrivals = Set.of(Location.ISLAND);
+
+        ArrayList<Student> students = new ArrayList<>();
+        students.add(new Student(31, Color.RED));
+        students.add(new Student(32, Color.BLUE));
+        students.add(new Student(33, Color.GREEN));
+        students.add(new Student(34, Color.PINK));
+
+        JSONCharacter jc = new JSONCharacter(1, CharacterType.MOVEMENT, "Move from card to island", 1, Action.MOVESTUDENT, 4, Location.CARD_ISLAND, true, allowedDepartures, allowedArrivals, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
+        characters[0] = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
+        this.game.setCharactersCards(characters);
+
+        assertThrows(NoActiveCardException.class, () -> this.game.needsRefill());
+
+        Player p1 = this.game.getPlayer("player1");
+        try {
+            this.game.usePower(p1, 0);
+        } catch (NoCharacterSelectedException ex) {
+            fail();
+        }
+
+        try {
+            assertTrue(this.game.needsRefill());
+        } catch (NoActiveCardException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void checkRefillNoMovementCard(){
+        Character[] characters = new Character[1];
+        JSONCharacter jc = new JSONCharacter(12, CharacterType.ACTION, "Put Back students", 3, Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
+        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        this.game.setCharactersCards(characters);
+
+        assertThrows(NoActiveCardException.class, () -> this.game.needsRefill());
+
+        Player p1 = this.game.getPlayer("player1");
+        try {
+            this.game.usePower(p1, 0);
+        } catch (NoCharacterSelectedException ex) {
+            fail();
+        }
+
+        try {
+            assertFalse(this.game.needsRefill());
+        } catch (NoActiveCardException e) {
+            fail();
+        }
+    }
+
 }

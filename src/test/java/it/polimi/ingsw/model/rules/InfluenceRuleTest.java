@@ -140,4 +140,10 @@ class InfluenceRuleTest {
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
         assertFalse(this.rule.isActionNeeded());
     }
+
+    @Test
+    void getMotherNatureExtraMovement(){
+        this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
+        assertEquals(0, this.rule.getMotherNatureExtraMovement());
+    }
 }

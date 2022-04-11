@@ -178,6 +178,11 @@ public class Game {
             ActionCharacter ac = (ActionCharacter) this.charactersCards[this.activeCard];
             if(ac.getType() != Action.ISLAND_INFLUENCE)
                 throw new NoActiveCardException("You can't calculate the influence of an island with this power");
+
+            if(this.activeCard != -1){
+                this.activeCard = -1;
+                this.currentRule = new DefaultRule();
+            }
         }
         Report report = island.getReport();
 
@@ -435,6 +440,9 @@ public class Game {
         Character c = this.charactersCards[card];
         this.currentRule = c.usePower(activePlayer);
 
+        //Case professor character
+        this.updateProfessors();
+
         if(this.currentRule.isActionNeeded()){
             this.activeCard = card;
         }
@@ -446,7 +454,7 @@ public class Game {
     public Action getRequestedAction() throws NoActiveCardException{
         if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
 
-        MovementCharacter c1 = (MovementCharacter) this.charactersCards[activeCard];
+        ActionCharacter c1 = (ActionCharacter) this.charactersCards[activeCard];
 
         return c1.getType();
     }
@@ -492,7 +500,6 @@ public class Game {
             throw new NoActiveCardException("You can't block a color with this power");
 
         this.currentRule = new InfluenceRule(player.getColor(), c, 0, false);
-
     }
 
     private void addProhibitionToken(Island island){
@@ -534,6 +541,28 @@ public class Game {
                 this.bag.putBackStudent(s);
             }
         }
+
+        if(this.activeCard != -1){
+            this.activeCard = -1;
+            this.currentRule = new DefaultRule();
+        }
+    }
+
+    public int getMotherNatureExtraMovement(){
+        return this.currentRule.getMotherNatureExtraMovement();
+    }
+
+    public boolean needsRefill() throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        MovementCharacter mc = null;
+        try{
+            mc = (MovementCharacter) this.charactersCards[activeCard];
+        } catch(ClassCastException ex){
+            return false;
+        }
+
+        return mc.isRefill();
     }
 
     //--------------------------------------------------------------------------------------------
@@ -553,69 +582,4 @@ public class Game {
 
         return students;
     }
-
-    /*public void showMe(){
-        System.out.println("");
-        System.out.println("");
-        System.out.println("CURRENT BOARD:");
-        LinkedList<Island> islands = getAllIslands();
-        for(Island i : islands){
-            String owner = "nobody";
-            if(i.getOwner() != null) owner = String.valueOf(i.getOwner());
-
-            System.out.print("Island "+i+", Owner "+owner+", Students: ");
-            ArrayList<Student> students = i.getAllStudents();
-            for(Student s : students) System.out.print(s+" ");
-            if(getMotherNaturePosition().equals(i)) System.out.print("MN");
-            System.out.print("\n");
-        }
-        Map<Color, Player> professors = getProfessors();
-        System.out.print("PROFESSORS: ");
-        for(Color co : Color.values()) System.out.print(co+": "+professors.get(co)+", ");
-        ArrayList<Player> players = getAllPlayers();
-        System.out.print("\nCLOUDS:\n");
-        for(int i=0; i<getNumberOfClouds(); i++){
-            System.out.print("Cloud "+i+": ");
-            for(Color co : Color.values()) System.out.print(co+"="+getNumberOfStudentPerColorOnCloud(i,co)+", ");
-            System.out.print("\n");
-        }
-        for(Player p : players){
-            System.out.println("\nDASHBOARD of "+p+":");
-            System.out.print("CARDS: ");
-            ArrayList<Card> cards = p.getHand().getAllCards();
-            for(Card ca : cards) System.out.print(ca+" ");
-            System.out.print("\nEntrance: ");
-            ArrayList<Student> students = p.getDashboard().getEntrance().getAllStudents();
-            for(Student s : students) System.out.print(s+" ");
-            System.out.print("\nCanteen: ");
-            for(Color col : Color.values()){
-                System.out.print(col+": "+p.getDashboard().getCanteen().getNumberStudentColor(col)+" ");
-            }
-            System.out.println("");
-        }
-
-        Character[] characters = this.getCharactersCards();
-        System.out.println("\nCARDS: \n");
-        for(Character c : characters){
-            System.out.println(c.toString());
-        }
-
-        System.out.println();
-        if(this.getActiveCard() == -1){
-            System.out.println("\u001B[31mNo active card\u001B[0m");
-        } else{
-            System.out.println("\u001B[34mThe active card is "+this.getActiveCard()+"\u001B[0m");
-            try {
-                System.out.println("\u001B[34mThe nextAction is "+this.getRequestedAction()+"\u001B[0m");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        //TODO DEBUG
-        System.out.println();
-        System.out.println(getCurrentRule().toString());
-
-        System.out.println("\n\n");
-    }*/
 }

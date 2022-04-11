@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.characters;
 
-import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.rules.ActionRule;
@@ -10,34 +10,22 @@ import it.polimi.ingsw.model.rules.Rule;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class MovementCharacter extends Character implements Movable {
-    private final Action type;
+public class MovementCharacter extends ActionCharacter implements Movable {
     private final Location locationType;
-    private final int numStudents;
     private final boolean refill;
     private ArrayList<Student> students;
     private final Set<Location> allowedDepartures;
     private final Set<Location> allowedArrivals;
 
     public MovementCharacter(int id, CharacterType type, String desc, int cost, ArrayList<Student> students, JSONParams params){
-        super(id, type, desc, cost);
+        super(id, type, desc, cost, params);
 
-        this.numStudents = params.getNumThingOnIt();
-        this.type = params.getTypeAction();
         this.locationType = params.getLocationType();
         this.refill = params.getRefill();
         this.students = new ArrayList<>(students);
 
         this.allowedDepartures = params.getAllowedDepartures();
         this.allowedArrivals = params.getAllowedArrivals();
-    }
-
-    public Action getType() {
-        return type;
-    }
-
-    public int getNumStudents() {
-        return numStudents;
     }
 
     public boolean isRefill() {
@@ -87,11 +75,20 @@ public class MovementCharacter extends Character implements Movable {
     @Override
     public String toString(){
         String s = super.toString();
-        s += "\u001B[1mActionType:\u001B[0m " + this.type + " - \u001B[1mNumStudents:\u001B[0m " + this.numStudents + "\n";
         s += "\u001B[1mLocation Type:\u001B[0m " + this.locationType + " - \u001B[1mNeeds Refill?\u001B[0m " + this.refill + "\n";
         s += "\u001B[1mAllowed Departures:\u001B[0m " + this.allowedDepartures.toString() + "\n";
         s += "\u001B[1mAllowed Arrivals:\u001B[0m " + this.allowedArrivals.toString() + "\n";
         s += "\u001B[1mStudents:\u001B[0m " + this.students.toString() + "\n";
         return s;
+    }
+
+    @Override
+    public void removeToken() throws NoMoreTokensException {
+        throw new NoMoreTokensException("You can't remove students without movement");
+    }
+
+    @Override
+    public void addToken() throws NoMoreTokensException {
+        throw new NoMoreTokensException("You can't add students without movement");
     }
 }
