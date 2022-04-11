@@ -32,7 +32,7 @@ public class Student implements Serializable {
             case YELLOW -> c = "\u001B[33m";
             case RED -> c = "\u001B[31m";
             case GREEN -> c = "\u001B[32m";
-            case PINK -> c = "\u001B[36m";
+            case PINK -> c = "\u001B[35m";
         }
         return c+String.valueOf(id)+"\u001B[0m";
     }

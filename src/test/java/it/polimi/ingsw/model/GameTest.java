@@ -1,10 +1,12 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.security.cert.CertificateParsingException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -69,7 +71,11 @@ class GameTest {
             fail();
         }
 
-        this.game.moveMotherNature(i);
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());
@@ -85,7 +91,11 @@ class GameTest {
             fail();
         }
 
-        this.game.moveMotherNature(i);
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
 
         assertEquals(11, this.game.getAllIslands().size());
     }

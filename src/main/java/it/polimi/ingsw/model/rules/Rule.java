@@ -1,4 +1,8 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.rules;
+
+import it.polimi.ingsw.model.Color;
+import it.polimi.ingsw.model.ColorTower;
+import it.polimi.ingsw.model.Report;
 
 import java.util.Map;
 
@@ -11,7 +15,7 @@ public interface Rule {
      * @return Returns the Color of the tower (So the color of the team) that has the highest influence on the island.
      * The returned value can be null if there isn't any player that has the professors of the students on the island.
      */
-    public ColorTower calculateInfluence(Report report, Map<Color, ColorTower> professors);
+    ColorTower calculateInfluence(Report report, Map<Color, ColorTower> professors);
 
     /**
      * This method is used to check if there is a player that has a higher number of students in the canteen.
@@ -22,5 +26,9 @@ public interface Rule {
      *                        color in the canteen of that player.
      * @return Nickname of the player that now has the professor.
      */
-    public String updateProfessor(String nameOwner, Map<String, Integer> canteenStudents);
+    String updateProfessor(String nameOwner, Map<String, Integer> canteenStudents);
+
+    boolean isActionNeeded();
+
+    int getMotherNatureExtraMovement();
 }

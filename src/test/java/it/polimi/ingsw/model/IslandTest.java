@@ -19,9 +19,8 @@ public class IslandTest {
     @Test
     public void getterTest(){
         assertEquals(0, island.getId());
-        assertEquals(0, island.getReport().getTowerNumbers());
+        assertEquals(1, island.getReport().getTowerNumbers());
         assertEquals(0, island.getAllStudents().size());
-        assertEquals(0, island.getReport().getTowerNumbers());
         assertNull(island.getReport().getOwner());
         island.conquest(ColorTower.BLACK);
         assertEquals(ColorTower.BLACK, island.getOwner());

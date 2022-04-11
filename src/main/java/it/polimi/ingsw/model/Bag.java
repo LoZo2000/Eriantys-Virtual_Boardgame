@@ -33,6 +33,11 @@ public class Bag implements Serializable {
         return s;
     }
 
+    public void putBackStudent(Student s){
+        this.students.add(s);
+        Collections.shuffle(this.students);
+    }
+
     public int getStudentsNum(){
         return students.size();
     }

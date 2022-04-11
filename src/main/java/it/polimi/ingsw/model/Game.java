@@ -1,13 +1,22 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.model.characters.*;
+import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.rules.DefaultRule;
+import it.polimi.ingsw.model.rules.InfluenceRule;
+import it.polimi.ingsw.model.rules.Rule;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.*;
 
 public class Game implements Serializable {
     private MotherNature motherNature;
@@ -17,13 +26,16 @@ public class Game implements Serializable {
     private ArrayList<Player> players = new ArrayList<>();
     private Card[] playedCards;
     private Bag bag;
-    private Character[] CharactersCards;
     private Map<Color, Player> professors;
     private Rule currentRule;
     private final int numPlayers;
     private boolean completeRules;
     private int lastPlayed;
 
+    private int activeCard;
+    private Character[] charactersCards;
+
+    private final String JSON_PATH = "characters.json";
     private String currentPlayer = null;
     private Action curretAction = null;
 
@@ -51,6 +63,20 @@ public class Game implements Serializable {
 
         for(Color c: Color.values()){
             this.professors.put(c, null);
+        }
+
+        if(this.completeRules){
+            this.activeCard = -1;
+            try {
+                this.charactersCards = initCardsFromJSON();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            //Arrays.stream(charactersCards).map(Character::toString)
+            //        .forEach(System.out::println);
+        } else{
+            this.activeCard = -1;
+            this.charactersCards = null;
         }
     }
 
@@ -109,15 +135,7 @@ public class Game implements Serializable {
 
     public void addPlayer(String nickname, ColorTower color){
         int numberOfStudents = this.numPlayers != 3 ? 7 : 9;
-        ArrayList<Student> entranceStudents = new ArrayList<>();
-        for(int i= 0; i<numberOfStudents; i++){
-            try {
-                Student s = this.bag.getRandomStudent();
-                entranceStudents.add(s);
-            } catch (NoMoreStudentsException e) {
-                e.printStackTrace();
-            }
-        }
+        ArrayList<Student> entranceStudents = extractFromBag(numberOfStudents);
 
         Player newPlayer = new Player(nickname, numPlayers, color, entranceStudents);
 
@@ -140,7 +158,6 @@ public class Game implements Serializable {
         return motherNature.getPosition();
     }
 
-    //TODO: new Exception added!!!!!
     public Island getIsland(int id) throws NoIslandException{
         for(Island i : islands){
             if(i.getId() == id) return i;
@@ -148,7 +165,6 @@ public class Game implements Serializable {
         throw new NoIslandException();
     }
 
-    //TODO: new Exception added!!!!!
     public Player getPlayer(String nickName) throws NoPlayerException{
         for(Player p : players){
             if(p.getNickname().equals(nickName)) return p;
@@ -160,50 +176,78 @@ public class Game implements Serializable {
         return (ArrayList<Player>) players.clone();
     }
 
-    public void moveMotherNature(Island island){
-        motherNature.movement(island);
+    //When parameter enableMovement is true the method has the regular behaviour.
+    //If enableMovement is false, it will be checked if there's an active card.
+    //If not an Exception will be raised
+    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException{
+        if(enableMovement)
+            motherNature.movement(island);
+        else{
+            if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+            ActionCharacter ac = (ActionCharacter) this.charactersCards[this.activeCard];
+            if(ac.getType() != Action.ISLAND_INFLUENCE)
+                throw new NoActiveCardException("You can't calculate the influence of an island with this power");
+
+            if(this.activeCard != -1){
+                this.activeCard = -1;
+                this.currentRule = new DefaultRule();
+            }
+        }
         Report report = island.getReport();
 
-        ColorTower higherInfluence = influence(report);
+        if(!island.getProhibition()) {
+            ColorTower higherInfluence = influence(report);
 
-        if(higherInfluence != report.getOwner()){
-            island.conquest(higherInfluence);
-            //TODO Necessario passare per Team
-            for(Player p: this.players){
-                if(p.getColor() == report.getOwner()){
-                    p.getDashboard().addTowers(report.getTowerNumbers());
+            if (higherInfluence != report.getOwner()) {
+                island.conquest(higherInfluence);
+                //TODO Necesario passare per Team
+                for (Player p : this.players) {
+                    if (p.getColor() == report.getOwner()) {
+                        p.getDashboard().addTowers(report.getTowerNumbers());
+                    }
+                    if (p.getColor() == higherInfluence) {
+                        p.getDashboard().removeTowers(report.getTowerNumbers());
+                    }
                 }
-                if(p.getColor() == higherInfluence){
-                    p.getDashboard().removeTowers(report.getTowerNumbers());
+
+                int islandNumber = this.islands.indexOf(island);
+                int previousPosition = (islandNumber - 1) % this.islands.size();
+                if (previousPosition < 0) previousPosition += this.islands.size();
+
+                if (this.islands.get(previousPosition).getOwner() == island.getOwner()) {
+                    try {
+                        //Only one Token on the merged island
+                        if(this.islands.get(previousPosition).getProhibition() && island.getProhibition()){
+                            addProhibitionToken(island);
+                        }
+                        island = mergeIsland(this.islands.get(previousPosition), island);
+                    } catch (NoContiguousIslandException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                islandNumber = this.islands.indexOf(island);
+                int successivePosition = (islandNumber + 1) % this.islands.size();
+
+                if (this.islands.get(successivePosition).getOwner() == island.getOwner()) {
+                    try {
+                        //Only one Token on the merged island
+                        if(this.islands.get(successivePosition).getProhibition() && island.getProhibition()){
+                            addProhibitionToken(island);
+                        }
+                        island = mergeIsland(island, this.islands.get(successivePosition));
+                    } catch (NoContiguousIslandException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
-            int islandNumber = this.islands.indexOf(island);
-            int previousPosition = (islandNumber - 1) % this.islands.size();
-            if(previousPosition<0) previousPosition += this.islands.size();
-
-            if(this.islands.get(previousPosition).getOwner() == island.getOwner()){
-                try {
-                    mergeIsland(this.islands.get(previousPosition), island);
-                } catch (NoContiguousIslandException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            islandNumber = this.islands.indexOf(island);
-            int successivePosition = (islandNumber + 1) % this.islands.size();
-
-            if(this.islands.get(successivePosition).getOwner() == island.getOwner()){
-                try {
-                    mergeIsland(island, this.islands.get(successivePosition));
-                } catch (NoContiguousIslandException e) {
-                    e.printStackTrace();
-                }
-            }
+        } else{
+            addProhibitionToken(island);
         }
     }
 
-    public void mergeIsland(Island i1, Island i2) throws NoContiguousIslandException {
+    public Island mergeIsland(Island i1, Island i2) throws NoContiguousIslandException {
         int indx1=islands.indexOf(i1);
         int indx2=islands.indexOf(i2);
         if(indx1-indx2==1 || indx1-indx2==-1 || (indx1==0 && indx2== islands.size()-1) || (indx1== islands.size()-1 && indx2==0)){
@@ -212,18 +256,9 @@ public class Game implements Serializable {
             islands.remove(i2);
             islands.add(indx1, temp);
             motherNature.movement(temp);
+            return temp;
         }
         else throw new NoContiguousIslandException("Islands are not Contiguous");
-    }
-
-    //MOVE FUNCTIONS
-    //function move written in a view where the parameters are message received by a client (temporary)
-    //TODO: new Exception added!!!!!
-    public void moveStudent(int studentId, Movable arrival, Movable departure) throws NoSuchStudentException{
-        Student s = departure.removeStudent(studentId);
-        arrival.addStudent(s);
-
-        this.updateProfessors();
     }
 
     private ColorTower influence(Report report){
@@ -270,6 +305,41 @@ public class Game implements Serializable {
         }
     }
 
+    //MOVE FUNCTIONS
+    //function move written in a view where the parameters are message received by a client (temporary)
+    public void moveStudent(int studentId, Movable arrival, Movable departure){
+        Student s;
+        try{
+            s = departure.removeStudent(studentId);
+            arrival.addStudent(s);
+
+            this.updateProfessors();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure){
+        Student s1, s2;
+        try{
+            s1 = departure.removeStudent(studentId1);
+            s2 = arrival.removeStudent(studentId2);
+
+            arrival.addStudent(s1);
+            departure.addStudent(s2);
+
+            this.updateProfessors();
+
+            //TODO Reminder: Use this snippet at the end of each method that can be called when there is an active card
+            if(this.activeCard != -1){
+                this.activeCard = -1;
+                this.currentRule = new DefaultRule();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void refillClouds() throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
         for (int i=0; i<clouds.length; i++){
             if (numPlayers==3) clouds[i].refillCloud(bag.getRandomStudent(4));
@@ -277,7 +347,6 @@ public class Game implements Serializable {
         }
     }
 
-    //TODO: new Exception added!!!!!
     public void selectCloud(String playerNick, Cloud cloud) throws NoPlayerException{
         ArrayList<Student> students = cloud.chooseCloud();
         for (Student s : students) getPlayer(playerNick).getDashboard().getEntrance().addStudent(s);
@@ -298,5 +367,226 @@ public class Game implements Serializable {
     }
     public Action getCurretAction(){
         return curretAction;
+    }
+
+    //-------------------------------------------------------------------------------------
+    //|                                     CHARACTERS                                    |
+    //-------------------------------------------------------------------------------------
+
+    public Character[] initCardsFromJSON() throws IOException{
+        Reader reader = new FileReader(JSON_PATH);
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+
+        JSONCharacter[] jsonCharacters = gson.fromJson(reader, JSONCharacter[].class);
+        List<Character> allCharacters = new ArrayList<>();
+        for (JSONCharacter jc : jsonCharacters) {
+            switch (jc.getTypeCharacter()) {
+                case MOVEMENT:
+                    ArrayList<Student> s = extractFromBag(jc.getParams().getNumThingOnIt());
+                    allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), s, jc.getParams()));
+                    break;
+
+                case INFLUENCE:
+                    allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    break;
+
+                case PROFESSOR:
+                    allCharacters.add(new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost()));
+                    break;
+
+                case MOTHERNATURE:
+                    allCharacters.add(new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    break;
+
+                case ACTION:
+                    allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    break;
+            }
+        }
+
+        Character[] selectedCharacter = new Character[3];
+        for(int i=0; i<3; i++){
+            Random rand = new Random();
+            int randomPos = rand.nextInt(allCharacters.size());
+            selectedCharacter[i] = allCharacters.get(randomPos);
+            allCharacters.remove(randomPos);
+        }
+
+        return selectedCharacter;
+    }
+
+    //TODO Refill method for cards which need it (Wait for controller) or use a flag in moveStudent (The Card will always be the departure Movable)
+
+    public int getActiveCard(){
+        return this.activeCard;
+    }
+
+    public Character[] getCharactersCards(){
+        return this.charactersCards.clone();
+    }
+
+    //TODO Debug Method
+    public Class<?> getCurrentRule(){
+        return this.currentRule.getClass();
+    }
+
+    //TODO Debug Method
+    public void setCharactersCards(Character[] characters){
+        this.charactersCards = characters.clone();
+    }
+
+    public boolean usePower(Player activePlayer, int card) throws NoCharacterSelectedException{
+        if(card <= -1 || card > 2){
+            throw new NoCharacterSelectedException("No character selected to use its power");
+        }
+
+        //TODO Check Monete
+
+        Character c = this.charactersCards[card];
+        this.currentRule = c.usePower(activePlayer);
+
+        //Case professor character
+        this.updateProfessors();
+
+        if(this.currentRule.isActionNeeded()){
+            this.activeCard = card;
+        }
+
+        return this.currentRule.isActionNeeded();
+
+    }
+
+    public Action getRequestedAction() throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        ActionCharacter c1 = (ActionCharacter) this.charactersCards[activeCard];
+
+        return c1.getType();
+    }
+
+    public Set<Location> getAllowedDepartures() throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        MovementCharacter c1 = (MovementCharacter) this.charactersCards[activeCard];
+
+        return c1.getAllowedDepartures();
+    }
+
+    public Set<Location> getAllowedArrivals() throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        MovementCharacter c1 = (MovementCharacter) this.charactersCards[activeCard];
+
+        return c1.getAllowedArrivals();
+    }
+
+    public void disableIsland(Island i) throws NoActiveCardException, NoMoreTokensException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        ActionCharacter ac = (ActionCharacter) this.charactersCards[this.activeCard];
+        if(ac.getType() != Action.BLOCK_ISLAND)
+            throw new NoActiveCardException("You can't block an island with this power");
+
+        ac.removeToken();
+
+        i.setProhibition(true);
+
+        if(this.activeCard != -1){
+            this.activeCard = -1;
+            this.currentRule = new DefaultRule();
+        }
+    }
+
+    public void disableColor(Player player, Color c) throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        ActionCharacter ac = (ActionCharacter) this.charactersCards[this.activeCard];
+        if(ac.getType() != Action.BLOCK_COLOR)
+            throw new NoActiveCardException("You can't block a color with this power");
+
+        this.currentRule = new InfluenceRule(player.getColor(), c, 0, false);
+    }
+
+    private void addProhibitionToken(Island island){
+        ActionCharacter ac;
+        for(Character c : this.charactersCards){
+            if(c.getTypeCharacter() == CharacterType.ACTION){
+                ac = (ActionCharacter) c;
+                if(ac.getType() == Action.BLOCK_ISLAND){
+                    //TODO This try/catch will become throws
+                    try {
+                        island.setProhibition(false);
+                        ac.addToken();
+                    } catch (NoMoreTokensException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public void putBackInBag(Color color) throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        ActionCharacter ac = (ActionCharacter) this.charactersCards[this.activeCard];
+        if(ac.getType() != Action.PUT_BACK)
+            throw new NoActiveCardException("You can't put back students with this power");
+
+        for(Player p : this.players){
+            Canteen canteen = p.getDashboard().getCanteen();
+            ArrayList<Student> students = canteen.getStudents(color);
+
+            for(int i=0; i<3 && students.size()!=0; i++){
+                Student s = students.remove(0);
+                try {
+                    canteen.removeStudent(s.getId());
+                } catch (NoSuchStudentException e) {
+                    e.printStackTrace();
+                }
+                this.bag.putBackStudent(s);
+            }
+        }
+
+        if(this.activeCard != -1){
+            this.activeCard = -1;
+            this.currentRule = new DefaultRule();
+        }
+    }
+
+    public int getMotherNatureExtraMovement(){
+        return this.currentRule.getMotherNatureExtraMovement();
+    }
+
+    public boolean needsRefill() throws NoActiveCardException{
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        MovementCharacter mc = null;
+        try{
+            mc = (MovementCharacter) this.charactersCards[activeCard];
+        } catch(ClassCastException ex){
+            return false;
+        }
+
+        return mc.isRefill();
+    }
+
+    //--------------------------------------------------------------------------------------------
+    //|                                             UTILS                                        |
+    //--------------------------------------------------------------------------------------------
+
+    private ArrayList<Student> extractFromBag(int numStudents){
+        ArrayList<Student> students = new ArrayList<>();
+        for(int i= 0; i<numStudents; i++){
+            try {
+                Student s = this.bag.getRandomStudent();
+                students.add(s);
+            } catch (NoMoreStudentsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return students;
     }
 }

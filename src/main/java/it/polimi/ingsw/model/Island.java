@@ -3,15 +3,12 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Island implements Movable, Serializable {
     private final int id;
     private ArrayList<Student> students;
-    private boolean prohibitionToken = false;
+    private boolean prohibitionToken;
     private int maxTowers;
     private ColorTower owner;
 
@@ -19,6 +16,7 @@ public class Island implements Movable, Serializable {
         this.id = id;
         students = new ArrayList<>();
         maxTowers = 1;
+        prohibitionToken = false;
         this.owner = null;
     }
 
@@ -30,6 +28,7 @@ public class Island implements Movable, Serializable {
         students.addAll(i2.students);
         maxTowers = i1.maxTowers + i2.maxTowers;
         owner = i1.owner;
+        prohibitionToken = i1.prohibitionToken || i2.prohibitionToken;
     }
 
     public int getId(){
@@ -77,7 +76,7 @@ public class Island implements Movable, Serializable {
             colors.put(possibleColors[i], colorsCont[i]);
         }
 
-        return new Report(owner, numTowers, colors);
+        return new Report(owner, numTowers, colors, null, 0);
     }
 
     public ArrayList<Student> getAllStudents(){
@@ -124,6 +123,7 @@ public class Island implements Movable, Serializable {
         return false;
     }
 
-    public String toString(){   return String.valueOf(id);  }
-
+    public String toString(){
+        return String.valueOf(id);
+    }
 }

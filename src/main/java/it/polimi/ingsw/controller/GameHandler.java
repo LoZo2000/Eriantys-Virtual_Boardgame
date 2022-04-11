@@ -1,10 +1,15 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.exceptions.*;
 import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.exceptions.NoActiveCardException;
+import it.polimi.ingsw.model.exceptions.NoCharacterSelectedException;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class GameHandler {
     private ArrayList<String> players;          //List of player in the game (it's "final": after all the player have joined, this list will not be modified). It is necessary to remember the order of the players during the PLAYCARD phase
@@ -18,6 +23,8 @@ public class GameHandler {
     private int maxMoveStudent = 3;             //Number of students a player is allowed to move every turn
     private int actualMoveStudent = 0;          //Number of students the current player has already moved in this turn
     private boolean completeRules = false;
+
+    private Action oldPhase;
     private Action currentPhase = Action.CREATEMATCH; //First phase is ADDME: we wait for some players to join
 
     private Translator translator;
@@ -30,8 +37,7 @@ public class GameHandler {
     }
 
 
-
-    public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException {
+    public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, NoActiveCardException, NoCharacterSelectedException {
         System.out.println("Message to exe: "+message.getAction());
         switch (message.getAction()){
 
@@ -89,7 +95,7 @@ public class GameHandler {
             case MOVESTUDENT:
                 if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
                 else if(currentPhase!=Action.MOVESTUDENT) throw new IllegalMoveException("Wrong move: you should not move students now!");
-                else if(message.getDepartureType()!= Location.ENTRANCE || (message.getArrivalType()!=Location.ISLAND && message.getArrivalType()!=Location.CANTEEN) ) throw new IllegalMoveException("Illegal movement!");
+                else if(message.getDepartureType() != Location.ENTRANCE || (message.getArrivalType()!=Location.ISLAND && message.getArrivalType()!=Location.CANTEEN) ) throw new IllegalMoveException("Illegal movement!");
                 else{
                     translator.translateThis(message);
                     actualMoveStudent++;
@@ -99,6 +105,40 @@ public class GameHandler {
                         actualMoveStudent = 0;
                     }
                 }
+                break;
+
+            case USEPOWER:
+                if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
+                if(currentPhase!=Action.MOVESTUDENT && currentPhase!=Action.MOVEMOTHERNATURE) throw new IllegalMoveException("Wrong move: can't activate powers now!");
+
+                boolean isActive = translator.translateThis(message);
+
+                if(isActive){
+                    this.oldPhase = this.currentPhase;
+                    this.currentPhase = Action.ACTIVECARD;
+                }
+
+                break;
+
+            case EXCHANGESTUDENT:
+                if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
+                if(currentPhase != Action.ACTIVECARD)
+                    throw new IllegalMoveException("Wrong move: you have to use the effect on the active card!");
+
+                Action requestedActiveAction = translator.getRequestedAction();
+                if(requestedActiveAction != Action.EXCHANGESTUDENT)
+                    throw new IllegalMoveException("Wrong move: you should not exchange students now!");
+
+                if(!checkMovementLocations(message))
+                    throw new IllegalMoveException("You can't move students from these locations");
+
+                translator.translateThis(message);
+                try{
+                    translator.getRequestedAction();
+                } catch(Exception e){
+                    this.currentPhase = this.oldPhase;
+                }
+
                 break;
 
             case MOVEMOTHERNATURE:
@@ -137,7 +177,10 @@ public class GameHandler {
 
             case SHOWME:    //Every player in every moment of the match (after all the players have joined) can call SHOWME to give a look to the board
                 if(numPlayers==0 || numPlayers!=maxPlayers) throw new IllegalMoveException("Wait until all the players join the match...");
-                else translator.translateThis(message);
+                else {
+                    //System.out.println(this.currentPhase);
+                    translator.translateThis(message);
+                }
                 break;
 
             default:
@@ -159,9 +202,28 @@ public class GameHandler {
         return newOrder;
     }
 
+    private boolean checkMovementLocations(Message m){
+        try {
+            Set<Location> allowedLocations = this.translator.getAllowedDepartures();
+            if(!allowedLocations.contains(m.getDepartureType()))
+                return false;
+
+            allowedLocations = this.translator.getAllowedArrivals();
+            if(!(allowedLocations.contains(m.getArrivalType())))
+                return false;
+
+            if(m.getArrivalType() == m.getDepartureType())
+                return false;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
 
 
     public Game getGame(){
         return translator.getGame();
     }
+
 }
