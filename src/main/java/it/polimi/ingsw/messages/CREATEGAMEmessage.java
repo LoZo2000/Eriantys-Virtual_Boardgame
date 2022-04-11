@@ -2,20 +2,20 @@ package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.controller.Action;
 
-public class CREATEMATCHmessage extends Message{
+public class CREATEGAMEmessage extends Message {
     final private boolean completeRules;
-    final private int numPlayers;
+    final private int maxPlayers;
 
-    public CREATEMATCHmessage(String sender, Action action, boolean completeRules, int numPlayers){
+    public CREATEGAMEmessage(String sender, Action action, boolean completeRules, int maxPlayers){
         super(sender, action);
         this.completeRules = completeRules;
-        this.numPlayers = numPlayers;
+        this.maxPlayers = maxPlayers;
     }
 
     public boolean getCompleteRules(){
         return completeRules;
     }
     public int getNumPlayers(){
-        return numPlayers;
+        return maxPlayers;
     }
 }

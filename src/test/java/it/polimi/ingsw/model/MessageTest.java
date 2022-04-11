@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.messages.*;
-import it.polimi.ingsw.model.Action;
-import it.polimi.ingsw.model.Location;
+import it.polimi.ingsw.controller.Action;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

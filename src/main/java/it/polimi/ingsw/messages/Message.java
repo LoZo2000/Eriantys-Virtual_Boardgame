@@ -1,7 +1,7 @@
 package it.polimi.ingsw.messages;
 
-import it.polimi.ingsw.model.Action;
-import it.polimi.ingsw.model.Location;
+import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.controller.Location;
 
 import java.io.Serializable;
 

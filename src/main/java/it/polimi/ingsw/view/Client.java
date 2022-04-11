@@ -1,5 +1,7 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.*;
 

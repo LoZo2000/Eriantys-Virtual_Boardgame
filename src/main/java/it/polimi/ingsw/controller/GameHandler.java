@@ -1,6 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.messages.Message;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class GameHandler {
             case MOVESTUDENT:
                 if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
                 else if(currentPhase!=Action.MOVESTUDENT) throw new IllegalMoveException("Wrong move: you should not move students now!");
-                else if(message.getDepartureType()!=Location.ENTRANCE || (message.getArrivalType()!=Location.ISLAND && message.getArrivalType()!=Location.CANTEEN) ) throw new IllegalMoveException("Illegal movement!");
+                else if(message.getDepartureType()!= Location.ENTRANCE || (message.getArrivalType()!=Location.ISLAND && message.getArrivalType()!=Location.CANTEEN) ) throw new IllegalMoveException("Illegal movement!");
                 else{
                     translator.translateThis(message);
                     actualMoveStudent++;

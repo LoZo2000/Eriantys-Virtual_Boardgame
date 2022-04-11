@@ -2,7 +2,7 @@ package it.polimi.ingsw.view;
 
 import  it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.messages.Message;
-import it.polimi.ingsw.model.Action;
+import it.polimi.ingsw.controller.Action;
 import  it.polimi.ingsw.model.Model;
 
 import java.io.IOException;
