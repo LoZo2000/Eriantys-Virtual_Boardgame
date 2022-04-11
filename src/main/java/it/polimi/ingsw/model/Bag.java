@@ -2,11 +2,12 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
-public class Bag {
+public class Bag implements Serializable {
     private final Stack<Student> students;
 
     public Bag(Stack<Student> students){

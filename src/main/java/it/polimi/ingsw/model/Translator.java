@@ -1,8 +1,9 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.exceptions.EndGameException;
+import it.polimi.ingsw.model.exceptions.EndGameException;
 import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 
 import java.util.ArrayList;
@@ -18,9 +19,21 @@ public class Translator {
         game = new Game(completeRules, numPlayers);
     }
 
-    public void translateThis(Message message){
+    public void translateThis(Message message) throws IllegalMoveException {
 
         switch(message.getAction()){
+
+            case CREATEMATCH:
+                if(game.getRegisteredNumPlayers() == 1)
+                    game.addPlayer(message.getSender(), ColorTower.WHITE);
+                else if(game.getRegisteredNumPlayers() == 0 && game.getNumPlayers() == 3)
+                    game.addPlayer(message.getSender(), ColorTower.GREY);
+                else
+                    game.addPlayer(message.getSender(), ColorTower.BLACK);
+                break;
+
+
+
             case ADDME:         //To add a player in the current match
                 //TODO Fix
                 if(game.getRegisteredNumPlayers() == 1)
@@ -40,7 +53,7 @@ public class Translator {
                     game.getPlayer(message.getSender()).getDashboard().setGraveyard(c);
                 }
                 catch(Exception e){
-                    e.printStackTrace();
+                    throw new IllegalMoveException("There is no such a card");
                 }
                 break;
 
@@ -53,6 +66,7 @@ public class Translator {
                         try {
                             departure = game.getPlayer(message.getSender()).getDashboard().getEntrance();
                         }catch(Exception e){
+                            //Cannot fail (impossible to enter this branch)!!!
                             e.printStackTrace();
                         }
                         break;
@@ -60,6 +74,7 @@ public class Translator {
                         try{
                             departure = game.getPlayer(message.getSender()).getDashboard().getCanteen();
                         }catch(Exception e){
+                            //Cannot fail (impossible to enter this branch)!!!
                             e.printStackTrace();
                         }
                         break;
@@ -67,7 +82,7 @@ public class Translator {
                         try {
                             departure = game.getIsland(message.getDepartureId());
                         }catch(Exception e){
-                            e.printStackTrace();
+                            throw new IllegalMoveException("This island doesn't exist!");
                         }
                         break;
                     default:
@@ -78,6 +93,7 @@ public class Translator {
                         try {
                             arrival = game.getPlayer(message.getSender()).getDashboard().getEntrance();
                         }catch (Exception e){
+                            //Cannot fail (impossible to enter this branch)!!!
                             e.printStackTrace();
                         }
                         break;
@@ -85,6 +101,7 @@ public class Translator {
                         try{
                             arrival = game.getPlayer(message.getSender()).getDashboard().getCanteen();
                         }catch(Exception e){
+                            //Cannot fail (impossible to enter this branch)!!!
                             e.printStackTrace();
                         }
                         break;
@@ -92,7 +109,7 @@ public class Translator {
                         try{
                             arrival = game.getIsland(message.getArrivalId());
                         }catch(Exception e){
-                            e.printStackTrace();
+                            throw new IllegalMoveException("This island doesn't exist!");
                         }
                         break;
                     default:
@@ -101,7 +118,7 @@ public class Translator {
                 try {
                     game.moveStudent(message.getStudentId(), arrival, departure);
                 }catch (Exception e){
-                    e.printStackTrace();
+                    throw new IllegalMoveException("Student, arrival or departure missing...");
                 }
                 break;
 
@@ -207,5 +224,11 @@ public class Translator {
         if(black>=white && black>=grey) return ColorTower.BLACK;
         if(white>=black && white>=grey) return ColorTower.WHITE;
         return ColorTower.GREY;
+    }
+
+
+
+    public Game getGame(){
+        return game;
     }
 }

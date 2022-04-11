@@ -1,9 +1,11 @@
 package it.polimi.ingsw.messages;
 
-import it.polimi.ingsw.controller.Action;
-import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.model.Action;
+import it.polimi.ingsw.model.Location;
 
-public class Message {
+import java.io.Serializable;
+
+public class Message implements Serializable {
     final private String sender;
     final private Action action;
 

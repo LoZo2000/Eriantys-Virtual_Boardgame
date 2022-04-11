@@ -1,8 +1,9 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player{
+public class Player implements Serializable {
     final private Hand hand;
     final private Dashboard dashboard;
     final private String nickname;

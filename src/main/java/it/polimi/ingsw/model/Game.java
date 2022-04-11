@@ -3,12 +3,13 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class Game {
+public class Game implements Serializable {
     private MotherNature motherNature;
     private LinkedList <Island> islands = new LinkedList<>();
     private Cloud[] clouds;
@@ -22,6 +23,9 @@ public class Game {
     private final int numPlayers;
     private boolean completeRules;
     private int lastPlayed;
+
+    private String currentPlayer = null;
+    private Action curretAction = null;
 
 
 
@@ -207,6 +211,7 @@ public class Game {
             islands.remove(i1);
             islands.remove(i2);
             islands.add(indx1, temp);
+            motherNature.movement(temp);
         }
         else throw new NoContiguousIslandException("Islands are not Contiguous");
     }
@@ -280,5 +285,18 @@ public class Game {
 
     public Cloud[] getAllClouds(){
         return clouds;
+    }
+
+    public void setCurrentPlayer(String nickname){
+        currentPlayer = nickname;
+    }
+    public void setCurrentAction(Action action){
+        curretAction = action;
+    }
+    public String getCurrentPlayer(){
+        return currentPlayer;
+    }
+    public Action getCurretAction(){
+        return curretAction;
     }
 }

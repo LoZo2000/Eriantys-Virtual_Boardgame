@@ -2,9 +2,10 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.OverflowCardException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Hand{
+public class Hand implements Serializable {
     private ArrayList<Card> cards;
 
     public Hand(){
@@ -24,12 +25,12 @@ public class Hand{
 
     //Returns the selected card and deletes it
     public Card playCard(int pos) throws OverflowCardException {
-        if(pos<cards.size() && pos>=0){
-            Card c = cards.get(pos);
-            cards.remove(pos);
-            return c;
+        for(Card c : cards){
+            if(c.getPriority()==pos){
+                cards.remove(c);
+                return c;
+            }
         }
-        else
-            throw new OverflowCardException();
+        throw new OverflowCardException();
     }
 }

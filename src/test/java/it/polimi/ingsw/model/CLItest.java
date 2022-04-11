@@ -1,16 +1,13 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.Action;
-import it.polimi.ingsw.controller.GameHandler;
-import it.polimi.ingsw.controller.Location;
-import it.polimi.ingsw.controller.exceptions.EndGameException;
+import it.polimi.ingsw.model.exceptions.EndGameException;
 import it.polimi.ingsw.messages.*;
 
 import java.util.Scanner;
 
 public class CLItest {
 
-    public static void main(String[] args){
+    /*public static void main(String[] args){
         String playerId, ac, lo, ans;
         Location arrivalType, departureType;
         boolean completeRules;
@@ -124,5 +121,5 @@ public class CLItest {
                 if(e instanceof EndGameException) System.exit(0);
             }
         }
-    }
+    }*/
 }

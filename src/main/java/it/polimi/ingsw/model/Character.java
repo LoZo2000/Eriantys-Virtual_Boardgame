@@ -1,4 +1,6 @@
 package it.polimi.ingsw.model;
 
-public class Character {
+import java.io.Serializable;
+
+public class Character implements Serializable {
 }

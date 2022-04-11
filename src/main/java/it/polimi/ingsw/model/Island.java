@@ -2,12 +2,13 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class Island implements Movable{
+public class Island implements Movable, Serializable {
     private final int id;
     private ArrayList<Student> students;
     private boolean prohibitionToken = false;

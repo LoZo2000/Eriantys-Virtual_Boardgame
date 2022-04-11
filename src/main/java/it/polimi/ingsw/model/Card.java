@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class Card{
+import java.io.Serializable;
+
+public class Card implements Serializable {
     private final int priority;
     private final int movement;
     //private final int back;

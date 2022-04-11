@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class DefaultRule implements Rule{
+public class DefaultRule implements Rule, Serializable {
 
     @Override
     public ColorTower calculateInfluence(Report report, Map<Color, ColorTower> professors) {

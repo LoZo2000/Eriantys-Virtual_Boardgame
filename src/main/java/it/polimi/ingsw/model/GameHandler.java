@@ -1,13 +1,14 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.exceptions.*;
 import it.polimi.ingsw.messages.Message;
+import it.polimi.ingsw.model.exceptions.*;
 
 import java.util.ArrayList;
 
 public class GameHandler {
     private ArrayList<String> players;          //List of player in the game (it's "final": after all the player have joined, this list will not be modified). It is necessary to remember the order of the players during the PLAYCARD phase
     private int[] priority = {0,0,0,0};         //Priority of the card played by the player with the same index in "players"
+    private int[] maxMTmovement = {0,0,0,0};    //Movement of the card played by the player with the same index in "players"
     private ArrayList<String> orderPlayers;     //This list will be created every turn after the players have played their cards. The game will accept only moves made by the player in position 0. After he/she has selected a cloud, the player in postion 0 is removed
     private int maxPlayers = 0;                 //Number of players expected to join the match (choosen by the first player)
     private int numPlayers = 0;                 //Number of player currently enrolled in our match
@@ -16,7 +17,7 @@ public class GameHandler {
     private int maxMoveStudent = 3;             //Number of students a player is allowed to move every turn
     private int actualMoveStudent = 0;          //Number of students the current player has already moved in this turn
     private boolean completeRules = false;
-    private Action currentPhase = Action.ADDME; //First phase is ADDME: we wait for some players to join
+    private Action currentPhase = Action.CREATEMATCH; //First phase is ADDME: we wait for some players to join
 
     private Translator translator;
 
@@ -30,21 +31,23 @@ public class GameHandler {
 
 
     public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException {
+        System.out.println("Message to exe: "+message.getAction());
         switch (message.getAction()){
 
+            case CREATEMATCH:   //The first player creates the game
+                players.add(message.getSender());
+                if(message.getCompleteRules()) completeRules = true;
+                maxPlayers = message.getNumPlayers();
+                if(maxPlayers==3) maxMoveStudent = 4;
+                numPlayers = 1;
+                firstPlayer = 0;
+                translator = new Translator(completeRules, maxPlayers);
+                translator.translateThis(message);
+                currentPhase = Action.ADDME;
+                break;
+
             case ADDME:     //To add a new player
-                if(numPlayers==0){      //If he/she is the first player, he/she has the right to decide the rules of the match
-                    players.add(message.getSender());
-                    if(message.getCompleteRules()) completeRules = true;
-                    maxPlayers = message.getNumPlayers();
-                    if(maxPlayers==3) maxMoveStudent = 4;
-                    numPlayers = 1;
-                    firstPlayer = 0;
-                    translator = new Translator(completeRules, maxPlayers);
-                    translator.translateThis(message);
-                }
-                else if(numPlayers==maxPlayers) throw new CannotJoinException("The room is already full!");
-                else if(completeRules!=message.getCompleteRules() || maxPlayers!=message.getNumPlayers()) throw new CannotJoinException("This match doesn't fit your requirements");
+                if(numPlayers==maxPlayers) throw new CannotJoinException("The room is already full!");
                 else if(players.contains(message.getSender())) throw new CannotJoinException("Nickname already taken!");
                 else{
                     players.add(message.getSender());
@@ -53,7 +56,9 @@ public class GameHandler {
                     translator.translateThis(message);
                     if(numPlayers==maxPlayers){     //If it is ture, it means that all the players have joined: time to change phase
                         currentPhase = Action.PLAYCARD;
+                        translator.getGame().setCurrentAction(Action.PLAYCARD);
                         currentPlayer = 0;
+                        translator.getGame().setCurrentPlayer(players.get(0));
                         firstPlayer = 0;
                     }
                 }
@@ -64,13 +69,17 @@ public class GameHandler {
                 else if(currentPhase!=Action.PLAYCARD) throw new IllegalMoveException("Wrong move: you should not play a card now!");
                 else{
                     priority[currentPlayer] = message.getPriority();
+                    maxMTmovement[currentPlayer] = (message.getPriority()+1)/2;
                     translator.translateThis(message);
                     currentPlayer = (currentPlayer+1)%maxPlayers;
+                    translator.getGame().setCurrentPlayer(players.get(currentPlayer));
                     if(currentPlayer==firstPlayer){     //If it is true, this means that all the players have already played their cards: time to change phase
                         orderPlayers = sort();          //New order according to the cards played
                         firstPlayer = players.indexOf(orderPlayers.get(0));
                         actualMoveStudent = 0;
                         currentPhase = Action.MOVESTUDENT;
+                        translator.getGame().setCurrentAction(Action.MOVESTUDENT);
+                        translator.getGame().setCurrentPlayer(orderPlayers.get(0));
                         //TODO: remember to disable the previously active rule!!!
                     }
                 }
@@ -85,6 +94,7 @@ public class GameHandler {
                     actualMoveStudent++;
                     if(actualMoveStudent==maxMoveStudent){      //After 3 or 4 students have been moved, it is time to move MotherNature
                         currentPhase = Action.MOVEMOTHERNATURE;
+                        translator.getGame().setCurrentAction(Action.MOVEMOTHERNATURE);
                         actualMoveStudent = 0;
                     }
                 }
@@ -94,8 +104,12 @@ public class GameHandler {
                 if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
                 else if(currentPhase!=Action.MOVEMOTHERNATURE) throw new IllegalMoveException("Wrong move: you should not move Mother Nature now!");
                 else{
+                    int index=0;
+                    for(int i=0; i<players.size(); i++) if(players.get(i).equals(message.getSender())) index=i;
+                    if(message.getMovement()<1 || message.getMovement()>maxMTmovement[index]) throw new IllegalMoveException("You cannot move Mother Nature so far");
                     translator.translateThis(message);
                     currentPhase = Action.SELECTCLOUD;
+                    translator.getGame().setCurrentAction(Action.SELECTCLOUD);
                 }
                 break;
 
@@ -107,10 +121,14 @@ public class GameHandler {
                     orderPlayers.remove(0);
                     if(orderPlayers.size()>0) {     //It is time for the following player to move students!
                         currentPhase = Action.MOVESTUDENT;
+                        translator.getGame().setCurrentAction(Action.MOVESTUDENT);
+                        translator.getGame().setCurrentPlayer(orderPlayers.get(0));
                     }
                     else{                           //Else, if orderPlayers is empty: all the players have played their turns: it is time to play a card!
                         currentPhase = Action.PLAYCARD;
+                        translator.getGame().setCurrentAction(Action.PLAYCARD);
                         currentPlayer = firstPlayer;
+                        translator.getGame().setCurrentPlayer(players.get(currentPlayer));
                         translator.endTurn();
                     }
                 }
@@ -138,5 +156,11 @@ public class GameHandler {
             priority[min]=11;
         }
         return newOrder;
+    }
+
+
+
+    public Game getGame(){
+        return translator.getGame();
     }
 }

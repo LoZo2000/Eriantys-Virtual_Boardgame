@@ -1,6 +1,8 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.messages.*;
+import it.polimi.ingsw.model.Action;
+import it.polimi.ingsw.model.Location;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,8 +27,8 @@ public class MessageTest {
     }
 
     @Test
-    public void ADDMEtest(){
-        Message message = new ADDMEmessage("player", Action.ADDME, false, 2);
+    public void CREATEMATCHtest(){
+        Message message = new CREATEMATCHmessage("player", Action.CREATEMATCH, false, 2);
         assertFalse(message.getCompleteRules());
         assertEquals(2, message.getNumPlayers());
     }

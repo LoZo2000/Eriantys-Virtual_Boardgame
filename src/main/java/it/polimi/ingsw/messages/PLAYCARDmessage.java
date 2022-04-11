@@ -1,6 +1,6 @@
 package it.polimi.ingsw.messages;
 
-import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.model.Action;
 
 public class PLAYCARDmessage extends Message{
     final private int priority;
