@@ -62,7 +62,7 @@ class CompleteRulesGameTest {
         this.game.addPlayer(player2);
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void useRulesExtraPoints() {
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(8, CharacterType.INFLUENCE, "Influence + 2", 2, null, 0, null, false, null, null, false, 2, 0);
@@ -148,7 +148,7 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void useRulesDisableTower() {
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(6, CharacterType.INFLUENCE, "Influence No Towers", 3, null, 0, null, false, null, null, true, 0, 0);
@@ -259,7 +259,7 @@ class CompleteRulesGameTest {
         assertEquals(2, i.getReport().getTowerNumbers());
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void updateProfessorsMoveToCanteen() throws Exception{
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
         Canteen c = this.game.getPlayer("player1").getDashboard().getCanteen();
@@ -269,7 +269,7 @@ class CompleteRulesGameTest {
         assertEquals(this.game.getPlayer("player1"), professors.get(Color.BLUE));
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void updateProfessorsNotMoveToCanteen() throws Exception{
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
         Island i = this.game.getIsland(0);
@@ -279,7 +279,7 @@ class CompleteRulesGameTest {
         assertNull(professors.get(Color.BLUE));
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void updateProfessorsChangeOwnershipTieRule() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(2, CharacterType.PROFESSOR, "Get the professor also if you have the same number of the others", 2, null, 0, null, false, null, null, false, 0, 0);
@@ -310,7 +310,7 @@ class CompleteRulesGameTest {
         assertEquals(this.game.getPlayer("player2"), professors.get(Color.BLUE));
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void useRulesDisableIsland() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
@@ -390,7 +390,7 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void useRulesDisableIslandMerge2Tokens() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
@@ -522,7 +522,7 @@ class CompleteRulesGameTest {
         assertEquals(4, ac.getNumTokens());
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void usePowerBlockColor() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(9, CharacterType.ACTION, "Block color", 3, Action.BLOCK_COLOR, 0, null, false, null, null, false, 0, 0);
@@ -583,7 +583,7 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void usePowerInfluenceIsland() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence w/o moving MN", 3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0);
@@ -635,7 +635,7 @@ class CompleteRulesGameTest {
         assertEquals(i, game.getMotherNaturePosition());
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void usePowerPutBack() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(12, CharacterType.ACTION, "Put Back students", 3, Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
