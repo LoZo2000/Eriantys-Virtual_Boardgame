@@ -23,6 +23,12 @@ public class GameHandler2 {
     private int numFinishedTurn=0; //number of players that finished their turn
 
 
+    public Phase getPhase(){
+        return currentPhase;
+    }
+
+
+
     //TODO: Exception added
     public GameHandler2(Message message) throws IllegalMessageException { //First instruction of all
         if(message.getAction()!=Action.CREATEMATCH) throw new IllegalMessageException();
@@ -43,14 +49,14 @@ public class GameHandler2 {
             firstPlayer=0;
             currentPhase=Phase.PRETURN;
         }
-        if(currentPhase==Phase.PRETURN) currentPhase=Phase.MIDDLETURN;
-        if(currentPhase==Phase.MIDDLETURN) {
+        else if(currentPhase==Phase.PRETURN) currentPhase=Phase.MIDDLETURN;
+        else if(currentPhase==Phase.MIDDLETURN) {
             currentPhase = Phase.MOVEMNTURN;
             //System.out.println("CAMBIO fase"+currentPhase);
             currentMoveStudent = 0;
         }
-        if(currentPhase==Phase.MOVEMNTURN) currentPhase=Phase.ENDTURN;
-        if(currentPhase==Phase.ENDTURN){
+        else if(currentPhase==Phase.MOVEMNTURN) currentPhase=Phase.ENDTURN;
+        else if(currentPhase==Phase.ENDTURN){
             if(numFinishedTurn==maxPlayers){
                 currentPhase=Phase.PRETURN;
                 numFinishedTurn=0;

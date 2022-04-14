@@ -136,6 +136,7 @@ public class Translator {
 
             case SELECTCLOUD:       //To select a cloud
                 Cloud[] clouds = game.getAllClouds();
+                //TODO Add a check if the position of the cloud is ok
                 try{
                     game.selectCloud(message.getSender(), clouds[message.getCloudPosition()]);
                 }catch(Exception e){
@@ -265,11 +266,13 @@ public class Translator {
             System.out.println("");
         }
 
+        /*currently the characters are not supported in showme
         Character[] characters = this.game.getCharactersCards();
         System.out.println("\nCARDS: \n");
         for(Character c : characters){
             System.out.println(c.toString());
         }
+
 
         System.out.println();
         if(this.game.getActiveCard() == -1){
@@ -283,12 +286,16 @@ public class Translator {
             }
         }
 
+
         //TODO DEBUG
         System.out.println();
         System.out.println(game.getCurrentRule().toString());
 
         System.out.println("\n\n");
+        */
     }
+
+
 
     public Set<Location> getAllowedDepartures() throws NoActiveCardException{
         return this.game.getAllowedDepartures();
@@ -297,6 +304,7 @@ public class Translator {
     public Set<Location> getAllowedArrivals() throws NoActiveCardException{
         return this.game.getAllowedArrivals();
     }
+
     //Function called when the game ends
     //By now, the only ending condition implemented is:
     //                                      -when there are no more students in the bag

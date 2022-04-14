@@ -24,6 +24,7 @@ public class CLITest2 {
 
         while(true){
             //sc.nextLine();
+            System.out.println("La fase attuale è "+gameHandler.getPhase());
             System.out.println("Current player (player's nickname):");
             playerId = sc.nextLine();
             //sc.nextLine();
@@ -32,13 +33,13 @@ public class CLITest2 {
 
             if(ac.equals("ADDME")) {
                 //sc.nextLine();
-                System.out.println("Do you want to play with complete rules? (y/n)");
-                ans = sc.nextLine();
-                completeRules = false;
-                if(ans.equals("y")) completeRules = true;
-                System.out.println("How many players?");
-                numPlayers = sc.nextInt();
-                sc.nextLine();
+                //System.out.println("Do you want to play with complete rules? (y/n)");
+                //ans = sc.nextLine();
+                //completeRules = false;
+                //if(ans.equals("y")) completeRules = true;
+                //System.out.println("How many players?");
+                //numPlayers = sc.nextInt();
+                //sc.nextLine();
                 message = new ADDMEmessage(playerId, Action.ADDME);
             }
 
