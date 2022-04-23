@@ -51,6 +51,7 @@ public class Client {
                 game = (Game) objectInputStream.readObject();
                 showBoard(game);
             }while(game.getCurrentPlayer()==null || !game.getCurrentPlayer().equals(nickname));
+            System.out.println("allora");
 
             while (true){
                 message = getInput();
@@ -60,9 +61,11 @@ public class Client {
                     objectInputStream = new ObjectInputStream(inputStream);
                     game = (Game) objectInputStream.readObject();
                     showBoard(game);
+                    System.out.println("abs il current player è"+game.getCurrentPlayer());
                 }while(game.getCurrentPlayer()==null || !game.getCurrentPlayer().equals(nickname));
             }
         } catch(Exception e){
+            e.printStackTrace();
             System.out.println("Connection closed from the client side");
         } finally {
             stdin.close();
@@ -72,35 +75,23 @@ public class Client {
         }
     }
 
-
-
     private Message getInputStart(){
-        System.out.println("Select one of the following options:");
-        System.out.println("\t-'CREATEMATCH' to create a new match choosing your favourite features");
-        System.out.println("\t-'ADDME' to join a match created by a friend");
-        action = stdin.nextLine();
-
-        if(action.equals("CREATEMATCH")){
-            System.out.println("Insert your nickname:");
-            nickname = stdin.nextLine();
-            do {
-                System.out.println("How many players do you want to play with?");
-                numPlayers = stdin.nextInt();
-                stdin.nextLine();
-            }while(numPlayers<2 || numPlayers>4);
-            System.out.println("Do you want to play by simple (type 'SIMPLE') or complete rules (type 'COMPLETE')?");
-            rule = stdin.nextLine();
-            if(rule.equals("COMPLETE")) return new CREATEMATCHmessage(nickname, Action.CREATEMATCH, true, numPlayers);
-            else return new CREATEMATCHmessage(nickname, Action.CREATEMATCH, false, numPlayers);
+        boolean completeRules;
+        System.out.println("Insert your nickname:");
+        nickname = stdin.nextLine();
+        do {
+            System.out.println("How many players do you want to play with? (a number between 2 and 4)");
+            numPlayers = stdin.nextInt();
+            stdin.nextLine();
+        }while(numPlayers<2 || numPlayers>4);
+        System.out.println("Do you want to play by simple (type 'SIMPLE') or complete rules (type 'COMPLETE')?");
+        rule = stdin.nextLine();
+        if(rule.equals("COMPLETE")) completeRules=true;
+        else{
+            completeRules=false;
         }
+        return new ADDMEmessage(nickname, Action.ADDME, completeRules, numPlayers);
 
-        else if(action.equals("ADDME")){
-            System.out.println("Insert your nickname:");
-            nickname = stdin.nextLine();
-            return new ADDMEmessage(nickname, Action.ADDME);
-        }
-
-        return new Message(nickname, null);
     }
 
 
@@ -231,10 +222,11 @@ public class Client {
         }
         if(game.getCurrentPlayer()==null){
             System.out.println("Waiting for other players...");
+            System.out.println("aaa"+game.getCurrentPlayer());
         }
         else{
             System.out.println("Turn of: "+game.getCurrentPlayer());
-            System.out.println("Phase: "+game.getCurretAction());
+            System.out.println("Phase: "+game.getCurrentPhase());
         }
     }
 }

@@ -1,12 +1,14 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.model.Game;
 
+
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
-public class Connection extends Observable<Message> implements Runnable {
+public class Connection implements Runnable {
 
     private Socket socket;
     private InputStream inputStream;
@@ -17,6 +19,7 @@ public class Connection extends Observable<Message> implements Runnable {
     private ObjectOutputStream objectOutputStream;
     private Message message;
     private String owner;
+    private InetAddress sockaddr;
     private boolean active = true;
 
 
@@ -24,6 +27,7 @@ public class Connection extends Observable<Message> implements Runnable {
     public Connection(Socket socket, Server server){
         this.socket = socket;
         this.server = server;
+        sockaddr = socket.getInetAddress();
     }
 
     private synchronized boolean isActive(){
@@ -68,16 +72,16 @@ public class Connection extends Observable<Message> implements Runnable {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             out = new PrintWriter(socket.getOutputStream());
-            send("Welcome to Eriantys'world!\nWould you like to create a new game (type 'CREATEMATCH') or to join one (type 'ADDME')?");
+            send("Welcome to Eriantys'world!\nTo play digit ADDME");
             objectInputStream = new ObjectInputStream(inputStream);
             message = (Message) objectInputStream.readObject();
             owner = message.getSender();
-            server.lobby(this, message);
-            notify(message);
+            server.deliverMessage(this, message);
             while(isActive()){
                 objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
-                notify(message);
+                System.out.println("sono qui active");
+                server.deliverMessage(this, message);
             }
         } catch(Exception e){
             System.err.println(e.getMessage());

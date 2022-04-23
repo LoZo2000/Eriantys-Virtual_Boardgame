@@ -23,10 +23,10 @@ public class CLITest2 {
 
         Scanner sc=new Scanner(System.in);
 
-        Message message = new CREATEGAMEmessage("abc", Action.CREATEMATCH, true, 2 );
+        Message message = new CREATEMATCHmessage("abc", Action.CREATEMATCH, false, 3 );
         GameHandler2 gameHandler = new GameHandler2(message);
 
-        //TODO Add usepower command and exchangeStudent
+
         while(true){
             //sc.nextLine();
             System.out.println("La fase attuale è "+gameHandler.getPhase());

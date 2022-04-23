@@ -63,7 +63,7 @@ public class GameHandler {
                     translator.translateThis(message);
                     if(numPlayers==maxPlayers){     //If it is ture, it means that all the players have joined: time to change phase
                         currentPhase = Action.PLAYCARD;
-                        translator.getGame().setCurrentAction(Action.PLAYCARD);
+                        //translator.getGame().setCurrentAction(Action.PLAYCARD);
                         currentPlayer = 0;
                         translator.getGame().setCurrentPlayer(players.get(0));
                         firstPlayer = 0;
@@ -85,7 +85,7 @@ public class GameHandler {
                         firstPlayer = players.indexOf(orderPlayers.get(0));
                         actualMoveStudent = 0;
                         currentPhase = Action.MOVESTUDENT;
-                        translator.getGame().setCurrentAction(Action.MOVESTUDENT);
+                        //translator.getGame().setCurrentAction(Action.MOVESTUDENT);
                         translator.getGame().setCurrentPlayer(orderPlayers.get(0));
                         //TODO: remember to disable the previously active rule!!!
                     }
@@ -101,7 +101,7 @@ public class GameHandler {
                     actualMoveStudent++;
                     if(actualMoveStudent==maxMoveStudent){      //After 3 or 4 students have been moved, it is time to move MotherNature
                         currentPhase = Action.MOVEMOTHERNATURE;
-                        translator.getGame().setCurrentAction(Action.MOVEMOTHERNATURE);
+                        //translator.getGame().setCurrentAction(Action.MOVEMOTHERNATURE);
                         actualMoveStudent = 0;
                     }
                 }
@@ -150,7 +150,7 @@ public class GameHandler {
                     if(message.getMovement()<1 || message.getMovement()>maxMTmovement[index]) throw new IllegalMoveException("You cannot move Mother Nature so far");
                     translator.translateThis(message);
                     currentPhase = Action.SELECTCLOUD;
-                    translator.getGame().setCurrentAction(Action.SELECTCLOUD);
+                    //translator.getGame().setCurrentAction(Action.SELECTCLOUD);
                 }
                 break;
 
@@ -162,12 +162,12 @@ public class GameHandler {
                     orderPlayers.remove(0);
                     if(orderPlayers.size()>0) {     //It is time for the following player to move students!
                         currentPhase = Action.MOVESTUDENT;
-                        translator.getGame().setCurrentAction(Action.MOVESTUDENT);
+                        //translator.getGame().setCurrentAction(Action.MOVESTUDENT);
                         translator.getGame().setCurrentPlayer(orderPlayers.get(0));
                     }
                     else{                           //Else, if orderPlayers is empty: all the players have played their turns: it is time to play a card!
                         currentPhase = Action.PLAYCARD;
-                        translator.getGame().setCurrentAction(Action.PLAYCARD);
+                        //translator.getGame().setCurrentAction(Action.PLAYCARD);
                         currentPlayer = firstPlayer;
                         translator.getGame().setCurrentPlayer(players.get(currentPlayer));
                         translator.endTurn();

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.*;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.messages.Message;
 
@@ -25,15 +26,25 @@ public class GameHandler2 {
     private int numFinishedTurn=0; //number of players that finished their turn
     private boolean usedCard;
 
+    public Game getGame(){
+        return translator.getGame();
+    }
+
     public Phase getPhase(){
         return currentPhase;
+    }
+
+    public int getActivePlayers(){ //return the number of players in the game
+        return numPlayers;
     }
 
 
 
     //TODO: Exception added
     public GameHandler2(Message message) throws IllegalMessageException { //First instruction of all
+        //System.out.println("sono qui lala"+message.getAction());
         if(message.getAction()!=Action.CREATEMATCH) throw new IllegalMessageException();
+        //System.out.println("sono qui handler");
         completeRules = message.getCompleteRules();
         maxPlayers = message.getNumPlayers();
         if(maxPlayers==3) maxMoveStudent = 4;
@@ -54,23 +65,37 @@ public class GameHandler2 {
             currentPlayer=0;
             firstPlayer=0;
             currentPhase=Phase.PRETURN;
+            translator.getGame().setCurrentPlayer(players.get(0));
+            translator.getGame().setCurrentPhase(currentPhase);
         }
-        else if(currentPhase==Phase.PRETURN) currentPhase=Phase.MIDDLETURN;
+        else if(currentPhase==Phase.PRETURN) {
+            currentPhase=Phase.MIDDLETURN;
+            translator.getGame().setCurrentPhase(currentPhase);
+        }
         else if(currentPhase==Phase.MIDDLETURN) {
             currentPhase = Phase.MOVEMNTURN;
             //System.out.println("CAMBIO fase"+currentPhase);
             currentMoveStudent = 0;
+            translator.getGame().setCurrentPhase(currentPhase);
         }
-        else if(currentPhase==Phase.MOVEMNTURN) currentPhase=Phase.ENDTURN;
+        else if(currentPhase==Phase.MOVEMNTURN){
+            currentPhase=Phase.ENDTURN;
+            translator.getGame().setCurrentPhase(currentPhase);
+        }
         else if(currentPhase==Phase.ENDTURN){
             usedCard = false;
             if(numFinishedTurn==maxPlayers){
                 currentPhase=Phase.PRETURN;
                 numFinishedTurn=0;
                 currentPlayer=firstPlayer;
+                translator.getGame().setCurrentPhase(currentPhase);
             }
-            else currentPhase=Phase.MIDDLETURN;
-        } else if(currentPhase == Phase.ACTIVECARD){
+            else {
+                currentPhase=Phase.MIDDLETURN;
+                translator.getGame().setCurrentPhase(currentPhase);
+            }
+        }
+        else if(currentPhase == Phase.ACTIVECARD) {
             currentPhase = oldPhase;
         }
 
@@ -135,6 +160,8 @@ public class GameHandler2 {
     //refresh the current player
     private void refreshCurrentPlayer() {
         currentPlayer = players.indexOf(orderPlayers.get(numFinishedTurn));
+        translator.getGame().setCurrentPlayer(orderPlayers.get(numFinishedTurn));
+        //TODO Decide how to manage the current player in game
     }
 
 
@@ -151,6 +178,7 @@ public class GameHandler2 {
                 numPlayers++;
                 translator.translateThis(message);
                 if(numPlayers==maxPlayers) nextPhase();
+                //System.out.println(translator.getGame().getCurrentPlayer());
 
                 break;
 
@@ -158,10 +186,12 @@ public class GameHandler2 {
                 priority[currentPlayer] = message.getPriority();
                 translator.translateThis(message);
                 currentPlayer = (currentPlayer+1)%maxPlayers;
+                translator.getGame().setCurrentPlayer(players.get(currentPlayer));
                 if(currentPlayer==firstPlayer){ //first player in the first turn is 0 initialized in nextphase
                     orderPlayers = sort();
                     firstPlayer = players.indexOf(orderPlayers.get(0));
                     currentPlayer=firstPlayer;
+                    translator.getGame().setCurrentPlayer(orderPlayers.get(0));
                     nextPhase();
                 }
                 break;
@@ -325,92 +355,4 @@ public class GameHandler2 {
 
         return true;
     }
-
-    /*private boolean CharacterPlayed;
-    private final Game game;
-    private final int numPlayers;
-    private int currentPlayer;
-
-
-
-    private void PreTurn(){
-        int first = game.getLastPlayed();
-        for(int i=0; i<numPlayers; i++){
-            //tutti i metodi non ritornano nulla in quanto sono da implementare
-            ThrowCard(game.getPlayerNum(i));
-            for(int j=1; j<(numPlayers); j++) {
-                WaitForThrownCard(game.getPlayerNum(i + j));
-            }
-
-            WaitForUserCard();
-
-            SaveCard();
-
-            WaitForThrownCard(game.getPlayerNum(i));
-            for(int j=1; j<(numPlayers); j++) {
-                SendCard(game.getPlayerNum(i+1));
-            }
-
-        }
-        currentPlayer=WhoPlays();
-        game.setLastPlayed(currentPlayer);
-    }
-
-    private void MiddleTurn(){
-        for(int i=0; i<numPlayers; i++){
-            StartTurn(game.getPlayerNum(currentPlayer));
-            for(int j=1; j<(numPlayers); j++) {
-                WaitTurn(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitStudents();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyStudent(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitMotherNature();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyMotherNature(game.getPlayerNum(currentPlayer+j));
-            }
-
-            WaitCloud();
-
-            for(int j=1; j<(numPlayers); j++) {
-                NotifyCloud(game.getPlayerNum(currentPlayer+j));
-            }
-            currentPlayer++;
-        }
-    }
-
-    //da implementare
-    private void ThrowCard(Player player){}
-
-    private void WaitForThrownCard(Player player){}
-
-    private void WaitForUserCard(){}
-
-    private void SendCard(Player player){}
-
-    private void SaveCard(){}
-
-    private int WhoPlays(){}
-
-    private void StartTurn(Player currentPlayer){}
-
-    private void WaitTurn(Player nonCurrentPlayer){}
-
-    private void WaitStudents(){}
-
-    private void NotifyStudent(Player player){}
-
-    private void WaitMotherNature(){}
-
-    private void NotifyMotherNature(Player player){}
-
-    private void WaitCloud(){}
-
-    private void NotifyCloud(Player player){}*/
-
 }

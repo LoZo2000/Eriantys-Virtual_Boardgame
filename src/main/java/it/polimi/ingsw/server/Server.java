@@ -1,9 +1,7 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.server;
 
-import  it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.controller.exceptions.IllegalActionException;
 import it.polimi.ingsw.messages.Message;
-import it.polimi.ingsw.controller.Action;
-import  it.polimi.ingsw.model.Model;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,20 +16,16 @@ import java.util.concurrent.Executors;
 public class Server {
     private static final int PORT = 12346;
     private ServerSocket serverSocket;
+    private GameManager gameMaker;
 
     private ExecutorService executor = Executors.newFixedThreadPool(128);
 
     private List<Connection> connections = new ArrayList<>();
 
-    //Other:
-    Model model;
-    Controller controller;
 
-    //Match's features:
-    private boolean completeRules = false;
-    private int maxPlayers = 0;
-    private int currentPlayers = 1;
-
+    public synchronized void deliverMessage(Connection c, Message message) throws IllegalActionException {
+        gameMaker.manageMessage(c, message);
+    }
 
 
     //Register connection
@@ -45,29 +39,9 @@ public class Server {
         c.closeConnection();
     }
 
-    public synchronized void lobby(Connection c, Message message){
-        if(message.getAction()==Action.CREATEMATCH && maxPlayers==0){
-            completeRules = message.getCompleteRules();
-            maxPlayers = message.getNumPlayers();
-            model = new Model();
-            controller = new Controller(model);
-            RemoteView remoteView = new RemoteView(c);
-            remoteView.addObserver(controller);
-            model.addObserver(remoteView);
-        }
-        else if(message.getAction()==Action.ADDME && currentPlayers<maxPlayers){
-            currentPlayers++;
-            RemoteView remoteView = new RemoteView(c);
-            remoteView.addObserver(controller);
-            model.addObserver(remoteView);
-        }
-        else{
-            c.closeConnection();
-        }
-    }
-
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
+        this.gameMaker = new GameManager();
     }
 
     public void run(){
