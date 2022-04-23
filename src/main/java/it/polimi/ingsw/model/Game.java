@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.controller.Phase;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.controller.Action;
@@ -37,7 +38,7 @@ public class Game implements Serializable {
 
     private final String JSON_PATH = "characters.json";
     private String currentPlayer = null;
-    private Action curretAction = null;
+    private Phase currentPhase = null;
 
 
 
@@ -349,14 +350,14 @@ public class Game implements Serializable {
     public void setCurrentPlayer(String nickname){
         currentPlayer = nickname;
     }
-    public void setCurrentAction(Action action){
-        curretAction = action;
+    public void setCurrentPhase(Phase phase){
+        currentPhase = phase;
     }
     public String getCurrentPlayer(){
         return currentPlayer;
     }
-    public Action getCurretAction(){
-        return curretAction;
+    public Phase getCurrentPhase(){
+        return currentPhase;
     }
 
     //-------------------------------------------------------------------------------------
