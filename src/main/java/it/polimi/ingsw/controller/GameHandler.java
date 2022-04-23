@@ -37,7 +37,7 @@ public class GameHandler {
     }
 
 
-    public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, NoActiveCardException, NoCharacterSelectedException {
+    public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, NoActiveCardException, NoCharacterSelectedException, NotEnoughMoneyException, NoMoreTokensException {
         System.out.println("Message to exe: "+message.getAction());
         switch (message.getAction()){
 

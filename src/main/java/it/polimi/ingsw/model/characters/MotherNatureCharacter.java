@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import it.polimi.ingsw.model.rules.MotherNatureRule;
 import it.polimi.ingsw.model.rules.Rule;
 
@@ -18,7 +19,10 @@ public class MotherNatureCharacter extends Character{
     }
 
     @Override
-    public Rule usePower(Player player) {
+    public Rule usePower(Player player) throws NotEnoughMoneyException {
+        player.useCoins(this.getCost());
+        this.increaseTimesUsed();
+
         return new MotherNatureRule(extraMovement);
     }
 

@@ -24,14 +24,11 @@ public class Game implements Serializable {
     private Cloud[] clouds;
     //private Team[] teams;
     private ArrayList<Player> players = new ArrayList<>();
-    private Card[] playedCards;
     private Bag bag;
     private Map<Color, Player> professors;
     private Rule currentRule;
     private final int numPlayers;
-    private boolean completeRules;
-    private int lastPlayed;
-
+    private final boolean completeRules;
     private int activeCard;
     private Character[] charactersCards;
 
@@ -39,15 +36,20 @@ public class Game implements Serializable {
     private String currentPlayer = null;
     private Action curretAction = null;
 
+    private Map<Player, Card> playedCards;
+
 
 
     //Create game but no players are added;
     public Game(boolean completeRules, int numPlayers){
-        lastPlayed = 0;
         this.numPlayers=numPlayers;
         this.completeRules=completeRules;
+
+        //Init Bag
         FactoryBag fb = new FactoryBag();
         bag = fb.getBag();
+
+        //Init islands and mother nature
         Bag initBag = fb.getInitBag();
         initIslands(initBag);
         motherNature = new MotherNature();
@@ -58,13 +60,19 @@ public class Game implements Serializable {
             e.printStackTrace();
         }
 
-        this.currentRule = new DefaultRule();
-        this.professors = new HashMap<>();
+        //PLAYED CARDS
+        this.playedCards = new Hashtable<>();
 
+        //RULES
+        this.currentRule = new DefaultRule();
+
+        //PROFESSORS
+        this.professors = new HashMap<>();
         for(Color c: Color.values()){
             this.professors.put(c, null);
         }
 
+        //CHARACTERS (Only complete rules)
         if(this.completeRules){
             this.activeCard = -1;
             try {
@@ -72,8 +80,8 @@ public class Game implements Serializable {
             }catch (IOException e){
                 e.printStackTrace();
             }
-            //Arrays.stream(charactersCards).map(Character::toString)
-            //        .forEach(System.out::println);
+            Arrays.stream(charactersCards).map(Character::toString)
+                    .forEach(System.out::println);
         } else{
             this.activeCard = -1;
             this.charactersCards = null;
@@ -175,6 +183,8 @@ public class Game implements Serializable {
     public ArrayList<Player> getAllPlayers(){
         return (ArrayList<Player>) players.clone();
     }
+
+    //TODO PlayCard
 
     //When parameter enableMovement is true the method has the regular behaviour.
     //If enableMovement is false, it will be checked if there's an active card.
@@ -312,6 +322,11 @@ public class Game implements Serializable {
         arrival.addStudent(s);
 
         this.updateProfessors();
+
+        if(completeRules){
+            Color c = s.getColor();
+            this.assignCoins(c, true, false);
+        }
     }
 
     public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure) throws NoSuchStudentException{
@@ -323,6 +338,14 @@ public class Game implements Serializable {
         departure.addStudent(s2);
 
         this.updateProfessors();
+
+        if(completeRules){
+            Color c1 = s1.getColor();
+            Color c2 = s2.getColor();
+
+            this.assignCoins(c1, false, c1 == c2);
+            this.assignCoins(c2, true, c1 == c2);
+        }
 
         if(this.activeCard != -1){
             this.activeCard = -1;
@@ -340,6 +363,10 @@ public class Game implements Serializable {
     public void selectCloud(String playerNick, Cloud cloud) throws NoPlayerException{
         ArrayList<Student> students = cloud.chooseCloud();
         for (Student s : students) getPlayer(playerNick).getDashboard().getEntrance().addStudent(s);
+
+        //This will always be the last action of each player per round, so the rules can be reset now
+        this.activeCard = -1;
+        this.currentRule = new DefaultRule();
     }
 
     public Cloud[] getAllClouds(){
@@ -409,6 +436,17 @@ public class Game implements Serializable {
 
     //TODO Refill method for cards which need it (Wait for controller) or use a flag in moveStudent (The Card will always be the departure Movable)
 
+    //SameColors is a flag that checks if this movement was an exchange between 2 students of the same color.
+    //In this case the Player won't receive any coin because this action could lead to a farm of coins.
+    private void assignCoins(Color c, boolean reset, boolean sameColors){
+        for(Player p : this.players){
+            if(p.getDashboard().getCanteen().canGetCoin(c, reset)){
+                if(!sameColors)
+                    p.giveCoin();
+            }
+        }
+    }
+
     public int getActiveCard(){
         return this.activeCard;
     }
@@ -427,12 +465,10 @@ public class Game implements Serializable {
         this.charactersCards = characters.clone();
     }
 
-    public boolean usePower(Player activePlayer, int card) throws NoCharacterSelectedException{
+    public boolean usePower(Player activePlayer, int card) throws NoCharacterSelectedException, NotEnoughMoneyException{
         if(card <= -1 || card > 2){
             throw new NoCharacterSelectedException("No character selected to use its power");
         }
-
-        //TODO Check Monete
 
         Character c = this.charactersCards[card];
         this.currentRule = c.usePower(activePlayer);
@@ -497,6 +533,7 @@ public class Game implements Serializable {
             throw new NoActiveCardException("You can't block a color with this power");
 
         this.currentRule = new InfluenceRule(player.getColor(), c, 0, false);
+        this.activeCard = -1;
     }
 
     private void addProhibitionToken(Island island){
@@ -532,6 +569,9 @@ public class Game implements Serializable {
                 Student s = students.remove(0);
                 try {
                     canteen.removeStudent(s.getId());
+
+                    //Needed to reset the removedColor (If I try to put the same color after this method I could not get the coin)
+                    canteen.canGetCoin(color, true);
                 } catch (NoSuchStudentException e) {
                     e.printStackTrace();
                 }
@@ -549,8 +589,8 @@ public class Game implements Serializable {
         return this.currentRule.getMotherNatureExtraMovement();
     }
 
-    public boolean needsRefill() throws NoActiveCardException{
-        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+    public boolean needsRefill(){
+        if(this.activeCard == -1) return false;
 
         MovementCharacter mc = null;
         try{
@@ -559,7 +599,26 @@ public class Game implements Serializable {
             return false;
         }
 
+        if(!mc.isRefill()){
+            if(this.activeCard != -1){
+                this.activeCard = -1;
+                this.currentRule = new DefaultRule();
+            }
+        }
+
         return mc.isRefill();
+    }
+
+    public void refillActiveCard() throws NoActiveCardException, NoMoreStudentsException {
+        if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
+
+        MovementCharacter mc = (MovementCharacter) this.charactersCards[activeCard];
+        mc.addStudent(bag.getRandomStudent());
+
+        if(this.activeCard != -1){
+            this.activeCard = -1;
+            this.currentRule = new DefaultRule();
+        }
     }
 
     //--------------------------------------------------------------------------------------------

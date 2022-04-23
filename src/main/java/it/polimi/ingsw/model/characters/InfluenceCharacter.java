@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import it.polimi.ingsw.model.rules.InfluenceRule;
 import it.polimi.ingsw.model.rules.Rule;
 
@@ -24,7 +25,10 @@ public class InfluenceCharacter extends Character{
     }
 
     @Override
-    public Rule usePower(Player player) {
+    public Rule usePower(Player player) throws NotEnoughMoneyException {
+        player.useCoins(this.getCost());
+        this.increaseTimesUsed();
+
         return new InfluenceRule(player.getColor(), null, extraPoints, towersDisabled);
     }
 

@@ -48,10 +48,10 @@ public class MovementCharacter extends ActionCharacter implements Movable {
         return Set.copyOf(this.allowedDepartures);
     }
 
-    @Override
+    /*@Override
     public Rule usePower(Player player) {
         return new ActionRule();
-    }
+    }*/
 
     public void addStudent(Student s){
         students.add(s);

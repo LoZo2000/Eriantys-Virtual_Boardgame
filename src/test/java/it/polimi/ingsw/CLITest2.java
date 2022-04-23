@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.GameHandler2;
 import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.exceptions.EndGameException;
 import it.polimi.ingsw.controller.exceptions.IllegalMessageException;
 import it.polimi.ingsw.messages.*;
@@ -16,12 +17,16 @@ public class CLITest2 {
         Location arrivalType, departureType;
         boolean completeRules;
         int numPlayers, priority, studentId, arrivalId, departureId, MNmovement, position;
+
+        int numCard, studentId2;
+        Color chosenColor;
+
         Scanner sc=new Scanner(System.in);
 
-        Message message = new CREATEGAMEmessage("abc", Action.CREATEMATCH, false, 3 );
+        Message message = new CREATEGAMEmessage("abc", Action.CREATEMATCH, true, 2 );
         GameHandler2 gameHandler = new GameHandler2(message);
 
-
+        //TODO Add usepower command and exchangeStudent
         while(true){
             //sc.nextLine();
             System.out.println("La fase attuale è "+gameHandler.getPhase());
@@ -29,95 +34,154 @@ public class CLITest2 {
             playerId = sc.nextLine();
             //sc.nextLine();
             System.out.println("Insert action: (Action)");
-            ac = sc.nextLine();
+            ac = sc.nextLine().toUpperCase();
 
-            if(ac.equals("ADDME")) {
-                //sc.nextLine();
-                //System.out.println("Do you want to play with complete rules? (y/n)");
-                //ans = sc.nextLine();
-                //completeRules = false;
-                //if(ans.equals("y")) completeRules = true;
-                //System.out.println("How many players?");
-                //numPlayers = sc.nextInt();
-                //sc.nextLine();
-                message = new ADDMEmessage(playerId, Action.ADDME);
-            }
-
-            else if(ac.equals("PLAYCARD")){
-                System.out.println("Chose which card you want to play (priority):");
-                priority = sc.nextInt();
-                sc.nextLine();
-                message = new PLAYCARDmessage(playerId, Action.PLAYCARD, priority);
-            }
-
-            else if(ac.equals("MOVESTUDENT")){
-                System.out.println("Which student do you want to move? (studentId)");
-                studentId = sc.nextInt();
-                sc.nextLine();
-                System.out.println("Where the student is? (Location)");
-                lo = sc.nextLine();
-                if(lo.equals("ISLAND")){
-                    departureType=Location.ISLAND;
-                    System.out.println("Choose island: (islandId)");
-                    departureId = sc.nextInt();
+            switch (ac) {
+                case "ADDME" ->
+                    //sc.nextLine();
+                    //System.out.println("Do you want to play with complete rules? (y/n)");
+                    //ans = sc.nextLine();
+                    //completeRules = false;
+                    //if(ans.equals("y")) completeRules = true;
+                    //System.out.println("How many players?");
+                    //numPlayers = sc.nextInt();
+                    //sc.nextLine();
+                    message = new ADDMEmessage(playerId, Action.ADDME);
+                case "PLAYCARD" -> {
+                    System.out.println("Chose which card you want to play (priority):");
+                    priority = sc.nextInt();
                     sc.nextLine();
+                    message = new PLAYCARDmessage(playerId, Action.PLAYCARD, priority);
                 }
-                else if(lo.equals("CANTEEN")){
-                    departureType=Location.CANTEEN;
+                case "MOVESTUDENT" -> {
+                    System.out.println("Which student do you want to move? (studentId)");
+                    studentId = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Where the student is? (Location)");
+                    lo = sc.nextLine().toUpperCase();
+                    try {
+                        departureType = Location.valueOf(lo);
+                    }catch (IllegalArgumentException e){
+                        System.out.println("The inserted value isn't a valid location");
+                        continue;
+                    }
                     departureId = -1;
+                    if (lo.equals("ISLAND")) {
+                        System.out.println("Choose island: (islandId)");
+                        departureId = sc.nextInt();
+                        sc.nextLine();
+                    }
+                    //sc.nextLine();
+                    System.out.println("Where do you want to move the student? (Location)");
+                    lo = sc.nextLine().toUpperCase();
+                    try {
+                        arrivalType = Location.valueOf(lo);
+                    }catch (IllegalArgumentException e){
+                        System.out.println("The inserted value isn't a valid location");
+                        continue;
+                    }
+                    arrivalId = -1;
+                    if (lo.equals("ISLAND")) {
+                        System.out.println("Choose island: (islandId)");
+                        arrivalId = sc.nextInt();
+                        sc.nextLine();
+                    }
+                    message = new MOVESTUDENTmessage(playerId, Action.MOVESTUDENT, studentId, departureType, departureId, arrivalType, arrivalId);
                 }
-                else if(lo.equals("ENTRANCE")) {
-                    departureType=Location.ENTRANCE;
+                case "USEPOWER" -> {
+                    //sc.nextLine();
+                    System.out.print("Choose which card you want to activate (0,1,2): ");
+                    numCard = sc.nextInt();
+                    sc.nextLine();
+                    message = new USEPOWERmessage(playerId, Action.USEPOWER, numCard);
+                }
+                case "EXCHANGESTUDENT" -> {
+                    System.out.print("Which student do you want to move? (studentId) ");
+                    studentId = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.println("Where is the student? (Location) ");
+                    lo = sc.nextLine().toUpperCase();
+                    try {
+                        departureType = Location.valueOf(lo);
+                    }catch (IllegalArgumentException e){
+                        System.out.println("The inserted value isn't a valid location");
+                        continue;
+                    }
                     departureId = -1;
+
+                    System.out.print("Which is the other student do you want to move? (studentId) ");
+                    studentId2 = sc.nextInt();
+                    sc.nextLine();
+                    //sc.nextLine();
+                    System.out.println("Where is this other student? (Location) ");
+                    lo = sc.nextLine().toUpperCase();
+
+                    try {
+                        arrivalType = Location.valueOf(lo);
+                    }catch (IllegalArgumentException e){
+                        System.out.println("The inserted value isn't a valid location");
+                        continue;
+                    }
+                    arrivalId = -1;
+
+                    message = new EXCHANGESTUDENTmessage(playerId, Action.EXCHANGESTUDENT, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
+
                 }
-                else{
-                    departureType = null;
-                    departureId = -1;
-                }
-                //sc.nextLine();
-                System.out.println("Where do you want to move the student? (Location)");
-                lo = sc.nextLine();
-                if(lo.equals("ISLAND")){
-                    arrivalType=Location.ISLAND;
+                case "ISLAND_INFLUENCE" -> {
                     System.out.println("Choose island: (islandId)");
                     arrivalId = sc.nextInt();
                     sc.nextLine();
-                }
-                else if(lo.equals("CANTEEN")){
-                    arrivalType=Location.CANTEEN;
-                    arrivalId = -1;
-                }
-                else if(lo.equals("ENTRANCE")) {
-                    arrivalType=Location.ENTRANCE;
-                    arrivalId = -1;
-                }
-                else{
-                    arrivalType = null;
-                    arrivalId = -1;
-                }
-                message = new MOVESTUDENTmessage(playerId, Action.MOVESTUDENT, studentId, departureType, departureId, arrivalType, arrivalId);
-            }
 
-            else if(ac.equals("MOVEMOTHERNATURE")){
-                System.out.println("Insert Mother Nature's movement:");
-                MNmovement = sc.nextInt();
-                sc.nextLine();
-                message = new MOVEMOTHERNATUREmessage(playerId, Action.MOVEMOTHERNATURE, MNmovement);
-            }
+                    message = new ChooseIslandMessage(playerId, Action.ISLAND_INFLUENCE, arrivalId);
+                }
+                case "BLOCK_ISLAND" -> {
+                    System.out.println("Choose island: (islandId)");
+                    arrivalId = sc.nextInt();
+                    sc.nextLine();
 
-            else if(ac.equals("SELECTCLOUD")){
-                System.out.println("Select which cloud you have chosen: (position)");
-                position = sc.nextInt();
-                sc.nextLine();
-                message = new SELECTCLOUDmessage(playerId, Action.SELECTCLOUD, position);
-            }
+                    message = new ChooseIslandMessage(playerId, Action.BLOCK_ISLAND, arrivalId);
+                }
+                case "BLOCK_COLOR" -> {
+                    System.out.println("Choose color: (Color)");
+                    lo = sc.nextLine().toUpperCase();
 
-            else if(ac.equals("SHOWME")){
-                message = new SHOWMEmessage(playerId, Action.SHOWME);
-            }
+                    try {
+                        chosenColor = Color.valueOf(lo);
+                    }catch (IllegalArgumentException e){
+                        System.out.println("The inserted value isn't a valid color");
+                        continue;
+                    }
 
-            else{
-                message = new Message(playerId, null);
+                    message = new ChooseColorMessage(playerId, Action.BLOCK_COLOR, chosenColor);
+                }
+                case "PUT_BACK" -> {
+                    System.out.println("Choose color: (Color)");
+                    lo = sc.nextLine().toUpperCase();
+
+                    try {
+                        chosenColor = Color.valueOf(lo);
+                    }catch (IllegalArgumentException e){
+                        System.out.println("The inserted value isn't a valid color");
+                        continue;
+                    }
+
+                    message = new ChooseColorMessage(playerId, Action.PUT_BACK, chosenColor);
+                }
+                case "MOVEMOTHERNATURE" -> {
+                    System.out.println("Insert Mother Nature's movement:");
+                    MNmovement = sc.nextInt();
+                    sc.nextLine();
+                    message = new MOVEMOTHERNATUREmessage(playerId, Action.MOVEMOTHERNATURE, MNmovement);
+                }
+                case "SELECTCLOUD" -> {
+                    System.out.println("Select which cloud you have chosen: (position)");
+                    position = sc.nextInt();
+                    sc.nextLine();
+                    message = new SELECTCLOUDmessage(playerId, Action.SELECTCLOUD, position);
+                }
+                case "SHOWME" -> message = new SHOWMEmessage(playerId, Action.SHOWME);
+                default -> message = new Message(playerId, null);
             }
 
             try{

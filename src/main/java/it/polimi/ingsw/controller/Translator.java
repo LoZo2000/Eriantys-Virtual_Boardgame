@@ -15,24 +15,26 @@ import java.util.Set;
 
 
 public class Translator {
-    Game game;
+    private Game game;
+    private final boolean completeRules;
 
     public Translator(boolean completeRules, int numPlayers){
+        this.completeRules = completeRules;
         game = new Game(completeRules, numPlayers);
     }
 
-    public boolean translateThis(Message message) throws IllegalMoveException, NoCharacterSelectedException, NoActiveCardException {
+    public boolean translateThis(Message message) throws IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
 
         switch(message.getAction()){
 
-            case CREATEMATCH:
+            /*case CREATEMATCH:
                 if(game.getRegisteredNumPlayers() == 1)
                     game.addPlayer(message.getSender(), ColorTower.WHITE);
                 else if(game.getRegisteredNumPlayers() == 0 && game.getNumPlayers() == 3)
                     game.addPlayer(message.getSender(), ColorTower.GREY);
                 else
                     game.addPlayer(message.getSender(), ColorTower.BLACK);
-                return false;
+                return false;*/
 
             case ADDME:         //To add a player in the current match
                 //TODO Fix
@@ -57,9 +59,7 @@ public class Translator {
                 }
                 return false;
 
-
-
-            case MOVESTUDENT:   //To move a student (from ENTRANCE to ISLAND or CANTEEN)
+            case MOVESTUDENT:   //To move a student (from ENTRANCE to ISLAND or CANTEEN) (or from CARD_ISLAND or CARD_CANTEEN if active card)
                 Movable departure=null, arrival=null;
                 switch(message.getDepartureType()){
                     case ENTRANCE:
@@ -84,6 +84,12 @@ public class Translator {
                         }catch(Exception e){
                             throw new IllegalMoveException("This island doesn't exist!");
                         }
+                        break;
+                    case CARD_ISLAND:
+                        departure = getMovementCharacterCard(Location.CARD_ISLAND);
+                        break;
+                    case CARD_CANTEEN:
+                        departure = getMovementCharacterCard(Location.CARD_CANTEEN);
                         break;
                     default:
                         departure = null;
@@ -112,6 +118,12 @@ public class Translator {
                             throw new IllegalMoveException("This island doesn't exist!");
                         }
                         break;
+                    case CARD_ISLAND:
+                        arrival = getMovementCharacterCard(Location.CARD_ISLAND);
+                        break;
+                    case CARD_CANTEEN:
+                        arrival = getMovementCharacterCard(Location.CARD_CANTEEN);
+                        break;
                     default:
                         arrival = null;
                 }
@@ -119,6 +131,13 @@ public class Translator {
                     game.moveStudent(message.getStudentId(), arrival, departure);
                 }catch (Exception e){
                     throw new IllegalMoveException("Student, arrival or departure missing...");
+                }
+
+                try {
+                    if(this.game.needsRefill())
+                        this.game.refillActiveCard();
+                }catch(NoActiveCardException | NoMoreStudentsException e){
+                    e.printStackTrace();
                 }
                 return false;
 
@@ -176,15 +195,7 @@ public class Translator {
                         departure = p.getDashboard().getCanteen();
                         break;
                     case CARD_EXCHANGE:
-                        Character[] characters = this.game.getCharactersCards();
-                        departure = null;
-                        for(Character ch : characters){
-                            if(ch.getTypeCharacter() == CharacterType.MOVEMENT){
-                                MovementCharacter mc = (MovementCharacter) ch;
-                                if(mc.getLocationType() == Location.CARD_EXCHANGE && departure == null)
-                                    departure = mc;
-                            }
-                        }
+                        departure = getMovementCharacterCard(Location.CARD_EXCHANGE);
                         break;
                     default:
                         departure = null;
@@ -197,24 +208,32 @@ public class Translator {
                         arrival = p.getDashboard().getCanteen();
                         break;
                     case CARD_EXCHANGE:
-                        Character[] characters = this.game.getCharactersCards();
-                        arrival = null;
-                        for(Character ch : characters){
-                            if(ch.getTypeCharacter() == CharacterType.MOVEMENT){
-                                MovementCharacter mc = (MovementCharacter) ch;
-                                if(mc.getLocationType() == Location.CARD_EXCHANGE && arrival == null)
-                                    arrival = mc;
-                            }
-                        }
+                        arrival = getMovementCharacterCard(Location.CARD_EXCHANGE);
                         break;
                     default:
                         arrival = null;
                 }
                 try {
                     game.exchangeStudent(exchangeMessage.getStudentId(), exchangeMessage.getStudentId2(), arrival, departure);
-                } catch (NoSuchStudentException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    throw new IllegalMoveException("Student, arrival or departure missing...");
                 }
+                return false;
+
+            case BLOCK_ISLAND:
+                blockIsland(message);
+                return false;
+
+            case ISLAND_INFLUENCE:
+                calculateIslandInfluence(message);
+                return false;
+
+            case BLOCK_COLOR:
+                blockColor((ChooseColorMessage) message);
+                return false;
+
+            case PUT_BACK:
+                putBackStudents((ChooseColorMessage) message);
                 return false;
 
             default:
@@ -226,75 +245,128 @@ public class Translator {
         return this.game.getRequestedAction();
     }
 
-    private void showMe(){
+    private void blockIsland(Message message) throws NoActiveCardException, NoMoreTokensException, IllegalMoveException {
+        ChooseIslandMessage cm = (ChooseIslandMessage) message;
+        Island i;
+        try {
+            i = this.game.getIsland(cm.getIdIsland());
+        }catch(NoIslandException e){
+            throw new IllegalMoveException("This island doesn't exist!");
+        }
+
+        this.game.disableIsland(i);
+    }
+
+    private void calculateIslandInfluence(Message message) throws NoActiveCardException, IllegalMoveException {
+        ChooseIslandMessage cm = (ChooseIslandMessage) message;
+        Island i;
+        try {
+            i = this.game.getIsland(cm.getIdIsland());
+        }catch(NoIslandException e){
+            throw new IllegalMoveException("This island doesn't exist!");
+        }
+
+        this.game.moveMotherNature(i, false);
+    }
+
+    private void blockColor(ChooseColorMessage message) throws NoActiveCardException {
+        Player p = null;
+        try {
+            p = this.game.getPlayer(message.getSender());
+        } catch (NoPlayerException e) {
+            e.printStackTrace();
+        }
+        this.game.disableColor(p, message.getChosenColor());
+    }
+
+    private void putBackStudents(ChooseColorMessage message) throws NoActiveCardException {
+        this.game.putBackInBag(message.getChosenColor());
+    }
+
+    private void showMe() {
         System.out.println("");
         System.out.println("");
         System.out.println("CURRENT BOARD:");
         LinkedList<Island> islands = game.getAllIslands();
-        for(Island i : islands){
+        for (Island i : islands) {
             String owner = "nobody";
-            if(i.getOwner() != null) owner = String.valueOf(i.getOwner());
+            if (i.getOwner() != null) owner = String.valueOf(i.getOwner());
 
-            System.out.print("Island "+i+", Owner "+owner+", Students: ");
+            System.out.print("Island " + i + ", Owner " + owner + ", Students: ");
             ArrayList<Student> students = i.getAllStudents();
-            for(Student s : students) System.out.print(s+" ");
-            if(game.getMotherNaturePosition().equals(i)) System.out.print("MN");
+            for (Student s : students) System.out.print(s + " ");
+            if (game.getMotherNaturePosition().equals(i)) System.out.print("MN");
+            if(i.getProhibition()) System.out.print("\u001B[31mBLOCK\u001B[0m");
             System.out.print("\n");
         }
         Map<Color, Player> professors = game.getProfessors();
         System.out.print("PROFESSORS: ");
-        for(Color co : Color.values()) System.out.print(co+": "+professors.get(co)+", ");
+        for (Color co : Color.values()) System.out.print(co + ": " + professors.get(co) + ", ");
         ArrayList<Player> players = game.getAllPlayers();
         System.out.print("\nCLOUDS:\n");
-        for(int i=0; i<game.getNumberOfClouds(); i++){
-            System.out.print("Cloud "+i+": ");
-            for(Color co : Color.values()) System.out.print(co+"="+game.getNumberOfStudentPerColorOnCloud(i,co)+", ");
+        for (int i = 0; i < game.getNumberOfClouds(); i++) {
+            System.out.print("Cloud " + i + ": ");
+            for (Color co : Color.values())
+                System.out.print(co + "=" + game.getNumberOfStudentPerColorOnCloud(i, co) + ", ");
             System.out.print("\n");
         }
-        for(Player p : players){
-            System.out.println("\nDASHBOARD of "+p+":");
+        for (Player p : players) {
+            System.out.println("\nDASHBOARD of " + p + ":");
             System.out.print("CARDS: ");
             ArrayList<Card> cards = p.getHand().getAllCards();
-            for(Card ca : cards) System.out.print(ca+" ");
+            for (Card ca : cards) System.out.print(ca + " ");
             System.out.print("\nEntrance: ");
             ArrayList<Student> students = p.getDashboard().getEntrance().getAllStudents();
-            for(Student s : students) System.out.print(s+" ");
-            System.out.print("\nCanteen: ");
-            for(Color col : Color.values()){
-                System.out.print(col+": "+p.getDashboard().getCanteen().getNumberStudentColor(col)+" ");
+            for (Student s : students) System.out.print(s + " ");
+            System.out.println("\n\u001B[1m\u001B[34mCanteen: \u001B[0m");
+            for (Color col : Color.values()) {
+                System.out.println("\t\u001B[1m"+col + "\u001B[0m: " + p.getDashboard().getCanteen().getStudents(col) + " (Num: " + p.getDashboard().getCanteen().getNumberStudentColor(col) +")");
             }
+            if(completeRules)
+                System.out.print("\nCoins: " + p.getCoins());
             System.out.println("");
         }
 
-        /*currently the characters are not supported in showme
-        Character[] characters = this.game.getCharactersCards();
-        System.out.println("\nCARDS: \n");
-        for(Character c : characters){
-            System.out.println(c.toString());
-        }
-
-
-        System.out.println();
-        if(this.game.getActiveCard() == -1){
-            System.out.println("\u001B[31mNo active card\u001B[0m");
-        } else{
-            System.out.println("\u001B[34mThe active card is "+this.game.getActiveCard()+"\u001B[0m");
-            try {
-                System.out.println("\u001B[34mThe nextAction is "+this.game.getRequestedAction()+"\u001B[0m");
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (completeRules){
+            Character[] characters = this.game.getCharactersCards();
+            System.out.println("\nCARDS: \n");
+            for (Character c : characters) {
+                System.out.println(c.toString());
             }
+
+
+            System.out.println();
+            if (this.game.getActiveCard() == -1) {
+                System.out.println("\u001B[31mNo active card\u001B[0m");
+            } else {
+                System.out.println("\u001B[34mThe active card is " + this.game.getActiveCard() + "\u001B[0m");
+                try {
+                    System.out.println("\u001B[34mThe nextAction is " + this.game.getRequestedAction() + "\u001B[0m");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            //TODO DEBUG
+            System.out.println();
+            System.out.println(game.getCurrentRule().toString());
+
+            System.out.println("\n\n");
         }
-
-
-        //TODO DEBUG
-        System.out.println();
-        System.out.println(game.getCurrentRule().toString());
-
-        System.out.println("\n\n");
-        */
     }
 
+    private MovementCharacter getMovementCharacterCard(Location typeCard){
+        Character[] characters = this.game.getCharactersCards();
+        for(Character ch : characters){
+            if(ch.getTypeCharacter() == CharacterType.MOVEMENT){
+                MovementCharacter mc = (MovementCharacter) ch;
+                if(mc.getLocationType() == typeCard)
+                    return mc;
+            }
+        }
+        return null;
+    }
 
 
     public Set<Location> getAllowedDepartures() throws NoActiveCardException{

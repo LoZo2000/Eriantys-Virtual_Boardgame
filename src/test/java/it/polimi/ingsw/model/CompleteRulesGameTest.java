@@ -12,9 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +35,8 @@ class CompleteRulesGameTest {
         students1.add(new Student(20, Color.BLUE));
         students1.add(new Student(21, Color.BLUE));
         students1.add(new Student(22, Color.BLUE));
+        students1.add(new Student(25, Color.RED));
+        students1.add(new Student(26, Color.RED));
 
         Player player1 = new Player("player1",2, ColorTower.BLACK, students1);
 
@@ -129,12 +128,18 @@ class CompleteRulesGameTest {
 
         assertEquals(1, i.getReport().getTowerNumbers());
 
+        //2 Coins Needed
+        p2.giveCoin();
+        p2.giveCoin();
+
         try {
             //Card 1: 2 Extra Influence Points
             this.game.usePower(p2, 0);
-        } catch (NoCharacterSelectedException ex) {
+        } catch (NoCharacterSelectedException | NotEnoughMoneyException ex) {
             fail();
         }
+
+        assertEquals(0, p2.getCoins());
 
         assertEquals(InfluenceRule.class, game.getCurrentRule());
 
@@ -240,12 +245,18 @@ class CompleteRulesGameTest {
             fail();
         }
 
+        p2.giveCoin();
+        p2.giveCoin();
+        p2.giveCoin();
+
         try {
             //Card 0 Disable Towers
             this.game.usePower(p2, 0);
-        } catch (NoCharacterSelectedException ex) {
+        } catch (NoCharacterSelectedException | NotEnoughMoneyException ex) {
             fail();
         }
+
+        assertEquals(0, p2.getCoins());
 
         assertEquals(InfluenceRule.class, game.getCurrentRule());
 
@@ -294,12 +305,17 @@ class CompleteRulesGameTest {
 
         assertEquals(this.game.getPlayer("player1"), professors.get(Color.BLUE));
 
+        this.game.getPlayer("player2").giveCoin();
+        this.game.getPlayer("player2").giveCoin();
+
         try {
             //Card 0 Tie Professor
             this.game.usePower(this.game.getPlayer("player2"), 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
+
+        assertEquals(0, this.game.getPlayer("player2").getCoins());
 
         e = this.game.getPlayer("player2").getDashboard().getEntrance();
         c = this.game.getPlayer("player2").getDashboard().getCanteen();
@@ -349,11 +365,16 @@ class CompleteRulesGameTest {
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableIsland(i));
 
+        p1.giveCoin();
+        p1.giveCoin();
+
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
+
+        assertEquals(0, p1.getCoins());
 
         try {
             this.game.disableIsland(i);
@@ -415,11 +436,16 @@ class CompleteRulesGameTest {
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableIsland(null));
 
+        p1.giveCoin();
+        p1.giveCoin();
+
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
+
+        assertEquals(0, p1.getCoins());
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableColor(null, Color.PINK));
 
@@ -470,11 +496,20 @@ class CompleteRulesGameTest {
             fail();
         }
 
+        Player finalP = p1;
+        assertThrows(NotEnoughMoneyException.class, () -> this.game.usePower(finalP, 0));
+
+        p1.giveCoin();
+        p1.giveCoin();
+        p1.giveCoin();
+
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
+
+        assertEquals(0, p1.getCoins());
 
         try {
             this.game.disableIsland(i);
@@ -558,11 +593,17 @@ class CompleteRulesGameTest {
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableColor(null, Color.PINK));
 
+        p2.giveCoin();
+        p2.giveCoin();
+        p2.giveCoin();
+
         try {
             this.game.usePower(p2, 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
+
+        assertEquals(0, p1.getCoins());
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableIsland(null));
         assertThrows(NoActiveCardException.class, () -> this.game.moveMotherNature(null, false));
@@ -616,11 +657,17 @@ class CompleteRulesGameTest {
 
         assertThrows(NoActiveCardException.class, () -> this.game.moveMotherNature(i2, false));
 
+        p1.giveCoin();
+        p1.giveCoin();
+        p1.giveCoin();
+
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
+
+        assertEquals(0, p1.getCoins());
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableIsland(null));
 
@@ -652,8 +699,11 @@ class CompleteRulesGameTest {
         this.game.moveStudent(2, c1, e1);
         this.game.moveStudent(7, c1, e1);
         this.game.moveStudent(17, c1, e1);
+        this.game.moveStudent(18, c1, e1);
+        this.game.moveStudent(19, c1, e1);
 
-        assertEquals(4, c1.getNumberStudentColor(Color.BLUE));
+        assertEquals(6, c1.getNumberStudentColor(Color.BLUE));
+        assertEquals(2, p1.getCoins());
 
         Player p2 = this.game.getPlayer("player2");
         Entrance e2 = p2.getDashboard().getEntrance();
@@ -665,6 +715,10 @@ class CompleteRulesGameTest {
         assertEquals(2, c2.getNumberStudentColor(Color.BLUE));
 
         assertThrows(NoActiveCardException.class, () -> this.game.moveMotherNature(null, false));
+
+        p1.giveCoin();
+        p1.giveCoin();
+        p1.giveCoin();
 
         try {
             this.game.usePower(p1, 0);
@@ -680,8 +734,10 @@ class CompleteRulesGameTest {
             fail();
         }
 
-        assertEquals(1, c1.getNumberStudentColor(Color.BLUE));
+        assertEquals(3, c1.getNumberStudentColor(Color.BLUE));
         assertEquals(0, c2.getNumberStudentColor(Color.BLUE));
+
+        assertEquals(2, p1.getCoins());
     }
 
     @Test
@@ -693,17 +749,22 @@ class CompleteRulesGameTest {
         this.game.setCharactersCards(characters);
 
         Player p1 = this.game.getPlayer("player1");
+
+        p1.giveCoin();
+
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
 
+        assertEquals(0, p1.getCoins());
+
         assertEquals(2, this.game.getMotherNatureExtraMovement());
     }
 
     @Test
-    void exchangeStudent() throws Exception{
+    void exchangeStudentCardEntrance() throws Exception{
         Character[] characters = new Character[1];
         Set<Location> allowedDepartures = Set.of(Location.ENTRANCE, Location.CARD_EXCHANGE);
         Set<Location> allowedArrivals = Set.of(Location.ENTRANCE, Location.CARD_EXCHANGE);
@@ -722,11 +783,16 @@ class CompleteRulesGameTest {
 
         Player p1 = this.game.getPlayer("player1");
         Entrance e1 = p1.getDashboard().getEntrance();
+
+        p1.giveCoin();
+
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
+
+        assertEquals(0, p1.getCoins());
 
         Action requestedActiveAction = null;
         Set<Location> departures = null;
@@ -778,20 +844,19 @@ class CompleteRulesGameTest {
         characters[0] = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
         this.game.setCharactersCards(characters);
 
-        assertThrows(NoActiveCardException.class, () -> this.game.needsRefill());
+        assertFalse(this.game.needsRefill());
 
         Player p1 = this.game.getPlayer("player1");
+        p1.giveCoin();
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
             fail();
         }
 
-        try {
-            assertTrue(this.game.needsRefill());
-        } catch (NoActiveCardException e) {
-            fail();
-        }
+        assertEquals(0, p1.getCoins());
+
+        assertTrue(this.game.needsRefill());
     }
 
     @Test
@@ -802,9 +867,132 @@ class CompleteRulesGameTest {
         characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
         this.game.setCharactersCards(characters);
 
-        assertThrows(NoActiveCardException.class, () -> this.game.needsRefill());
+        assertFalse(this.game.needsRefill());
 
         Player p1 = this.game.getPlayer("player1");
+        p1.giveCoin();
+        p1.giveCoin();
+        p1.giveCoin();
+        try {
+            this.game.usePower(p1, 0);
+        } catch (NoCharacterSelectedException ex) {
+            fail();
+        }
+
+        assertEquals(0, p1.getCoins());
+
+        assertFalse(this.game.needsRefill());
+    }
+
+    @Test
+    void giveCoinsMoveStudent() throws Exception{
+        Player p1 = this.game.getPlayer("player1");
+        Entrance e1 = p1.getDashboard().getEntrance();
+        Canteen c1 = p1.getDashboard().getCanteen();
+        Island i = this.game.getIsland(3);
+
+        assertEquals(0, p1.getCoins());
+
+        this.game.moveStudent(6, c1, e1);
+        assertEquals(0, p1.getCoins());
+
+        this.game.moveStudent(2, c1, e1);
+        assertEquals(0, p1.getCoins());
+
+        this.game.moveStudent(18, i, e1);
+        assertEquals(0, p1.getCoins());
+
+        this.game.moveStudent(7, c1, e1);
+        assertEquals(1, p1.getCoins());
+
+        this.game.moveStudent(17, i, e1);
+        assertEquals(1, p1.getCoins());
+    }
+
+    @Test
+    void giveCoinsExchangeStudentsEntranceCanteen() throws Exception{
+        Character[] characters = new Character[1];
+        Set<Location> allowedDepartures = Set.of(Location.ENTRANCE, Location.CANTEEN);
+        Set<Location> allowedArrivals = Set.of(Location.ENTRANCE, Location.CANTEEN);
+
+        JSONCharacter jc = new JSONCharacter(10, CharacterType.MOVEMENT, "Exchange student between entrance and canteen", 1, Action.EXCHANGESTUDENT, 0, Location.CARD_EXCHANGE, false, allowedDepartures, allowedArrivals, false, 0, 0);
+        characters[0] = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), new ArrayList<>(), jc.getParams());
+        this.game.setCharactersCards(characters);
+
+        Player p1 = this.game.getPlayer("player1");
+        Entrance e1 = p1.getDashboard().getEntrance();
+        Canteen c1 = p1.getDashboard().getCanteen();
+        Island i = this.game.getIsland(3);
+
+        this.game.moveStudent(6, c1, e1);
+        assertEquals(0, p1.getCoins());
+
+        this.game.moveStudent(2, c1, e1);
+        assertEquals(0, p1.getCoins());
+
+        this.game.moveStudent(18, i, e1);
+        assertEquals(0, p1.getCoins());
+
+        this.game.moveStudent(7, c1, e1);
+        assertEquals(1, p1.getCoins());
+
+        this.game.moveStudent(17, c1, e1);
+        assertEquals(1, p1.getCoins());
+
+        this.game.moveStudent(25, c1, e1);
+        assertEquals(1, p1.getCoins());
+
+        this.game.moveStudent(26, c1, e1);
+        assertEquals(1, p1.getCoins());
+
+        //One Coin Used
+        try {
+            this.game.usePower(p1, 0);
+        } catch (NoCharacterSelectedException ex) {
+            fail();
+        }
+        this.game.exchangeStudent(17, 1, e1, c1);
+
+        //It will be given the coin for the third Red student in the canteen, but no coins will be given for the third
+        //student in the blue table
+        assertEquals(1, p1.getCoins());
+    }
+
+    @Test
+    void giveCoinPutBack() throws Exception{
+        Character[] characters = new Character[1];
+        JSONCharacter jc = new JSONCharacter(12, CharacterType.ACTION, "Put Back students", 3, Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
+        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        this.game.setCharactersCards(characters);
+
+        Player p1 = this.game.getPlayer("player1");
+        Entrance e1 = p1.getDashboard().getEntrance();
+        Canteen c1 = p1.getDashboard().getCanteen();
+        Island i = this.game.getIsland(3);
+
+        this.game.moveStudent(6, c1, e1);
+        this.game.moveStudent(2, c1, e1);
+        this.game.moveStudent(7, c1, e1);
+        this.game.moveStudent(17, c1, e1);
+        this.game.moveStudent(18, c1, e1);
+
+        assertEquals(5, c1.getNumberStudentColor(Color.BLUE));
+        assertEquals(1, p1.getCoins());
+
+        Player p2 = this.game.getPlayer("player2");
+        Entrance e2 = p2.getDashboard().getEntrance();
+        Canteen c2 = p2.getDashboard().getCanteen();
+
+        this.game.moveStudent(23, c2, e2);
+        this.game.moveStudent(24, c2, e2);
+
+        assertEquals(2, c2.getNumberStudentColor(Color.BLUE));
+
+        p1.giveCoin();
+        p1.giveCoin();
+        p1.giveCoin();
+
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
@@ -812,10 +1000,18 @@ class CompleteRulesGameTest {
         }
 
         try {
-            assertFalse(this.game.needsRefill());
-        } catch (NoActiveCardException e) {
+            this.game.putBackInBag(Color.BLUE);
+        } catch (NoActiveCardException ex) {
             fail();
         }
-    }
 
+        assertEquals(2, c1.getNumberStudentColor(Color.BLUE));
+        assertEquals(0, c2.getNumberStudentColor(Color.BLUE));
+
+        assertEquals(1, p1.getCoins());
+
+        this.game.moveStudent(22, c1, e1);
+
+        assertEquals(2, p1.getCoins());
+    }
 }

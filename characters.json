@@ -139,7 +139,7 @@
         "CARD_CANTEEN"
       ],
       "allowedArrivals": [
-        "ISLAND"
+        "CANTEEN"
       ]
     }
   },
