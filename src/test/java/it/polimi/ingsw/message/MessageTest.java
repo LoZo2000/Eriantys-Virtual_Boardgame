@@ -1,8 +1,9 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.message;
 
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.model.Color;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +25,10 @@ public class MessageTest {
         assertEquals(-1, message.getArrivalId());
         assertEquals(-1, message.getMovement());
         assertEquals(-1, message.getCloudPosition());
+        assertEquals(-1, message.getCharacterCard());
+        assertEquals(-1, message.getStudentId2());
+        assertNull(message.getChosenColor());
+        assertEquals(-1, message.getIdIsland());
     }
 
     @Test
@@ -31,6 +36,13 @@ public class MessageTest {
         Message message = new CREATEMATCHmessage("player", Action.CREATEMATCH, false, 2);
         assertFalse(message.getCompleteRules());
         assertEquals(2, message.getNumPlayers());
+    }
+
+    @Test
+    public void ADDMEtest(){
+        Message message = new ADDMEmessage("player", Action.ADDME, false, 3);
+        assertFalse(message.getCompleteRules());
+        assertEquals(3, message.getNumPlayers());
     }
 
     @Test
@@ -64,5 +76,34 @@ public class MessageTest {
     @Test
     public void SHOWMEtest(){
         Message message = new SHOWMEmessage("player", Action.SHOWME);
+    }
+
+    @Test
+    public void USEPOWERtest(){
+        Message message = new USEPOWERmessage("player", Action.USEPOWER, 0);
+        assertEquals(0, message.getCharacterCard());
+    }
+
+    @Test
+    public void EXCHANGESTUDENTtest(){
+        Message message = new EXCHANGESTUDENTmessage("player", Action.EXCHANGESTUDENT, 0, 1, Location.CANTEEN, 2, Location.ISLAND, 3);
+        assertEquals(0, message.getStudentId());
+        assertEquals(1, message.getStudentId2());
+        assertEquals(Location.CANTEEN, message.getDepartureType());
+        assertEquals(2, message.getDepartureId());
+        assertEquals(Location.ISLAND, message.getArrivalType());
+        assertEquals(3, message.getArrivalId());
+    }
+
+    @Test
+    public void CHOOSECOLORtest(){
+        Message message = new ChooseColorMessage("player", Action.BLOCK_COLOR, Color.BLUE);
+        assertEquals(Color.BLUE, message.getChosenColor());
+    }
+
+    @Test
+    public void CHOOSEISLANDtest(){
+        Message message = new ChooseIslandMessage("player", Action.BLOCK_ISLAND, 0);
+        assertEquals(0, message.getIdIsland());
     }
 }

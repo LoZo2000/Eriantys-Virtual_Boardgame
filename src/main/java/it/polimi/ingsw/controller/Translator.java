@@ -23,18 +23,9 @@ public class Translator {
         game = new Game(completeRules, numPlayers);
     }
 
-    public boolean translateThis(Message message) throws IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
+    public boolean translateThis(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
 
         switch(message.getAction()){
-
-            /*case CREATEMATCH:
-                if(game.getRegisteredNumPlayers() == 1)
-                    game.addPlayer(message.getSender(), ColorTower.WHITE);
-                else if(game.getRegisteredNumPlayers() == 0 && game.getNumPlayers() == 3)
-                    game.addPlayer(message.getSender(), ColorTower.GREY);
-                else
-                    game.addPlayer(message.getSender(), ColorTower.BLACK);
-                return false;*/
 
             case ADDME:         //To add a player in the current match
                 //TODO Fix
@@ -65,27 +56,13 @@ public class Translator {
                 Movable departure=null, arrival=null;
                 switch(message.getDepartureType()){
                     case ENTRANCE:
-                        try {
-                            departure = game.getPlayer(message.getSender()).getDashboard().getEntrance();
-                        }catch(Exception e){
-                            //Cannot fail (impossible to enter this branch)!!!
-                            e.printStackTrace();
-                        }
+                        departure = game.getPlayer(message.getSender()).getDashboard().getEntrance();
                         break;
                     case CANTEEN:
-                        try{
-                            departure = game.getPlayer(message.getSender()).getDashboard().getCanteen();
-                        }catch(Exception e){
-                            //Cannot fail (impossible to enter this branch)!!!
-                            e.printStackTrace();
-                        }
+                        departure = game.getPlayer(message.getSender()).getDashboard().getCanteen();
                         break;
                     case ISLAND:
-                        try {
-                            departure = game.getIsland(message.getDepartureId());
-                        }catch(Exception e){
-                            throw new IllegalMoveException("This island doesn't exist!");
-                        }
+                        departure = game.getIsland(message.getDepartureId());
                         break;
                     case CARD_ISLAND:
                         departure = getMovementCharacterCard(Location.CARD_ISLAND);
@@ -98,27 +75,13 @@ public class Translator {
                 }
                 switch(message.getArrivalType()){
                     case ENTRANCE:
-                        try {
-                            arrival = game.getPlayer(message.getSender()).getDashboard().getEntrance();
-                        }catch (Exception e){
-                            //Cannot fail (impossible to enter this branch)!!!
-                            e.printStackTrace();
-                        }
+                        arrival = game.getPlayer(message.getSender()).getDashboard().getEntrance();
                         break;
                     case CANTEEN:
-                        try{
-                            arrival = game.getPlayer(message.getSender()).getDashboard().getCanteen();
-                        }catch(Exception e){
-                            //Cannot fail (impossible to enter this branch)!!!
-                            e.printStackTrace();
-                        }
+                        arrival = game.getPlayer(message.getSender()).getDashboard().getCanteen();
                         break;
                     case ISLAND:
-                        try{
-                            arrival = game.getIsland(message.getArrivalId());
-                        }catch(Exception e){
-                            throw new IllegalMoveException("This island doesn't exist!");
-                        }
+                        arrival = game.getIsland(message.getArrivalId());
                         break;
                     case CARD_ISLAND:
                         arrival = getMovementCharacterCard(Location.CARD_ISLAND);
@@ -180,23 +143,13 @@ public class Translator {
             case USEPOWER:
                 USEPOWERmessage um = (USEPOWERmessage) message;
                 Player p = null;
-                try {
-                    p = this.game.getPlayer(um.getSender());
-                }catch (NoPlayerException ex){
-                    ex.printStackTrace();
-                }
+                p = this.game.getPlayer(um.getSender());
                 return this.game.usePower(p, um.getCharacterCard());
 
             case EXCHANGESTUDENT:
                 //Movable departure, arrival;
                 EXCHANGESTUDENTmessage exchangeMessage = (EXCHANGESTUDENTmessage) message;
-                p = null;
-                try {
-                    p = this.game.getPlayer(exchangeMessage.getSender());
-                }catch (NoPlayerException ex){
-                    ex.printStackTrace();
-                    return false;
-                }
+                p = this.game.getPlayer(exchangeMessage.getSender());
                 switch(exchangeMessage.getDepartureType()){
                     case ENTRANCE:
                         departure = p.getDashboard().getEntrance();

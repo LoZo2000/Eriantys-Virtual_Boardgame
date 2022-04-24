@@ -553,6 +553,76 @@ class CompleteRulesGameTest {
     }
 
     @RepeatedTest(10)
+    void useRulesDisableIslandMerge2TokensPREVIOUSISLAND() throws Exception{
+        Character[] characters = new Character[1];
+        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
+        //JSONParams params = new JSONParams(Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
+        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        this.game.setCharactersCards(characters);
+
+        Player p1 = this.game.getPlayer("player1");
+        Entrance e = p1.getDashboard().getEntrance();
+        Canteen c = p1.getDashboard().getCanteen();
+        Island i = this.game.getIsland(3);
+
+        this.game.moveStudent(6, c, e);
+        this.game.moveStudent(2, i, e);
+        this.game.moveStudent(7, i, e);
+
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+
+        assertThrows(NoActiveCardException.class, () -> this.game.disableIsland(null));
+
+        p1.giveCoin();
+
+        try {
+            this.game.usePower(p1, 0);
+        } catch (NoCharacterSelectedException ex) {
+            fail();
+        }
+
+        assertEquals(0, p1.getCoins());
+
+        assertThrows(NoActiveCardException.class, () -> this.game.disableColor(null, Color.PINK));
+
+        try {
+            this.game.disableIsland(i);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        ActionCharacter ac = (ActionCharacter) this.game.getCharactersCards()[0];
+        assertEquals(3, ac.getNumTokens());
+
+
+        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+        assertEquals(1, i.getReport().getTowerNumbers());
+
+        i = this.game.getIsland(4);
+        try {
+            this.game.disableIsland(i);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        this.game.moveStudent(19, i, e);
+        this.game.moveStudent(20, i, e);
+        this.game.moveStudent(21, i, e);
+        this.game.moveStudent(22, i, e);
+        this.game.moveStudent(5, i, e);
+
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+    }
+
+    @RepeatedTest(10)
     void usePowerBlockColor() throws Exception{
         Character[] characters = new Character[1];
         JSONCharacter jc = new JSONCharacter(9, CharacterType.ACTION, "Block color", 3, Action.BLOCK_COLOR, 0, null, false, null, null, false, 0, 0);
@@ -774,7 +844,6 @@ class CompleteRulesGameTest {
 
         Player p1 = this.game.getPlayer("player1");
         Entrance e1 = p1.getDashboard().getEntrance();
-
 
         try {
             this.game.usePower(p1, 0);

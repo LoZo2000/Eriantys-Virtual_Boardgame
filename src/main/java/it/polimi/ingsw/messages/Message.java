@@ -2,6 +2,7 @@ package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.model.Color;
 
 import java.io.Serializable;
 
@@ -59,6 +60,26 @@ public class Message implements Serializable {
 
     //For SELECTCLOUDmessage:
     public int getCloudPosition(){
+        return -1;
+    }
+
+    //For USEPOWERmessage:
+    public int getCharacterCard(){
+        return -1;
+    }
+
+    //For EXCHANGESTUDENTmessage:
+    public int getStudentId2(){
+        return -1;
+    }
+
+    //For CHOOSECOLORmessage:
+    public Color getChosenColor(){
+        return null;
+    }
+
+    //For CHOOSEISLANDmessage:
+    public int getIdIsland(){
         return -1;
     }
 }

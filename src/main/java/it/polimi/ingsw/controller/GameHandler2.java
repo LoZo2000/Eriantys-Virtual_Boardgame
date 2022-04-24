@@ -84,6 +84,7 @@ public class GameHandler2 {
         else if(currentPhase==Phase.ENDTURN){
             usedCard = false;
             if(numFinishedTurn==maxPlayers){
+                translator.getGame().resetPlayedCards();
                 currentPhase=Phase.PRETURN;
                 numFinishedTurn=0;
                 currentPlayer=firstPlayer;
@@ -164,7 +165,7 @@ public class GameHandler2 {
     }
 
 
-    public void execute(Message message) throws IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
+    public void execute(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
         if(isLegitPlayer(message.getSender())==false) throw new NotYourTurnException();
         if(isLegitAction(message.getAction())==false) throw new IllegalActionException();
 

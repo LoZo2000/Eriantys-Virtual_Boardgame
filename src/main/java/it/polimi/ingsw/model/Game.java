@@ -7,12 +7,10 @@ import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
-import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.rules.DefaultRule;
 import it.polimi.ingsw.model.rules.InfluenceRule;
 import it.polimi.ingsw.model.rules.Rule;
-
 import java.io.Serializable;
 import java.io.FileReader;
 import java.io.IOException;
@@ -187,7 +185,8 @@ public class Game implements Serializable {
 
         List<Card> cards = h.getAllCards();
         if(!playedCards.values().containsAll(cards)){
-            Card card = cards.get(priority-1);
+            //Card card = cards.get(priority-1);
+            Card card = new Card(priority, priority/2+priority%2);
             if(playedCards.containsValue(card)){
                 throw new AlreadyPlayedCardException("Another player already played this card");
             }
@@ -196,6 +195,10 @@ public class Game implements Serializable {
         Card c = h.playCard(priority);
         playedCards.put(player, c);
         player.getDashboard().setGraveyard(c);
+    }
+
+    public void resetPlayedCards(){
+        playedCards = new Hashtable<>();;
     }
 
     public int getMaximumMNMovement(Player p){
@@ -242,30 +245,20 @@ public class Game implements Serializable {
                 if (previousPosition < 0) previousPosition += this.islands.size();
 
                 if (this.islands.get(previousPosition).getOwner() == island.getOwner()) {
-                    try {
-                        //Only one Token on the merged island
-                        if(this.islands.get(previousPosition).getProhibition() && island.getProhibition()){
-                            addProhibitionToken(island);
-                        }
-                        island = mergeIsland(this.islands.get(previousPosition), island);
-                    } catch (NoContiguousIslandException e) {
-                        e.printStackTrace();
+                    if(this.islands.get(previousPosition).getProhibition() && island.getProhibition()){
+                        addProhibitionToken(island);
                     }
+                    island = mergeIsland(this.islands.get(previousPosition), island);
                 }
 
                 islandNumber = this.islands.indexOf(island);
                 int successivePosition = (islandNumber + 1) % this.islands.size();
 
                 if (this.islands.get(successivePosition).getOwner() == island.getOwner()) {
-                    try {
-                        //Only one Token on the merged island
-                        if(this.islands.get(successivePosition).getProhibition() && island.getProhibition()){
-                            addProhibitionToken(island);
-                        }
-                        island = mergeIsland(island, this.islands.get(successivePosition));
-                    } catch (NoContiguousIslandException e) {
-                        e.printStackTrace();
+                    if(this.islands.get(successivePosition).getProhibition() && island.getProhibition()){
+                        addProhibitionToken(island);
                     }
+                    island = mergeIsland(island, this.islands.get(successivePosition));
                 }
             }
         } else{
@@ -273,18 +266,15 @@ public class Game implements Serializable {
         }
     }
 
-    public Island mergeIsland(Island i1, Island i2) throws NoContiguousIslandException {
+    public Island mergeIsland(Island i1, Island i2) {
         int indx1=islands.indexOf(i1);
         int indx2=islands.indexOf(i2);
-        if(indx1-indx2==1 || indx1-indx2==-1 || (indx1==0 && indx2== islands.size()-1) || (indx1== islands.size()-1 && indx2==0)){
-            Island temp= new Island(i1, i2);
-            islands.remove(i1);
-            islands.remove(i2);
-            islands.add(indx1, temp);
-            motherNature.movement(temp);
-            return temp;
-        }
-        else throw new NoContiguousIslandException("Islands are not Contiguous");
+        Island temp= new Island(i1, i2);
+        islands.remove(i1);
+        islands.remove(i2);
+        islands.add(indx1, temp);
+        motherNature.movement(temp);
+        return temp;
     }
 
     private ColorTower influence(Report report){
@@ -369,7 +359,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void refillClouds() throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
+    public void refillClouds() throws NoMoreStudentsException {
         for (int i=0; i<clouds.length; i++){
             if (numPlayers==3) clouds[i].refillCloud(bag.getRandomStudent(4));
             else clouds[i].refillCloud(bag.getRandomStudent(3));

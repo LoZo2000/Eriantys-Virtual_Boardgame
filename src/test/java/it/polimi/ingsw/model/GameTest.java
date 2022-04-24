@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.Phase;
 import it.polimi.ingsw.model.exceptions.AlreadyPlayedCardException;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 import org.junit.jupiter.api.BeforeEach;
@@ -216,6 +217,7 @@ class GameTest {
         }catch (Exception e){
             e.printStackTrace();
         }
+        game.resetPlayedCards();
     }
 
     @Test
@@ -231,12 +233,6 @@ class GameTest {
         game = new Game(false, 5);
         game = new Game(false, 3);
         for(int i=0; i<20; i++) game.addPlayer("bro1", ColorTower.WHITE);
-        try {
-            game.mergeIsland(game.getIsland(0), game.getIsland(2));
-            fail();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         try{
             game.moveStudent(3045, game.getIsland(0), game.getIsland(1));
             fail();
@@ -271,7 +267,17 @@ class GameTest {
     }
 
     @Test
-    void playCardAlreadyPlayed() throws Exception{
+    public void setGetPlayerPhase(){
+        game.setCurrentPlayer("player2");
+        assertEquals(game.getCurrentPlayer(), "player2");
+        for(Phase p : Phase.values()){
+            game.setCurrentPhase(p);
+            assertEquals(game.getCurrentPhase(), p);
+        }
+    }
+
+    @Test
+    public void playCardAlreadyPlayed() throws Exception{
         Player p1 = game.getPlayer("player1");
         Player p2 = game.getPlayer("player2");
 
@@ -282,7 +288,7 @@ class GameTest {
     }
 
     @Test
-    void playCardAlreadyPlayedButOnlyCardPlayable() throws Exception{
+    public void playCardAlreadyPlayedButOnlyCardPlayable() throws Exception{
         Player p1 = game.getPlayer("player1");
         Player p2 = game.getPlayer("player2");
 
@@ -295,5 +301,14 @@ class GameTest {
 
         assertDoesNotThrow(()->this.game.playCard(p1, 1));
         assertEquals(1, game.getMaximumMNMovement(p1));
+    }
+
+    @Test
+    public void refillCardTest(){
+        try {
+            game.refillActiveCard();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

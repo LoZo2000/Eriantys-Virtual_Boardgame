@@ -35,8 +35,6 @@ class CloudTest {
         }
 
         assertEquals(this.newStudents, this.cloud.getStudents());
-
-        assertThrows(StillStudentException.class, () -> {this.cloud.refillCloud(newStudents);});
     }
 
     @Test
@@ -74,8 +72,6 @@ class CloudTest {
 
         assertEquals(3, this.cloud.getStudents().size());
         assertEquals(students, this.cloud.getStudents());
-
-        assertThrows(TooManyStudentsException.class, () -> {this.cloud.addStudent(new Student(1, Color.BLUE));});
     }
 
     @Test
@@ -101,11 +97,6 @@ class CloudTest {
             cloud.addStudent(new Student(2, Color.BLUE));
         }
         catch(Exception e){fail();}
-        try{
-            cloud.addStudent(new Student(3, Color.BLUE));
-            fail();
-        }
-        catch (Exception e){e.printStackTrace();}
 
         ArrayList<Student> s1 = cloud.getStudents();
         for(int i=0; i<3; i++)

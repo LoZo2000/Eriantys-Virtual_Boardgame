@@ -15,8 +15,7 @@ public class Cloud implements Serializable {
         students = new ArrayList<>();
     }
 
-    public void refillCloud(ArrayList<Student> newStudents) throws TooManyStudentsException, StillStudentException {
-        if(students.size()!=0) throw new StillStudentException("Clouds are not empty");
+    public void refillCloud(ArrayList<Student> newStudents) {
         for(Student s : newStudents){
             addStudent(s);
         }
@@ -30,9 +29,8 @@ public class Cloud implements Serializable {
     }
 
     //To pass students one at a time
-    public void addStudent(Student student) throws TooManyStudentsException {
+    public void addStudent(Student student) {
         if(students.size()<maxStudents) students.add(student);
-        else throw new TooManyStudentsException();
     }
 
     //Returns a copy of students (to let the users examine the cloud)

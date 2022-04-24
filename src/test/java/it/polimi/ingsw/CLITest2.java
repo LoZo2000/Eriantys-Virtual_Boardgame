@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class CLITest2 {
 
-    public static void main(String[] args) throws IllegalMessageException {
+    /*public static void main(String[] args) throws IllegalMessageException {
         String playerId, ac, lo, ans;
         Location arrivalType, departureType;
         boolean completeRules;
@@ -191,5 +191,5 @@ public class CLITest2 {
                 if(e instanceof EndGameException) System.exit(0);
             }
         }
-    }
+    }*/
 }
