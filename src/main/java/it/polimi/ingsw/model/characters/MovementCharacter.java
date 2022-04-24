@@ -4,8 +4,6 @@ import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.rules.ActionRule;
-import it.polimi.ingsw.model.rules.Rule;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -47,11 +45,6 @@ public class MovementCharacter extends ActionCharacter implements Movable {
     public Set<Location> getAllowedDepartures() {
         return Set.copyOf(this.allowedDepartures);
     }
-
-    /*@Override
-    public Rule usePower(Player player) {
-        return new ActionRule();
-    }*/
 
     public void addStudent(Student s){
         students.add(s);

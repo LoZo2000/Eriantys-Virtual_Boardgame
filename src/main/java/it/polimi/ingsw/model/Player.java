@@ -16,7 +16,7 @@ public class Player implements Serializable {
         this.hand = new Hand();
         this.dashboard = new Dashboard(numPlayers, entranceStudents, color);
         //TODO IT'S 1 (DEBUG)
-        this.coins = 0;
+        this.coins = 1;
     }
 
     public Hand getHand(){

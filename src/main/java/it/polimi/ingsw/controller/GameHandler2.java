@@ -159,8 +159,8 @@ public class GameHandler2 {
 
     //refresh the current player
     private void refreshCurrentPlayer() {
-        currentPlayer = players.indexOf(orderPlayers.get(numFinishedTurn));
-        translator.getGame().setCurrentPlayer(orderPlayers.get(numFinishedTurn));
+        currentPlayer = players.indexOf(orderPlayers.get(numFinishedTurn%numPlayers));
+        translator.getGame().setCurrentPlayer(orderPlayers.get(numFinishedTurn%numPlayers));
         //TODO Decide how to manage the current player in game
     }
 
@@ -183,8 +183,8 @@ public class GameHandler2 {
                 break;
 
             case PLAYCARD: //need to check if the player owns the card through an exception in translate
-                priority[currentPlayer] = message.getPriority();
                 translator.translateThis(message);
+                priority[currentPlayer] = message.getPriority();
                 currentPlayer = (currentPlayer+1)%maxPlayers;
                 translator.getGame().setCurrentPlayer(players.get(currentPlayer));
                 if(currentPlayer==firstPlayer){ //first player in the first turn is 0 initialized in nextphase

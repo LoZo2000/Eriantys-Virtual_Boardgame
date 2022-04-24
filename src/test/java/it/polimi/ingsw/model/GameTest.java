@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.AlreadyPlayedCardException;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -267,5 +268,32 @@ class GameTest {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void playCardAlreadyPlayed() throws Exception{
+        Player p1 = game.getPlayer("player1");
+        Player p2 = game.getPlayer("player2");
+
+        this.game.playCard(p2, 1);
+        assertEquals(1, game.getMaximumMNMovement(p2));
+
+        assertThrows(AlreadyPlayedCardException.class, ()->this.game.playCard(p1, 1));
+    }
+
+    @Test
+    void playCardAlreadyPlayedButOnlyCardPlayable() throws Exception{
+        Player p1 = game.getPlayer("player1");
+        Player p2 = game.getPlayer("player2");
+
+        this.game.playCard(p2, 1);
+        assertEquals(1, game.getMaximumMNMovement(p2));
+
+        //Play cards from 2 to 10
+        for(int i=1; i<10; i++)
+            p1.getHand().playCard(i+1);
+
+        assertDoesNotThrow(()->this.game.playCard(p1, 1));
+        assertEquals(1, game.getMaximumMNMovement(p1));
     }
 }

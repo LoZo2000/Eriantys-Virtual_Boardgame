@@ -130,7 +130,6 @@ class CompleteRulesGameTest {
 
         //2 Coins Needed
         p2.giveCoin();
-        p2.giveCoin();
 
         try {
             //Card 1: 2 Extra Influence Points
@@ -247,7 +246,6 @@ class CompleteRulesGameTest {
 
         p2.giveCoin();
         p2.giveCoin();
-        p2.giveCoin();
 
         try {
             //Card 0 Disable Towers
@@ -305,7 +303,6 @@ class CompleteRulesGameTest {
 
         assertEquals(this.game.getPlayer("player1"), professors.get(Color.BLUE));
 
-        this.game.getPlayer("player2").giveCoin();
         this.game.getPlayer("player2").giveCoin();
 
         try {
@@ -365,7 +362,6 @@ class CompleteRulesGameTest {
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableIsland(i));
 
-        p1.giveCoin();
         p1.giveCoin();
 
         try {
@@ -436,7 +432,6 @@ class CompleteRulesGameTest {
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableIsland(null));
 
-        p1.giveCoin();
         p1.giveCoin();
 
         try {
@@ -595,7 +590,6 @@ class CompleteRulesGameTest {
 
         p2.giveCoin();
         p2.giveCoin();
-        p2.giveCoin();
 
         try {
             this.game.usePower(p2, 0);
@@ -603,7 +597,7 @@ class CompleteRulesGameTest {
             fail();
         }
 
-        assertEquals(0, p1.getCoins());
+        assertEquals(0, p2.getCoins());
 
         assertThrows(NoActiveCardException.class, () -> this.game.disableIsland(null));
         assertThrows(NoActiveCardException.class, () -> this.game.moveMotherNature(null, false));
@@ -659,7 +653,6 @@ class CompleteRulesGameTest {
 
         p1.giveCoin();
         p1.giveCoin();
-        p1.giveCoin();
 
         try {
             this.game.usePower(p1, 0);
@@ -703,7 +696,7 @@ class CompleteRulesGameTest {
         this.game.moveStudent(19, c1, e1);
 
         assertEquals(6, c1.getNumberStudentColor(Color.BLUE));
-        assertEquals(2, p1.getCoins());
+        assertEquals(3, p1.getCoins());
 
         Player p2 = this.game.getPlayer("player2");
         Entrance e2 = p2.getDashboard().getEntrance();
@@ -716,7 +709,6 @@ class CompleteRulesGameTest {
 
         assertThrows(NoActiveCardException.class, () -> this.game.moveMotherNature(null, false));
 
-        p1.giveCoin();
         p1.giveCoin();
         p1.giveCoin();
 
@@ -750,7 +742,6 @@ class CompleteRulesGameTest {
 
         Player p1 = this.game.getPlayer("player1");
 
-        p1.giveCoin();
 
         try {
             this.game.usePower(p1, 0);
@@ -784,7 +775,6 @@ class CompleteRulesGameTest {
         Player p1 = this.game.getPlayer("player1");
         Entrance e1 = p1.getDashboard().getEntrance();
 
-        p1.giveCoin();
 
         try {
             this.game.usePower(p1, 0);
@@ -847,7 +837,6 @@ class CompleteRulesGameTest {
         assertFalse(this.game.needsRefill());
 
         Player p1 = this.game.getPlayer("player1");
-        p1.giveCoin();
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
@@ -872,7 +861,6 @@ class CompleteRulesGameTest {
         Player p1 = this.game.getPlayer("player1");
         p1.giveCoin();
         p1.giveCoin();
-        p1.giveCoin();
         try {
             this.game.usePower(p1, 0);
         } catch (NoCharacterSelectedException ex) {
@@ -891,22 +879,22 @@ class CompleteRulesGameTest {
         Canteen c1 = p1.getDashboard().getCanteen();
         Island i = this.game.getIsland(3);
 
-        assertEquals(0, p1.getCoins());
+        assertEquals(1, p1.getCoins());
 
         this.game.moveStudent(6, c1, e1);
-        assertEquals(0, p1.getCoins());
+        assertEquals(1, p1.getCoins());
 
         this.game.moveStudent(2, c1, e1);
-        assertEquals(0, p1.getCoins());
+        assertEquals(1, p1.getCoins());
 
         this.game.moveStudent(18, i, e1);
-        assertEquals(0, p1.getCoins());
+        assertEquals(1, p1.getCoins());
 
         this.game.moveStudent(7, c1, e1);
-        assertEquals(1, p1.getCoins());
+        assertEquals(2, p1.getCoins());
 
         this.game.moveStudent(17, i, e1);
-        assertEquals(1, p1.getCoins());
+        assertEquals(2, p1.getCoins());
     }
 
     @Test
@@ -925,25 +913,25 @@ class CompleteRulesGameTest {
         Island i = this.game.getIsland(3);
 
         this.game.moveStudent(6, c1, e1);
-        assertEquals(0, p1.getCoins());
+        assertEquals(1, p1.getCoins());
 
         this.game.moveStudent(2, c1, e1);
-        assertEquals(0, p1.getCoins());
+        assertEquals(1, p1.getCoins());
 
         this.game.moveStudent(18, i, e1);
-        assertEquals(0, p1.getCoins());
+        assertEquals(1, p1.getCoins());
 
         this.game.moveStudent(7, c1, e1);
-        assertEquals(1, p1.getCoins());
+        assertEquals(2, p1.getCoins());
 
         this.game.moveStudent(17, c1, e1);
-        assertEquals(1, p1.getCoins());
+        assertEquals(2, p1.getCoins());
 
         this.game.moveStudent(25, c1, e1);
-        assertEquals(1, p1.getCoins());
+        assertEquals(2, p1.getCoins());
 
         this.game.moveStudent(26, c1, e1);
-        assertEquals(1, p1.getCoins());
+        assertEquals(2, p1.getCoins());
 
         //One Coin Used
         try {
@@ -955,7 +943,7 @@ class CompleteRulesGameTest {
 
         //It will be given the coin for the third Red student in the canteen, but no coins will be given for the third
         //student in the blue table
-        assertEquals(1, p1.getCoins());
+        assertEquals(2, p1.getCoins());
     }
 
     @Test
@@ -978,7 +966,7 @@ class CompleteRulesGameTest {
         this.game.moveStudent(18, c1, e1);
 
         assertEquals(5, c1.getNumberStudentColor(Color.BLUE));
-        assertEquals(1, p1.getCoins());
+        assertEquals(2, p1.getCoins());
 
         Player p2 = this.game.getPlayer("player2");
         Entrance e2 = p2.getDashboard().getEntrance();
@@ -989,7 +977,6 @@ class CompleteRulesGameTest {
 
         assertEquals(2, c2.getNumberStudentColor(Color.BLUE));
 
-        p1.giveCoin();
         p1.giveCoin();
         p1.giveCoin();
 

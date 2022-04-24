@@ -16,14 +16,6 @@ public class InfluenceCharacter extends Character{
         this.extraPoints = params.getExtraInfluencePoints();
     }
 
-    public boolean getTowersDisabled(){
-        return this.towersDisabled;
-    }
-
-    public int getExtraPoints(){
-        return this.extraPoints;
-    }
-
     @Override
     public Rule usePower(Player player) throws NotEnoughMoneyException {
         player.useCoins(this.getCost());

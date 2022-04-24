@@ -36,10 +36,7 @@ public class Game implements Serializable {
     private final String JSON_PATH = "characters.json";
     private String currentPlayer = null;
     private Phase currentPhase = null;
-
     private Map<Player, Card> playedCards;
-
-
 
     //Create game but no players are added;
     public Game(boolean completeRules, int numPlayers){
@@ -185,7 +182,25 @@ public class Game implements Serializable {
         return (ArrayList<Player>) players.clone();
     }
 
-    //TODO PlayCard
+    public void playCard(Player player, int priority) throws OverflowCardException, AlreadyPlayedCardException {
+        Hand h = player.getHand();
+
+        List<Card> cards = h.getAllCards();
+        if(!playedCards.values().containsAll(cards)){
+            Card card = cards.get(priority-1);
+            if(playedCards.containsValue(card)){
+                throw new AlreadyPlayedCardException("Another player already played this card");
+            }
+        }
+
+        Card c = h.playCard(priority);
+        playedCards.put(player, c);
+        player.getDashboard().setGraveyard(c);
+    }
+
+    public int getMaximumMNMovement(Player p){
+        return playedCards.get(p).getMovement();
+    }
 
     //When parameter enableMovement is true the method has the regular behaviour.
     //If enableMovement is false, it will be checked if there's an active card.

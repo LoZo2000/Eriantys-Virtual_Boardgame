@@ -19,16 +19,8 @@ public abstract class Character {
         this.numberTimesUsed = 0;
     }
 
-    public int getId(){
-        return id;
-    }
-
     public int getCost() {
         return cost + numberTimesUsed;
-    }
-
-    public int getNumberTimesUsed(){
-        return numberTimesUsed;
     }
 
     protected void increaseTimesUsed(){

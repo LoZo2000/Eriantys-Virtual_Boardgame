@@ -49,13 +49,15 @@ public class Translator {
 
 
             case PLAYCARD:      //To play the assistant card
-                Card c;
                 try {
-                    c = game.getPlayer(message.getSender()).getHand().playCard(message.getPriority());
-                    game.getPlayer(message.getSender()).getDashboard().setGraveyard(c);
-                }
-                catch(Exception e){
+                    Player p = this.game.getPlayer(message.getSender());
+                    this.game.playCard(p, message.getPriority());
+                } catch(OverflowCardException e){
                     throw new IllegalMoveException("There is no such a card");
+                } catch(AlreadyPlayedCardException e){
+                    throw new IllegalMoveException("Another player has already played that card!");
+                } catch (NoPlayerException e){
+                    throw new IllegalMoveException("There isn't a player with that nickname!");
                 }
                 return false;
 
@@ -141,17 +143,25 @@ public class Translator {
                 }
                 return false;
 
-
-
             case MOVEMOTHERNATURE:  //To move MotherNature
                 LinkedList<Island> islands = game.getAllIslands();
                 int currentMNposition = islands.indexOf(game.getMotherNaturePosition());
                 int numIslands = islands.size();
+
+                try{
+                    Player p = this.game.getPlayer(message.getSender());
+                    if(message.getMovement() == 0){
+                        throw new IllegalMoveException("You have to move Mother Nature!");
+                    }
+                    if(message.getMovement() > (this.game.getMaximumMNMovement(p) + this.game.getMotherNatureExtraMovement()))
+                        throw new IllegalMoveException("You can't move that much Mother Nature!");
+                }catch(NoPlayerException e){
+                    throw new IllegalMoveException("There isn't a player with that nickname!");
+                }
+
                 int newMTposition = (currentMNposition + message.getMovement()) % numIslands;
                 game.moveMotherNature(islands.get(newMTposition), true);
                 return false;
-
-
 
             case SELECTCLOUD:       //To select a cloud
                 Cloud[] clouds = game.getAllClouds();

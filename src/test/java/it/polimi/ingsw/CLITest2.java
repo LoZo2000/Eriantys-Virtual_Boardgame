@@ -23,7 +23,7 @@ public class CLITest2 {
 
         Scanner sc=new Scanner(System.in);
 
-        Message message = new CREATEMATCHmessage("abc", Action.CREATEMATCH, false, 3 );
+        Message message = new CREATEMATCHmessage("abc", Action.CREATEMATCH, true, 2 );
         GameHandler2 gameHandler = new GameHandler2(message);
 
 
@@ -46,7 +46,7 @@ public class CLITest2 {
                     //System.out.println("How many players?");
                     //numPlayers = sc.nextInt();
                     //sc.nextLine();
-                    message = new ADDMEmessage(playerId, Action.ADDME);
+                    message = new ADDMEmessage(playerId, Action.ADDME, true, 2);
                 case "PLAYCARD" -> {
                     System.out.println("Chose which card you want to play (priority):");
                     priority = sc.nextInt();

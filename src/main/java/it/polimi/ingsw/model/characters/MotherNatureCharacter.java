@@ -14,10 +14,6 @@ public class MotherNatureCharacter extends Character{
         this.extraMovement = params.getExtraMNMovement();
     }
 
-    public int getExtraMovement(){
-        return this.extraMovement;
-    }
-
     @Override
     public Rule usePower(Player player) throws NotEnoughMoneyException {
         player.useCoins(this.getCost());
