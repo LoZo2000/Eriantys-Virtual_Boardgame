@@ -40,7 +40,6 @@ public class GameHandler2 {
 
 
 
-    //TODO: Exception added
     public GameHandler2(Message message) throws IllegalMessageException { //First instruction of all
         //System.out.println("sono qui lala"+message.getAction());
         if(message.getAction()!=Action.CREATEMATCH) throw new IllegalMessageException();
@@ -60,7 +59,7 @@ public class GameHandler2 {
         initLegitActions();
     }
 
-    private void nextPhase(){
+    private void nextPhase() throws EndGameException {
         if(currentPhase==Phase.PREGAME){
             currentPlayer=0;
             firstPlayer=0;
@@ -89,6 +88,7 @@ public class GameHandler2 {
                 numFinishedTurn=0;
                 currentPlayer=firstPlayer;
                 translator.getGame().setCurrentPhase(currentPhase);
+                translator.endTurn();
             }
             else {
                 currentPhase=Phase.MIDDLETURN;
@@ -159,9 +159,8 @@ public class GameHandler2 {
 
     //refresh the current player
     private void refreshCurrentPlayer() {
-        currentPlayer = players.indexOf(orderPlayers.get(numFinishedTurn%numPlayers));
-        translator.getGame().setCurrentPlayer(orderPlayers.get(numFinishedTurn%numPlayers));
-        //TODO Decide how to manage the current player in game
+        currentPlayer = players.indexOf(orderPlayers.get(numFinishedTurn%maxPlayers));
+        translator.getGame().setCurrentPlayer(orderPlayers.get(numFinishedTurn%maxPlayers));
     }
 
 
@@ -178,7 +177,6 @@ public class GameHandler2 {
                 numPlayers++;
                 translator.translateThis(message);
                 if(numPlayers==maxPlayers) nextPhase();
-                //System.out.println(translator.getGame().getCurrentPlayer());
 
                 break;
 
@@ -325,7 +323,7 @@ public class GameHandler2 {
 
 
 
-    private ArrayList<String> sort(){ //to check beacuse i don't understand if it is right
+    private ArrayList<String> sort(){
         ArrayList<String> newOrder = new ArrayList<>();
         for(int i=0; i<maxPlayers; i++){
             int min=0;
