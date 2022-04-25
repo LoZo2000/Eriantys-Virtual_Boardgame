@@ -605,12 +605,12 @@ public class Game implements Serializable {
             return false;
         }
 
-        if(!mc.isRefill()){
+        /*if(!mc.isRefill()){
             if(this.activeCard != -1){
                 this.activeCard = -1;
                 this.currentRule = new DefaultRule();
             }
-        }
+        }*/
 
         return mc.isRefill();
     }
