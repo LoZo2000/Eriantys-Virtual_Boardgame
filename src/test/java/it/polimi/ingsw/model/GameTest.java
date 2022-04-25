@@ -1,8 +1,15 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.Action;
+import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
+import it.polimi.ingsw.model.characters.Character;
+import it.polimi.ingsw.model.characters.CharacterType;
+import it.polimi.ingsw.model.characters.JSONCharacter;
+import it.polimi.ingsw.model.characters.MovementCharacter;
 import it.polimi.ingsw.model.exceptions.AlreadyPlayedCardException;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
+import it.polimi.ingsw.model.exceptions.NoCharacterSelectedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -11,6 +18,7 @@ import java.security.cert.CertificateParsingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +50,7 @@ class GameTest {
 
         Player player2 = new Player("player2", 2, ColorTower.WHITE, students2);
 
-        this.game = new Game(false, 2);
+        this.game = new Game(true, 2);
 
         this.game.addPlayer(player1);
         this.game.addPlayer(player2);
@@ -301,14 +309,5 @@ class GameTest {
 
         assertDoesNotThrow(()->this.game.playCard(p1, 1));
         assertEquals(1, game.getMaximumMNMovement(p1));
-    }
-
-    @Test
-    public void refillCardTest(){
-        try {
-            game.refillActiveCard();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 }

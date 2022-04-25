@@ -10,6 +10,18 @@ public class ModelExceptionTest {
     @Test
     public void testAllExceptions(){
         try{
+            testAlreadyPlayedCardException(true);
+            fail();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
+            testAlreadyPlayedCardException(false);
+            fail();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try{
             testCannotJoinException(true);
             fail();
         }catch(Exception e){
@@ -282,5 +294,10 @@ public class ModelExceptionTest {
     private void testUnrecognizedPlayerOrActionException(boolean withString) throws UnrecognizedPlayerOrActionException {
         if(withString) throw new UnrecognizedPlayerOrActionException("helo");
         throw new UnrecognizedPlayerOrActionException();
+    }
+
+    private void testAlreadyPlayedCardException(boolean withString) throws AlreadyPlayedCardException {
+        if(withString) throw new AlreadyPlayedCardException("helo");
+        throw new AlreadyPlayedCardException();
     }
 }

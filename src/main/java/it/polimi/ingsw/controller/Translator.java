@@ -147,10 +147,8 @@ public class Translator {
                 return this.game.usePower(p, um.getCharacterCard());
 
             case EXCHANGESTUDENT:
-                //Movable departure, arrival;
-                EXCHANGESTUDENTmessage exchangeMessage = (EXCHANGESTUDENTmessage) message;
-                p = this.game.getPlayer(exchangeMessage.getSender());
-                switch(exchangeMessage.getDepartureType()){
+                p = this.game.getPlayer(message.getSender());
+                switch(message.getDepartureType()){
                     case ENTRANCE:
                         departure = p.getDashboard().getEntrance();
                         break;
@@ -163,7 +161,7 @@ public class Translator {
                     default:
                         departure = null;
                 }
-                switch(exchangeMessage.getArrivalType()){
+                switch(message.getArrivalType()){
                     case ENTRANCE:
                         arrival = p.getDashboard().getEntrance();
                         break;
@@ -177,7 +175,7 @@ public class Translator {
                         arrival = null;
                 }
                 try {
-                    game.exchangeStudent(exchangeMessage.getStudentId(), exchangeMessage.getStudentId2(), arrival, departure);
+                    game.exchangeStudent(message.getStudentId(), message.getStudentId2(), arrival, departure);
                 } catch (Exception e) {
                     throw new IllegalMoveException("Student, arrival or departure missing...");
                 }
@@ -192,11 +190,11 @@ public class Translator {
                 return false;
 
             case BLOCK_COLOR:
-                blockColor((ChooseColorMessage) message);
+                blockColor(message);
                 return false;
 
             case PUT_BACK:
-                putBackStudents((ChooseColorMessage) message);
+                putBackStudents(message);
                 return false;
 
             default:
@@ -209,10 +207,9 @@ public class Translator {
     }
 
     private void blockIsland(Message message) throws NoActiveCardException, NoMoreTokensException, IllegalMoveException {
-        ChooseIslandMessage cm = (ChooseIslandMessage) message;
         Island i;
         try {
-            i = this.game.getIsland(cm.getIdIsland());
+            i = this.game.getIsland(message.getIdIsland());
         }catch(NoIslandException e){
             throw new IllegalMoveException("This island doesn't exist!");
         }
@@ -221,10 +218,9 @@ public class Translator {
     }
 
     private void calculateIslandInfluence(Message message) throws NoActiveCardException, IllegalMoveException {
-        ChooseIslandMessage cm = (ChooseIslandMessage) message;
         Island i;
         try {
-            i = this.game.getIsland(cm.getIdIsland());
+            i = this.game.getIsland(message.getIdIsland());
         }catch(NoIslandException e){
             throw new IllegalMoveException("This island doesn't exist!");
         }
@@ -232,7 +228,7 @@ public class Translator {
         this.game.moveMotherNature(i, false);
     }
 
-    private void blockColor(ChooseColorMessage message) throws NoActiveCardException {
+    private void blockColor(Message message) throws NoActiveCardException {
         Player p = null;
         try {
             p = this.game.getPlayer(message.getSender());
@@ -242,7 +238,7 @@ public class Translator {
         this.game.disableColor(p, message.getChosenColor());
     }
 
-    private void putBackStudents(ChooseColorMessage message) throws NoActiveCardException {
+    private void putBackStudents(Message message) throws NoActiveCardException {
         this.game.putBackInBag(message.getChosenColor());
     }
 

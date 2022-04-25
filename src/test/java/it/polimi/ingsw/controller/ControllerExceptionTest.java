@@ -2,8 +2,6 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.IllegalActionException;
 import it.polimi.ingsw.controller.exceptions.IllegalMessageException;
-import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
-import it.polimi.ingsw.model.exceptions.UnrecognizedPlayerOrActionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;

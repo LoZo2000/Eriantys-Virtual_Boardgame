@@ -899,7 +899,6 @@ class CompleteRulesGameTest {
         students.add(new Student(34, Color.PINK));
 
         JSONCharacter jc = new JSONCharacter(1, CharacterType.MOVEMENT, "Move from card to island", 1, Action.MOVESTUDENT, 4, Location.CARD_ISLAND, true, allowedDepartures, allowedArrivals, false, 0, 0);
-        //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
         characters[0] = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
         this.game.setCharactersCards(characters);
 
@@ -915,6 +914,8 @@ class CompleteRulesGameTest {
         assertEquals(0, p1.getCoins());
 
         assertTrue(this.game.needsRefill());
+
+        game.refillActiveCard();
     }
 
     @Test
