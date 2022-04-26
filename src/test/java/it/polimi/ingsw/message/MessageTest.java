@@ -106,4 +106,9 @@ public class MessageTest {
         Message message = new ChooseIslandMessage("player", Action.BLOCK_ISLAND, 0);
         assertEquals(0, message.getIdIsland());
     }
+
+    @Test
+    public void ENDGAMEtest(){
+        Message message = new ENDGAMEmessage("player", Action.ENDGAME);
+    }
 }
