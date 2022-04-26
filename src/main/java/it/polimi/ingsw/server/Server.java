@@ -27,7 +27,6 @@ public class Server {
         gameMaker.manageMessage(c, message);
     }
 
-
     //Register connection
     private synchronized void registerConnection(Connection c){
         connections.add(c);

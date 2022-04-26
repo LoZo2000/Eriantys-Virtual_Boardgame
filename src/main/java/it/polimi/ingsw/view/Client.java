@@ -51,7 +51,6 @@ public class Client {
                 game = (Game) objectInputStream.readObject();
                 showBoard(game);
             }while(game.getCurrentPlayer()==null || !game.getCurrentPlayer().equals(nickname));
-            System.out.println("allora");
 
             while (true){
                 message = getInput();

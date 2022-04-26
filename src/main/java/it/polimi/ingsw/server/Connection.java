@@ -80,7 +80,6 @@ public class Connection implements Runnable {
             while(isActive()){
                 objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
-                System.out.println("sono qui active");
                 server.deliverMessage(this, message);
             }
         } catch(Exception e){

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class GameManager {
     private List<Connection> addedConnections = new ArrayList<>();
-    private GameHandler2[] gameTypes = new GameHandler2[6];
+    private GameHandler2[] gameTypes = new GameHandler2[6]; //Why 6? It is possible to create up to 6 matches with different features: x2 players, x3 players, x4 players and with or without complete rules
     Hashtable<Connection, GameHandler2> games = new Hashtable<>();
 
 

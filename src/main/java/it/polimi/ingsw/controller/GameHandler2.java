@@ -9,14 +9,14 @@ import java.util.*;
 
 public class GameHandler2 {
     private ArrayList<String> players;
-    private int[] priority = {0,0,0,0};
     private ArrayList<String> orderPlayers;
+    private int[] priority = {0,0,0,0};
     private int maxPlayers; //max players in the game
     private int numPlayers = 0; //current num of players
     private int currentPlayer = -1; //the current player in the array players
     private int firstPlayer = -1; //the first player that played a card
-    private int maxMoveStudent = 3;
-    private int currentMoveStudent = 0;
+    private int maxMoveStudent = 3; //Max number of students a player is allowed to move
+    private int currentMoveStudent = 0; //How many students the player has moved so far
     private boolean completeRules;
     private Phase currentPhase = Phase.PREGAME;
     private Phase oldPhase;
