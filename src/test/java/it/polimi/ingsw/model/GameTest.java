@@ -117,6 +117,66 @@ class GameTest {
     }
 
     @Test
+    void mergeIslandFirstLast() throws Exception{
+        Entrance e = null;
+        Canteen c = null;
+        try {
+            e = this.game.getPlayer("player1").getDashboard().getEntrance();
+            c = this.game.getPlayer("player1").getDashboard().getCanteen();
+        }catch(Exception ex){
+            fail();
+        }
+        Island i = null;
+        try {
+            i = this.game.getIsland(0);
+        }catch(Exception ex){
+            fail();
+        }
+
+        try {
+            this.game.moveStudent(6, c, e);
+            this.game.moveStudent(2, i, e);
+            this.game.moveStudent(7, i, e);
+        }catch (Exception ex){
+            fail();
+        }
+
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        } catch (EndGameException ex) {
+            ex.printStackTrace();
+        }
+
+        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+        assertEquals(1, i.getReport().getTowerNumbers());
+
+        try {
+            i = this.game.getIsland(11);
+        }catch (Exception ex){
+            fail();
+        }
+        try {
+            this.game.moveStudent(5, i, e);
+        }catch (Exception ex){
+            fail();
+        }
+
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        } catch (EndGameException ex) {
+            ex.printStackTrace();
+        }
+
+        assertEquals(11, this.game.getAllIslands().size());
+        assertEquals(0, this.game.getIsland(0).getId());
+        assertFalse(this.game.getAllIslands().contains(new Island(11)));
+    }
+
+    @Test
     void updateProfessorsMoveToCanteen(){
         Entrance e = null;
         Canteen c = null;
