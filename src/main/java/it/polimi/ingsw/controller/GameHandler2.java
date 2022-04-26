@@ -182,7 +182,8 @@ public class GameHandler2 {
         translator.getGame().setCurrentPlayer(orderPlayers.get(numFinishedTurn%maxPlayers));
     }
 
-    public void execute(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException, EndGameException {
+
+    public void execute(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, NoSuchStudentException, EndGameException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException, EndGameException {
         if(isLegitPlayer(message.getSender())==false) throw new NotYourTurnException();
         if(isLegitAction(message.getAction())==false) throw new IllegalActionException();
 

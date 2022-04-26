@@ -23,7 +23,7 @@ public class Translator {
         game = new Game(completeRules, numPlayers);
     }
 
-    public boolean translateThis(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException, EndGameException {
+    public boolean translateThis(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException, NoSuchStudentException, NoMoreTokensException, EndGameException {
 
         switch(message.getAction()){
 
@@ -103,7 +103,7 @@ public class Translator {
                         this.game.refillActiveCard();
                 }catch( NoMoreStudentsException e){
                     throw new EndGameException("Game ended: the winner is "+getWinner());
-                }catch(NoActiveCardException e){
+                }catch(CannotAddStudentException | NoActiveCardException e){
                     e.printStackTrace();
                 }
                 return false;
@@ -224,7 +224,7 @@ public class Translator {
         this.game.disableIsland(i);
     }
 
-    private void calculateIslandInfluence(Message message) throws NoActiveCardException, IllegalMoveException, EndGameException {
+    private void calculateIslandInfluence(Message message) throws NoActiveCardException, IllegalMoveException, NoMoreTokensException, EndGameException {
         Island i;
         try {
             i = this.game.getIsland(message.getIdIsland());
@@ -245,7 +245,7 @@ public class Translator {
         this.game.disableColor(p, message.getChosenColor());
     }
 
-    private void putBackStudents(Message message) throws NoActiveCardException {
+    private void putBackStudents(Message message) throws NoActiveCardException, NoSuchStudentException {
         this.game.putBackInBag(message.getChosenColor());
     }
 
@@ -316,7 +316,7 @@ public class Translator {
 
             //TODO DEBUG
             System.out.println();
-            System.out.println(game.getCurrentRule().toString());
+            System.out.println(game.getCurrentRule().getClass().toString());
 
             System.out.println("\n\n");
         }
