@@ -72,7 +72,7 @@ public class Connection implements Runnable {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             out = new PrintWriter(socket.getOutputStream());
-            send("Welcome to Eriantys'world!\nTo play digit ADDME");
+            send("Welcome to Eriantys'world!");
             objectInputStream = new ObjectInputStream(inputStream);
             message = (Message) objectInputStream.readObject();
             owner = message.getSender();
@@ -80,7 +80,6 @@ public class Connection implements Runnable {
             while(isActive()){
                 objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
-                System.out.println("sono qui active");
                 server.deliverMessage(this, message);
             }
         } catch(Exception e){

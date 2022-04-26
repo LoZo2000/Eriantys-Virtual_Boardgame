@@ -51,7 +51,6 @@ public class Client {
                 game = (Game) objectInputStream.readObject();
                 showBoard(game);
             }while(game.getCurrentPlayer()==null || !game.getCurrentPlayer().equals(nickname));
-            System.out.println("allora");
 
             while (true){
                 message = getInput();
@@ -61,7 +60,6 @@ public class Client {
                     objectInputStream = new ObjectInputStream(inputStream);
                     game = (Game) objectInputStream.readObject();
                     showBoard(game);
-                    System.out.println("abs il current player è"+game.getCurrentPlayer());
                 }while(game.getCurrentPlayer()==null || !game.getCurrentPlayer().equals(nickname));
             }
         } catch(Exception e){
@@ -222,7 +220,6 @@ public class Client {
         }
         if(game.getCurrentPlayer()==null){
             System.out.println("Waiting for other players...");
-            System.out.println("aaa"+game.getCurrentPlayer());
         }
         else{
             System.out.println("Turn of: "+game.getCurrentPlayer());

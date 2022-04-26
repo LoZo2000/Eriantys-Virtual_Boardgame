@@ -23,7 +23,7 @@ public class Translator {
         game = new Game(completeRules, numPlayers);
     }
 
-    public boolean translateThis(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException, NoSuchStudentException, NoMoreTokensException, EndGameException {
+    public boolean translateThis(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoSuchStudentException, NoMoreTokensException, EndGameException {
 
         switch(message.getAction()){
 
