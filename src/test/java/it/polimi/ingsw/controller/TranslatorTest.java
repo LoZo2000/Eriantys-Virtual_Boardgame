@@ -91,19 +91,19 @@ public class TranslatorTest {
 
     @Test
     public void PLAYCARDtest(){
-        Message message = new PLAYCARDmessage("player1", Action.PLAYCARD, 2);
+        Message message = new PlayCardMessage("player1", Action.PLAYCARD, 2);
         try{
             translator.translateThis(message);
         }catch (Exception e){
             fail();
         }
-        message = new PLAYCARDmessage("player2", Action.PLAYCARD, 3);
+        message = new PlayCardMessage("player2", Action.PLAYCARD, 3);
         try{
             translator.translateThis(message);
         }catch(Exception e){
             fail();
         }
-        message = new PLAYCARDmessage("player3", Action.PLAYCARD, 11);
+        message = new PlayCardMessage("player3", Action.PLAYCARD, 11);
         try{
             translator.translateThis(message);
             fail();
@@ -115,7 +115,7 @@ public class TranslatorTest {
     @Test
     public void MOVESTUDENTtest() throws Exception{
         ArrayList<Student> students = translator.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
-        Message message = new MOVESTUDENTmessage("player1", Action.MOVESTUDENT, students.get(0).getId(), Location.ENTRANCE, 0, Location.ISLAND, 0);
+        Message message = new MoveStudentMessage("player1", Action.MOVESTUDENT, students.get(0).getId(), Location.ENTRANCE, 0, Location.ISLAND, 0);
         try {
             translator.translateThis(message);
         }catch (Exception e){
@@ -124,7 +124,7 @@ public class TranslatorTest {
 
         for(Location dep : Location.values()){
             for(Location arr : Location.values()){
-                message = new MOVESTUDENTmessage("player1", Action.MOVESTUDENT, 0, dep, 0, arr, 0);
+                message = new MoveStudentMessage("player1", Action.MOVESTUDENT, 0, dep, 0, arr, 0);
                 try {
                     translator.translateThis(message);
                 }catch (Exception e){
@@ -147,19 +147,19 @@ public class TranslatorTest {
             fail();
         }
 
-        Message message = new MOVESTUDENTmessage("player1", Action.MOVESTUDENT, 31, Location.CARD_ISLAND, 0, Location.ISLAND, 1);
+        Message message = new MoveStudentMessage("player1", Action.MOVESTUDENT, 31, Location.CARD_ISLAND, 0, Location.ISLAND, 1);
         try {
             translator.translateThis(message);
         }catch (Exception e){
             fail();
         }
-        message = new MOVESTUDENTmessage("player1", Action.MOVESTUDENT, 32, Location.CARD_ISLAND, 0, Location.ISLAND, 1);
+        message = new MoveStudentMessage("player1", Action.MOVESTUDENT, 32, Location.CARD_ISLAND, 0, Location.ISLAND, 1);
         try {
             translator.translateThis(message);
         }catch (Exception e){
             fail();
         }
-        message = new MOVESTUDENTmessage("player1", Action.MOVESTUDENT, 32, Location.CARD_ISLAND, 0, Location.ISLAND, 1);
+        message = new MoveStudentMessage("player1", Action.MOVESTUDENT, 32, Location.CARD_ISLAND, 0, Location.ISLAND, 1);
         try {
             translator.translateThis(message);
             fail();
@@ -170,13 +170,13 @@ public class TranslatorTest {
 
     @Test
     public void MOVEMOTHERNATUREtest(){
-        Message message = new PLAYCARDmessage("player1", Action.PLAYCARD, 1);
+        Message message = new PlayCardMessage("player1", Action.PLAYCARD, 1);
         try {
             translator.translateThis(message);
         }catch (Exception e){
             fail();
         }
-        message = new MOVEMOTHERNATUREmessage("player1", Action.MOVEMOTHERNATURE, 1);
+        message = new MoveMotherNatureMessage("player1", Action.MOVEMOTHERNATURE, 1);
         try {
             translator.translateThis(message);
         }catch (Exception e){
@@ -186,13 +186,13 @@ public class TranslatorTest {
 
     @Test
     public void SELECTCARDtest(){
-        Message message = new SELECTCLOUDmessage("player1", Action.SELECTCLOUD, 1);
+        Message message = new SelectCloudMessage("player1", Action.SELECTCLOUD, 1);
         try {
             translator.translateThis(message);
         }catch (Exception e){
             fail();
         }
-        message = new SELECTCLOUDmessage("player3", Action.SELECTCLOUD, 9);
+        message = new SelectCloudMessage("player3", Action.SELECTCLOUD, 9);
         try {
             translator.translateThis(message);
         }catch (Exception e){
@@ -202,7 +202,7 @@ public class TranslatorTest {
 
     @Test
     public void SHOWMEtest(){
-        Message message = new SHOWMEmessage("player1", Action.SHOWME);
+        Message message = new ShowMeMessage("player1", Action.SHOWME);
         try {
             translator.translateThis(message);
         }catch (Exception e){
@@ -212,7 +212,7 @@ public class TranslatorTest {
 
     @Test
     public void USEPOWERtest(){
-        Message message = new USEPOWERmessage("player1", Action.USEPOWER, 0);
+        Message message = new UsePowerMessage("player1", Action.USEPOWER, 0);
         try {
             translator.translateThis(message);
         }catch (Exception e){
@@ -224,7 +224,7 @@ public class TranslatorTest {
     public void EXCHANGESTUDENTtest() throws Exception{
         ArrayList<Student> students = translator.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
         ArrayList<Student> students1 = translator.getGame().getIsland(1).getAllStudents();
-        Message message = new EXCHANGESTUDENTmessage("player1", Action.EXCHANGESTUDENT, students.get(0).getId(), students1.get(0).getId(), Location.ENTRANCE, 0, Location.ISLAND, 1);
+        Message message = new ExchangeStudentMessage("player1", Action.EXCHANGESTUDENT, students.get(0).getId(), students1.get(0).getId(), Location.ENTRANCE, 0, Location.ISLAND, 1);
         try {
             translator.translateThis(message);
         }catch (Exception e){
@@ -233,7 +233,7 @@ public class TranslatorTest {
 
         for(Location dep : Location.values()){
             for(Location arr : Location.values()){
-                message = new EXCHANGESTUDENTmessage("player1", Action.EXCHANGESTUDENT, 0, 1, dep, 0, arr, 0);
+                message = new ExchangeStudentMessage("player1", Action.EXCHANGESTUDENT, 0, 1, dep, 0, arr, 0);
                 try {
                     translator.translateThis(message);
                 }catch (Exception e){
@@ -411,17 +411,17 @@ public class TranslatorTest {
     public void getWinnerTestGREY(){
         try {
             ArrayList<Student> students = translator.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
-            Message message = new PLAYCARDmessage("player1", Action.PLAYCARD, 1);
+            Message message = new PlayCardMessage("player1", Action.PLAYCARD, 1);
             try {
                 translator.translateThis(message);
             }catch (Exception e){
                 fail();
             }
             for (int i = 0; i < 7; i++) {
-                message = new MOVESTUDENTmessage("player1", Action.MOVESTUDENT, students.get(i).getId(), Location.ENTRANCE, 0, Location.CANTEEN, 0);
+                message = new MoveStudentMessage("player1", Action.MOVESTUDENT, students.get(i).getId(), Location.ENTRANCE, 0, Location.CANTEEN, 0);
                 translator.translateThis(message);
             }
-            message = new MOVEMOTHERNATUREmessage("player1", Action.MOVEMOTHERNATURE, 1);
+            message = new MoveMotherNatureMessage("player1", Action.MOVEMOTHERNATURE, 1);
             translator.translateThis(message);
         }catch (Exception e){
             fail();
@@ -438,17 +438,17 @@ public class TranslatorTest {
     public void getWinnerTestBLACK(){
         try {
             ArrayList<Student> students = translator.getGame().getPlayer("player2").getDashboard().getEntrance().getAllStudents();
-            Message message = new PLAYCARDmessage("player2", Action.PLAYCARD, 1);
+            Message message = new PlayCardMessage("player2", Action.PLAYCARD, 1);
             try {
                 translator.translateThis(message);
             }catch (Exception e){
                 fail();
             }
             for (int i = 0; i < 7; i++) {
-                message = new MOVESTUDENTmessage("player2", Action.MOVESTUDENT, students.get(i).getId(), Location.ENTRANCE, 0, Location.CANTEEN, 0);
+                message = new MoveStudentMessage("player2", Action.MOVESTUDENT, students.get(i).getId(), Location.ENTRANCE, 0, Location.CANTEEN, 0);
                 translator.translateThis(message);
             }
-            message = new MOVEMOTHERNATUREmessage("player2", Action.MOVEMOTHERNATURE, 1);
+            message = new MoveMotherNatureMessage("player2", Action.MOVEMOTHERNATURE, 1);
             translator.translateThis(message);
         }catch (Exception e){
             fail();
@@ -465,17 +465,17 @@ public class TranslatorTest {
     public void getWinnerTestWHITE(){
         try {
             ArrayList<Student> students = translator.getGame().getPlayer("player3").getDashboard().getEntrance().getAllStudents();
-            Message message = new PLAYCARDmessage("player3", Action.PLAYCARD, 1);
+            Message message = new PlayCardMessage("player3", Action.PLAYCARD, 1);
             try {
                 translator.translateThis(message);
             }catch (Exception e){
                 fail();
             }
             for (int i = 0; i < 7; i++) {
-                message = new MOVESTUDENTmessage("player3", Action.MOVESTUDENT, students.get(i).getId(), Location.ENTRANCE, 0, Location.CANTEEN, 0);
+                message = new MoveStudentMessage("player3", Action.MOVESTUDENT, students.get(i).getId(), Location.ENTRANCE, 0, Location.CANTEEN, 0);
                 translator.translateThis(message);
             }
-            message = new MOVEMOTHERNATUREmessage("player3", Action.MOVEMOTHERNATURE, 1);
+            message = new MoveMotherNatureMessage("player3", Action.MOVEMOTHERNATURE, 1);
             translator.translateThis(message);
         }catch (Exception e){
             fail();
@@ -492,23 +492,23 @@ public class TranslatorTest {
     @Test
     public void playCardExceptions(){
         try{
-            Message message = new PLAYCARDmessage("player1", Action.PLAYCARD, 11);
+            Message message = new PlayCardMessage("player1", Action.PLAYCARD, 11);
             translator.translateThis(message);
             fail();
         }catch (Exception e){
             e.printStackTrace();
         }
         try{
-            Message message = new PLAYCARDmessage("player1", Action.PLAYCARD, 5);
+            Message message = new PlayCardMessage("player1", Action.PLAYCARD, 5);
             translator.translateThis(message);
-            message = new PLAYCARDmessage("player2", Action.PLAYCARD, 5);
+            message = new PlayCardMessage("player2", Action.PLAYCARD, 5);
             translator.translateThis(message);
             fail();
         }catch (Exception e){
             e.printStackTrace();
         }
         try{
-            Message message = new PLAYCARDmessage("player4", Action.PLAYCARD, 3);
+            Message message = new PlayCardMessage("player4", Action.PLAYCARD, 3);
             translator.translateThis(message);
             fail();
         }catch (Exception e){
@@ -519,23 +519,23 @@ public class TranslatorTest {
     @Test
     public void MoveMotherNatureExceptions(){
         try{
-            Message message = new MOVEMOTHERNATUREmessage("player1", Action.MOVEMOTHERNATURE, 0);
+            Message message = new MoveMotherNatureMessage("player1", Action.MOVEMOTHERNATURE, 0);
             translator.translateThis(message);
             fail();
         }catch (Exception e){
             e.printStackTrace();
         }
         try{
-            Message message = new PLAYCARDmessage("player1", Action.PLAYCARD, 1);
+            Message message = new PlayCardMessage("player1", Action.PLAYCARD, 1);
             translator.translateThis(message);
-            message = new MOVEMOTHERNATUREmessage("player1", Action.MOVEMOTHERNATURE, 2);
+            message = new MoveMotherNatureMessage("player1", Action.MOVEMOTHERNATURE, 2);
             translator.translateThis(message);
             fail();
         }catch (Exception e){
             e.printStackTrace();
         }
         try{
-            Message message = new MOVEMOTHERNATUREmessage("player4", Action.MOVEMOTHERNATURE, 1);
+            Message message = new MoveMotherNatureMessage("player4", Action.MOVEMOTHERNATURE, 1);
             translator.translateThis(message);
             fail();
         }catch (Exception e){
@@ -557,7 +557,7 @@ public class TranslatorTest {
                 fail();
             }
 
-            Message message = new SHOWMEmessage("player1", Action.SHOWME);
+            Message message = new ShowMeMessage("player1", Action.SHOWME);
             translator.translateThis(message);
         }catch (Exception e){
             fail();
@@ -566,6 +566,6 @@ public class TranslatorTest {
 
     @Test
     void noCharacterSelectedTest(){
-        assertThrows(NoCharacterSelectedException.class, ()->translator.translateThis(new USEPOWERmessage("player1", Action.USEPOWER, 8)));
+        assertThrows(NoCharacterSelectedException.class, ()->translator.translateThis(new UsePowerMessage("player1", Action.USEPOWER, 8)));
     }
 }

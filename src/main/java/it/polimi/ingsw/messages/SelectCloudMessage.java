@@ -2,10 +2,10 @@ package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.controller.Action;
 
-public class SELECTCLOUDmessage extends  Message{
+public class SelectCloudMessage extends  Message{
     final private int cloudPosition;
 
-    public SELECTCLOUDmessage(String sender, Action action, int cloudPosition){
+    public SelectCloudMessage(String sender, Action action, int cloudPosition){
         super(sender, action);
         this.cloudPosition = cloudPosition;
     }

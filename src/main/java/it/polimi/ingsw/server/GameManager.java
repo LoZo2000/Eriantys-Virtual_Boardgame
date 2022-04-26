@@ -52,7 +52,7 @@ public class GameManager {
         int numPlayers = message.getNumPlayers();
         int i=numPlayers-2+additive;
         if(gameTypes[i]==null){
-            Message createGame = new CREATEMATCHmessage("gameMaker", Action.CREATEMATCH, completeRules, numPlayers );
+            Message createGame = new CreateMatchMessage("gameMaker", Action.CREATEMATCH, completeRules, numPlayers );
             gameTypes[i] = new GameHandler2(createGame);
             gameTypes[i].execute(message);
             addedConnections.add(c);

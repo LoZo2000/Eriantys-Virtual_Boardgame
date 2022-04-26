@@ -2,10 +2,9 @@ package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.controller.Action;
 
-public class ENDGAMEmessage extends Message{
+public class ShowMeMessage extends  Message{
 
-    public ENDGAMEmessage(String sender, Action action) {
+    public ShowMeMessage(String sender, Action action){
         super(sender, action);
     }
-
 }

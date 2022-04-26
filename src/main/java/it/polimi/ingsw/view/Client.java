@@ -106,7 +106,7 @@ public class Client {
             System.out.println("Choose which card do you want to play (priority):");
             priority = stdin.nextInt();
             stdin.nextLine();
-            return new PLAYCARDmessage(nickname, Action.PLAYCARD, priority);
+            return new PlayCardMessage(nickname, Action.PLAYCARD, priority);
         }
 
         else if(action.equals("MOVESTUDENT")){
@@ -153,21 +153,21 @@ public class Client {
                 arrivalType = null;
                 arrivalId = -1;
             }
-            return new MOVESTUDENTmessage(nickname, Action.MOVESTUDENT, studentId, departureType, departureId, arrivalType, arrivalId);
+            return new MoveStudentMessage(nickname, Action.MOVESTUDENT, studentId, departureType, departureId, arrivalType, arrivalId);
         }
 
         else if(action.equals("MOVEMOTHERNATURE")){
             System.out.println("Insert Mother Nature's movement:");
             MNmovement = stdin.nextInt();
             stdin.nextLine();
-            return new MOVEMOTHERNATUREmessage(nickname, Action.MOVEMOTHERNATURE, MNmovement);
+            return new MoveMotherNatureMessage(nickname, Action.MOVEMOTHERNATURE, MNmovement);
         }
 
         else if(action.equals("SELECTCLOUD")){
             System.out.println("Select which cloud you have chosen: (position)");
             position = stdin.nextInt();
             stdin.nextLine();
-            return new SELECTCLOUDmessage(nickname, Action.SELECTCLOUD, position);
+            return new SelectCloudMessage(nickname, Action.SELECTCLOUD, position);
         }
 
         return new Message(nickname, null);
