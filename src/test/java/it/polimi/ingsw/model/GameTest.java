@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.EndGameException;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
@@ -85,6 +86,8 @@ class GameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
+        } catch (EndGameException ex) {
+            ex.printStackTrace();
         }
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
@@ -105,6 +108,8 @@ class GameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
+        } catch (EndGameException ex) {
+            ex.printStackTrace();
         }
 
         assertEquals(11, this.game.getAllIslands().size());

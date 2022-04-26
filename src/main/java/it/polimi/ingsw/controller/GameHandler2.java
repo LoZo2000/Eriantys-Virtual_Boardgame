@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.*;
+import it.polimi.ingsw.messages.ENDGAMEmessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.messages.Message;
@@ -142,6 +143,11 @@ public class GameHandler2 {
         temp.add(Action.SHOWME);
         legitAction.put(Phase.ACTIVECARD, (ArrayList<Action>) temp.clone());
 
+        temp.clear();
+        temp.add(Action.ENDGAME);
+        temp.add(Action.SHOWME);
+        legitAction.put(Phase.ENDGAME, (ArrayList<Action>) temp.clone());
+
     }
 
     //Check if the action is legit in that phase
@@ -158,167 +164,183 @@ public class GameHandler2 {
         }
     }
 
+    private void endGame(){
+        currentPhase=Phase.ENDGAME;
+        Message endGameMessage = new ENDGAMEmessage("handler", Action.ENDGAME);
+        try{
+            execute(endGameMessage);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     //refresh the current player
     private void refreshCurrentPlayer() {
         currentPlayer = players.indexOf(orderPlayers.get(numFinishedTurn%maxPlayers));
         translator.getGame().setCurrentPlayer(orderPlayers.get(numFinishedTurn%maxPlayers));
     }
 
-
-    public void execute(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
+    public void execute(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException, EndGameException {
         if(isLegitPlayer(message.getSender())==false) throw new NotYourTurnException();
         if(isLegitAction(message.getAction())==false) throw new IllegalActionException();
 
+        try {
+            switch (message.getAction()) {
 
-        switch (message.getAction()){
+                case ADDME:
 
-            case ADDME:
+                    players.add(message.getSender());
+                    numPlayers++;
+                    translator.translateThis(message);
+                    if (numPlayers == maxPlayers) nextPhase();
 
-                players.add(message.getSender());
-                numPlayers++;
-                translator.translateThis(message);
-                if(numPlayers==maxPlayers) nextPhase();
+                    break;
 
-                break;
+                case PLAYCARD: //need to check if the player owns the card through an exception in translate
+                    translator.translateThis(message);
+                    priority[currentPlayer] = message.getPriority();
+                    currentPlayer = (currentPlayer + 1) % maxPlayers;
+                    translator.getGame().setCurrentPlayer(players.get(currentPlayer));
+                    if (currentPlayer == firstPlayer) { //first player in the first turn is 0 initialized in nextphase
+                        orderPlayers = sort();
+                        firstPlayer = players.indexOf(orderPlayers.get(0));
+                        currentPlayer = firstPlayer;
+                        translator.getGame().setCurrentPlayer(orderPlayers.get(0));
+                        nextPhase();
+                    }
+                    break;
 
-            case PLAYCARD: //need to check if the player owns the card through an exception in translate
-                translator.translateThis(message);
-                priority[currentPlayer] = message.getPriority();
-                currentPlayer = (currentPlayer+1)%maxPlayers;
-                translator.getGame().setCurrentPlayer(players.get(currentPlayer));
-                if(currentPlayer==firstPlayer){ //first player in the first turn is 0 initialized in nextphase
-                    orderPlayers = sort();
-                    firstPlayer = players.indexOf(orderPlayers.get(0));
-                    currentPlayer=firstPlayer;
-                    translator.getGame().setCurrentPlayer(orderPlayers.get(0));
+                case MOVESTUDENT:
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        Action requestedActiveAction = translator.getRequestedAction();
+                        if (requestedActiveAction != Action.MOVESTUDENT)
+                            throw new IllegalMoveException("Wrong move: you should not move students now!");
+
+                        if (!checkMovementLocations(message))
+                            throw new IllegalMoveException("You can't move students from these locations");
+                    } else if (message.getDepartureType() != Location.ENTRANCE || (message.getArrivalType() != Location.ISLAND && message.getArrivalType() != Location.CANTEEN))
+                        throw new IllegalMoveException("Illegal movement!");
+
+                    translator.translateThis(message);
+                    if (currentPhase != Phase.ACTIVECARD)
+                        currentMoveStudent++;
+                    //System.out.println("il numero di current move student è"+currentMoveStudent);
+                    if (currentMoveStudent == maxMoveStudent || currentPhase == Phase.ACTIVECARD) {
+                        nextPhase();
+                    }
+                    break;
+                // discuss with others where to save cards of the players
+                case MOVEMOTHERNATURE: //add a check if mother nature move of the right number of islands
+                    translator.translateThis(message);
                     nextPhase();
-                }
-                break;
+                    break;
 
-            case MOVESTUDENT:
-                if(currentPhase == Phase.ACTIVECARD){
-                    Action requestedActiveAction = translator.getRequestedAction();
-                    if(requestedActiveAction != Action.MOVESTUDENT)
-                        throw new IllegalMoveException("Wrong move: you should not move students now!");
+                case USEPOWER:
+                    if (usedCard)
+                        throw new IllegalMoveException("You can't use characters' powers twice in the same turn");
+                    boolean isActive = translator.translateThis(message);
+                    usedCard = true;
+                    if (isActive) {
+                        this.oldPhase = this.currentPhase;
+                        this.currentPhase = Phase.ACTIVECARD;
+                    }
+                    break;
 
-                    if(!checkMovementLocations(message))
-                        throw new IllegalMoveException("You can't move students from these locations");
-                }
-                else if(message.getDepartureType()!=Location.ENTRANCE || (message.getArrivalType()!=Location.ISLAND && message.getArrivalType()!=Location.CANTEEN) )
-                    throw new IllegalMoveException("Illegal movement!");
+                case EXCHANGESTUDENT:
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        Action requestedActiveAction = translator.getRequestedAction();
+                        if (requestedActiveAction != Action.EXCHANGESTUDENT)
+                            throw new IllegalMoveException("Wrong move: you should not move students now!");
 
-                translator.translateThis(message);
-                if(currentPhase != Phase.ACTIVECARD)
-                    currentMoveStudent++;
-                //System.out.println("il numero di current move student è"+currentMoveStudent);
-                if(currentMoveStudent==maxMoveStudent || currentPhase == Phase.ACTIVECARD){
+                        if (!checkMovementLocations(message))
+                            throw new IllegalMoveException("You can't move students from these locations");
+                    }
+
+                    translator.translateThis(message);
+
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        nextPhase();
+                    }
+                    break;
+
+                case BLOCK_ISLAND:
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        Action requestedActiveAction = translator.getRequestedAction();
+                        if (requestedActiveAction != Action.BLOCK_ISLAND)
+                            throw new IllegalMoveException("Wrong move: you cannot block an island now!");
+                    }
+
+                    translator.translateThis(message);
+
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        nextPhase();
+                    }
+                    break;
+
+                case ISLAND_INFLUENCE:
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        Action requestedActiveAction = translator.getRequestedAction();
+                        if (requestedActiveAction != Action.ISLAND_INFLUENCE)
+                            throw new IllegalMoveException("Wrong move: you cannot choose an island!");
+                    }
+
+                    translator.translateThis(message);
+
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        nextPhase();
+                    }
+                    break;
+
+                case BLOCK_COLOR:
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        Action requestedActiveAction = translator.getRequestedAction();
+                        if (requestedActiveAction != Action.BLOCK_COLOR)
+                            throw new IllegalMoveException("Wrong move: you cannot choose a color to be blocked!");
+                    }
+
+                    translator.translateThis(message);
+
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        nextPhase();
+                    }
+                    break;
+
+                case PUT_BACK:
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        Action requestedActiveAction = translator.getRequestedAction();
+                        if (requestedActiveAction != Action.PUT_BACK)
+                            throw new IllegalMoveException("Wrong move: you cannot put back students of a color now!");
+                    }
+
+                    translator.translateThis(message);
+
+                    if (currentPhase == Phase.ACTIVECARD) {
+                        nextPhase();
+                    }
+                    break;
+
+                case SELECTCLOUD:
+                    translator.translateThis(message);
+                    numFinishedTurn++;
+                    refreshCurrentPlayer();
                     nextPhase();
-                }
-                break;
-                                   // discuss with others where to save cards of the players
-            case MOVEMOTHERNATURE: //add a check if mother nature move of the right number of islands
-                translator.translateThis(message);
-                nextPhase();
-                break;
+                    break;
 
-            case USEPOWER:
-                if(usedCard)
-                    throw new IllegalMoveException("You can't use characters' powers twice in the same turn");
-                boolean isActive = translator.translateThis(message);
-                usedCard = true;
-                if(isActive){
-                    this.oldPhase = this.currentPhase;
-                    this.currentPhase = Phase.ACTIVECARD;
-                }
-                break;
+                case SHOWME:
+                    if (numPlayers == 0 || numPlayers != maxPlayers)
+                        throw new IllegalMoveException("Wait until all the players join the match...");
+                    else translator.translateThis(message);
+                    break;
 
-            case EXCHANGESTUDENT:
-                if(currentPhase == Phase.ACTIVECARD){
-                    Action requestedActiveAction = translator.getRequestedAction();
-                    if(requestedActiveAction != Action.EXCHANGESTUDENT)
-                        throw new IllegalMoveException("Wrong move: you should not move students now!");
-
-                    if(!checkMovementLocations(message))
-                        throw new IllegalMoveException("You can't move students from these locations");
-                }
-
-                translator.translateThis(message);
-
-                if(currentPhase == Phase.ACTIVECARD){
-                    nextPhase();
-                }
-                break;
-
-            case BLOCK_ISLAND:
-                if(currentPhase == Phase.ACTIVECARD){
-                    Action requestedActiveAction = translator.getRequestedAction();
-                    if(requestedActiveAction != Action.BLOCK_ISLAND)
-                        throw new IllegalMoveException("Wrong move: you cannot block an island now!");
-                }
-
-                translator.translateThis(message);
-
-                if(currentPhase == Phase.ACTIVECARD){
-                    nextPhase();
-                }
-                break;
-
-            case ISLAND_INFLUENCE:
-                if(currentPhase == Phase.ACTIVECARD){
-                    Action requestedActiveAction = translator.getRequestedAction();
-                    if(requestedActiveAction != Action.ISLAND_INFLUENCE)
-                        throw new IllegalMoveException("Wrong move: you cannot choose an island!");
-                }
-
-                translator.translateThis(message);
-
-                if(currentPhase == Phase.ACTIVECARD){
-                    nextPhase();
-                }
-                break;
-
-            case BLOCK_COLOR:
-                if(currentPhase == Phase.ACTIVECARD){
-                    Action requestedActiveAction = translator.getRequestedAction();
-                    if(requestedActiveAction != Action.BLOCK_COLOR)
-                        throw new IllegalMoveException("Wrong move: you cannot choose a color to be blocked!");
-                }
-
-                translator.translateThis(message);
-
-                if(currentPhase == Phase.ACTIVECARD){
-                    nextPhase();
-                }
-                break;
-
-            case PUT_BACK:
-                if(currentPhase == Phase.ACTIVECARD){
-                    Action requestedActiveAction = translator.getRequestedAction();
-                    if(requestedActiveAction != Action.PUT_BACK)
-                        throw new IllegalMoveException("Wrong move: you cannot put back students of a color now!");
-                }
-
-                translator.translateThis(message);
-
-                if(currentPhase == Phase.ACTIVECARD){
-                    nextPhase();
-                }
-                break;
-
-            case SELECTCLOUD:
-                translator.translateThis(message);
-                numFinishedTurn++;
-                refreshCurrentPlayer();
-                nextPhase();
-                break;
-
-            case SHOWME:
-                if(numPlayers==0 || numPlayers!=maxPlayers) throw new IllegalMoveException("Wait until all the players join the match...");
-                else translator.translateThis(message);
-                break;
-
-            default:
-                throw new UnrecognizedPlayerOrActionException("This kind of action doesn't exist!");
+                default:
+                    throw new UnrecognizedPlayerOrActionException("This kind of action doesn't exist!");
+            }
+        }
+        catch (EndGameException ex){
+            endGame();
+            throw new EndGameException();
         }
     }
 

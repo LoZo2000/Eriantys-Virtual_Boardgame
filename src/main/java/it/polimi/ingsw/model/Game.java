@@ -35,6 +35,8 @@ public class Game implements Serializable {
     private String currentPlayer = null;
     private Phase currentPhase = null;
     private Map<Player, Card> playedCards;
+    private boolean finishedGame = false;
+    private String winner;
 
     //Create game but no players are added;
     public Game(boolean completeRules, int numPlayers){
@@ -90,6 +92,15 @@ public class Game implements Serializable {
 
     public int getNumberOfClouds(){
         return clouds.length;
+    }
+
+    public void endGame(ColorTower winner){
+        finishedGame=true;
+        for(Player p : players){
+            if(p.getColor()==winner){
+                this.winner=p.getNickname();
+            }
+        }
     }
 
     private void initClouds(int numPlayers) throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
@@ -208,7 +219,7 @@ public class Game implements Serializable {
     //When parameter enableMovement is true the method has the regular behaviour.
     //If enableMovement is false, it will be checked if there's an active card.
     //If not an Exception will be raised
-    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException{
+    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException, EndGameException {
         if(enableMovement)
             motherNature.movement(island);
         else{
@@ -237,6 +248,9 @@ public class Game implements Serializable {
                     }
                     if (p.getColor() == higherInfluence) {
                         p.getDashboard().removeTowers(report.getTowerNumbers());
+                        if(p.getDashboard().getTowers()==0){
+                            throw new EndGameException();
+                        }
                     }
                 }
 
@@ -266,7 +280,7 @@ public class Game implements Serializable {
         }
     }
 
-    public Island mergeIsland(Island i1, Island i2) {
+    public Island mergeIsland(Island i1, Island i2) throws EndGameException {
         int indx1=islands.indexOf(i1);
         int indx2=islands.indexOf(i2);
         Island temp= new Island(i1, i2);
@@ -274,6 +288,9 @@ public class Game implements Serializable {
         islands.remove(i2);
         islands.add(indx1, temp);
         motherNature.movement(temp);
+        if(islands.size()<=3){
+            throw new EndGameException();
+        }
         return temp;
     }
 
