@@ -109,6 +109,6 @@ public class MessageTest {
 
     @Test
     public void ENDGAMEtest(){
-        Message message = new ENDGAMEmessage("player", Action.ENDGAME);
+        Message message = new EndGameMessage("player", Action.ENDGAME);
     }
 }
