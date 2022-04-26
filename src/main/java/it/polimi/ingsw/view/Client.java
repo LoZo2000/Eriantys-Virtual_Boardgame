@@ -90,7 +90,7 @@ public class Client {
         else{
             completeRules=false;
         }
-        return new ADDMEmessage(nickname, Action.ADDME, completeRules, numPlayers);
+        return new AddMeMessage(nickname, Action.ADDME, completeRules, numPlayers);
 
     }
 

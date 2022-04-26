@@ -42,7 +42,7 @@ public class GameManager {
         }
     }
 
-    private void manageADD(Connection c, Message message) throws NoPlayerException, NoIslandException, IllegalMessageException, NoActiveCardException, IllegalActionException, NotYourTurnException, IllegalMoveException, UnrecognizedPlayerOrActionException, CannotJoinException, NoCharacterSelectedException, EndGameException, NotEnoughMoneyException, NoMoreTokensException {
+    private void manageADD(Connection c, Message message) throws NoPlayerException, NoIslandException, IllegalMessageException, NoActiveCardException, IllegalActionException, NotYourTurnException, IllegalMoveException, UnrecognizedPlayerOrActionException, CannotJoinException, NoCharacterSelectedException, EndGameException, NotEnoughMoneyException, NoMoreTokensException, NoSuchStudentException {
         int additive=0; // additive became 3 if the rules are complete for the index in the array
         boolean completeRules = message.getCompleteRules();
         if(completeRules) additive=3;

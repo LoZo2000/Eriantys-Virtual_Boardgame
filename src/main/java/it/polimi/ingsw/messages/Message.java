@@ -23,7 +23,7 @@ public class Message implements Serializable {
         return action;
     }
 
-    //For ADDMEmessage:
+    //For AddMeMessage:
     public boolean getCompleteRules(){
         return false;
     }

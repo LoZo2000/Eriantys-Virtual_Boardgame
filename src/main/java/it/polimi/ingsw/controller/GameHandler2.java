@@ -165,7 +165,7 @@ public class GameHandler2 {
     }
 
 
-    public void execute(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, CannotJoinException, EndGameException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
+    public void execute(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NotYourTurnException, UnrecognizedPlayerOrActionException, NoSuchStudentException, EndGameException, IllegalActionException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
         if(isLegitPlayer(message.getSender())==false) throw new NotYourTurnException();
         if(isLegitAction(message.getAction())==false) throw new IllegalActionException();
 

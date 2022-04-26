@@ -29,6 +29,10 @@ public class ActionCharacter extends Character{
         return numTokens;
     }
 
+    public int getMaxNumTokens(){
+        return maxNumTokens;
+    }
+
     public void removeToken() throws NoMoreTokensException {
         if(numTokens == 0){
             throw new NoMoreTokensException("There is no token left");
