@@ -143,7 +143,7 @@ public class Translator {
                 return false;
 
             case USEPOWER:
-                USEPOWERmessage um = (USEPOWERmessage) message;
+                UsePowerMessage um = (UsePowerMessage) message;
                 Player p = null;
                 p = this.game.getPlayer(um.getSender());
                 return this.game.usePower(p, um.getCharacterCard());

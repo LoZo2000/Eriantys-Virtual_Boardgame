@@ -2,10 +2,10 @@ package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.controller.Action;
 
-public class USEPOWERmessage extends Message{
+public class UsePowerMessage extends Message{
     private final int characterCard;
 
-    public USEPOWERmessage(String sender, Action action, int characterCard) {
+    public UsePowerMessage(String sender, Action action, int characterCard) {
         super(sender, action);
         this.characterCard = characterCard;
     }

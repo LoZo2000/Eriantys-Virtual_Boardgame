@@ -3,7 +3,7 @@ package it.polimi.ingsw.messages;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
 
-public class EXCHANGESTUDENTmessage extends Message{
+public class ExchangeStudentMessage extends Message{
     final private int studentId1;
     final private int studentId2;
     final private Location departureType;
@@ -11,7 +11,7 @@ public class EXCHANGESTUDENTmessage extends Message{
     final private Location arrivalType;
     final private int arrivalId;
 
-    public EXCHANGESTUDENTmessage(String sender, Action action, int studentId1, int studentId2, Location departureType, int departureId, Location arrivalType, int arrivalId){
+    public ExchangeStudentMessage(String sender, Action action, int studentId1, int studentId2, Location departureType, int departureId, Location arrivalType, int arrivalId){
         super(sender, action);
         this.studentId1 = studentId1;
         this.studentId2 = studentId2;

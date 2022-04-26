@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.*;
-import it.polimi.ingsw.messages.ENDGAMEmessage;
+import it.polimi.ingsw.messages.EndGameMessage;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.messages.Message;
@@ -166,7 +166,7 @@ public class GameHandler2 {
 
     private void endGame(){
         currentPhase=Phase.ENDGAME;
-        Message endGameMessage = new ENDGAMEmessage("handler", Action.ENDGAME);
+        Message endGameMessage = new EndGameMessage("handler", Action.ENDGAME);
         try{
             execute(endGameMessage);
         }

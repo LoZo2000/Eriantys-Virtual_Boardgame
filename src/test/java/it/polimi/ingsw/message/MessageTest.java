@@ -33,7 +33,7 @@ public class MessageTest {
 
     @Test
     public void CREATEMATCHtest(){
-        Message message = new CREATEMATCHmessage("player", Action.CREATEMATCH, false, 2);
+        Message message = new CreateMatchMessage("player", Action.CREATEMATCH, false, 2);
         assertFalse(message.getCompleteRules());
         assertEquals(2, message.getNumPlayers());
     }
@@ -47,13 +47,13 @@ public class MessageTest {
 
     @Test
     public void PLAYCARDtest(){
-        Message message = new PLAYCARDmessage("player", Action.PLAYCARD, 2);
+        Message message = new PlayCardMessage("player", Action.PLAYCARD, 2);
         assertEquals(2, message.getPriority());
     }
 
     @Test
     public void MOVESTUDENTtest(){
-        Message message = new MOVESTUDENTmessage("player", Action.MOVESTUDENT, 2, Location.ISLAND, 0, Location.ISLAND, 1);
+        Message message = new MoveStudentMessage("player", Action.MOVESTUDENT, 2, Location.ISLAND, 0, Location.ISLAND, 1);
         assertEquals(2, message.getStudentId());
         assertEquals(Location.ISLAND, message.getDepartureType());
         assertEquals(0, message.getDepartureId());
@@ -63,30 +63,30 @@ public class MessageTest {
 
     @Test
     public void MOVEMOTHERNATUREtest(){
-        Message message = new MOVEMOTHERNATUREmessage("player", Action.MOVEMOTHERNATURE, 2);
+        Message message = new MoveMotherNatureMessage("player", Action.MOVEMOTHERNATURE, 2);
         assertEquals(2, message.getMovement());
     }
 
     @Test
     public void SELECTCLOUDtest(){
-        Message message = new SELECTCLOUDmessage("player", Action.MOVEMOTHERNATURE, 2);
+        Message message = new SelectCloudMessage("player", Action.MOVEMOTHERNATURE, 2);
         assertEquals(2, message.getCloudPosition());
     }
 
     @Test
     public void SHOWMEtest(){
-        Message message = new SHOWMEmessage("player", Action.SHOWME);
+        Message message = new ShowMeMessage("player", Action.SHOWME);
     }
 
     @Test
     public void USEPOWERtest(){
-        Message message = new USEPOWERmessage("player", Action.USEPOWER, 0);
+        Message message = new UsePowerMessage("player", Action.USEPOWER, 0);
         assertEquals(0, message.getCharacterCard());
     }
 
     @Test
     public void EXCHANGESTUDENTtest(){
-        Message message = new EXCHANGESTUDENTmessage("player", Action.EXCHANGESTUDENT, 0, 1, Location.CANTEEN, 2, Location.ISLAND, 3);
+        Message message = new ExchangeStudentMessage("player", Action.EXCHANGESTUDENT, 0, 1, Location.CANTEEN, 2, Location.ISLAND, 3);
         assertEquals(0, message.getStudentId());
         assertEquals(1, message.getStudentId2());
         assertEquals(Location.CANTEEN, message.getDepartureType());
