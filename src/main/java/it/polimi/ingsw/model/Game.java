@@ -35,6 +35,8 @@ public class Game implements Serializable {
     private String currentPlayer = null;
     private Phase currentPhase = null;
     private Map<Player, Card> playedCards;
+    private boolean finishedGame = false;
+    private String winner;
 
     //Create game but no players are added;
     public Game(boolean completeRules, int numPlayers){
@@ -76,8 +78,8 @@ public class Game implements Serializable {
             }catch (IOException e){
                 e.printStackTrace();
             }
-            Arrays.stream(charactersCards).map(Character::toString)
-                    .forEach(System.out::println);
+            //Arrays.stream(charactersCards).map(Character::toString)
+            //        .forEach(System.out::println);
         } else{
             this.activeCard = -1;
             this.charactersCards = null;
@@ -90,6 +92,15 @@ public class Game implements Serializable {
 
     public int getNumberOfClouds(){
         return clouds.length;
+    }
+
+    public void endGame(ColorTower winner){
+        finishedGame=true;
+        for(Player p : players){
+            if(p.getColor()==winner){
+                this.winner=p.getNickname();
+            }
+        }
     }
 
     private void initClouds(int numPlayers) throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
@@ -208,7 +219,7 @@ public class Game implements Serializable {
     //When parameter enableMovement is true the method has the regular behaviour.
     //If enableMovement is false, it will be checked if there's an active card.
     //If not an Exception will be raised
-    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException{
+    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException, EndGameException, NoMoreTokensException {
         if(enableMovement)
             motherNature.movement(island);
         else{
@@ -218,10 +229,10 @@ public class Game implements Serializable {
             if(ac.getType() != Action.ISLAND_INFLUENCE)
                 throw new NoActiveCardException("You can't calculate the influence of an island with this power");
 
-            if(this.activeCard != -1){
+            //if(this.activeCard != -1){
                 this.activeCard = -1;
                 this.currentRule = new DefaultRule();
-            }
+            //}
         }
         Report report = island.getReport();
 
@@ -237,6 +248,9 @@ public class Game implements Serializable {
                     }
                     if (p.getColor() == higherInfluence) {
                         p.getDashboard().removeTowers(report.getTowerNumbers());
+                        if(p.getDashboard().getTowers()==0){
+                            throw new EndGameException();
+                        }
                     }
                 }
 
@@ -266,7 +280,7 @@ public class Game implements Serializable {
         }
     }
 
-    public Island mergeIsland(Island i1, Island i2) {
+    public Island mergeIsland(Island i1, Island i2) throws EndGameException {
         int indx1=islands.indexOf(i1);
         int indx2=islands.indexOf(i2);
         Island temp= new Island(i1, i2);
@@ -274,6 +288,9 @@ public class Game implements Serializable {
         islands.remove(i2);
         islands.add(indx1, temp);
         motherNature.movement(temp);
+        if(islands.size()<=3){
+            throw new EndGameException();
+        }
         return temp;
     }
 
@@ -323,7 +340,7 @@ public class Game implements Serializable {
 
     //MOVE FUNCTIONS
     //function move written in a view where the parameters are message received by a client (temporary)
-    public void moveStudent(int studentId, Movable arrival, Movable departure) throws NoSuchStudentException{
+    public void moveStudent(int studentId, Movable arrival, Movable departure) throws NoSuchStudentException, CannotAddStudentException {
         Student s = departure.removeStudent(studentId);
         arrival.addStudent(s);
 
@@ -335,7 +352,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure) throws NoSuchStudentException{
+    public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure) throws NoSuchStudentException, CannotAddStudentException {
         Student s1, s2;
         s1 = departure.removeStudent(studentId1);
         s2 = arrival.removeStudent(studentId2);
@@ -345,18 +362,18 @@ public class Game implements Serializable {
 
         this.updateProfessors();
 
-        if(completeRules){
+        //if(completeRules){
             Color c1 = s1.getColor();
             Color c2 = s2.getColor();
 
             this.assignCoins(c1, false, c1 == c2);
             this.assignCoins(c2, true, c1 == c2);
-        }
+        //}
 
-        if(this.activeCard != -1){
+        //if(this.activeCard != -1){
             this.activeCard = -1;
             this.currentRule = new DefaultRule();
-        }
+        //}
     }
 
     public void refillClouds() throws NoMoreStudentsException {
@@ -462,8 +479,8 @@ public class Game implements Serializable {
     }
 
     //TODO Debug Method
-    public Class<?> getCurrentRule(){
-        return this.currentRule.getClass();
+    public Rule getCurrentRule(){
+        return this.currentRule;
     }
 
     //TODO Debug Method
@@ -471,7 +488,9 @@ public class Game implements Serializable {
         this.charactersCards = characters.clone();
     }
 
-    public boolean usePower(Player activePlayer, int card) throws NoCharacterSelectedException, NotEnoughMoneyException{
+    public boolean usePower(Player activePlayer, int card) throws NoCharacterSelectedException, NotEnoughMoneyException, IllegalMoveException {
+        if(!completeRules)
+            throw new IllegalMoveException("You can't use characters with simple rules!");
         if(card <= -1 || card > 2){
             throw new NoCharacterSelectedException("No character selected to use its power");
         }
@@ -525,10 +544,10 @@ public class Game implements Serializable {
 
         i.setProhibition(true);
 
-        if(this.activeCard != -1){
+        //if(this.activeCard != -1){
             this.activeCard = -1;
             this.currentRule = new DefaultRule();
-        }
+        //}
     }
 
     public void disableColor(Player player, Color c) throws NoActiveCardException{
@@ -542,25 +561,20 @@ public class Game implements Serializable {
         this.activeCard = -1;
     }
 
-    private void addProhibitionToken(Island island){
+    private void addProhibitionToken(Island island) throws NoMoreTokensException{
         ActionCharacter ac;
         for(Character c : this.charactersCards){
             if(c.getTypeCharacter() == CharacterType.ACTION){
                 ac = (ActionCharacter) c;
                 if(ac.getType() == Action.BLOCK_ISLAND){
-                    //TODO This try/catch will become throws
-                    try {
-                        island.setProhibition(false);
-                        ac.addToken();
-                    } catch (NoMoreTokensException e){
-                        e.printStackTrace();
-                    }
+                    island.setProhibition(false);
+                    ac.addToken();
                 }
             }
         }
     }
 
-    public void putBackInBag(Color color) throws NoActiveCardException{
+    public void putBackInBag(Color color) throws NoActiveCardException, NoSuchStudentException {
         if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
 
         ActionCharacter ac = (ActionCharacter) this.charactersCards[this.activeCard];
@@ -573,22 +587,18 @@ public class Game implements Serializable {
 
             for(int i=0; i<3 && students.size()!=0; i++){
                 Student s = students.remove(0);
-                try {
-                    canteen.removeStudent(s.getId());
+                canteen.removeStudent(s.getId());
 
-                    //Needed to reset the removedColor (If I try to put the same color after this method I could not get the coin)
-                    canteen.canGetCoin(color, true);
-                } catch (NoSuchStudentException e) {
-                    e.printStackTrace();
-                }
+                //Needed to reset the removedColor (If I try to put the same color after this method I could not get the coin)
+                canteen.canGetCoin(color, true);
                 this.bag.putBackStudent(s);
             }
         }
 
-        if(this.activeCard != -1){
+        //if(this.activeCard != -1){
             this.activeCard = -1;
             this.currentRule = new DefaultRule();
-        }
+        //}
     }
 
     public int getMotherNatureExtraMovement(){
@@ -615,16 +625,16 @@ public class Game implements Serializable {
         return mc.isRefill();
     }
 
-    public void refillActiveCard() throws NoActiveCardException, NoMoreStudentsException {
+    public void refillActiveCard() throws NoActiveCardException, NoMoreStudentsException, CannotAddStudentException {
         if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
 
         MovementCharacter mc = (MovementCharacter) this.charactersCards[activeCard];
         mc.addStudent(bag.getRandomStudent());
 
-        if(this.activeCard != -1){
+        //if(this.activeCard != -1){
             this.activeCard = -1;
             this.currentRule = new DefaultRule();
-        }
+        //}
     }
 
     //--------------------------------------------------------------------------------------------

@@ -23,7 +23,7 @@ public class Translator {
         game = new Game(completeRules, numPlayers);
     }
 
-    public boolean translateThis(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoMoreTokensException {
+    public boolean translateThis(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoSuchStudentException, NoMoreTokensException, EndGameException {
 
         switch(message.getAction()){
 
@@ -101,7 +101,9 @@ public class Translator {
                 try {
                     if(this.game.needsRefill())
                         this.game.refillActiveCard();
-                }catch(NoActiveCardException | NoMoreStudentsException e){
+                }catch( NoMoreStudentsException e){
+                    throw new EndGameException("Game ended: the winner is "+getWinner());
+                }catch(CannotAddStudentException | NoActiveCardException e){
                     e.printStackTrace();
                 }
                 return false;
@@ -197,6 +199,11 @@ public class Translator {
                 putBackStudents(message);
                 return false;
 
+            case ENDGAME:
+                ColorTower winner=getWinner();
+                game.endGame(winner);
+                return false;
+
             default:
                 return false;
         }
@@ -217,7 +224,7 @@ public class Translator {
         this.game.disableIsland(i);
     }
 
-    private void calculateIslandInfluence(Message message) throws NoActiveCardException, IllegalMoveException {
+    private void calculateIslandInfluence(Message message) throws NoActiveCardException, IllegalMoveException, NoMoreTokensException, EndGameException {
         Island i;
         try {
             i = this.game.getIsland(message.getIdIsland());
@@ -238,7 +245,7 @@ public class Translator {
         this.game.disableColor(p, message.getChosenColor());
     }
 
-    private void putBackStudents(Message message) throws NoActiveCardException {
+    private void putBackStudents(Message message) throws NoActiveCardException, NoSuchStudentException {
         this.game.putBackInBag(message.getChosenColor());
     }
 
@@ -309,7 +316,7 @@ public class Translator {
 
             //TODO DEBUG
             System.out.println();
-            System.out.println(game.getCurrentRule().toString());
+            System.out.println(game.getCurrentRule().getClass().toString());
 
             System.out.println("\n\n");
         }

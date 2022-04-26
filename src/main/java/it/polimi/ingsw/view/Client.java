@@ -60,7 +60,6 @@ public class Client {
                     objectInputStream = new ObjectInputStream(inputStream);
                     game = (Game) objectInputStream.readObject();
                     showBoard(game);
-                    System.out.println("abs il current player è"+game.getCurrentPlayer());
                 }while(game.getCurrentPlayer()==null || !game.getCurrentPlayer().equals(nickname));
             }
         } catch(Exception e){
@@ -89,7 +88,7 @@ public class Client {
         else{
             completeRules=false;
         }
-        return new ADDMEmessage(nickname, Action.ADDME, completeRules, numPlayers);
+        return new AddMeMessage(nickname, Action.ADDME, completeRules, numPlayers);
 
     }
 
@@ -221,7 +220,6 @@ public class Client {
         }
         if(game.getCurrentPlayer()==null){
             System.out.println("Waiting for other players...");
-            System.out.println("aaa"+game.getCurrentPlayer());
         }
         else{
             System.out.println("Turn of: "+game.getCurrentPlayer());

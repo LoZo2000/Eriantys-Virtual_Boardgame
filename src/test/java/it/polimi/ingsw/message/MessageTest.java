@@ -40,7 +40,7 @@ public class MessageTest {
 
     @Test
     public void ADDMEtest(){
-        Message message = new ADDMEmessage("player", Action.ADDME, false, 3);
+        Message message = new AddMeMessage("player", Action.ADDME, false, 3);
         assertFalse(message.getCompleteRules());
         assertEquals(3, message.getNumPlayers());
     }

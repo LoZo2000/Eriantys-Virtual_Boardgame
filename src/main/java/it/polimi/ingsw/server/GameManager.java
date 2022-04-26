@@ -5,8 +5,8 @@ import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.GameHandler2;
 import it.polimi.ingsw.controller.exceptions.IllegalActionException;
 import it.polimi.ingsw.controller.exceptions.IllegalMessageException;
-import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.messages.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +29,15 @@ public class GameManager {
                 e.printStackTrace();
             }
             showModel(c);
-
         }
         else{
             if(addedConnections.contains(c)==false) throw new IllegalActionException();
             try {
                 games.get(c).execute(message);
+            }catch (EndGameException ex){
+                showModel(c);
+                endGame(c);
+                return;
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -42,7 +45,7 @@ public class GameManager {
         }
     }
 
-    private void manageADD(Connection c, Message message) throws NoPlayerException, NoIslandException, IllegalMessageException, NoActiveCardException, IllegalActionException, NotYourTurnException, IllegalMoveException, UnrecognizedPlayerOrActionException, CannotJoinException, NoCharacterSelectedException, EndGameException, NotEnoughMoneyException, NoMoreTokensException {
+    private void manageADD(Connection c, Message message) throws NoPlayerException, NoIslandException, IllegalMessageException, NoActiveCardException, IllegalActionException, NotYourTurnException, IllegalMoveException, UnrecognizedPlayerOrActionException, CannotJoinException, NoCharacterSelectedException, EndGameException, NotEnoughMoneyException, NoMoreTokensException, NoSuchStudentException {
         int additive=0; // additive became 3 if the rules are complete for the index in the array
         boolean completeRules = message.getCompleteRules();
         if(completeRules) additive=3;
@@ -65,11 +68,18 @@ public class GameManager {
         }
     }
 
-    protected void showModel(Connection c) {
+    private void showModel(Connection c) {
         System.out.println("Sending something through "+c);
         GameHandler2 temp=games.get(c);
         for(Connection a : addedConnections){
             if(games.get(a).equals(temp)) a.send(games.get(a).getGame());
+        }
+    }
+
+    private void endGame(Connection c){
+        GameHandler2 temp=games.get(c);
+        for(Connection a : addedConnections){
+            if(games.get(a).equals(temp)) a.closeConnection();
         }
     }
 

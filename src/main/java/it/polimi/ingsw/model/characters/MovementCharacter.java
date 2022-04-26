@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.model.exceptions.CannotAddStudentException;
 import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import it.polimi.ingsw.model.*;
@@ -46,7 +47,9 @@ public class MovementCharacter extends ActionCharacter implements Movable {
         return Set.copyOf(this.allowedDepartures);
     }
 
-    public void addStudent(Student s){
+    public void addStudent(Student s) throws CannotAddStudentException {
+        if(students.size() == getMaxNumTokens())
+            throw new CannotAddStudentException("You cannot add a student in this moment!");
         students.add(s);
     }
 

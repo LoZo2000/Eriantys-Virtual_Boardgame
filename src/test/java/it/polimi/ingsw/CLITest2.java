@@ -46,7 +46,7 @@ public class CLITest2 {
                     //System.out.println("How many players?");
                     //numPlayers = sc.nextInt();
                     //sc.nextLine();
-                    message = new ADDMEmessage(playerId, Action.ADDME, true, 2);
+                    message = new AddMeMessage(playerId, Action.ADDME, true, 2);
                 case "PLAYCARD" -> {
                     System.out.println("Chose which card you want to play (priority):");
                     priority = sc.nextInt();

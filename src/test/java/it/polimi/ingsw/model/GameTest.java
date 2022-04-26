@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.EndGameException;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.model.characters.CharacterType;
 import it.polimi.ingsw.model.characters.JSONCharacter;
 import it.polimi.ingsw.model.characters.MovementCharacter;
 import it.polimi.ingsw.model.exceptions.AlreadyPlayedCardException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 import it.polimi.ingsw.model.exceptions.NoCharacterSelectedException;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,14 +52,14 @@ class GameTest {
 
         Player player2 = new Player("player2", 2, ColorTower.WHITE, students2);
 
-        this.game = new Game(true, 2);
+        this.game = new Game(false, 2);
 
         this.game.addPlayer(player1);
         this.game.addPlayer(player2);
     }
 
     @Test
-    void moveMotherNature() {
+    void moveMotherNature() throws Exception{
         Entrance e = null;
         Canteen c = null;
         try {
@@ -85,6 +87,8 @@ class GameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
+        } catch (EndGameException ex) {
+            ex.printStackTrace();
         }
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
@@ -105,6 +109,8 @@ class GameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
+        } catch (EndGameException ex) {
+            ex.printStackTrace();
         }
 
         assertEquals(11, this.game.getAllIslands().size());
@@ -309,5 +315,22 @@ class GameTest {
 
         assertDoesNotThrow(()->this.game.playCard(p1, 1));
         assertEquals(1, game.getMaximumMNMovement(p1));
+    }
+
+    @Test
+    void testNoActiveCard() throws Exception{
+        Player p1 = game.getPlayer("player1");
+
+        assertThrows(IllegalMoveException.class, () -> game.usePower(p1, 0));
+        assertThrows(NoActiveCardException.class, () -> game.getRequestedAction());
+        assertThrows(NoActiveCardException.class, () -> game.getAllowedDepartures());
+        assertThrows(NoActiveCardException.class, () -> game.getAllowedDepartures());
+
+        assertThrows(NoActiveCardException.class, () -> game.disableIsland(null));
+        assertThrows(NoActiveCardException.class, () -> game.disableColor(p1, Color.RED));
+        assertThrows(NoActiveCardException.class, () -> game.moveMotherNature(null, false));
+        assertThrows(NoActiveCardException.class, () -> game.putBackInBag(Color.RED));
+        assertFalse(game.needsRefill());
+        assertThrows(NoActiveCardException.class, () -> game.refillActiveCard());
     }
 }

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.Player;
@@ -12,23 +14,79 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import javax.security.auth.login.FailedLoginException;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TranslatorTest {
     Translator translator;
 
+    private final String JSON_PATH = "characters.json";
+
     @BeforeEach
     public void init() throws Exception{
         translator = new Translator(true, 3);
-        Message message = new ADDMEmessage("player1", Action.ADDME, true, 3);
+        Message message = new AddMeMessage("player1", Action.ADDME, true, 3);
         translator.translateThis(message);
-        message = new ADDMEmessage("player2", Action.ADDME, true, 3);
+        message = new AddMeMessage("player2", Action.ADDME, true, 3);
         translator.translateThis(message);
-        message = new ADDMEmessage("player3", Action.ADDME, true, 3);
+        message = new AddMeMessage("player3", Action.ADDME, true, 3);
         translator.translateThis(message);
+    }
+
+    private Character getCharacterFromJSON(int id){
+        Reader reader = null;
+        try {
+            reader = new FileReader(JSON_PATH);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+
+        JSONCharacter[] jsonCharacters = gson.fromJson(reader, JSONCharacter[].class);
+        List<Character> allCharacters = new ArrayList<>();
+        for (JSONCharacter jc : jsonCharacters) {
+            switch (jc.getTypeCharacter()) {
+                case MOVEMENT:
+                    ArrayList<Student> s = new ArrayList<>();
+                    if(jc.getParams().getNumThingOnIt() > 0) {
+                        s.add(new Student(31, Color.RED));
+                        s.add(new Student(32, Color.BLUE));
+                        s.add(new Student(33, Color.GREEN));
+                        s.add(new Student(34, Color.PINK));
+                    }
+                    if(jc.getParams().getNumThingOnIt() == 6) {
+                        s.add(new Student(35, Color.BLUE));
+                        s.add(new Student(36, Color.BLUE));
+                    }
+                    allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), s, jc.getParams()));
+                    break;
+
+                case INFLUENCE:
+                    allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    break;
+
+                case PROFESSOR:
+                    allCharacters.add(new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost()));
+                    break;
+
+                case MOTHERNATURE:
+                    allCharacters.add(new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    break;
+
+                case ACTION:
+                    allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    break;
+            }
+        }
+
+        return allCharacters.get(id-1);
     }
 
     @Test
@@ -79,17 +137,7 @@ public class TranslatorTest {
     @Test
     public void MOVESTUDENTpowertest() throws Exception{
         Character[] characters = new Character[1];
-        Set<Location> allowedDepartures = Set.of(Location.CARD_ISLAND);
-        Set<Location> allowedArrivals = Set.of(Location.ISLAND);
-
-        ArrayList<Student> students = new ArrayList<>();
-        students.add(new Student(31, Color.RED));
-        students.add(new Student(32, Color.BLUE));
-        students.add(new Student(33, Color.GREEN));
-        students.add(new Student(34, Color.PINK));
-
-        JSONCharacter jc = new JSONCharacter(1, CharacterType.MOVEMENT, "Move from card to island", 1, Action.MOVESTUDENT, 4, Location.CARD_ISLAND, true, allowedDepartures, allowedArrivals, false, 0, 0);
-        characters[0] = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
+        characters[0] = getCharacterFromJSON(1);
         translator.getGame().setCharactersCards(characters);
 
         Player p1 = translator.getGame().getPlayer("player1");
@@ -198,8 +246,7 @@ public class TranslatorTest {
     @Test
     public void BLOCKISLANDtest() throws Exception{
         Character[] characters = new Character[1];
-        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        characters[0] = getCharacterFromJSON(5);
         translator.getGame().setCharactersCards(characters);
 
         Player p1 = translator.getGame().getPlayer("player1");
@@ -238,8 +285,7 @@ public class TranslatorTest {
     @Test
     public void ISLANDINFLUENCEtest() throws Exception{
         Character[] characters = new Character[1];
-        JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence w/o moving MN", 3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        characters[0] = getCharacterFromJSON(3);
         translator.getGame().setCharactersCards(characters);
 
         Player p1 = translator.getGame().getPlayer("player1");
@@ -281,8 +327,7 @@ public class TranslatorTest {
     @Test
     public void BLOCKCOLORtest() throws Exception{
         Character[] characters = new Character[1];
-        JSONCharacter jc = new JSONCharacter(9, CharacterType.ACTION, "Block color", 3, Action.BLOCK_COLOR, 0, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        characters[0] = getCharacterFromJSON(9);
         translator.getGame().setCharactersCards(characters);
 
         Player p1 = translator.getGame().getPlayer("player1");
@@ -313,8 +358,7 @@ public class TranslatorTest {
     @Test
     public void PUTBACKtest() throws Exception{
         Character[] characters = new Character[1];
-        JSONCharacter jc = new JSONCharacter(12, CharacterType.ACTION, "Put Back students", 3, Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
-        characters[0] = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        characters[0] = getCharacterFromJSON(12);
         translator.getGame().setCharactersCards(characters);
 
         Player p1 = translator.getGame().getPlayer("player1");
@@ -503,18 +547,7 @@ public class TranslatorTest {
     public void showMeWithActiveCardTest(){
         try {
             Character[] characters = new Character[1];
-            Set<Location> allowedDepartures = Set.of(Location.CARD_ISLAND);
-            Set<Location> allowedArrivals = Set.of(Location.ISLAND);
-
-            ArrayList<Student> students = new ArrayList<>();
-            students.add(new Student(31, Color.RED));
-            students.add(new Student(32, Color.BLUE));
-            students.add(new Student(33, Color.GREEN));
-            students.add(new Student(34, Color.PINK));
-
-            JSONCharacter jc = new JSONCharacter(1, CharacterType.MOVEMENT, "Move from card to island", 1, Action.MOVESTUDENT, 4, Location.CARD_ISLAND, true, allowedDepartures, allowedArrivals, false, 0, 0);
-            //JSONParams params = new JSONParams(Action.PUT_BACK, 0, null, false, null, null, false, 0, 0);
-            characters[0] = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
+            characters[0] = getCharacterFromJSON(1);
             translator.getGame().setCharactersCards(characters);
 
             Player p1 = translator.getGame().getPlayer("player1");
@@ -529,5 +562,10 @@ public class TranslatorTest {
         }catch (Exception e){
             fail();
         }
+    }
+
+    @Test
+    void noCharacterSelectedTest(){
+        assertThrows(NoCharacterSelectedException.class, ()->translator.translateThis(new USEPOWERmessage("player1", Action.USEPOWER, 8)));
     }
 }

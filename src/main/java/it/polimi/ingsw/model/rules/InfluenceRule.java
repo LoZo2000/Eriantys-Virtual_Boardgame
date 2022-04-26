@@ -55,4 +55,20 @@ public class InfluenceRule extends DecoratedRule{
     public int getMotherNatureExtraMovement() {
         return this.defaultRules.getMotherNatureExtraMovement();
     }
+
+    public ColorTower getPlayerWhoUsed() {
+        return playerWhoUsed;
+    }
+
+    public Color getBlockedColor() {
+        return blockedColor;
+    }
+
+    public int getExtraPoints() {
+        return extraPoints;
+    }
+
+    public boolean isDisableTowers() {
+        return disableTowers;
+    }
 }

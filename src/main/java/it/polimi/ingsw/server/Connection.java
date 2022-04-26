@@ -72,7 +72,7 @@ public class Connection implements Runnable {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             out = new PrintWriter(socket.getOutputStream());
-            send("Welcome to Eriantys'world!\nTo play digit ADDME");
+            send("Welcome to Eriantys'world!");
             objectInputStream = new ObjectInputStream(inputStream);
             message = (Message) objectInputStream.readObject();
             owner = message.getSender();
