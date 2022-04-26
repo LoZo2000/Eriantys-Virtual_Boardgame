@@ -281,12 +281,21 @@ public class Game implements Serializable {
     }
 
     public Island mergeIsland(Island i1, Island i2) throws EndGameException {
+        Island temp;
         int indx1=islands.indexOf(i1);
         int indx2=islands.indexOf(i2);
-        Island temp= new Island(i1, i2);
-        islands.remove(i1);
-        islands.remove(i2);
-        islands.add(indx1, temp);
+        if(indx1>indx2){
+            temp= new Island(i2, i1);
+            islands.remove(i1);
+            islands.remove(i2);
+            islands.add(indx2, temp);
+        }
+        else{
+            temp= new Island(i1, i2);
+            islands.remove(i1);
+            islands.remove(i2);
+            islands.add(indx1, temp);
+        }
         motherNature.movement(temp);
         if(islands.size()<=3){
             throw new EndGameException();
