@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.*;
 import it.polimi.ingsw.messages.EndGameMessage;
+import it.polimi.ingsw.messages.GameStatus;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.messages.Message;
@@ -41,22 +42,7 @@ public class GameHandler2 {
 
 
 
-    public GameHandler2(Message message) throws IllegalMessageException { //First instruction of all
-        //System.out.println("sono qui lala"+message.getAction());
-        if(message.getAction()!=Action.CREATEMATCH) throw new IllegalMessageException();
-        //System.out.println("sono qui handler");
-        completeRules = message.getCompleteRules();
-        maxPlayers = message.getNumPlayers();
-        if(maxPlayers==3) maxMoveStudent = 4;
-        else maxMoveStudent=3;
-        translator = new Translator(completeRules, maxPlayers);
-        players = new ArrayList<>();
-        orderPlayers = new ArrayList<>();
-        firstPlayer=0;
-
-        oldPhase = currentPhase;
-        usedCard = false;
-
+    public GameHandler2(){
         initLegitActions();
     }
 
@@ -191,12 +177,29 @@ public class GameHandler2 {
             switch (message.getAction()) {
 
                 case ADDME:
-
-                    players.add(message.getSender());
-                    numPlayers++;
-                    translator.translateThis(message);
-                    if (numPlayers == maxPlayers) nextPhase();
-
+                    System.out.println("Case ADD GameHandler");
+                    if(numPlayers==0){
+                        completeRules = message.getCompleteRules();
+                        maxPlayers = message.getNumPlayers();
+                        if(maxPlayers==3) maxMoveStudent = 4;
+                        else maxMoveStudent=3;
+                        translator = new Translator(completeRules, maxPlayers);
+                        players = new ArrayList<>();
+                        orderPlayers = new ArrayList<>();
+                        firstPlayer=0;
+                        oldPhase = currentPhase;
+                        usedCard = false;
+                        initLegitActions();
+                        players.add(message.getSender());
+                        numPlayers++;
+                        translator.translateThis(message);
+                    }
+                    else{
+                        players.add(message.getSender());
+                        numPlayers++;
+                        translator.translateThis(message);
+                        if (numPlayers == maxPlayers) nextPhase();
+                    }
                     break;
 
                 case PLAYCARD: //need to check if the player owns the card through an exception in translate
@@ -376,5 +379,9 @@ public class GameHandler2 {
         }
 
         return true;
+    }
+
+    public GameStatus getGameStatus(String owner){
+        return translator.getGameStatus(owner);
     }
 }

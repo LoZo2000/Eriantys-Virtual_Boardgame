@@ -3,7 +3,6 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.messages.*;
-import it.polimi.ingsw.model.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -17,9 +16,7 @@ public class Client {
 
     private Message message;
     private String nickname;
-    private String action;
-    private String rule, lo;
-    private int numPlayers, priority, studentId, arrivalId, departureId, MNmovement, position;
+    private int numPlayers, priority, studentId, arrivalId, departureId, MNmovement, position, action, lo, rule;
     private Location arrivalType, departureType;
 
     public Client(String ip, int port){
@@ -35,22 +32,19 @@ public class Client {
         ObjectInputStream objectInputStream;
         OutputStream outputStream = socket.getOutputStream();
         ObjectOutputStream objectOutputStream = null;
-        Game game;
+        GameStatus GS;
 
         stdin = new Scanner(System.in);
-        String socketLine;
         try{
-            socketLine = socketIn.nextLine();
-            System.out.println(socketLine);
 
             message = getInputStart();
             objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(message);
             do {
                 objectInputStream = new ObjectInputStream(inputStream);
-                game = (Game) objectInputStream.readObject();
-                showBoard(game);
-            }while(game.getCurrentPlayer()==null || !game.getCurrentPlayer().equals(nickname));
+                GS = (GameStatus) objectInputStream.readObject();
+                showBoard(GS);
+            }while(GS.getEnemiesNames()==null || GS.getEnemiesNames().size()+1<numPlayers || !GS.getTurnOf().equals(nickname));
 
             while (true){
                 message = getInput();
@@ -58,9 +52,9 @@ public class Client {
                 objectOutputStream.writeObject(message);
                 do {
                     objectInputStream = new ObjectInputStream(inputStream);
-                    game = (Game) objectInputStream.readObject();
-                    showBoard(game);
-                }while(game.getCurrentPlayer()==null || !game.getCurrentPlayer().equals(nickname));
+                    GS = (GameStatus) objectInputStream.readObject();
+                    showBoard(GS);
+                }while(!GS.getTurnOf().equals(nickname));
             }
         } catch(Exception e){
             e.printStackTrace();
@@ -70,21 +64,21 @@ public class Client {
             socketIn.close();
             objectOutputStream.close();
             socket.close();
+            System.out.println("Thanks for playing!");
         }
     }
 
     private Message getInputStart(){
         boolean completeRules;
-        System.out.println("Insert your nickname:");
+        System.out.println("Welcome in the magic world of Eriantys!\nPlease, insert your nickname:");
         nickname = stdin.nextLine();
         do {
-            System.out.println("How many players do you want to play with? (a number between 2 and 4)");
+            System.out.println("How many players do you want to play with? (between 2 and 4)");
             numPlayers = stdin.nextInt();
-            stdin.nextLine();
         }while(numPlayers<2 || numPlayers>4);
-        System.out.println("Do you want to play by simple (type 'SIMPLE') or complete rules (type 'COMPLETE')?");
-        rule = stdin.nextLine();
-        if(rule.equals("COMPLETE")) completeRules=true;
+        System.out.println("Do you want to play by simple (type 0) or complete rules (type 1)?");
+        rule = stdin.nextInt();
+        if(rule==1) completeRules=true;
         else{
             completeRules=false;
         }
@@ -95,135 +89,141 @@ public class Client {
 
 
     private Message getInput(){
-        System.out.println("Select one of the following options:");
-        System.out.println("\t-'PLAYCARD' to play an assistant-card");
-        System.out.println("\t-'MOVESTUDENT' to move a student from your ENTRANCE to your CANTEEN or an ISLAND");
-        System.out.println("\t-'MOVEMOTHERNATURE' to move Mother Nature");
-        System.out.println("\t-'SELECTCLOUD' to refill your ENTRANCE with students from a cloud");
-        action = stdin.nextLine();
+        System.out.println("Select one of the following options (type an integer):");
+        System.out.println("\t-'1) PLAYCARD' to play an assistant-card");
+        System.out.println("\t-'2) MOVESTUDENT' to move a student from your ENTRANCE to your CANTEEN or an ISLAND");
+        System.out.println("\t-'3) MOVEMOTHERNATURE' to move Mother Nature");
+        System.out.println("\t-'4) SELECTCLOUD' to refill your ENTRANCE with students from a cloud");
+        action = stdin.nextInt();
 
-        if(action.equals("PLAYCARD")){
-            System.out.println("Choose which card do you want to play (priority):");
-            priority = stdin.nextInt();
-            stdin.nextLine();
-            return new PlayCardMessage(nickname, Action.PLAYCARD, priority);
+        switch (action){
+            case 1:
+                System.out.println("Choose which card do you want to play (priority):");
+                priority = stdin.nextInt();
+                return new PlayCardMessage(nickname, Action.PLAYCARD, priority);
+            case 2:
+                System.out.println("Which student do you want to move? (studentId)");
+                studentId = stdin.nextInt();
+                System.out.println("Where the student is? (type 1 for ENTRANCE, 2 for CANTEEN or 3 for ISLAND)");
+                lo = stdin.nextInt();
+                switch (lo){
+                    case 1:
+                        departureType=Location.ENTRANCE;
+                        departureId = -1;
+                        break;
+                    case 2:
+                        departureType=Location.CANTEEN;
+                        departureId = -1;
+                        break;
+                    case 3:
+                        departureType=Location.ISLAND;
+                        System.out.println("Choose island: (islandId)");
+                        departureId = stdin.nextInt();
+                        break;
+                    default:
+                        departureType = null;
+                        departureId = -1;
+                        break;
+                }
+                System.out.println("Where do you want to move the student? (type 1 for ENTRANCE, 2 for CANTEEN or 3 for ISLAND)");
+                lo = stdin.nextInt();
+                switch (lo){
+                    case 1:
+                        arrivalType=Location.ENTRANCE;
+                        arrivalId = -1;
+                        break;
+                    case 2:
+                        arrivalType=Location.CANTEEN;
+                        arrivalId = -1;
+                        break;
+                    case 3:
+                        arrivalType=Location.ISLAND;
+                        System.out.println("Choose island: (islandId)");
+                        arrivalId = stdin.nextInt();
+                        break;
+                    default:
+                        arrivalType = null;
+                        arrivalId = -1;
+                }
+                return new MoveStudentMessage(nickname, Action.MOVESTUDENT, studentId, departureType, departureId, arrivalType, arrivalId);
+            case 3:
+                System.out.println("Insert Mother Nature's movement:");
+                MNmovement = stdin.nextInt();
+                return new MoveMotherNatureMessage(nickname, Action.MOVEMOTHERNATURE, MNmovement);
+            case 4:
+                System.out.println("Select which cloud you have chosen: (position)");
+                position = stdin.nextInt();
+                return new SelectCloudMessage(nickname, Action.SELECTCLOUD, position);
+            default:
+                return new Message(nickname, null);
         }
-
-        else if(action.equals("MOVESTUDENT")){
-            System.out.println("Which student do you want to move? (studentId)");
-            studentId = stdin.nextInt();
-            stdin.nextLine();
-            System.out.println("Where the student is? (type ENTRANCE, CANTEEN or ISLAND)");
-            lo = stdin.nextLine();
-            if(lo.equals("ISLAND")){
-                departureType=Location.ISLAND;
-                System.out.println("Choose island: (islandId)");
-                departureId = stdin.nextInt();
-                stdin.nextLine();
-            }
-            else if(lo.equals("CANTEEN")){
-                departureType=Location.CANTEEN;
-                departureId = -1;
-            }
-            else if(lo.equals("ENTRANCE")) {
-                departureType=Location.ENTRANCE;
-                departureId = -1;
-            }
-            else{
-                departureType = null;
-                departureId = -1;
-            }
-            System.out.println("Where do you want to move the student? (type ENTRANCE, CANTEEN or ISLAND)");
-            lo = stdin.nextLine();
-            if(lo.equals("ISLAND")){
-                arrivalType=Location.ISLAND;
-                System.out.println("Choose island: (islandId)");
-                arrivalId = stdin.nextInt();
-                stdin.nextLine();
-            }
-            else if(lo.equals("CANTEEN")){
-                arrivalType=Location.CANTEEN;
-                arrivalId = -1;
-            }
-            else if(lo.equals("ENTRANCE")) {
-                arrivalType=Location.ENTRANCE;
-                arrivalId = -1;
-            }
-            else{
-                arrivalType = null;
-                arrivalId = -1;
-            }
-            return new MoveStudentMessage(nickname, Action.MOVESTUDENT, studentId, departureType, departureId, arrivalType, arrivalId);
-        }
-
-        else if(action.equals("MOVEMOTHERNATURE")){
-            System.out.println("Insert Mother Nature's movement:");
-            MNmovement = stdin.nextInt();
-            stdin.nextLine();
-            return new MoveMotherNatureMessage(nickname, Action.MOVEMOTHERNATURE, MNmovement);
-        }
-
-        else if(action.equals("SELECTCLOUD")){
-            System.out.println("Select which cloud you have chosen: (position)");
-            position = stdin.nextInt();
-            stdin.nextLine();
-            return new SelectCloudMessage(nickname, Action.SELECTCLOUD, position);
-        }
-
-        return new Message(nickname, null);
     }
 
 
 
-    public void showBoard(Game game){
-        System.out.println("\n\nCURRENT BOARD:");
-        LinkedList<Island> islands = game.getAllIslands();
-        for(Island i : islands){
-            String owner = "nobody";
-            if(i.getOwner() != null){
-                owner = String.valueOf(i.getOwner());
-            }
-
-            System.out.print("\tIsland "+i+", Owner "+owner+", Towers x"+i.getReport().getTowerNumbers()+", Students: ");
-            ArrayList<Student> students = i.getAllStudents();
-            for(Student s : students) System.out.print(s+" ");
-            if(game.getMotherNaturePosition().equals(i)) System.out.print("MN");
-            System.out.print("\n");
-        }
-        Map<Color, Player> professors = game.getProfessors();
-        System.out.print("Professors: ");
-        for(Color co : Color.values()) System.out.print(co+": "+professors.get(co)+", ");
-        ArrayList<Player> players = game.getAllPlayers();
-        System.out.print("\nClouds:\n");
-        for(int i=0; i<game.getNumberOfClouds(); i++){
-            System.out.print("\tCloud "+i+": ");
-            for(Color co : Color.values()) System.out.print(co+"="+game.getNumberOfStudentPerColorOnCloud(i,co)+", ");
-            System.out.print("\n");
-        }
-        for(Player p : players){
-            System.out.println("DASHBOARD of "+p+" (color "+p.getDashboard().getColor()+"):");
-            if(p.getNickname().equals(nickname)){
-                System.out.print("\tAvailable cards: ");
-                ArrayList<Card> cards = p.getHand().getAllCards();
-                for(Card ca : cards) System.out.print(ca+" ");
-                System.out.println("");
-            }
-            System.out.println("\tLast card played: "+p.getDashboard().getGraveyard());
-            System.out.print("\tEntrance: ");
-            ArrayList<Student> students = p.getDashboard().getEntrance().getAllStudents();
-            for(Student s : students) System.out.print(s+" ");
-            System.out.print("\n\tCanteen: ");
-            for(Color col : Color.values()){
-                System.out.print(col+": "+p.getDashboard().getCanteen().getNumberStudentColor(col)+" ");
-            }
-            System.out.println("");
-        }
-        if(game.getCurrentPlayer()==null){
-            System.out.println("Waiting for other players...");
-        }
+    public void showBoard(GameStatus gameStatus){
+        if(!gameStatus.getError().equals("")) System.out.println("\n\nFORBIDDEN MOVE: "+gameStatus.getError()+"\nInsert a new legal move...");
         else{
-            System.out.println("Turn of: "+game.getCurrentPlayer());
-            System.out.println("Phase: "+game.getCurrentPhase());
+            int towerToWin = 8;
+            if(numPlayers==3) towerToWin = 6;
+            System.out.println("\n\nISLANDS:");
+            for(int i=0; i<gameStatus.getIslandsId().size(); i++){
+                System.out.print("Id: "+gameStatus.getIslandsId().get(i)+"\t");
+                if(gameStatus.getOwners().get(i)==null) System.out.print("Owner: nobody\t");
+                else System.out.print("Owner: "+gameStatus.getOwners().get(i)+"\t");
+                System.out.print("Tower: "+gameStatus.getNumTowers().get(i)+"\t");
+                System.out.print("\u001B[34mBLUE: "+gameStatus.getStudentsOnIsland().get(i).get(0)+"\u001B[0m\t");
+                System.out.print("\u001B[33mYELLOW: "+gameStatus.getStudentsOnIsland().get(i).get(1)+"\u001B[0m\t");
+                System.out.print("\u001B[31mRED: "+gameStatus.getStudentsOnIsland().get(i).get(2)+"\u001B[0m\t");
+                System.out.print("\u001B[32mGREEN: "+gameStatus.getStudentsOnIsland().get(i).get(3)+"\u001B[0m\t");
+                System.out.print("\u001B[35mPINK: "+gameStatus.getStudentsOnIsland().get(i).get(4)+"\u001B[0m\t");
+                if(gameStatus.getMN()==i) System.out.print("MN");
+                System.out.print("\n");
+            }
+            System.out.println("CLOUDS:");
+            for(int i=0; i<gameStatus.getStudentsOnCloud().size(); i++){
+                System.out.print("Cloud "+i+":\t");
+                System.out.print("\u001B[34mBLUE: "+gameStatus.getStudentsOnCloud().get(i).get(0)+"\u001B[0m\t");
+                System.out.print("\u001B[33mYELLOW: "+gameStatus.getStudentsOnCloud().get(i).get(1)+"\u001B[0m\t");
+                System.out.print("\u001B[31mRED: "+gameStatus.getStudentsOnCloud().get(i).get(2)+"\u001B[0m\t");
+                System.out.print("\u001B[32mGREEN: "+gameStatus.getStudentsOnCloud().get(i).get(3)+"\u001B[0m\t");
+                System.out.print("\u001B[35mPINK: "+gameStatus.getStudentsOnCloud().get(i).get(4)+"\u001B[0m\n");
+
+            }
+            System.out.print("PROFESSORS:\t");
+            System.out.print("\u001B[34mBLUE: "+gameStatus.getProfessorsOwners().get(0)+"\u001B[0m\t");
+            System.out.print("\u001B[33mYELLOW: "+gameStatus.getProfessorsOwners().get(1)+"\u001B[0m\t");
+            System.out.print("\u001B[31mRED: "+gameStatus.getProfessorsOwners().get(2)+"\u001B[0m\t");
+            System.out.print("\u001B[32mGREEN: "+gameStatus.getProfessorsOwners().get(3)+"\u001B[0m\t");
+            System.out.print("\u001B[35mPINK: "+gameStatus.getProfessorsOwners().get(4)+"\u001B[0m\n");
+            if(gameStatus.getEnemiesNames()!=null){
+                for(int i=0; i<gameStatus.getEnemiesNames().size(); i++){
+                    System.out.println("DASHBOARD of "+gameStatus.getEnemiesNames().get(i)+" (color: "+gameStatus.getEnemiesColors().get(i)+")\tLast card: "+gameStatus.getEnemiesLastCards().get(i)+"\tTowers: "+(towerToWin-gameStatus.getEnemiesTowers().get(i)));
+                    System.out.print("Entrance:\t");
+                    System.out.print("\u001B[34mBLUE: "+gameStatus.getEnemiesEntrances().get(i).get(0)+"\u001B[0m\t");
+                    System.out.print("\u001B[33mYELLOW: "+gameStatus.getEnemiesEntrances().get(i).get(1)+"\u001B[0m\t");
+                    System.out.print("\u001B[31mRED: "+gameStatus.getEnemiesEntrances().get(i).get(2)+"\u001B[0m\t");
+                    System.out.print("\u001B[32mGREEN: "+gameStatus.getEnemiesEntrances().get(i).get(3)+"\u001B[0m\t");
+                    System.out.print("\u001B[35mPINK: "+gameStatus.getEnemiesEntrances().get(i).get(4)+"\u001B[0m\n");
+                    System.out.print("Canteen:\t");
+                    System.out.print("\u001B[34mBLUE: "+gameStatus.getEnemiesCanteen().get(i).get(0)+"/10\u001B[0m\t");
+                    System.out.print("\u001B[33mYELLOW: "+gameStatus.getEnemiesCanteen().get(i).get(1)+"/10\u001B[0m\t");
+                    System.out.print("\u001B[31mRED: "+gameStatus.getEnemiesCanteen().get(i).get(2)+"/10\u001B[0m\t");
+                    System.out.print("\u001B[32mGREEN: "+gameStatus.getEnemiesCanteen().get(i).get(3)+"/10\u001B[0m\t");
+                    System.out.print("\u001B[35mPINK: "+gameStatus.getEnemiesCanteen().get(i).get(4)+"/10\u001B[0m\n");
+                }
+            }
+            System.out.println("YOUR DASHBOARD (color: "+gameStatus.getMyColor()+")\tLast card: "+gameStatus.getMyLastCard()+"\tTowers: "+(towerToWin-gameStatus.getMyTowers()));
+            System.out.println("Your cards: "+gameStatus.getMyCards());
+            System.out.println("Entrance:\t"+gameStatus.getStudentsInEntrance()+"\u001B[0m");
+            System.out.print("Canteen:\t");
+            System.out.print("\u001B[34mBLUE: "+gameStatus.getStudentsInCanteen().get(0)+"\u001B[0m\n");
+            System.out.print("\t\t\t\u001B[33mYELLOW: "+gameStatus.getStudentsInCanteen().get(1)+"\u001B[0m\n");
+            System.out.print("\t\t\t\u001B[31mRED: "+gameStatus.getStudentsInCanteen().get(2)+"\u001B[0m\n");
+            System.out.print("\t\t\t\u001B[32mGREEN: "+gameStatus.getStudentsInCanteen().get(3)+"\u001B[0m\n");
+            System.out.print("\t\t\t\u001B[35mPINK: "+gameStatus.getStudentsInCanteen().get(4)+"\u001B[0m\n");
+            System.out.println("Current phase: "+gameStatus.getCurrentPhase());
+            System.out.println("Current player: "+gameStatus.getTurnOf());
         }
     }
 }

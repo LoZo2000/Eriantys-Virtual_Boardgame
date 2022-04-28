@@ -379,4 +379,8 @@ public class Translator {
     public Game getGame(){
         return game;
     }
+
+    public GameStatus getGameStatus(String owner){
+        return game.getGameStatus(owner);
+    }
 }

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
+import it.polimi.ingsw.messages.GameStatus;
 import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.exceptions.*;
@@ -644,6 +645,126 @@ public class Game implements Serializable {
             this.activeCard = -1;
             this.currentRule = new DefaultRule();
         //}
+    }
+
+    public GameStatus getGameStatus(String owner) {
+        try {
+
+            ColorTower myColor = getPlayer(owner).getColor();
+            int g = 0, b = 0, w = 0;
+            List<Integer> islandsId = new ArrayList<>();
+            List<ColorTower> owners = new ArrayList<>();
+            List<Integer> numTowers = new ArrayList<>();
+            List<List<Integer>> studentsOnIsland = new ArrayList<>();
+            int MN=0;
+            List<String> professorsOwners = new ArrayList<>();
+            List<List<Integer>> studentsOnCloud = new ArrayList<>();
+            List<Card> enemiesLastCards = new ArrayList<>();
+
+
+
+            int pos=0;
+            for (Island i : islands) {
+                islandsId.add(i.getId());
+                owners.add(i.getOwner());
+                numTowers.add(i.getReport().getTowerNumbers());
+                if (i.getOwner()==ColorTower.GREY) g += i.getReport().getTowerNumbers();
+                else if (i.getOwner()==ColorTower.BLACK) b += i.getReport().getTowerNumbers();
+                else if (i.getOwner()==ColorTower.WHITE) w += i.getReport().getTowerNumbers();
+                int[] colors = {0, 0, 0, 0, 0};
+                for (Student s : i.getAllStudents()) {
+                    switch (s.getColor()) {
+                        case BLUE -> colors[0]++;
+                        case YELLOW -> colors[1]++;
+                        case RED -> colors[2]++;
+                        case GREEN -> colors[3]++;
+                        case PINK -> colors[4]++;
+                    }
+                }
+                List<Integer> listTemp = new ArrayList<>();
+                for (int cont = 0; cont < 5; cont++) listTemp.add(colors[cont]);
+                studentsOnIsland.add(listTemp);
+                if(motherNature.getPosition().equals(i)) MN = pos;
+                pos++;
+            }
+
+            for (Color co : Color.values()){
+                if(professors.get(co)==null) professorsOwners.add("nobody");
+                else professorsOwners.add(professors.get(co).getNickname());
+            }
+
+            for (int i = 0; i < numPlayers; i++) {
+                int[] colors = {0,0,0,0,0};
+                List<Integer> listTemp = new ArrayList<>();
+                for (Student s : clouds[i].getStudents()) {
+                    switch (s.getColor()){
+                        case BLUE -> colors[0]++;
+                        case YELLOW -> colors[1]++;
+                        case RED -> colors[2]++;
+                        case GREEN -> colors[3]++;
+                        case PINK -> colors[4]++;
+                    }
+                }
+                for (int j=0; j<5; j++) listTemp.add(colors[j]);
+                studentsOnCloud.add(listTemp);
+            }
+
+            int myTowers = 0;
+            if (myColor.equals(ColorTower.GREY)) myTowers = g;
+            else if (myColor.equals(ColorTower.BLACK)) myTowers = b;
+            else if (myColor.equals(ColorTower.WHITE)) myTowers = w;
+            List<List<Student>> studentsInCanteen = new ArrayList<>();
+            studentsInCanteen.add(getPlayer(owner).getDashboard().getCanteen().getStudents(Color.BLUE));
+            studentsInCanteen.add(getPlayer(owner).getDashboard().getCanteen().getStudents(Color.YELLOW));
+            studentsInCanteen.add(getPlayer(owner).getDashboard().getCanteen().getStudents(Color.RED));
+            studentsInCanteen.add(getPlayer(owner).getDashboard().getCanteen().getStudents(Color.GREEN));
+            studentsInCanteen.add(getPlayer(owner).getDashboard().getCanteen().getStudents(Color.PINK));
+
+            List<String> enemiesNames = new ArrayList<>();
+            List<ColorTower> enemiesColors = new ArrayList<>();
+            List<Integer> enemiesTowers = new ArrayList<>();
+            List<List<Integer>> enemiesEntrances = new ArrayList<>();
+            List<List<Integer>> enemiesCanteen = new ArrayList<>();
+
+            for(Player p : players){
+                if(!p.equals(getPlayer(owner))){
+                    enemiesNames.add(p.getNickname());
+                    enemiesColors.add(p.getColor());
+                    enemiesLastCards.add(p.getDashboard().getGraveyard());
+
+
+                    if (p.getColor().equals(ColorTower.GREY)) enemiesTowers.add(g);
+                    else if (p.getColor().equals(ColorTower.BLACK)) enemiesTowers.add(b);
+                    else if (p.getColor().equals(ColorTower.WHITE)) enemiesTowers.add(w);
+
+                    int[] colors = {0, 0, 0, 0, 0, 0};
+                    for(Student s : p.getDashboard().getEntrance().getAllStudents()){
+                        switch (s.getColor()){
+                            case BLUE -> colors[0]++;
+                            case YELLOW -> colors[1]++;
+                            case RED -> colors[2]++;
+                            case PINK -> colors[3]++;
+                            case GREEN -> colors[4]++;
+                        }
+                    }
+                    List<Integer> listTemp = new ArrayList<>();
+                    for(int i=0; i<5; i++) listTemp.add(colors[i]);
+                    enemiesEntrances.add(listTemp);
+
+                    listTemp = new ArrayList<>();
+                    listTemp.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE));
+                    listTemp.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.YELLOW));
+                    listTemp.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.RED));
+                    listTemp.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.GREEN));
+                    listTemp.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.PINK));
+                    enemiesCanteen.add(listTemp);
+                }
+            }
+
+            return new GameStatus(currentPlayer, currentPhase, owner, myColor, myTowers, getPlayer(owner).getDashboard().getEntrance().getAllStudents(), studentsInCanteen, getPlayer(owner).getHand().getAllCards(), enemiesNames, enemiesColors, enemiesTowers, enemiesEntrances, enemiesCanteen, islandsId, owners, numTowers, studentsOnIsland, MN, professorsOwners, studentsOnCloud, getPlayer(owner).getDashboard().getGraveyard(), enemiesLastCards);
+        }catch(Exception e){
+            return new GameStatus(owner, "Error occourred while retrieving game's status...", currentPlayer);
+        }
     }
 
     //--------------------------------------------------------------------------------------------

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.controller.exceptions.IllegalActionException;
+import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.messages.Message;
+import it.polimi.ingsw.model.Model;
+import it.polimi.ingsw.view.RemoteView;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -23,9 +25,9 @@ public class Server {
     private List<Connection> connections = new ArrayList<>();
 
 
-    public synchronized void deliverMessage(Connection c, Message message) throws IllegalActionException {
+    /*public synchronized void deliverMessage(Connection c, Message message) throws IllegalActionException {
         gameMaker.manageMessage(c, message);
-    }
+    }*/
 
     //Register connection
     private synchronized void registerConnection(Connection c){
@@ -41,6 +43,11 @@ public class Server {
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
         this.gameMaker = new GameManager();
+    }
+
+    //To sort the players among matches availables according to their preferences
+    public synchronized void lobby(Connection c, Message message){
+        gameMaker.joinLobby(c, message);
     }
 
     public void run(){
