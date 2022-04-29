@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Canteen implements Movable, Serializable {
+public class Canteen implements Movable{
     private ArrayList<Student> blue;
     private ArrayList<Student> yellow;
     private ArrayList<Student> red;

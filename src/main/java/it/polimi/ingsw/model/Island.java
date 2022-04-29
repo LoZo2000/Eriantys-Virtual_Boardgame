@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
-
-import java.io.Serializable;
 import java.util.*;
 
-public class Island implements Movable, Serializable {
+public class Island implements Movable{
     private final int id;
     private ArrayList<Student> students;
     private boolean prohibitionToken;

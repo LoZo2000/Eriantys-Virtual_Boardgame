@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player implements Serializable {
+public class Player{
     final private Hand hand;
     final private Dashboard dashboard;
     final private String nickname;

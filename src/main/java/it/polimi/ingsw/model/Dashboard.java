@@ -1,9 +1,8 @@
 package it.polimi.ingsw.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Dashboard implements Serializable {
+public class Dashboard{
     private Card graveyard;
     private Canteen canteen;
     private Entrance entrance;

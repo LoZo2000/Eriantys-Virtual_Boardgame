@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Stack;
 
-public class FactoryBag implements Serializable {
+public class FactoryBag{
     Stack<Student> students;
     Bag bag;
     Bag initBag;

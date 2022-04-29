@@ -12,13 +12,12 @@ import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.rules.DefaultRule;
 import it.polimi.ingsw.model.rules.InfluenceRule;
 import it.polimi.ingsw.model.rules.Rule;
-import java.io.Serializable;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
 
-public class Game implements Serializable {
+public class Game{
     private MotherNature motherNature;
     private LinkedList <Island> islands = new LinkedList<>();
     private Cloud[] clouds;

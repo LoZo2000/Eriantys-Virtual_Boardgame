@@ -1,12 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
-import it.polimi.ingsw.model.exceptions.StillStudentException;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cloud implements Serializable {
+public class Cloud{
     private final int maxStudents;
     ArrayList<Student> students;
 

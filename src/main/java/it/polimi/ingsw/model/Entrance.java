@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Entrance implements Movable, Serializable {
+public class Entrance implements Movable{
     ArrayList<Student> students;
 
     public Entrance(ArrayList<Student> entranceStudents){

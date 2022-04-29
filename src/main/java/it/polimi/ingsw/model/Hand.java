@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.OverflowCardException;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Hand implements Serializable {
+public class Hand{
     private ArrayList<Card> cards;
 
     public Hand(){

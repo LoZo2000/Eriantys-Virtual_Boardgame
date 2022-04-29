@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
-import java.io.Serializable;
-
-public class MotherNature implements Serializable {
+public class MotherNature{
     private Island position;
 
     public MotherNature(){position = null;}
