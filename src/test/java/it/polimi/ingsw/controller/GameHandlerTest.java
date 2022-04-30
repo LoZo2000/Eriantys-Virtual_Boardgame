@@ -21,15 +21,15 @@ public class GameHandlerTest {
 
     @BeforeEach
     public void init(){
-        Message message = new CreateMatchMessage("player1", Action.CREATEMATCH, true, 3);
+        Game game = new Game(true, 3);
         try{
-            gameHandler = new GameHandler2(message);
+            gameHandler = new GameHandler2(game);
         }catch (Exception e){
             fail();
         }
-        message = new CreateMatchMessage("player1", Action.CREATEMATCH, true, 2);
+        game = new Game(true, 2);
         try{
-            gameHandler = new GameHandler2(message);
+            gameHandler = new GameHandler2(game);
         }catch (Exception e){
             fail();
         }
@@ -80,9 +80,6 @@ public class GameHandlerTest {
             gameHandler.execute(message);
 
             message = new SelectCloudMessage("player1", Action.SELECTCLOUD, 1);
-            gameHandler.execute(message);
-
-            message = new ShowMeMessage("player2", Action.SHOWME);
             gameHandler.execute(message);
 
             message = new PlayCardMessage("player2", Action.PLAYCARD, 2);

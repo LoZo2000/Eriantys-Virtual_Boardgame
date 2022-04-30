@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.Color;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Student;
 import it.polimi.ingsw.model.characters.*;
@@ -29,7 +30,8 @@ public class TranslatorTest {
 
     @BeforeEach
     public void init() throws Exception{
-        translator = new Translator(true, 3);
+        Game game = new Game(true, 3);
+        translator = new Translator(game);
         Message message = new AddMeMessage("player1", Action.ADDME, true, 3);
         translator.translateThis(message);
         message = new AddMeMessage("player2", Action.ADDME, true, 3);
@@ -193,16 +195,6 @@ public class TranslatorTest {
             fail();
         }
         message = new SelectCloudMessage("player3", Action.SELECTCLOUD, 9);
-        try {
-            translator.translateThis(message);
-        }catch (Exception e){
-            fail();
-        }
-    }
-
-    @Test
-    public void SHOWMEtest(){
-        Message message = new ShowMeMessage("player1", Action.SHOWME);
         try {
             translator.translateThis(message);
         }catch (Exception e){
@@ -540,27 +532,6 @@ public class TranslatorTest {
             fail();
         }catch (Exception e){
             e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void showMeWithActiveCardTest(){
-        try {
-            Character[] characters = new Character[1];
-            characters[0] = getCharacterFromJSON(1);
-            translator.getGame().setCharactersCards(characters);
-
-            Player p1 = translator.getGame().getPlayer("player1");
-            try {
-                translator.getGame().usePower(p1, 0);
-            } catch (NoCharacterSelectedException ex) {
-                fail();
-            }
-
-            Message message = new ShowMeMessage("player1", Action.SHOWME);
-            translator.translateThis(message);
-        }catch (Exception e){
-            fail();
         }
     }
 

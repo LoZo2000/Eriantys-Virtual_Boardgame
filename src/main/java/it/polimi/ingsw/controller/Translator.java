@@ -18,13 +18,12 @@ public class Translator {
     private Game game;
     private final boolean completeRules;
 
-    public Translator(boolean completeRules, int numPlayers){
-        this.completeRules = completeRules;
-        game = new Game(completeRules, numPlayers);
+    public Translator(Game game){
+        this.completeRules = game.getCompleteRules();
+        this.game = game;
     }
 
     public boolean translateThis(Message message) throws NoPlayerException, NoIslandException, IllegalMoveException, NoCharacterSelectedException, NoActiveCardException, NotEnoughMoneyException, NoSuchStudentException, NoMoreTokensException, EndGameException {
-
         switch(message.getAction()){
 
             case ADDME:         //To add a player in the current match
@@ -378,9 +377,5 @@ public class Translator {
 
     public Game getGame(){
         return game;
-    }
-
-    public GameStatus getGameStatus(String owner){
-        return game.getGameStatus(owner);
     }
 }

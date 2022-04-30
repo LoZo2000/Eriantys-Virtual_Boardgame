@@ -12,12 +12,13 @@ import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.rules.DefaultRule;
 import it.polimi.ingsw.model.rules.InfluenceRule;
 import it.polimi.ingsw.model.rules.Rule;
+import it.polimi.ingsw.server.Observable;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
 
-public class Game{
+public class Game extends Observable<GameStatus> {
     private MotherNature motherNature;
     private LinkedList <Island> islands = new LinkedList<>();
     private Cloud[] clouds;
@@ -33,7 +34,7 @@ public class Game{
 
     private final String JSON_PATH = "characters.json";
     private String currentPlayer = null;
-    private Phase currentPhase = null;
+    private Phase currentPhase = Phase.PREGAME;
     private Map<Player, Card> playedCards;
     private boolean finishedGame = false;
     private String winner;
@@ -141,6 +142,9 @@ public class Game{
     //TODO TEMPORARY METHOD
     public void addPlayer(Player p){
         this.players.add(p);
+
+        //AddPlayer has worked: update all the clients!
+        for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
     }
 
     //TODO TEMPORARY METHOD
@@ -155,6 +159,9 @@ public class Game{
         Player newPlayer = new Player(nickname, numPlayers, color, entranceStudents);
 
         players.add(newPlayer);
+
+        //AddPlayer has worked: update all the clients!
+        for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
     }
 
     public int getNumPlayers(){
@@ -206,6 +213,9 @@ public class Game{
         Card c = h.playCard(priority);
         playedCards.put(player, c);
         player.getDashboard().setGraveyard(c);
+
+        //PlayCard has worked: update all the clients!
+        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public void resetPlayedCards(){
@@ -278,6 +288,9 @@ public class Game{
         } else{
             addProhibitionToken(island);
         }
+
+        //MoveMotherNature has worked: update all the clients!
+        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public Island mergeIsland(Island i1, Island i2) throws EndGameException {
@@ -359,6 +372,9 @@ public class Game{
             Color c = s.getColor();
             this.assignCoins(c, true, false);
         }
+
+        //MoveStudent has worked: update all the clients!
+        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure) throws NoSuchStudentException, CannotAddStudentException {
@@ -399,6 +415,9 @@ public class Game{
         //This will always be the last action of each player per round, so the rules can be reset now
         this.activeCard = -1;
         this.currentRule = new DefaultRule();
+
+        //SelectCloud has worked: update all the clients!
+        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public Cloud[] getAllClouds(){
@@ -646,7 +665,7 @@ public class Game{
         //}
     }
 
-    public GameStatus getGameStatus(String owner) {
+    private GameStatus getGameStatus(String owner) {
         try {
 
             ColorTower myColor = getPlayer(owner).getColor();
@@ -764,6 +783,14 @@ public class Game{
         }catch(Exception e){
             return new GameStatus(owner, "Error occourred while retrieving game's status...", currentPlayer);
         }
+    }
+
+    public void sendErrorNote(String mistaker, String error, String currentPlayer){
+        notify(new GameStatus(mistaker, error, currentPlayer));
+    }
+
+    public boolean getCompleteRules(){
+        return completeRules;
     }
 
     //--------------------------------------------------------------------------------------------

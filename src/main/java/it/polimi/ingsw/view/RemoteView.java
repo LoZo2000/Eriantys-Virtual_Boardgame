@@ -2,7 +2,6 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.messages.GameStatus;
 import it.polimi.ingsw.messages.Message;
-import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.server.Connection;
 import it.polimi.ingsw.server.Observer;
 

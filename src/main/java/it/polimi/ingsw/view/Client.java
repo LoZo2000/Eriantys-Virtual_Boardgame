@@ -171,7 +171,7 @@ public class Client {
                 System.out.print("Id: "+gameStatus.getIslandsId().get(i)+"\t");
                 if(gameStatus.getOwners().get(i)==null) System.out.print("Owner: nobody\t");
                 else System.out.print("Owner: "+gameStatus.getOwners().get(i)+"\t");
-                System.out.print("Tower: "+gameStatus.getNumTowers().get(i)+"\t");
+                System.out.print("Towers: x"+gameStatus.getNumTowers().get(i)+"\t");
                 System.out.print("\u001B[34mBLUE: "+gameStatus.getStudentsOnIsland().get(i).get(0)+"\u001B[0m\t");
                 System.out.print("\u001B[33mYELLOW: "+gameStatus.getStudentsOnIsland().get(i).get(1)+"\u001B[0m\t");
                 System.out.print("\u001B[31mRED: "+gameStatus.getStudentsOnIsland().get(i).get(2)+"\u001B[0m\t");

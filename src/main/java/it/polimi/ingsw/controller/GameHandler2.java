@@ -42,7 +42,17 @@ public class GameHandler2 {
 
 
 
-    public GameHandler2(){
+    public GameHandler2(Game game){
+        completeRules = game.getCompleteRules();
+        maxPlayers = game.getNumPlayers();
+        if(maxPlayers==3) maxMoveStudent = 4;
+        else maxMoveStudent=3;
+        translator = new Translator(game);
+        players = new ArrayList<>();
+        orderPlayers = new ArrayList<>();
+        firstPlayer=0;
+        //oldPhase = currentPhase;
+        usedCard = false;
         initLegitActions();
     }
 
@@ -177,33 +187,14 @@ public class GameHandler2 {
             switch (message.getAction()) {
 
                 case ADDME:
-                    System.out.println("Case ADD GameHandler");
-                    if(numPlayers==0){
-                        completeRules = message.getCompleteRules();
-                        maxPlayers = message.getNumPlayers();
-                        if(maxPlayers==3) maxMoveStudent = 4;
-                        else maxMoveStudent=3;
-                        translator = new Translator(completeRules, maxPlayers);
-                        players = new ArrayList<>();
-                        orderPlayers = new ArrayList<>();
-                        firstPlayer=0;
-                        oldPhase = currentPhase;
-                        usedCard = false;
-                        initLegitActions();
-                        players.add(message.getSender());
-                        numPlayers++;
-                        translator.translateThis(message);
-                    }
-                    else{
-                        players.add(message.getSender());
-                        numPlayers++;
-                        translator.translateThis(message);
-                        if (numPlayers == maxPlayers) nextPhase();
-                    }
+                    if (numPlayers == 0) getGame().setCurrentPlayer(message.getSender());
+                    players.add(message.getSender());
+                    numPlayers++;
+                    if (numPlayers == maxPlayers) nextPhase();
+                    translator.translateThis(message);
                     break;
 
                 case PLAYCARD: //need to check if the player owns the card through an exception in translate
-                    translator.translateThis(message);
                     priority[currentPlayer] = message.getPriority();
                     currentPlayer = (currentPlayer + 1) % maxPlayers;
                     translator.getGame().setCurrentPlayer(players.get(currentPlayer));
@@ -214,6 +205,7 @@ public class GameHandler2 {
                         translator.getGame().setCurrentPlayer(orderPlayers.get(0));
                         nextPhase();
                     }
+                    translator.translateThis(message);
                     break;
 
                 case MOVESTUDENT:
@@ -227,18 +219,19 @@ public class GameHandler2 {
                     } else if (message.getDepartureType() != Location.ENTRANCE || (message.getArrivalType() != Location.ISLAND && message.getArrivalType() != Location.CANTEEN))
                         throw new IllegalMoveException("Illegal movement!");
 
-                    translator.translateThis(message);
                     if (currentPhase != Phase.ACTIVECARD)
                         currentMoveStudent++;
                     //System.out.println("il numero di current move student è"+currentMoveStudent);
                     if (currentMoveStudent == maxMoveStudent || currentPhase == Phase.ACTIVECARD) {
                         nextPhase();
                     }
+
+                    translator.translateThis(message);
                     break;
                 // discuss with others where to save cards of the players
                 case MOVEMOTHERNATURE: //add a check if mother nature move of the right number of islands
-                    translator.translateThis(message);
                     nextPhase();
+                    translator.translateThis(message);
                     break;
 
                 case USEPOWER:
@@ -326,16 +319,10 @@ public class GameHandler2 {
                     break;
 
                 case SELECTCLOUD:
-                    translator.translateThis(message);
                     numFinishedTurn++;
                     refreshCurrentPlayer();
                     nextPhase();
-                    break;
-
-                case SHOWME:
-                    if (numPlayers == 0 || numPlayers != maxPlayers)
-                        throw new IllegalMoveException("Wait until all the players join the match...");
-                    else translator.translateThis(message);
+                    translator.translateThis(message);
                     break;
 
                 default:
@@ -379,9 +366,5 @@ public class GameHandler2 {
         }
 
         return true;
-    }
-
-    public GameStatus getGameStatus(String owner){
-        return translator.getGameStatus(owner);
     }
 }

@@ -74,11 +74,6 @@ public class MessageTest {
     }
 
     @Test
-    public void SHOWMEtest(){
-        Message message = new ShowMeMessage("player", Action.SHOWME);
-    }
-
-    @Test
     public void USEPOWERtest(){
         Message message = new UsePowerMessage("player", Action.USEPOWER, 0);
         assertEquals(0, message.getCharacterCard());
