@@ -4,9 +4,9 @@ import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Update;
 import it.polimi.ingsw.model.Game;
 
-public class EndGameMessage extends Message{
+public class ShowMeMessage extends  Message{
 
-    public EndGameMessage(String sender, Action action) {
+    public ShowMeMessage(String sender, Action action){
         super(sender, action);
     }
 
@@ -14,5 +14,4 @@ public class EndGameMessage extends Message{
     public Update execute(Game game) {
         return null;
     }
-
 }

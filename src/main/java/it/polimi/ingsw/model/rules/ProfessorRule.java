@@ -20,7 +20,8 @@ public class ProfessorRule extends DecoratedRule{
 
     @Override
     public String updateProfessor(String nameOwner, Map<String, Integer> canteenStudents) {
-        canteenStudents.replace(this.playerWhoUsed, canteenStudents.get(this.playerWhoUsed) + 1);
+        if(canteenStudents.get(this.playerWhoUsed) != 0)
+            canteenStudents.replace(this.playerWhoUsed, canteenStudents.get(this.playerWhoUsed) + 1);
         return this.defaultRules.updateProfessor(nameOwner, canteenStudents);
     }
 

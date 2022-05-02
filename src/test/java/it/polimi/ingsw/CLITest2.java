@@ -1,18 +1,30 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.controller.Action;
-import it.polimi.ingsw.controller.GameHandler2;
+import it.polimi.ingsw.controller.GameHandler;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.model.Color;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.EndGameException;
 import it.polimi.ingsw.controller.exceptions.IllegalMessageException;
 import it.polimi.ingsw.messages.*;
+import it.polimi.ingsw.view.Columns;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.util.Scanner;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 public class CLITest2 {
 
-    /*public static void main(String[] args) throws IllegalMessageException {
+    public static void main(String[] args) throws IllegalMessageException {
+        Message message;
+        if(AnsiConsole.getTerminalWidth() != 0)
+            AnsiConsole.systemInstall();
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.print(ansi().eraseScreen(Ansi.Erase.ALL).cursor(1,1));
+
         String playerId, ac, lo, ans;
         Location arrivalType, departureType;
         boolean completeRules;
@@ -23,8 +35,8 @@ public class CLITest2 {
 
         Scanner sc=new Scanner(System.in);
 
-        Message message = new CREATEMATCHmessage("abc", Action.CREATEMATCH, true, 2 );
-        GameHandler2 gameHandler = new GameHandler2(message);
+        Game game = new Game(true, 2);
+        GameHandler gameHandler = new GameHandler(game);
 
 
         while(true){
@@ -46,12 +58,12 @@ public class CLITest2 {
                     //System.out.println("How many players?");
                     //numPlayers = sc.nextInt();
                     //sc.nextLine();
-                    message = new AddMeMessage(playerId, Action.ADDME, true, 2);
+                        message = new AddMeMessage(playerId, true, 2);
                 case "PLAYCARD" -> {
                     System.out.println("Chose which card you want to play (priority):");
                     priority = sc.nextInt();
                     sc.nextLine();
-                    message = new PLAYCARDmessage(playerId, Action.PLAYCARD, priority);
+                    message = new PlayCardMessage(playerId, priority);
                 }
                 case "MOVESTUDENT" -> {
                     System.out.println("Which student do you want to move? (studentId)");
@@ -86,14 +98,14 @@ public class CLITest2 {
                         arrivalId = sc.nextInt();
                         sc.nextLine();
                     }
-                    message = new MOVESTUDENTmessage(playerId, Action.MOVESTUDENT, studentId, departureType, departureId, arrivalType, arrivalId);
+                    message = new MoveStudentMessage(playerId, studentId, departureType, departureId, arrivalType, arrivalId);
                 }
                 case "USEPOWER" -> {
                     //sc.nextLine();
                     System.out.print("Choose which card you want to activate (0,1,2): ");
                     numCard = sc.nextInt();
                     sc.nextLine();
-                    message = new USEPOWERmessage(playerId, Action.USEPOWER, numCard);
+                    message = new UsePowerMessage(playerId, numCard);
                 }
                 case "EXCHANGESTUDENT" -> {
                     System.out.print("Which student do you want to move? (studentId) ");
@@ -125,7 +137,7 @@ public class CLITest2 {
                     }
                     arrivalId = -1;
 
-                    message = new EXCHANGESTUDENTmessage(playerId, Action.EXCHANGESTUDENT, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
+                    message = new ExchangeStudentMessage(playerId, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
 
                 }
                 case "ISLAND_INFLUENCE" -> {
@@ -133,14 +145,14 @@ public class CLITest2 {
                     arrivalId = sc.nextInt();
                     sc.nextLine();
 
-                    message = new ChooseIslandMessage(playerId, Action.ISLAND_INFLUENCE, arrivalId);
+                    message = new IslandInfluenceMessage(playerId, arrivalId);
                 }
                 case "BLOCK_ISLAND" -> {
                     System.out.println("Choose island: (islandId)");
                     arrivalId = sc.nextInt();
                     sc.nextLine();
 
-                    message = new ChooseIslandMessage(playerId, Action.BLOCK_ISLAND, arrivalId);
+                    message = new BlockIslandMessage(playerId, arrivalId);
                 }
                 case "BLOCK_COLOR" -> {
                     System.out.println("Choose color: (Color)");
@@ -153,7 +165,7 @@ public class CLITest2 {
                         continue;
                     }
 
-                    message = new ChooseColorMessage(playerId, Action.BLOCK_COLOR, chosenColor);
+                    message = new BlockColorMessage(playerId, chosenColor);
                 }
                 case "PUT_BACK" -> {
                     System.out.println("Choose color: (Color)");
@@ -166,30 +178,34 @@ public class CLITest2 {
                         continue;
                     }
 
-                    message = new ChooseColorMessage(playerId, Action.PUT_BACK, chosenColor);
+                    message = new PutBackMessage(playerId, chosenColor);
                 }
                 case "MOVEMOTHERNATURE" -> {
                     System.out.println("Insert Mother Nature's movement:");
                     MNmovement = sc.nextInt();
                     sc.nextLine();
-                    message = new MOVEMOTHERNATUREmessage(playerId, Action.MOVEMOTHERNATURE, MNmovement);
+                    message = new MoveMotherNatureMessage(playerId, MNmovement);
                 }
                 case "SELECTCLOUD" -> {
                     System.out.println("Select which cloud you have chosen: (position)");
                     position = sc.nextInt();
                     sc.nextLine();
-                    message = new SELECTCLOUDmessage(playerId, Action.SELECTCLOUD, position);
+                    message = new SelectCloudMessage(playerId, position);
                 }
-                case "SHOWME" -> message = new SHOWMEmessage(playerId, Action.SHOWME);
-                default -> message = new Message(playerId, null);
+                case "SHOWME" -> message = new ShowMeMessage(playerId, Action.SHOWME);
+                default -> message = null;
             }
 
             try{
+                System.out.print(ansi().eraseScreen(Ansi.Erase.ALL).cursor(1,1));
                 gameHandler.execute(message);
             }catch(Exception e){
                 e.printStackTrace();
-                if(e instanceof EndGameException) System.exit(0);
+                if(e instanceof EndGameException) {
+                    System.exit(0);
+                    AnsiConsole.systemUninstall();
+                }
             }
         }
-    }*/
+    }
 }

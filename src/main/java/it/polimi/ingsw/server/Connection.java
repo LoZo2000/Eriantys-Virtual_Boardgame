@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.messages.AddMeMessage;
 import it.polimi.ingsw.messages.GameStatus;
 import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.model.Game;
@@ -76,7 +77,7 @@ public class Connection extends Observable<Message> implements Runnable {
             objectInputStream = new ObjectInputStream(inputStream);
             message = (Message) objectInputStream.readObject();
             owner = message.getSender();
-            server.lobby(this, message);
+            server.lobby(this, (AddMeMessage) message);
             notify(message);
             while(isActive()){
                 objectInputStream = new ObjectInputStream(inputStream);

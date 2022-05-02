@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.rules;
 
-public abstract class DecoratedRule implements Rule{
+import java.io.Serializable;
+
+public abstract class DecoratedRule implements Serializable, Rule{
     protected Rule defaultRules;
 
     public DecoratedRule(){

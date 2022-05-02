@@ -25,7 +25,7 @@ public class GameStatus implements Serializable{
     private List<List<Integer>> enemiesEntrances;
     private List<List<Integer>> enemiesCanteen;
 
-    private List<Integer> islandsId;
+    private List<String> islandsId;
     private List<ColorTower> owners;
     private List<Integer> numTowers;
     private List<List<Integer>> studentsOnIsland;
@@ -47,7 +47,7 @@ public class GameStatus implements Serializable{
 
 
     //Default creator:
-    public GameStatus(String turnOf, Phase currentPhase, String myId, ColorTower myColor, int myTowers, List<Student> studentsInEntrance, List<List<Student>> studentsInCanteen, List<Card> myCards, List<String> enemiesNames, List<ColorTower> enemiesColors, List<Integer> enemiesTowers, List<List<Integer>> enemiesEntrances, List<List<Integer>> enemiesCanteen, List<Integer> islandsId, List<ColorTower> owners, List<Integer> numTowers, List<List<Integer>> studentsOnIsland, int MN, List<String> professorsOwners, List<List<Integer>> studentsOnCloud, Card myLastCard, List<Card> enemiesLastCards){
+    public GameStatus(String turnOf, Phase currentPhase, String myId, ColorTower myColor, int myTowers, List<Student> studentsInEntrance, List<List<Student>> studentsInCanteen, List<Card> myCards, List<String> enemiesNames, List<ColorTower> enemiesColors, List<Integer> enemiesTowers, List<List<Integer>> enemiesEntrances, List<List<Integer>> enemiesCanteen, List<String> islandsId, List<ColorTower> owners, List<Integer> numTowers, List<List<Integer>> studentsOnIsland, int MN, List<String> professorsOwners, List<List<Integer>> studentsOnCloud, Card myLastCard, List<Card> enemiesLastCards){
         this.turnOf = turnOf;
         this.currentPhase = currentPhase;
 
@@ -118,7 +118,7 @@ public class GameStatus implements Serializable{
     public List<List<Integer>> getEnemiesCanteen(){
         return enemiesCanteen;
     }
-    public List<Integer> getIslandsId(){
+    public List<String> getIslandsId(){
         return islandsId;
     }
     public List<ColorTower> getOwners(){

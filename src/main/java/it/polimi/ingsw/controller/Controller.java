@@ -7,11 +7,11 @@ import it.polimi.ingsw.server.Observer;
 public class Controller implements Observer<Message> {
 
     private Game game;
-    private GameHandler2 gameHandler;
+    private GameHandler gameHandler;
 
     public Controller(Game game){
         this.game = game;
-        this.gameHandler = new GameHandler2(game);
+        this.gameHandler = new GameHandler(game);
     }
 
     @Override

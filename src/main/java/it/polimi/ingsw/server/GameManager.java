@@ -14,7 +14,7 @@ public class GameManager {
     private Controller[] controllerTypes = new Controller[6];
     private Game[] gameTypes = new Game[6];
 
-    public void joinLobby(Connection c, Message message){
+    public void joinLobby(Connection c, AddMeMessage message){
         int additive=0; // additive became 3 if the rules are complete for the index in the array
         boolean completeRules = message.getCompleteRules();
         if(completeRules) additive=3;

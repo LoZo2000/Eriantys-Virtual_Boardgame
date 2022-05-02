@@ -1,27 +1,17 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.EndGameException;
-import it.polimi.ingsw.controller.Action;
-import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
-import it.polimi.ingsw.model.characters.Character;
-import it.polimi.ingsw.model.characters.CharacterType;
-import it.polimi.ingsw.model.characters.JSONCharacter;
-import it.polimi.ingsw.model.characters.MovementCharacter;
 import it.polimi.ingsw.model.exceptions.AlreadyPlayedCardException;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
-import it.polimi.ingsw.model.exceptions.NoCharacterSelectedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.security.cert.CertificateParsingException;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -114,10 +104,14 @@ class GameTest {
         }
 
         assertEquals(11, this.game.getAllIslands().size());
+        assertEquals("03, 04", this.game.getAllIslands().get(3).getId());
+
+        assertEquals("03, 04", this.game.getIsland(3).getId());
+        assertEquals("03, 04", this.game.getIsland(4).getId());
     }
 
     @Test
-    void mergeIslandFirstLast() throws Exception{
+    void mergeIslandFirstLastUntilEndGame() throws Exception{
         Entrance e = null;
         Canteen c = null;
         try {
@@ -129,7 +123,7 @@ class GameTest {
         Island i = null;
         try {
             i = this.game.getIsland(0);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             fail();
         }
 
@@ -137,7 +131,7 @@ class GameTest {
             this.game.moveStudent(6, c, e);
             this.game.moveStudent(2, i, e);
             this.game.moveStudent(7, i, e);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             fail();
         }
 
@@ -151,29 +145,65 @@ class GameTest {
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());
+        String id = "00";
+        for(int cont = 0; cont < 8; cont++) {
+            try {
+                i = this.game.getIsland(game.getAllIslands().size()-1);
+            } catch (Exception ex) {
+                fail();
+            }
+
+            e.addStudent(new Student(40+cont, Color.BLUE));
+
+            try {
+                this.game.moveStudent(40+cont, i, e);
+            } catch (Exception ex) {
+                fail();
+            }
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            } catch (EndGameException ex) {
+                ex.printStackTrace();
+            }
+
+            assertEquals(11-cont, this.game.getAllIslands().size());
+            id += String.format(", %02d", 11-cont);
+
+            String[] arr = id.split(", ");
+
+            String orderedId = Arrays.stream(arr)
+                    .map(Integer::parseInt)
+                    .sorted()
+                    .map(x -> String.format("%02d", x))
+                    .reduce((temp1, temp2) -> temp1 + ", " + temp2)
+                    .orElse(null);
+
+            assertEquals(orderedId, this.game.getIsland(0).getId());
+            assertFalse(this.game.getAllIslands().contains(new Island(11-cont)));
+        }
 
         try {
-            i = this.game.getIsland(11);
-        }catch (Exception ex){
-            fail();
-        }
-        try {
-            this.game.moveStudent(5, i, e);
-        }catch (Exception ex){
+            i = this.game.getIsland(game.getAllIslands().size()-1);
+        } catch (Exception ex) {
             fail();
         }
 
+        e.addStudent(new Student(50, Color.BLUE));
+
         try {
-            this.game.moveMotherNature(i, true);
-        } catch (NoActiveCardException ex) {
+            this.game.moveStudent(50, i, e);
+        } catch (Exception ex) {
             fail();
-        } catch (EndGameException ex) {
-            ex.printStackTrace();
         }
 
-        assertEquals(11, this.game.getAllIslands().size());
-        assertEquals(0, this.game.getIsland(0).getId());
-        assertFalse(this.game.getAllIslands().contains(new Island(11)));
+        Island finalI = i;
+        assertThrows(EndGameException.class, () -> game.moveMotherNature(finalI, true));
+
+        assertEquals(3, this.game.getAllIslands().size());
+        assertFalse(this.game.getAllIslands().contains(new Island(4)));
     }
 
     @Test
@@ -275,7 +305,7 @@ class GameTest {
         for(int i=0; i<game.getNumberOfClouds(); i++) assertEquals(3, game.getNumberOfStudentPerColorOnCloud(i, Color.BLUE)+game.getNumberOfStudentPerColorOnCloud(i, Color.YELLOW)+game.getNumberOfStudentPerColorOnCloud(i, Color.RED)+game.getNumberOfStudentPerColorOnCloud(i, Color.GREEN)+game.getNumberOfStudentPerColorOnCloud(i, Color.PINK));
         assertEquals(2, game.getNumPlayers());
         assertEquals(2, game.getRegisteredNumPlayers());
-        assertEquals(0, game.getMotherNaturePosition().getId());
+        assertEquals("00", game.getMotherNaturePosition().getId());
         assertEquals(2, game.getAllPlayers().size());
         assertEquals(2, game.getAllClouds().length);
         //Try to get islands or players that don't exist:

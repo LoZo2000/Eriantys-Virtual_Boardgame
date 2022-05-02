@@ -1,13 +1,20 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
+import it.polimi.ingsw.model.exceptions.StillStudentException;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cloud{
+public class Cloud {
     private final int maxStudents;
-    ArrayList<Student> students;
+
+    private boolean isFull;
+    private ArrayList<Student> students;
 
     public Cloud(int maxStudents){
         this.maxStudents = maxStudents;
+        this.isFull = false;
         students = new ArrayList<>();
     }
 
@@ -15,6 +22,7 @@ public class Cloud{
         for(Student s : newStudents){
             addStudent(s);
         }
+        this.isFull = true;
     }
 
     public int getNumberOfStudentPerColor(Color color){
@@ -38,6 +46,11 @@ public class Cloud{
     public ArrayList<Student> chooseCloud(){
         ArrayList<Student> s = (ArrayList<Student>)students.clone();
         students.clear();
+        this.isFull = false;
         return s;
+    }
+
+    public boolean isFull(){
+        return isFull;
     }
 }

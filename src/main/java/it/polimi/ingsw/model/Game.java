@@ -36,6 +36,8 @@ public class Game extends Observable<GameStatus> {
     private String currentPlayer = null;
     private Phase currentPhase = Phase.PREGAME;
     private Map<Player, Card> playedCards;
+    private int remainingMoves;
+    private boolean usedCard;
     private boolean finishedGame = false;
     private String winner;
 
@@ -72,6 +74,9 @@ public class Game extends Observable<GameStatus> {
         }
 
         //CHARACTERS (Only complete rules)
+
+        this.usedCard = false;
+
         if(this.completeRules){
             this.activeCard = -1;
             try {
@@ -180,9 +185,16 @@ public class Game extends Observable<GameStatus> {
         return motherNature.getPosition();
     }
 
-    public Island getIsland(int id) throws NoIslandException{
+    /*public Island getIsland(int id) throws NoIslandException{
         for(Island i : islands){
             if(i.getId() == id) return i;
+        }
+        throw new NoIslandException();
+    }*/
+    public Island getIsland(int id) throws NoIslandException {
+        for(Island i : islands){
+            //if(i.getId() == id) return i;
+            if(i.checkContainedId(id)) return i;
         }
         throw new NoIslandException();
     }
@@ -240,8 +252,8 @@ public class Game extends Observable<GameStatus> {
                 throw new NoActiveCardException("You can't calculate the influence of an island with this power");
 
             //if(this.activeCard != -1){
-                this.activeCard = -1;
-                this.currentRule = new DefaultRule();
+            this.activeCard = -1;
+            this.currentRule = new DefaultRule();
             //}
         }
         Report report = island.getReport();
@@ -437,6 +449,16 @@ public class Game extends Observable<GameStatus> {
         return currentPhase;
     }
 
+    public void resetRemainingMoves(){
+        this.remainingMoves = this.numPlayers==3 ? 4 : 3;
+    }
+    public void reduceRemainingMoves(){
+        this.remainingMoves--;
+    }
+    public int getRemainingMoves(){
+        return remainingMoves;
+    }
+
     //-------------------------------------------------------------------------------------
     //|                                     CHARACTERS                                    |
     //-------------------------------------------------------------------------------------
@@ -514,6 +536,13 @@ public class Game extends Observable<GameStatus> {
     //TODO Debug Method
     public void setCharactersCards(Character[] characters){
         this.charactersCards = characters.clone();
+    }
+
+    public boolean getUsedCard(){
+        return this.usedCard;
+    }
+    public void setUsedCard(boolean usedCard){
+        this.usedCard = usedCard;
     }
 
     public boolean usePower(Player activePlayer, int card) throws NoCharacterSelectedException, NotEnoughMoneyException, IllegalMoveException {
@@ -670,7 +699,7 @@ public class Game extends Observable<GameStatus> {
 
             ColorTower myColor = getPlayer(owner).getColor();
             int g = 0, b = 0, w = 0;
-            List<Integer> islandsId = new ArrayList<>();
+            List<String> islandsId = new ArrayList<>();
             List<ColorTower> owners = new ArrayList<>();
             List<Integer> numTowers = new ArrayList<>();
             List<List<Integer>> studentsOnIsland = new ArrayList<>();

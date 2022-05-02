@@ -63,6 +63,9 @@ class CompleteRulesGameTest {
 
         this.game.addPlayer(player1);
         this.game.addPlayer(player2);
+
+        assertThrows(NoCharacterSelectedException.class, () -> game.usePower(player1, -1));
+        assertThrows(NoCharacterSelectedException.class, () -> game.usePower(player1, 15));
     }
 
     private Character getCharacterFromJSON(int id){

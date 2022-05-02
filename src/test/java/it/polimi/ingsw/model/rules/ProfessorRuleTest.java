@@ -121,7 +121,7 @@ class ProfessorRuleTest {
 
         String winner = this.rule.updateProfessor(null, counterPerColor);
 
-        assertEquals("player1", winner);
+        assertNull(winner);
     }
 
     @Test

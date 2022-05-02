@@ -1,9 +1,11 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player{
+public class Player implements Comparable<Player> {
     final private Hand hand;
     final private Dashboard dashboard;
     final private String nickname;
@@ -64,5 +66,17 @@ public class Player{
 
     public String toString(){
         return nickname;
+    }
+
+    @Override
+    public int compareTo(Player p) {
+        Card c1 = this.getDashboard().getGraveyard();
+        Card c2 = p.getDashboard().getGraveyard();
+
+        if(c1.getPriority() < c2.getPriority()){
+            return -1;
+        } else{
+            return 1;
+        }
     }
 }

@@ -4,7 +4,9 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import it.polimi.ingsw.model.rules.Rule;
 
-public abstract class Character {
+import java.io.Serializable;
+
+public abstract class Character implements Serializable {
     private final int id;
     private final String desc;
     private final CharacterType typeCharacter;

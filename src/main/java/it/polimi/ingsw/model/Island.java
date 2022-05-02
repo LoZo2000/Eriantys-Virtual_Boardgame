@@ -1,16 +1,19 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+
+import java.io.Serializable;
 import java.util.*;
 
-public class Island implements Movable{
-    private final int id;
+public class Island implements Movable {
+    //private final int id;
+    private final String id;
     private ArrayList<Student> students;
     private boolean prohibitionToken;
     private int maxTowers;
     private ColorTower owner;
 
-    public Island(int id){
+    /*public Island(int id){
         this.id = id;
         students = new ArrayList<>();
         maxTowers = 1;
@@ -30,6 +33,48 @@ public class Island implements Movable{
     }
 
     public int getId(){
+        return id;
+    }
+
+    public boolean equals(Object o){
+        if(o instanceof Island){
+            if(((Island)o).getId()==id) return true;
+        }
+        return false;
+    }
+    */
+
+    public Island(int id){
+        //this.id = id;
+        this.id = String.format("%02d", id);
+        students = new ArrayList<>();
+        maxTowers = 1;
+        prohibitionToken = false;
+        this.owner = null;
+    }
+
+    public Island(Island i1, Island i2){
+        //this(i1.id);
+        students = new ArrayList<>();
+        String s = i1.id + ", " + i2.id;
+
+        String[] arr = s.split(", ");
+
+        this.id = Arrays.stream(arr)
+                .map(Integer::parseInt)
+                .sorted()
+                .map(x -> String.format("%02d", x))
+                .reduce((temp1, temp2) -> temp1 + ", " + temp2)
+                .orElse(null);
+
+        students.addAll(i1.students);
+        students.addAll(i2.students);
+        maxTowers = i1.maxTowers + i2.maxTowers;
+        owner = i1.owner;
+        prohibitionToken = i1.prohibitionToken || i2.prohibitionToken;
+    }
+
+    public String getId(){
         return id;
     }
 
@@ -116,12 +161,19 @@ public class Island implements Movable{
 
     public boolean equals(Object o){
         if(o instanceof Island){
-            if(((Island)o).getId()==id) return true;
+            return ((Island) o).getId().equals(id);
         }
         return false;
     }
 
     public String toString(){
-        return String.valueOf(id);
+        //return String.valueOf(id);
+        return id;
+    }
+
+    public boolean checkContainedId(int idToCheck){
+        String x = String.format("%02d", idToCheck);
+        String[] arr = this.id.split(", ");
+        return Arrays.asList(arr).contains(x);
     }
 }

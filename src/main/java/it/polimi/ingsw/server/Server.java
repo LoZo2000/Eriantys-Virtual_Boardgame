@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.messages.AddMeMessage;
 import it.polimi.ingsw.messages.Message;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -42,7 +43,7 @@ public class Server {
     }
 
     //To sort the players among matches availables according to their preferences
-    public synchronized void lobby(Connection c, Message message){
+    public synchronized void lobby(Connection c, AddMeMessage message){
         gameMaker.joinLobby(c, message);
     }
 

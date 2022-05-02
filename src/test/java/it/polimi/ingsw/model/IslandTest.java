@@ -18,7 +18,7 @@ public class IslandTest {
 
     @Test
     public void getterTest(){
-        assertEquals(0, island.getId());
+        assertEquals("00", island.getId());
         assertEquals(0, island.getReport().getTowerNumbers());
         assertEquals(0, island.getAllStudents().size());
         assertNull(island.getReport().getOwner());
@@ -66,7 +66,7 @@ public class IslandTest {
         i2.conquest(ColorTower.BLACK);
 
         Island newIsland = new Island(island, i2);
-        assertEquals(0, newIsland.getId());
+        assertEquals("00, 01", newIsland.getId());
         assertEquals(2, newIsland.getAllStudents().size());
         assertEquals(2, newIsland.getAllStudents().get(0).getId());
         assertEquals(3, newIsland.getAllStudents().get(1).getId());
@@ -89,6 +89,8 @@ public class IslandTest {
         assertEquals(i2, island);
         assertNotEquals(island, i3);
         assertNotEquals(i3, island);
+
+        assertNotEquals(i2, new Object());
     }
 
     @Test
