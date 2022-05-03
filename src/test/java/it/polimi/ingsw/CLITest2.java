@@ -11,12 +11,26 @@ import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.view.Columns;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.junit.jupiter.api.Test;
 
+import java.io.*;
+import java.net.Socket;
 import java.util.Scanner;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class CLITest2 {
+
+    /*@Test
+    public void badClient() throws Exception {
+        Socket socket = new Socket("127.0.0.1", 12346);
+        OutputStream outputStream = socket.getOutputStream();
+        ObjectOutputStream objectOutputStream = null;
+        Message message = new PlayCardMessage("aaa", 1);
+        objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(message);
+
+    }*/
 
     public static void main(String[] args) throws IllegalMessageException {
         Message message;

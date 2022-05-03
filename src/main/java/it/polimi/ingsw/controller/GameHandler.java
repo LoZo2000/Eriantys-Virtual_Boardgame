@@ -3,7 +3,9 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.controller.exceptions.*;
 import it.polimi.ingsw.messages.CreateMatchMessage;
 import it.polimi.ingsw.messages.EndGameMessage;
+import it.polimi.ingsw.model.ColorTower;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Island;
 import it.polimi.ingsw.model.Student;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.messages.Message;
@@ -38,7 +40,7 @@ public class GameHandler {
         initLegitActions();
     }
 
-    private void nextPhase() {
+    private void nextPhase(){
         if(currentPhase==Phase.PREGAME){
             currentPlayer=players.get(0);
             currentPhase=Phase.PRETURN;
@@ -64,10 +66,10 @@ public class GameHandler {
             game.setUsedCard(false);
             if(numFinishedTurn==maxPlayers){
                 game.resetPlayedCards();
+                endTurn();
                 currentPhase=Phase.PRETURN;
                 numFinishedTurn=0;
                 game.setCurrentPhase(currentPhase);
-                //game.endTurn();
             }
             else {
                 currentPhase=Phase.MIDDLETURN;
@@ -207,7 +209,7 @@ public class GameHandler {
     }
 
     //TODO Debug method used for testing
-    public Game getGame(){
+    Game getGame(){
         return game;
     }
 
@@ -239,8 +241,37 @@ public class GameHandler {
         }
     }
 
-    private void endMovementPhase(){
+    private void endMovementPhase() {
         game.resetRemainingMoves();
         nextPhase();
+    }
+
+    private void endTurn(){
+        try {
+            game.refillClouds();
+        }catch(Exception e){
+            /*if(e instanceof NoMoreStudentsException){
+                throw new EndGameException("Game ended: the winner is "+getWinner());
+            }*/
+            e.printStackTrace();
+        }
+    }
+    private ColorTower getWinner(){
+        int black=0;
+        int white=0;
+        int grey=0;
+        LinkedList<Island> islands = game.getAllIslands();
+        for(Island i : islands){
+            if(i.getOwner()!=null){
+                switch (i.getOwner()){
+                    case BLACK -> black += i.getReport().getTowerNumbers();
+                    case WHITE -> white += i.getReport().getTowerNumbers();
+                    case GREY -> grey += i.getReport().getTowerNumbers();
+                }
+            }
+        }
+        if(black>=white && black>=grey) return ColorTower.BLACK;
+        if(white>=black && white>=grey) return ColorTower.WHITE;
+        return ColorTower.GREY;
     }
 }
