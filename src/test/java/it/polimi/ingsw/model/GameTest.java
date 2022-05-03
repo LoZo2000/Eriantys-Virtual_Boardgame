@@ -372,7 +372,7 @@ class GameTest {
 
     @Test
     public void setGetPlayerPhase(){
-        game.setCurrentPlayer("player2");
+        game.setCurrentPlayer("player2", false);
         assertEquals(game.getCurrentPlayer(), "player2");
         for(Phase p : Phase.values()){
             game.setCurrentPhase(p);

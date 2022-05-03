@@ -149,7 +149,7 @@ public class Game extends Observable<GameStatus> {
         this.players.add(p);
 
         //AddPlayer has worked: update all the clients!
-        for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
+        //for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
     }
 
     //TODO TEMPORARY METHOD
@@ -166,7 +166,7 @@ public class Game extends Observable<GameStatus> {
         players.add(newPlayer);
 
         //AddPlayer has worked: update all the clients!
-        for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
+        //for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
     }
 
     public int getNumPlayers(){
@@ -227,7 +227,7 @@ public class Game extends Observable<GameStatus> {
         player.getDashboard().setGraveyard(c);
 
         //PlayCard has worked: update all the clients!
-        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
+        //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public void resetPlayedCards(){
@@ -302,7 +302,7 @@ public class Game extends Observable<GameStatus> {
         }
 
         //MoveMotherNature has worked: update all the clients!
-        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
+        //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public Island mergeIsland(Island i1, Island i2) throws EndGameException {
@@ -386,7 +386,7 @@ public class Game extends Observable<GameStatus> {
         }
 
         //MoveStudent has worked: update all the clients!
-        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
+        //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure) throws NoSuchStudentException, CannotAddStudentException {
@@ -429,18 +429,21 @@ public class Game extends Observable<GameStatus> {
         this.currentRule = new DefaultRule();
 
         //SelectCloud has worked: update all the clients!
-        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
+        //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public Cloud[] getAllClouds(){
         return clouds;
     }
 
-    public void setCurrentPlayer(String nickname){
+    public void setCurrentPlayer(String nickname, boolean sendNotify){
         currentPlayer = nickname;
+        if(sendNotify)
+            sendNotifyAll();
     }
     public void setCurrentPhase(Phase phase){
         currentPhase = phase;
+        sendNotifyAll();
     }
     public String getCurrentPlayer(){
         return currentPlayer;
@@ -454,6 +457,8 @@ public class Game extends Observable<GameStatus> {
     }
     public void reduceRemainingMoves(){
         this.remainingMoves--;
+        if(remainingMoves != 0)
+            sendNotifyAll();
     }
     public int getRemainingMoves(){
         return remainingMoves;
@@ -563,7 +568,6 @@ public class Game extends Observable<GameStatus> {
         }
 
         return this.currentRule.isActionNeeded();
-
     }
 
     public Action getRequestedAction() throws NoActiveCardException{
@@ -812,6 +816,10 @@ public class Game extends Observable<GameStatus> {
         }catch(Exception e){
             return new GameStatus(owner, "Error occourred while retrieving game's status...", currentPlayer);
         }
+    }
+
+    private void sendNotifyAll(){
+        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public void sendErrorNote(String mistaker, String error, String currentPlayer){

@@ -42,7 +42,7 @@ public class GameHandler {
         if(currentPhase==Phase.PREGAME){
             currentPlayer=players.get(0);
             currentPhase=Phase.PRETURN;
-            game.setCurrentPlayer(players.get(0));
+            game.setCurrentPlayer(players.get(0), false);
             game.setCurrentPhase(currentPhase);
         }
         else if(currentPhase==Phase.PRETURN) {
@@ -77,6 +77,7 @@ public class GameHandler {
         }
         else if(currentPhase == Phase.ACTIVECARD) {
             currentPhase = oldPhase;
+            game.setCurrentPhase(currentPhase);
         }
 
     }
@@ -158,10 +159,10 @@ public class GameHandler {
         }
     }
 
-    private void changeCurrentPlayer(){
+    private void changeCurrentPlayer(boolean sendNotify){
         Collections.rotate(players, -1);
         currentPlayer = players.get(0);
-        game.setCurrentPlayer(currentPlayer);
+        game.setCurrentPlayer(currentPlayer, sendNotify);
     }
 
     public void execute(Message message) throws NotYourTurnException, IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, EndGameException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException {
@@ -189,6 +190,7 @@ public class GameHandler {
             if(activatedCard){
                 this.oldPhase = this.currentPhase;
                 this.currentPhase = Phase.ACTIVECARD;
+                game.setCurrentPhase(currentPhase);
             } else{
                 nextPhase();
             }
@@ -198,7 +200,7 @@ public class GameHandler {
 
         update.getRemainingNumClouds().ifPresent((remainingClouds) -> {
             numFinishedTurn++;
-            changeCurrentPlayer();
+            changeCurrentPlayer(false);
             nextPhase();
         });
 
@@ -222,7 +224,6 @@ public class GameHandler {
     }
 
     private void playedCard(){
-        changeCurrentPlayer();
         this.numFinishedTurn++;
         if (numFinishedTurn == numPlayers) {
             //Now the player List is ordered by the card played during the PLAYCARD Phase
@@ -230,9 +231,11 @@ public class GameHandler {
             game.getAllPlayers().stream().sorted().forEach((player -> players.add(player.getNickname())));
 
             currentPlayer = players.get(0);
-            game.setCurrentPlayer(currentPlayer);
+            game.setCurrentPlayer(currentPlayer, false);
 
             nextPhase();
+        } else{
+            changeCurrentPlayer(true);
         }
     }
 

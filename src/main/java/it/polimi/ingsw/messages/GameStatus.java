@@ -66,7 +66,7 @@ public class GameStatus implements Serializable{
 
         this.islandsId = islandsId;
         this.owners = owners;
-        this. numTowers = numTowers;
+        this.numTowers = numTowers;
         this.studentsOnIsland = studentsOnIsland;
         this.MN = MN;
         this.professorsOwners = professorsOwners;
