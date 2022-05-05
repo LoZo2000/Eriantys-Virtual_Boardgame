@@ -4,6 +4,7 @@ import it.polimi.ingsw.messages.AddMeMessage;
 import it.polimi.ingsw.messages.GameStatus;
 import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.view.GameReport;
 
 
 import java.io.*;
@@ -45,6 +46,15 @@ public class Connection extends Observable<Message> implements Runnable {
         try {
             objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(GS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void send(GameReport gr){
+        try {
+            objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(gr);
         }catch (Exception e){
             e.printStackTrace();
         }

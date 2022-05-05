@@ -5,7 +5,7 @@ import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.server.Observable;
 import it.polimi.ingsw.server.Observer;
 
-public abstract class View extends Observable<Message> implements Observer<GameStatus> {
+public abstract class View extends Observable<Message> implements Observer<GameReport> {
 
     protected View(){}
 
@@ -14,9 +14,10 @@ public abstract class View extends Observable<Message> implements Observer<GameS
     }
 
     protected abstract void showModel(GameStatus GS);
+    protected abstract void showModel(GameReport gr);
 
     @Override
-    public void update(GameStatus GS) {
-        showModel(GS);
+    public void update(GameReport gr) {
+        showModel(gr);
     }
 }

@@ -37,4 +37,12 @@ public class RemoteView extends View {
             connection.send(GS);
         }
     }
+
+    @Override
+    protected void showModel(GameReport gr) {
+        if(gr.getNamePlayer().equals(owner)){
+            System.out.println("Sending something to the client through "+connection);
+            connection.send(gr);
+        }
+    }
 }

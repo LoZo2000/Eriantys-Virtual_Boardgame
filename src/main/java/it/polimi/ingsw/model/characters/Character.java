@@ -6,6 +6,8 @@ import it.polimi.ingsw.model.rules.Rule;
 
 import java.io.Serializable;
 
+import static org.fusesource.jansi.Ansi.*;
+
 public abstract class Character implements Serializable {
     private final int id;
     private final String desc;
@@ -38,6 +40,12 @@ public abstract class Character implements Serializable {
     }
 
     public abstract Rule usePower(Player player) throws NotEnoughMoneyException;
+
+    public String shortString(){
+        String s = ansi().bold().a("Desc: ").reset().a(desc + "\n").toString();
+        s += ansi().bold().a("Cost: ").reset().a(getCost()).toString();
+        return s;
+    }
 
     @Override
     public String toString(){

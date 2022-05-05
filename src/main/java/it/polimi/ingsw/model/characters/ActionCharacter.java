@@ -2,11 +2,12 @@ package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Student;
 import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
 import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import it.polimi.ingsw.model.rules.ActionRule;
 import it.polimi.ingsw.model.rules.Rule;
+
+import static org.fusesource.jansi.Ansi.*;
 
 public class ActionCharacter extends Character{
     private final Action type;
@@ -53,6 +54,13 @@ public class ActionCharacter extends Character{
         this.increaseTimesUsed();
 
         return new ActionRule();
+    }
+
+    @Override
+    public String shortString(){
+        String s = super.shortString();
+        s += ansi().a(" - ").bold().a("Tokens: ").reset().a(numTokens).toString();
+        return s;
     }
 
     @Override

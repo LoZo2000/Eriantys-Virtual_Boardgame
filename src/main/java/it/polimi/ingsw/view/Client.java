@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characters.Character;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.fusesource.jansi.WindowsSupport;
 
 import java.io.*;
 import java.net.Socket;
@@ -27,10 +28,13 @@ public class Client {
     private final Map<Action, String> movesDescription;
     private int activeCard = -1;
     private Action requestedAction = null;
+    private GameReport gameReport;
+    private boolean detailedVisual;
 
     public Client(String ip, int port){
         this.ip = ip;
         this.port = port;
+        this.detailedVisual = false;
 
         movesDescription = new HashMap<>();
         movesDescription.put(Action.MOVESTUDENT, "to move a students from the CARD to the CANTEEN of the player or an ISLAND, depending on the active card.");
@@ -49,9 +53,9 @@ public class Client {
         ObjectInputStream objectInputStream;
         OutputStream outputStream = socket.getOutputStream();
         ObjectOutputStream objectOutputStream = null;
-        GameStatus gameStatus;
+        GameReport report;
 
-        //AnsiConsole.systemInstall();
+        AnsiConsole.systemInstall();
 
         activeCard = -1;
 
@@ -62,9 +66,10 @@ public class Client {
             objectOutputStream.writeObject(message);
             do {
                 objectInputStream = new ObjectInputStream(inputStream);
-                gameStatus = (GameStatus) objectInputStream.readObject();
-                showBoard(gameStatus);
-            }while(gameStatus.getEnemiesNames()==null || gameStatus.getEnemiesNames().size()+1<numPlayers || gameStatus.getTurnOf() == null ||!gameStatus.getTurnOf().equals(nickname));
+                report = (GameReport) objectInputStream.readObject();
+                showBoard(report);
+                gameReport = report;
+            }while(report.getTurnOf() == null || !report.getTurnOf().equals(nickname));
 
             while (true) {
                 message = getInput();
@@ -73,15 +78,19 @@ public class Client {
                     objectOutputStream.writeObject(message);
                     do {
                         objectInputStream = new ObjectInputStream(inputStream);
-                        gameStatus = (GameStatus) objectInputStream.readObject();
-                        showBoard(gameStatus);
-                        //activeCard = gameStatus.getActiveCard();
+                        report = (GameReport) objectInputStream.readObject();
+                        showBoard(report);
+
+                        if(report.getError() == null)
+                            gameReport = report;
+
+                        activeCard = report.getActiveCard();
                         if(activeCard != -1){
-                            //requestedAction = gameStatus.getRequestedAction();
+                            requestedAction = report.getRequestedAction();
                         } else{
                             requestedAction = null;
                         }
-                    }while(!gameStatus.getTurnOf().equals(nickname));
+                    }while(!report.getTurnOf().equals(nickname));
                 }
             }
         } catch(Exception e){
@@ -98,10 +107,8 @@ public class Client {
     }
 
     private Message getInputStart(){
-        //boolean completeRules;
         /*System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         System.out.print(ansi().eraseScreen(Ansi.Erase.ALL).cursor(1,1));*/
-        boolean completeRules;
         System.out.println("Welcome in the magic world of Eriantys!\nPlease, insert your nickname:");
         nickname = stdin.nextLine();
         do {
@@ -134,9 +141,17 @@ public class Client {
 
             if(completeRules) {
                 System.out.println("\t-'5) USEPOWER' to select a character card and activate its power.");
+                if(!detailedVisual)
+                    System.out.println("\t-'6) DETAILED CARD INFO' to print the detailed information about the draw characters");
+                else
+                    System.out.println("\t-'6) CLOSE DETAILED CARD INFO' to return to normal view");
             }
         } else{
             System.out.println("\t-'1) "+requestedAction+"' "+movesDescription.get(requestedAction));
+            if(!detailedVisual)
+                System.out.println("\t-'6) DETAILED CARD INFO' to print the detailed information about the draw characters");
+            else
+                System.out.println("\t-'6) CLOSE DETAILED CARD INFO' to return to normal view");
         }
         try {
             action = Integer.parseInt(stdin.nextLine());
@@ -218,97 +233,117 @@ public class Client {
                         System.out.println("You can't use characters card with simple rules");
                         return null;
                     }
+                case 6:
+                    if (completeRules) {
+                        if(detailedVisual)
+                            showBoard(gameReport);
+                        else
+                            showCardInfo();
+                        detailedVisual = !detailedVisual;
+                    } else {
+                        System.out.println("You can't use characters card with simple rules");
+                    }
+                    return null;
                 default:
                     System.out.println("Invalid action!");
                     return null;
             }
         } else{
-            switch(requestedAction){
-                case EXCHANGESTUDENT -> {
-                    System.out.print("Which student do you want to move? (studentId) ");
-                    try {
-                        studentId = Integer.parseInt(stdin.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
-                        return null;
-                    }
+            if(action == 1) {
+                switch (requestedAction) {
+                    case EXCHANGESTUDENT -> {
+                        System.out.print("Which student do you want to move? (studentId) ");
+                        try {
+                            studentId = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
 
-                    System.out.println("Where is the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
-                    try {
-                        lo = Integer.parseInt(stdin.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
-                        return null;
-                    }
-                    departureType = getLocation(lo);
-                    departureId = getLocationId(departureType);
+                        System.out.println("Where is the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
+                        try {
+                            lo = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
+                        departureType = getLocation(lo);
+                        departureId = getLocationId(departureType);
 
-                    System.out.println("Which is the other student do you want to move? (studentId) ");
-                    try {
-                        studentId2 = Integer.parseInt(stdin.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
-                        return null;
-                    }
+                        System.out.println("Which is the other student do you want to move? (studentId) ");
+                        try {
+                            studentId2 = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
 
-                    System.out.println("Where is the this second student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
-                    try {
-                        lo = Integer.parseInt(stdin.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
-                        return null;
-                    }
-                    arrivalType = getLocation(lo);
-                    arrivalId = getLocationId(arrivalType);
+                        System.out.println("Where is the this second student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
+                        try {
+                            lo = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
+                        arrivalType = getLocation(lo);
+                        arrivalId = getLocationId(arrivalType);
 
-                    return new ExchangeStudentMessage(nickname, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
+                        return new ExchangeStudentMessage(nickname, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
+                    }
+                    case ISLAND_INFLUENCE -> {
+                        System.out.println("Choose island: (islandId)");
+                        try {
+                            arrivalId = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
+                        return new IslandInfluenceMessage(nickname, arrivalId);
+                    }
+                    case BLOCK_ISLAND -> {
+                        System.out.println("Choose island: (islandId)");
+                        try {
+                            arrivalId = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
+                        return new BlockIslandMessage(nickname, arrivalId);
+                    }
+                    case BLOCK_COLOR -> {
+                        System.out.println("Choose color: (Color)");
+                        String color = stdin.nextLine().toUpperCase();
+
+                        try {
+                            chosenColor = Color.valueOf(color);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("The inserted value isn't a valid color");
+                            return null;
+                        }
+
+                        return new BlockColorMessage(nickname, chosenColor);
+                    }
+                    case PUT_BACK -> {
+                        System.out.println("Choose color: (Color)");
+                        String color = stdin.nextLine().toUpperCase();
+
+                        try {
+                            chosenColor = Color.valueOf(color);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("The inserted value isn't a valid color");
+                            return null;
+                        }
+
+                        return new PutBackMessage(nickname, chosenColor);
+                    }
                 }
-                case ISLAND_INFLUENCE -> {
-                    System.out.println("Choose island: (islandId)");
-                    try {
-                        arrivalId = Integer.parseInt(stdin.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
-                        return null;
-                    }
-                    return new IslandInfluenceMessage(nickname, arrivalId);
-                }
-                case BLOCK_ISLAND -> {
-                    System.out.println("Choose island: (islandId)");
-                    try {
-                        arrivalId = Integer.parseInt(stdin.nextLine());
-                    } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
-                        return null;
-                    }
-                    return new BlockIslandMessage(nickname, arrivalId);
-                }
-                case BLOCK_COLOR -> {
-                    System.out.println("Choose color: (Color)");
-                    String color = stdin.nextLine().toUpperCase();
-
-                    try {
-                        chosenColor = Color.valueOf(color);
-                    }catch (IllegalArgumentException e){
-                        System.out.println("The inserted value isn't a valid color");
-                        return null;
-                    }
-
-                    return new BlockColorMessage(nickname, chosenColor);
-                }
-                case PUT_BACK -> {
-                    System.out.println("Choose color: (Color)");
-                    String color = stdin.nextLine().toUpperCase();
-
-                    try {
-                        chosenColor = Color.valueOf(color);
-                    }catch (IllegalArgumentException e){
-                        System.out.println("The inserted value isn't a valid color");
-                        return null;
-                    }
-
-                    return new PutBackMessage(nickname, chosenColor);
-                }
+            } else if(action == 2) {
+                if(detailedVisual)
+                    showBoard(gameReport);
+                else
+                    showCardInfo();
+                detailedVisual = !detailedVisual;
+                return null;
             }
         }
 
@@ -358,105 +393,6 @@ public class Client {
         return id;
     }
 
-    public void showBoard(Game game){
-        //clearConsole();
-        /*System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        System.out.print(ansi().eraseScreen(Ansi.Erase.ALL).cursor(1,1));*/
-
-        Columns col = new Columns();
-
-        col.addColumn(1,"\n\u001B[31;1mCURRENT BOARD:\u001B[0m");
-        col.addColumn(2,"");
-        col.addColumn(1,"ISLANDS:");
-        col.addColumn(2,"");
-        LinkedList<Island> islands = game.getAllIslands();
-        boolean leftRight = true;
-        for(Island i : islands){
-            String owner = "nobody";
-            if(i.getOwner() != null){
-                owner = String.valueOf(i.getOwner());
-            }
-            String islandString = "";
-            islandString += "    Island "+i+", Owner "+owner+", Towers x"+i.getReport().getTowerNumbers()+", Students: ";
-            ArrayList<Student> students = i.getAllStudents();
-            for(Student s : students) islandString += s+" ";
-            if(game.getMotherNaturePosition().equals(i)) islandString += "MN";
-            if(i.getProhibition()) islandString += "\u001B[31mBLOCK\u001B[0m";
-
-            if(leftRight)
-                col.addColumn(1, islandString);
-            else
-                col.addColumn(2, islandString);
-
-            leftRight = !leftRight;
-        }
-        Map<Color, Player> professors = game.getProfessors();
-        String profs = "\nProfessors: ";
-        for(Color co : Color.values()) profs += co+": "+professors.get(co)+", ";
-        col.addColumn(1, profs);
-        ArrayList<Player> players = game.getAllPlayers();
-        col.addColumn(1, "\nClouds:");
-        for(int i=0; i<game.getNumberOfClouds(); i++){
-            String cloudString = "";
-            cloudString += "    Cloud "+i+": ";
-            for(Color co : Color.values()) cloudString += co+"="+game.getNumberOfStudentPerColorOnCloud(i,co)+", ";
-            col.addColumn(1, cloudString);
-        }
-        col.addColumn(1, "\n");
-        for(Player p : players){
-            String playerString = "";
-            playerString += "\u001B[1mDASHBOARD of "+p+"\u001B[0m (color "+p.getDashboard().getColor()+"):\n";
-            if(p.getNickname().equals(nickname)){
-                playerString += "    Available cards: \n";
-                ArrayList<Card> cards = p.getHand().getAllCards();
-                for(Card ca : cards) playerString += ca+" ";
-                playerString += "\n";
-            }
-            playerString += "    Last card played: "+p.getDashboard().getGraveyard() + "\n";
-            playerString += "    Entrance: ";
-            ArrayList<Student> students = p.getDashboard().getEntrance().getAllStudents();
-            for(Student s : students) playerString += s+" ";
-            playerString += "\n\u001B[1m\u001B[37mCANTEEN: \u001B[0m\n";
-            for (Color colo : Color.values()) {
-                playerString += "    \u001B[1m"+colo + "\u001B[0m: " + p.getDashboard().getCanteen().getStudents(colo) + " (Num: " + p.getDashboard().getCanteen().getNumberStudentColor(colo) +")\n";
-            }
-            if(completeRules)
-                playerString +="\n    Coins: " + p.getCoins();
-            playerString += "\n";
-            col.addColumn(1, playerString);
-        }
-        if(completeRules){
-            String cardsString = "";
-            Character[] characters = game.getCharactersCards();
-            cardsString += "\nCARDS: \n";
-            for (Character c : characters) {
-                cardsString += c.toString() + "\n";
-            }
-
-            if (game.getActiveCard() == -1) {
-                cardsString += "\u001B[31mNo active card\u001B[0m\n";
-            } else {
-                cardsString += "\u001B[34mThe active card is " + game.getActiveCard() + "\u001B[0m\n";
-                try {
-                    cardsString += "\u001B[34mThe nextAction is " + game.getRequestedAction() + "\u001B[0m\n";
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            col.addColumn(2, cardsString);
-        }
-
-        col.printAll();
-
-        if(game.getCurrentPlayer()==null){
-            System.out.println("Waiting for other players...");
-        }
-        else{
-            System.out.println("Turn of: "+game.getCurrentPlayer());
-            System.out.println("Phase: "+game.getCurrentPhase());
-        }
-    }
-
     public void showBoard(GameStatus gameStatus){
         if(!gameStatus.getError().equals("")) System.out.println("\n\nFORBIDDEN MOVE: "+gameStatus.getError()+"\nInsert a new legal move...");
         else{
@@ -502,7 +438,7 @@ public class Client {
                     System.out.print("\u001B[32mGREEN: "+gameStatus.getEnemiesEntrances().get(i).get(3)+"\u001B[0m\t");
                     System.out.print("\u001B[35mPINK: "+gameStatus.getEnemiesEntrances().get(i).get(4)+"\u001B[0m\n");
                     System.out.print("Canteen:\t");
-                    System.out.print("\u001B[34mBLUE: "+gameStatus.getEnemiesCanteen().get(i).get(0)+"/10\u001B[0m\t");
+                System.out.print("\u001B[34mBLUE: "+gameStatus.getEnemiesCanteen().get(i).get(0)+"/10\u001B[0m\t");
                     System.out.print("\u001B[33mYELLOW: "+gameStatus.getEnemiesCanteen().get(i).get(1)+"/10\u001B[0m\t");
                     System.out.print("\u001B[31mRED: "+gameStatus.getEnemiesCanteen().get(i).get(2)+"/10\u001B[0m\t");
                     System.out.print("\u001B[32mGREEN: "+gameStatus.getEnemiesCanteen().get(i).get(3)+"/10\u001B[0m\t");
@@ -521,6 +457,83 @@ public class Client {
             System.out.println("Current phase: "+gameStatus.getCurrentPhase());
             System.out.println("Current player: "+gameStatus.getTurnOf());
         }
+    }
+
+    public void showBoard(GameReport report){
+        if(report.getError() == null) {
+            Columns col = new Columns();
+            col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");
+            col.addColumn(1, report.getIslandsString());
+            col.addColumn(2, "\u001B[1;32mPROFESSORS\u001B[0m");
+            col.addColumn(2, report.getProfessorsString());
+
+            col.addColumn(2, "\u001B[1;36mCLOUDS\u001B[0m");
+            col.addColumn(2, report.getCloudsString());
+
+            col.addColumn(2, "\u001B[1;97mOPPONENTS\u001B[0m");
+            col.addColumn(2, report.getOpponentsString());
+
+            col.addColumn(1, report.getYourDashboardString());
+
+            if (completeRules) {
+                col.addColumn(2, "\u001B[1;92mCARDS SHORT INFO\u001B[0m \n");
+                col.addColumn(2, report.getShortCharacters());
+
+                col.addColumn(2, "\u001B[1;91mCurrent Rule: \u001B[0m " + report.getActiveRule() + "\n");
+            }
+            col.printAll();
+            System.out.println("Current phase: "+report.getCurrentPhase());
+            System.out.println("Current player: "+report.getTurnOf());
+        } else if(gameReport != null){
+            Columns col = new Columns();
+            col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");
+            col.addColumn(1, gameReport.getIslandsString());
+            col.addColumn(2, "\u001B[1;32mPROFESSORS\u001B[0m");
+            col.addColumn(2, gameReport.getProfessorsString());
+
+            col.addColumn(2, "\u001B[1;36mCLOUDS\u001B[0m");
+            col.addColumn(2, gameReport.getCloudsString());
+
+            col.addColumn(2, "\u001B[1;97mOPPONENTS\u001B[0m");
+            col.addColumn(2, gameReport.getOpponentsString());
+
+            col.addColumn(1, gameReport.getYourDashboardString());
+
+            if (completeRules) {
+                col.addColumn(2, "\u001B[1;92mCARDS SHORT INFO\u001B[0m \n");
+                col.addColumn(2, gameReport.getShortCharacters());
+
+                col.addColumn(2, "\u001B[1;91mCurrent Rule: \u001B[0m " + gameReport.getActiveRule() + "\n");
+            }
+            col.printAll();
+
+            System.out.println("\n\nFORBIDDEN MOVE: "+report.getError()+"\nInsert a new legal move...");
+            System.out.println("Current phase: "+gameReport.getCurrentPhase());
+            System.out.println("Current player: "+gameReport.getTurnOf());
+        } else{
+            System.out.println(report.getError()+"\n");
+        }
+    }
+
+    public void showCardInfo(){
+        Columns col = new Columns();
+        col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");
+        col.addColumn(1, gameReport.getIslandsString());
+        col.addColumn(2, "\u001B[1;32mPROFESSORS\u001B[0m");
+        col.addColumn(2, gameReport.getProfessorsString());
+
+        col.addColumn(1, gameReport.getYourDashboardString());
+
+        if (completeRules) {
+            col.addColumn(2, "\u001B[1;92mCARDS DETAILED INFO\u001B[0m");
+            col.addColumn(2, gameReport.getCharacters());
+
+            col.addColumn(2, "\u001B[1;91mCurrent Rule: \u001B[0m " + gameReport.getActiveRule() + "\n");
+        }
+        col.printAll();
+
+        System.out.println("Current phase: "+gameReport.getCurrentPhase());
+        System.out.println("Current player: "+gameReport.getTurnOf());
     }
 
     private void clearConsole() {

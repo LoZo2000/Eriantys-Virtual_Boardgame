@@ -13,37 +13,6 @@ public class Island implements Movable {
     private int maxTowers;
     private ColorTower owner;
 
-    /*public Island(int id){
-        this.id = id;
-        students = new ArrayList<>();
-        maxTowers = 1;
-        prohibitionToken = false;
-        this.owner = null;
-    }
-
-    //Creator to merge two islands (in Game you still have to delete the 2 previous islands and move motherNature to this new created island!!!)
-    //The new id will be the id of the first island (FEEL FREE TO CHANGE IT)
-    public Island(Island i1, Island i2){
-        this(i1.id);
-        students.addAll(i1.students);
-        students.addAll(i2.students);
-        maxTowers = i1.maxTowers + i2.maxTowers;
-        owner = i1.owner;
-        prohibitionToken = i1.prohibitionToken || i2.prohibitionToken;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public boolean equals(Object o){
-        if(o instanceof Island){
-            if(((Island)o).getId()==id) return true;
-        }
-        return false;
-    }
-    */
-
     public Island(int id){
         //this.id = id;
         this.id = String.format("%02d", id);

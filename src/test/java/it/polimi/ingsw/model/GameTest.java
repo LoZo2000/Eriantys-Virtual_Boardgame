@@ -5,6 +5,8 @@ import it.polimi.ingsw.controller.Phase;
 import it.polimi.ingsw.model.exceptions.AlreadyPlayedCardException;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
+import it.polimi.ingsw.view.Columns;
+import it.polimi.ingsw.view.GameReport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -183,6 +185,23 @@ class GameTest {
 
             assertEquals(orderedId, this.game.getIsland(0).getId());
             assertFalse(this.game.getAllIslands().contains(new Island(11-cont)));
+
+            GameReport report = new GameReport(game, game.getPlayer("player1"));
+            Columns col = new Columns();
+            col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");
+            col.addColumn(1, report.getIslandsString());
+            col.addColumn(2, "\u001B[1;32mPROFESSORS\u001B[0m");
+            col.addColumn(2, report.getProfessorsString());
+
+            col.addColumn(2, "\u001B[1;36mCLOUDS\u001B[0m");
+            col.addColumn(2, report.getCloudsString());
+
+            col.addColumn(2, "\u001B[1;97mOPPONENTS\u001B[0m");
+            col.addColumn(2, report.getOpponentsString());
+
+            col.addColumn(1, report.getYourDashboardString());
+
+            col.printAll();
         }
 
         try {

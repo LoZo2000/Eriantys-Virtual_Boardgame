@@ -13,12 +13,15 @@ import it.polimi.ingsw.model.rules.DefaultRule;
 import it.polimi.ingsw.model.rules.InfluenceRule;
 import it.polimi.ingsw.model.rules.Rule;
 import it.polimi.ingsw.server.Observable;
+import it.polimi.ingsw.view.Columns;
+import it.polimi.ingsw.view.GameReport;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
 
-public class Game extends Observable<GameStatus> {
+public class Game extends Observable<GameReport> {
     private MotherNature motherNature;
     private LinkedList <Island> islands = new LinkedList<>();
     private Cloud[] clouds;
@@ -164,6 +167,10 @@ public class Game extends Observable<GameStatus> {
         Player newPlayer = new Player(nickname, numPlayers, color, entranceStudents);
 
         players.add(newPlayer);
+
+        if(players.size() < numPlayers){
+            sendErrorNote(nickname, "Waiting for other players...", null);
+        }
 
         //AddPlayer has worked: update all the clients!
         //for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
@@ -698,7 +705,7 @@ public class Game extends Observable<GameStatus> {
         //}
     }
 
-    private GameStatus getGameStatus(String owner) {
+    /*private GameStatus getGameStatus(String owner) {
         try {
 
             ColorTower myColor = getPlayer(owner).getColor();
@@ -816,14 +823,15 @@ public class Game extends Observable<GameStatus> {
         }catch(Exception e){
             return new GameStatus(owner, "Error occourred while retrieving game's status...", currentPlayer);
         }
-    }
+    }*/
 
     private void sendNotifyAll(){
-        for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
+        //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
+        for(Player p : getAllPlayers()) notify(new GameReport(this, p));
     }
 
     public void sendErrorNote(String mistaker, String error, String currentPlayer){
-        notify(new GameStatus(mistaker, error, currentPlayer));
+        notify(new GameReport(mistaker, error, currentPlayer));
     }
 
     public boolean getCompleteRules(){

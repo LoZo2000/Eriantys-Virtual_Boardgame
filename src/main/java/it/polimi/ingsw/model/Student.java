@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import java.io.Serializable;
+import static org.fusesource.jansi.Ansi.*;
 
 public class Student implements Serializable {
     private final int id;
@@ -26,14 +27,15 @@ public class Student implements Serializable {
     }
 
     public String toString(){
-        String c = "";
+        /*String c = "";
         switch (color){
             case BLUE -> c = "\u001B[34m";
             case YELLOW -> c = "\u001B[33m";
             case RED -> c = "\u001B[31m";
             case GREEN -> c = "\u001B[32m";
-            case PINK -> c = "\u001B[35m";
+            case PINK -> c = "\u001B[95m";
         }
-        return c+String.valueOf(id)+"\u001B[0m";
+        return c+String.valueOf(id)+"\u001B[0m";*/
+        return ansi().fgBright(color.ansiColor).a(id).reset().toString();
     }
 }

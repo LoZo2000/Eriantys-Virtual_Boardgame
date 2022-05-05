@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static org.fusesource.jansi.Ansi.*;
+
 class CharactersTest {
 
     @Test
@@ -25,11 +27,15 @@ class CharactersTest {
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 5"), "The ID is 5");
         assertEquals(5, character.getId());
         assertTrue(character.toString().contains("\u001B[1mType:\u001B[0m " + CharacterType.ACTION), "It's an Action Character");
-        assertTrue(character.toString().contains("\u001B[1mCost:\u001B[0m 2"), "It's costs 2 Coins");
+        assertTrue(character.toString().contains("\u001B[1mCost:\u001B[0m 2"), "It costs 2 Coins");
+
+        assertTrue(character.shortString().contains(ansi().bold().a("Cost: ").reset().a(2).toString()), "It costs 2 Coins");
 
         //Action Parameters
         assertTrue(character.toString().contains("\u001B[1mActionType:\u001B[0m " + Action.BLOCK_ISLAND), "It blocks an island when used");
         assertTrue(character.toString().contains("\u001B[1mMaxNumTokens:\u001B[0m 4"), "It has 4 tokens on it");
+
+        assertTrue(character.shortString().contains(ansi().bold().a("Tokens: ").reset().a(4).toString()), "It has 4 tokens on it");
 
         //Test Methods
         assertEquals(Action.BLOCK_ISLAND, character.getType());
@@ -149,6 +155,8 @@ class CharactersTest {
         assertTrue(character.toString().contains("\u001B[1mNeeds Refill?\u001B[0m true"), "The card needs students refill");
         assertTrue(character.toString().contains("\u001B[1mAllowed Departures:\u001B[0m " + allowedDepartures), "The card permits movement only from CARD_ISLAND");
         assertTrue(character.toString().contains("\u001B[1mAllowed Arrivals:\u001B[0m " + allowedArrivals), "The card permits movement only to ISLAND");
+
+        assertTrue(character.shortString().contains(ansi().bold().a("Students: ").reset().a(students).toString()));
 
         //Check Values
         assertEquals(Action.MOVESTUDENT, character.getType(), "Allows only movement of students");

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Columns {
     }
 
     public void addColumn(int numberColumn, String stringToInsert){
-        int maxLength = terminalDim / 2-2;
+        int maxLength = terminalDim / 2-3;
 
         List<String> strings = removeNewLines(stringToInsert);
 
@@ -30,13 +31,18 @@ public class Columns {
                     int i = 0;
                     int previousEnd = 0;
                     do {
+                        String toAdd;
                         int endString;
                         if((i + 1) * maxLength < length){
                             endString = getPreviousSpacePosition(string, (i + 1) * maxLength);
                         } else{
                             endString = string.length();
                         }
-                        l.add(string.substring(previousEnd, endString));
+                        toAdd = string.substring(previousEnd, endString).strip();
+                        if(i != 0){
+                            toAdd = "> " + toAdd;
+                        }
+                        l.add(toAdd);
                         previousEnd = endString+1;
                         i++;
                     } while (i * maxLength < length);
@@ -51,12 +57,17 @@ public class Columns {
                     int previousEnd = 0;
                     do {
                         int endString;
+                        String toAdd;
                         if((i + 1) * maxLength < length){
                             endString = getPreviousSpacePosition(string, (i + 1) * maxLength);
                         } else{
                             endString = string.length();
                         }
-                        l.add(string.substring(previousEnd, endString));
+                        toAdd = string.substring(previousEnd, endString).strip();
+                        if(i != 0){
+                            toAdd = "> " + toAdd;
+                        }
+                        l.add(toAdd);
                         previousEnd = endString;
                         i++;
                     } while (i * maxLength < length);
@@ -71,7 +82,8 @@ public class Columns {
     }
 
     public void printAll(){
-        int maxLength = terminalDim / 2 - 2;
+        System.out.println(Ansi.ansi().eraseScreen().toString());
+        int maxLength = terminalDim / 2 - 3;
         int maxSize = Math.max(col1.size(), col2.size());
 
         for(int i=0; i<maxSize; i++){

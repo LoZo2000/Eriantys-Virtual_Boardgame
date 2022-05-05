@@ -9,6 +9,8 @@ import it.polimi.ingsw.model.*;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 public class MovementCharacter extends ActionCharacter implements Movable {
     private final Location locationType;
     private final boolean refill;
@@ -66,6 +68,13 @@ public class MovementCharacter extends ActionCharacter implements Movable {
         this.students.remove(positionInList);
 
         return removedStudent;
+    }
+
+    @Override
+    public String shortString(){
+        String s = super.shortString();
+        s += ansi().a(" - ").bold().a("Students: ").reset().a(students).toString();
+        return s;
     }
 
     @Override
