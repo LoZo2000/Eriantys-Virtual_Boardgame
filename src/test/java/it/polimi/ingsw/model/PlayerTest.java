@@ -88,7 +88,7 @@ public class PlayerTest {
 
     @Test
     public void toStringTest(){
-        System.out.println("The player is "+player);
+        assertEquals("player1", player.toString());
     }
 
     private Player newPlayer(String name, int numPlayer, ColorTower color){

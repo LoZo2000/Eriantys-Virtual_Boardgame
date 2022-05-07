@@ -46,17 +46,7 @@ public class BagTest{
         }
         assertEquals(0, bag.getStudentsNum());
 
-        try{
-            Student s = bag.getRandomStudent();
-            fail();
-        } catch (NoMoreStudentsException e) {
-            e.printStackTrace();
-        }
-        try{
-            bag.getRandomStudent(2);
-            fail();
-        } catch (NoMoreStudentsException e) {
-            e.printStackTrace();
-        }
+        assertThrows(NoMoreStudentsException.class, () -> bag.getRandomStudent());
+        assertThrows(NoMoreStudentsException.class, () -> bag.getRandomStudent(2));
     }
 }

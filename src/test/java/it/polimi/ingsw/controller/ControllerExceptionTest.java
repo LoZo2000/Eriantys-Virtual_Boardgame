@@ -4,36 +4,18 @@ import it.polimi.ingsw.controller.exceptions.IllegalActionException;
 import it.polimi.ingsw.controller.exceptions.IllegalMessageException;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ControllerExceptionTest {
 
     @Test
     public void testAllExceptions(){
-        try{
-            testIllegalActionException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testIllegalActionException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testIllegalMessageException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testIllegalMessageException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        assertThrows(IllegalActionException.class, () -> testIllegalActionException(true));
+        assertThrows(IllegalActionException.class, () -> testIllegalActionException(false));
+
+        assertThrows(IllegalMessageException.class, () -> testIllegalMessageException(true));
+        assertThrows(IllegalMessageException.class, () -> testIllegalMessageException(false));
     }
 
     private void testIllegalActionException(boolean withString) throws IllegalActionException {

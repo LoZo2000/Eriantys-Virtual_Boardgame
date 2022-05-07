@@ -1,10 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.EndGameException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.controller.Phase;
-import it.polimi.ingsw.model.exceptions.AlreadyPlayedCardException;
-import it.polimi.ingsw.model.exceptions.IllegalMoveException;
-import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 import it.polimi.ingsw.view.Columns;
 import it.polimi.ingsw.view.GameReport;
 import org.junit.jupiter.api.BeforeEach;
@@ -185,23 +182,6 @@ class GameTest {
 
             assertEquals(orderedId, this.game.getIsland(0).getId());
             assertFalse(this.game.getAllIslands().contains(new Island(11-cont)));
-
-            GameReport report = new GameReport(game, game.getPlayer("player1"));
-            Columns col = new Columns();
-            col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");
-            col.addColumn(1, report.getIslandsString());
-            col.addColumn(2, "\u001B[1;32mPROFESSORS\u001B[0m");
-            col.addColumn(2, report.getProfessorsString());
-
-            col.addColumn(2, "\u001B[1;36mCLOUDS\u001B[0m");
-            col.addColumn(2, report.getCloudsString());
-
-            col.addColumn(2, "\u001B[1;97mOPPONENTS\u001B[0m");
-            col.addColumn(2, report.getOpponentsString());
-
-            col.addColumn(1, report.getYourDashboardString());
-
-            col.printAll();
         }
 
         try {
@@ -328,18 +308,9 @@ class GameTest {
         assertEquals(2, game.getAllPlayers().size());
         assertEquals(2, game.getAllClouds().length);
         //Try to get islands or players that don't exist:
-        try{
-            game.getIsland(13);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            game.getPlayer("brooo");
-            fail();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        assertThrows(NoIslandException.class, () -> game.getIsland(13));
+
+        assertThrows(NoPlayerException.class, () -> game.getPlayer("ThisPlayerDoesn'tExist"));
         game.resetPlayedCards();
     }
 
@@ -354,14 +325,11 @@ class GameTest {
         }
 
         game = new Game(false, 5);
-        game = new Game(false, 3);
-        for(int i=0; i<20; i++) game.addPlayer("bro1", ColorTower.WHITE);
-        try{
-            game.moveStudent(3045, game.getIsland(0), game.getIsland(1));
-            fail();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
+        game = new Game(false, 2);
+        for(int i=0; i<17; i++) game.addPlayer("bro1", ColorTower.WHITE);
+
+        assertThrows(NoSuchStudentException.class, () -> game.moveStudent(3045, game.getIsland(0), game.getIsland(1)));
     }
 
     @RepeatedTest(100)

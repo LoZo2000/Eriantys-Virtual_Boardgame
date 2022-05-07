@@ -256,7 +256,7 @@ public class GameHandler {
             e.printStackTrace();
         }
     }
-    private ColorTower getWinner(){
+    /*private ColorTower getWinner(){
         int black=0;
         int white=0;
         int grey=0;
@@ -273,5 +273,5 @@ public class GameHandler {
         if(black>=white && black>=grey) return ColorTower.BLACK;
         if(white>=black && white>=grey) return ColorTower.WHITE;
         return ColorTower.GREY;
-    }
+    }*/
 }

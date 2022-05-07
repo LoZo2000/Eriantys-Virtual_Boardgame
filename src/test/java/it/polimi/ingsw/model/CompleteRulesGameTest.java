@@ -673,11 +673,11 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
 
         i = this.game.getIsland(4);
-        try {
+        /*try {
             this.game.disableIsland(i);
         } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+            fail();
+        }*/
 
         this.game.moveStudent(19, i, e);
         this.game.moveStudent(20, i, e);
@@ -743,7 +743,7 @@ class CompleteRulesGameTest {
         try {
             this.game.disableColor(p2, Color.BLUE);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            fail();
         }
 
         try {

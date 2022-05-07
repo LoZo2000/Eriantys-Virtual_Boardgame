@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.Entrance;
 import it.polimi.ingsw.model.Student;
+import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,9 +39,9 @@ public class EntranceTest {
     @Test
     public void getStudentsTest(){
         ArrayList<Student> students = entrance.getAllStudents();
-        for(Student s : students){
+        /*for(Student s : students){
             System.out.println(s.getId() + ", " + s.getColor());
-        }
+        }*/
 
         for(int i = 0; i<students.size(); i++){
             Student temp = new Student(i, Color.RED);
@@ -60,12 +61,7 @@ public class EntranceTest {
         assertEquals(6, entrance.getAllStudents().size());
         entrance.addStudent(new Student(8, Color.PINK));
         assertEquals(7, entrance.getAllStudents().size());
-        try{
-            entrance.removeStudent(0);
-            fail();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        assertThrows(NoSuchStudentException.class, () -> entrance.removeStudent(0));
         assertEquals(7, entrance.getAllStudents().size());
     }
 }

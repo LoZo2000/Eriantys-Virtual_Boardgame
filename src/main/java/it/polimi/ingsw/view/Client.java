@@ -4,10 +4,8 @@ import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.characters.Character;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import org.fusesource.jansi.WindowsSupport;
 
 import java.io.*;
 import java.net.Socket;
@@ -55,16 +53,18 @@ public class Client {
         ObjectOutputStream objectOutputStream = null;
         GameReport report;
 
-        AnsiConsole.systemInstall();
+        //AnsiConsole.systemInstall();
 
         activeCard = -1;
 
         stdin = new Scanner(System.in);
         try{
-            message = getInputStart();
-            objectOutputStream = new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(message);
             do {
+                if(gameReport == null || (gameReport.getError() != null && gameReport.getError().equals("This nickname is already taken"))) {
+                    message = getInputStart();
+                    objectOutputStream = new ObjectOutputStream(outputStream);
+                    objectOutputStream.writeObject(message);
+                }
                 objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
                 showBoard(report);
@@ -107,8 +107,7 @@ public class Client {
     }
 
     private Message getInputStart(){
-        /*System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        System.out.print(ansi().eraseScreen(Ansi.Erase.ALL).cursor(1,1));*/
+        System.out.println(Ansi.ansi().eraseScreen().toString());
         System.out.println("Welcome in the magic world of Eriantys!\nPlease, insert your nickname:");
         nickname = stdin.nextLine();
         do {
@@ -149,9 +148,9 @@ public class Client {
         } else{
             System.out.println("\t-'1) "+requestedAction+"' "+movesDescription.get(requestedAction));
             if(!detailedVisual)
-                System.out.println("\t-'6) DETAILED CARD INFO' to print the detailed information about the draw characters");
+                System.out.println("\t-'2) DETAILED CARD INFO' to print the detailed information about the draw characters");
             else
-                System.out.println("\t-'6) CLOSE DETAILED CARD INFO' to return to normal view");
+                System.out.println("\t-'2) CLOSE DETAILED CARD INFO' to return to normal view");
         }
         try {
             action = Integer.parseInt(stdin.nextLine());
@@ -511,7 +510,7 @@ public class Client {
             System.out.println("Current phase: "+gameReport.getCurrentPhase());
             System.out.println("Current player: "+gameReport.getTurnOf());
         } else{
-            System.out.println(report.getError()+"\n");
+            System.err.println(report.getError()+"\n");
         }
     }
 

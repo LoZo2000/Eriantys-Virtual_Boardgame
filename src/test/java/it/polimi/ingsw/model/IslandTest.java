@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,12 +50,7 @@ public class IslandTest {
         }catch(Exception e){
             fail();
         }
-        try{
-            Student s = island.removeStudent(0);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        assertThrows(NoSuchStudentException.class, () -> island.removeStudent(0));
     }
 
     @Test
@@ -95,7 +91,7 @@ public class IslandTest {
 
     @Test
     public void toStringTest(){
-        System.out.println("The id of the island is "+island);
+        assertEquals("00", island.toString());
     }
 
     @Test

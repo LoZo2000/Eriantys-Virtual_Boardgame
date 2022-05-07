@@ -3,228 +3,66 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ModelExceptionTest {
 
     @Test
     public void testAllExceptions(){
-        try{
-            testAlreadyPlayedCardException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testAlreadyPlayedCardException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testCannotJoinException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testCannotJoinException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testEndGameException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testEndGameException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testIllegalMoveException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testIllegalMoveException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoActiveCardException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoActiveCardException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoCharacterSelectedException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoCharacterSelectedException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoContiguousIslandException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoContiguousIslandException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoIslandException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoIslandException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoMoreStudentsException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoMoreStudentsException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoMoreTokensException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoMoreTokensException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoPlayerException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoPlayerException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoSuchStudentException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNoSuchStudentException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNotEnoughMoneyException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNotEnoughMoneyException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNotYourTurn(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testNotYourTurn(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testOverflowCardException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testOverflowCardException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testStillStudentException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testStillStudentException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testTooManyStudentsException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testTooManyStudentsException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testUnrecognizedPlayerOrActionException(true);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        try{
-            testUnrecognizedPlayerOrActionException(false);
-            fail();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        assertThrows(AlreadyPlayedCardException.class, () -> testAlreadyPlayedCardException(true));
+        assertThrows(AlreadyPlayedCardException.class, () -> testAlreadyPlayedCardException(false));
+
+        assertThrows(CannotJoinException.class, () -> testCannotJoinException(true));
+        assertThrows(CannotJoinException.class, () -> testCannotJoinException(false));
+
+        assertThrows(EndGameException.class, () -> testEndGameException(true));
+        assertThrows(EndGameException.class, () -> testEndGameException(false));
+
+        assertThrows(IllegalMoveException.class, () -> testIllegalMoveException(true));
+        assertThrows(IllegalMoveException.class, () -> testIllegalMoveException(false));
+
+        assertThrows(NoActiveCardException.class, () -> testNoActiveCardException(true));
+        assertThrows(NoActiveCardException.class, () -> testNoActiveCardException(false));
+
+        assertThrows(NoCharacterSelectedException.class, () -> testNoCharacterSelectedException(true));
+        assertThrows(NoCharacterSelectedException.class, () -> testNoCharacterSelectedException(false));
+
+        assertThrows(NoContiguousIslandException.class, () -> testNoContiguousIslandException(true));
+        assertThrows(NoContiguousIslandException.class, () -> testNoContiguousIslandException(false));
+
+        assertThrows(NoIslandException.class, () -> testNoIslandException(true));
+        assertThrows(NoIslandException.class, () -> testNoIslandException(false));
+
+        assertThrows(NoMoreStudentsException.class, () -> testNoMoreStudentsException(true));
+        assertThrows(NoMoreStudentsException.class, () -> testNoMoreStudentsException(false));
+
+        assertThrows(NoMoreTokensException.class, () -> testNoMoreTokensException(true));
+        assertThrows(NoMoreTokensException.class, () -> testNoMoreTokensException(false));
+
+        assertThrows(NoPlayerException.class, () -> testNoPlayerException(true));
+        assertThrows(NoPlayerException.class, () -> testNoPlayerException(false));
+
+        assertThrows(NoSuchStudentException.class, () -> testNoSuchStudentException(true));
+        assertThrows(NoSuchStudentException.class, () -> testNoSuchStudentException(false));
+
+        assertThrows(NotEnoughMoneyException.class, () -> testNotEnoughMoneyException(true));
+        assertThrows(NotEnoughMoneyException.class, () -> testNotEnoughMoneyException(false));
+
+        assertThrows(NotYourTurnException.class, () -> testNotYourTurn(true));
+        assertThrows(NotYourTurnException.class, () -> testNotYourTurn(false));
+
+        assertThrows(OverflowCardException.class, () -> testOverflowCardException(true));
+        assertThrows(OverflowCardException.class, () -> testOverflowCardException(false));
+
+        assertThrows(StillStudentException.class, () -> testStillStudentException(true));
+        assertThrows(StillStudentException.class, () -> testStillStudentException(false));
+
+        assertThrows(TooManyStudentsException.class, () -> testTooManyStudentsException(true));
+        assertThrows(TooManyStudentsException.class, () -> testTooManyStudentsException(false));
+
+        assertThrows(UnrecognizedPlayerOrActionException.class, () -> testUnrecognizedPlayerOrActionException(true));
+        assertThrows(UnrecognizedPlayerOrActionException.class, () -> testUnrecognizedPlayerOrActionException(false));
     }
 
     private void testCannotJoinException(boolean withString) throws CannotJoinException{

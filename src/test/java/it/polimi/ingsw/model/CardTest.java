@@ -33,6 +33,6 @@ public class CardTest{
     @Test
     public void toStringTest(){
         Card c1 = new Card(10, 5);
-        System.out.println("La carta ha "+c1);
+        assertEquals("(p:10, m:5)", c1.toString());
     }
 }

@@ -20,6 +20,7 @@ public class Server {
     private ExecutorService executor = Executors.newFixedThreadPool(128);
 
     private List<Connection> connections = new ArrayList<>();
+    private List<String> registeredNicknames;
 
 
     /*public synchronized void deliverMessage(Connection c, Message message) throws IllegalActionException {
@@ -34,12 +35,15 @@ public class Server {
     //Deregister connection
     public synchronized void deregisterConnection(Connection c){
         connections.remove(c);
+        this.registeredNicknames.remove(c.getNickname());
         c.closeConnection();
     }
 
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(PORT);
         this.gameMaker = new GameManager();
+
+        this.registeredNicknames = new ArrayList<>();
     }
 
     //To sort the players among matches availables according to their preferences
@@ -59,5 +63,13 @@ public class Server {
                 System.err.println("Connection error!");
             }
         }
+    }
+
+    public synchronized void registerNickname(String nickname){
+        this.registeredNicknames.add(nickname);
+    }
+
+    public synchronized boolean isNotValidNickname(String nickname){
+        return this.registeredNicknames.contains(nickname);
     }
 }

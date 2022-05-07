@@ -339,7 +339,7 @@ public class GameHandlerTest {
         assertTrue(gameHandler.getGame().getIsland(1).getAllStudents().contains(s));
         assertEquals(4, c.getStudents().size());
 
-        System.out.println("Card 1");
+        //System.out.println("Card 1");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -347,7 +347,7 @@ public class GameHandlerTest {
         Message message = new UsePowerMessage("player1", 0);
         gameHandler.execute(message);
 
-        System.out.println("Card 2");
+        //System.out.println("Card 2");
         assertEquals(ProfessorRule.class, gameHandler.getGame().getCurrentRule().getClass());
 
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
@@ -379,7 +379,7 @@ public class GameHandlerTest {
         assertEquals(motherNatureIsland, gameHandler.getGame().getMotherNaturePosition());
         assertEquals(ColorTower.BLACK, gameHandler.getGame().getIsland(1).getOwner());
 
-        System.out.println("Card 3");
+        //System.out.println("Card 3");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -389,7 +389,7 @@ public class GameHandlerTest {
         Message message = new UsePowerMessage("player1", 0);
         gameHandler.execute(message);
 
-        System.out.println("Card 4");
+        //System.out.println("Card 4");
         assertEquals(2, gameHandler.getGame().getMotherNatureExtraMovement());
         assertEquals(MotherNatureRule.class, gameHandler.getGame().getCurrentRule().getClass());
 
@@ -430,7 +430,7 @@ public class GameHandlerTest {
         gameHandler.getGame().moveMotherNature(i, true);
         assertEquals(ColorTower.BLACK, i.getOwner());
 
-        System.out.println("Card 5");
+        //System.out.println("Card 5");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -446,7 +446,7 @@ public class GameHandlerTest {
         assertEquals(ColorTower.BLACK, rule.getPlayerWhoUsed());
         assertNull(rule.getBlockedColor());
 
-        System.out.println("Card 6");
+        //System.out.println("Card 6");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -483,7 +483,7 @@ public class GameHandlerTest {
         assertTrue(c.getStudents().contains(s1));
         assertEquals(6, c.getStudents().size());
 
-        System.out.println("Card 7");
+        //System.out.println("Card 7");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -499,7 +499,7 @@ public class GameHandlerTest {
         assertEquals(ColorTower.BLACK, rule.getPlayerWhoUsed());
         assertNull(rule.getBlockedColor());
 
-        System.out.println("Card 8");
+        //System.out.println("Card 8");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -536,7 +536,7 @@ public class GameHandlerTest {
         assertEquals(i, gameHandler.getGame().getMotherNaturePosition());
         assertNull(i.getOwner());
 
-        System.out.println("Card 9");
+        //System.out.println("Card 9");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -580,7 +580,7 @@ public class GameHandlerTest {
         assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getCanteen().getStudents(s1.getColor()).contains(s1));
         assertEquals(0, c.getStudents().size());
 
-        System.out.println("Card 10");
+        //System.out.println("Card 10");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -612,7 +612,7 @@ public class GameHandlerTest {
         assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getCanteen().getStudents(s.getColor()).contains(s));
         assertEquals(4, c.getStudents().size());
 
-        System.out.println("Card 11");
+        //System.out.println("Card 11");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
@@ -649,7 +649,7 @@ public class GameHandlerTest {
         assertEquals(0, gameHandler.getGame().getPlayer("player1").getDashboard().getCanteen().getNumberStudentColor(Color.RED));
         assertEquals(0, gameHandler.getGame().getPlayer("player2").getDashboard().getCanteen().getNumberStudentColor(Color.RED));
 
-        System.out.println("Card 12");
+        //System.out.println("Card 12");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 }

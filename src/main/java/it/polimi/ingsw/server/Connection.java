@@ -84,11 +84,17 @@ public class Connection extends Observable<Message> implements Runnable {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             out = new PrintWriter(socket.getOutputStream());
-            objectInputStream = new ObjectInputStream(inputStream);
-            message = (Message) objectInputStream.readObject();
-            owner = message.getSender();
+            do {
+                objectInputStream = new ObjectInputStream(inputStream);
+                message = (Message) objectInputStream.readObject();
+                if (server.isNotValidNickname(message.getSender())) {
+                    send(new GameReport(null, "This nickname is already taken", null));
+                }
+            }while (server.isNotValidNickname(message.getSender()));
             server.lobby(this, (AddMeMessage) message);
             notify(message);
+            owner = message.getSender();
+            server.registerNickname(owner);
             while(isActive()){
                 objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
@@ -99,6 +105,10 @@ public class Connection extends Observable<Message> implements Runnable {
         } finally {
             close();
         }
+    }
+
+    public String getNickname(){
+        return owner;
     }
 
     public String toString(){

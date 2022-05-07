@@ -572,6 +572,8 @@ public class Game extends Observable<GameReport> {
 
         if(this.currentRule.isActionNeeded()){
             this.activeCard = card;
+        } else{
+            sendNotifyAll();
         }
 
         return this.currentRule.isActionNeeded();
