@@ -481,8 +481,15 @@ public class Client {
                 col.addColumn(2, "\u001B[1;91mCurrent Rule: \u001B[0m " + report.getActiveRule() + "\n");
             }
             col.printAll();
-            System.out.println("Current phase: "+report.getCurrentPhase());
-            System.out.println("Current player: "+report.getTurnOf());
+            if(report.getFinishedGame()==false){
+                System.out.println("Current phase: "+report.getCurrentPhase());
+                System.out.println("Current player: "+report.getTurnOf());
+            }
+            else{
+                System.out.println("The game is finished");
+                System.out.println("The winner is "+report.getWinner());
+            }
+
         } else if(gameReport != null){
             Columns col = new Columns();
             col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");

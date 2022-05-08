@@ -24,6 +24,8 @@ public class GameReport implements Serializable {
     private final int activeCard;
     private final Action requestedAction;
     private final String activeRule;
+    private final Boolean finished;
+    private final String winner;
 
     private final List<IslandReport> islands;
     private final List<CloudReport> clouds;
@@ -199,6 +201,8 @@ public class GameReport implements Serializable {
     public GameReport(String myId, String error, String turnOf){
         this.namePlayer = myId;
         this.error = error;
+        this.finished =false;
+        this.winner=null;
         this.turnOf = turnOf;
 
         this.activeRule = null;
@@ -214,8 +218,11 @@ public class GameReport implements Serializable {
         this.clouds = null;
     }
 
+
     public GameReport(Game game, Player owner){
         this.error = null;
+        this.finished =game.getFinishedGame();
+        this.winner=game.getWinner();
 
         islands = new ArrayList<>();
         professors = new HashMap<>();
@@ -419,5 +426,9 @@ public class GameReport implements Serializable {
     public String getError(){
         return error;
     }
+
+    public Boolean getFinishedGame(){ return this.finished;}
+
+    public String getWinner(){ return this.winner;}
 
 }

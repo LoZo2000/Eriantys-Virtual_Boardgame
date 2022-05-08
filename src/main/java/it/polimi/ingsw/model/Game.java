@@ -42,7 +42,7 @@ public class Game extends Observable<GameReport> {
     private int remainingMoves;
     private boolean usedCard;
     private boolean finishedGame = false;
-    private String winner;
+    private String winner=null;
 
     //Create game but no players are added;
     public Game(boolean completeRules, int numPlayers){
@@ -278,7 +278,10 @@ public class Game extends Observable<GameReport> {
                     if (p.getColor() == higherInfluence) {
                         p.getDashboard().removeTowers(report.getTowerNumbers());
                         if(p.getDashboard().getTowers()==0){
-                            throw new EndGameException();
+                            this.winner=p.getNickname();
+                            this.finishedGame=true;
+                            sendNotifyAll();
+                            //TODO notificare il gamehandler
                         }
                     }
                 }
@@ -331,6 +334,7 @@ public class Game extends Observable<GameReport> {
         motherNature.movement(temp);
         if(islands.size()<=3){
             throw new EndGameException();
+            //TODO implementare finire turno
         }
         return temp;
     }
@@ -458,6 +462,9 @@ public class Game extends Observable<GameReport> {
     public Phase getCurrentPhase(){
         return currentPhase;
     }
+    public Boolean getFinishedGame(){ return finishedGame;}
+
+    public String getWinner(){ return winner;}
 
     public void resetRemainingMoves(){
         this.remainingMoves = this.numPlayers==3 ? 4 : 3;
