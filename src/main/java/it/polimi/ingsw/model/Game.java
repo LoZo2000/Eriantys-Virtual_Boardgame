@@ -272,11 +272,17 @@ public class Game extends Observable<GameReport> {
                 island.conquest(higherInfluence);
                 //TODO Necesario passare per Team
                 for (Player p : this.players) {
+                    System.out.println("il giocatore "+p.getNickname()+"ha nella dashbord num torri"+ p.getDashboard().getTowers());
                     if (p.getColor() == report.getOwner()) {
                         p.getDashboard().addTowers(report.getTowerNumbers());
                     }
                     if (p.getColor() == higherInfluence) {
-                        p.getDashboard().removeTowers(report.getTowerNumbers());
+                        if(report.getOwner()==null){
+                            p.getDashboard().removeTowers(1);
+                        }
+                        else{
+                            p.getDashboard().removeTowers(report.getTowerNumbers());
+                        }
                         if(p.getDashboard().getTowers()==0){
                             this.winner=p.getNickname();
                             this.finishedGame=true;
