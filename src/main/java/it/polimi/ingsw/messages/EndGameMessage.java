@@ -12,7 +12,8 @@ public class EndGameMessage extends Message{
 
     @Override
     public Update execute(Game game) {
-        return null;
+        game.endGame();
+        return new Update(null, null, null, null, null, true, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
     }
 
 }

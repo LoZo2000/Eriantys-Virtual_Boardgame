@@ -51,13 +51,14 @@ public class MoveStudentMessage extends MovementMessage{
                 game.refillActiveCard();
         }catch( NoMoreStudentsException e){
             //throw new EndGameException("Game ended: the winner is "+getWinner());
+            game.setLastTurn(true);
         }
 
         if(game.getActiveCard() == -1) {
             game.reduceRemainingMoves();
         }
 
-        return new Update(null, null, game.getRemainingMoves(), null, usedCard, null);
+        return new Update(null, null, game.getRemainingMoves(), null, usedCard, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
     }
 
     public int getStudentId(){

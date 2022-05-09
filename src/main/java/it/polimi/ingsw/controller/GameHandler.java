@@ -22,6 +22,11 @@ public class GameHandler {
     private final Game game;
     private Map<Phase, ArrayList<Action>> legitAction;
     private int numFinishedTurn=0; //number of players that finished their turn
+
+    private boolean finishedGame=false;
+
+    private boolean isLastTurn= false;
+
     public Phase getPhase(){
         return currentPhase;
     }
@@ -68,6 +73,7 @@ public class GameHandler {
                 game.resetPlayedCards();
                 endTurn();
                 currentPhase=Phase.PRETURN;
+                if(isLastTurn) endGame();
                 numFinishedTurn=0;
                 game.setCurrentPhase(currentPhase);
             }
@@ -152,12 +158,13 @@ public class GameHandler {
 
     private void endGame(){
         currentPhase=Phase.ENDGAME;
-        Message endGameMessage = new EndGameMessage("handler", Action.ENDGAME);
+        game.setCurrentPhase(currentPhase);
+        Message endgame= new EndGameMessage("controller", Action.ENDGAME);
         try{
-            execute(endGameMessage);
+            execute(endgame);
         }
-        catch (Exception e){
-            e.printStackTrace();
+        catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
@@ -168,13 +175,24 @@ public class GameHandler {
     }
 
     public void execute(Message message) throws NotYourTurnException, IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, EndGameException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException {
-        if(!isLegitPlayer(message.getSender()))
+        if(!isLegitPlayer(message.getSender())) {
             throw new NotYourTurnException();
+        }
         if(!isLegitAction(message.getAction())) {
             throw new IllegalActionException();
         }
 
         Update update = message.execute(game);
+
+        update.getIsLastTurn().ifPresent(last -> this.isLastTurn=last);
+
+        update.getFinishedGame().ifPresent((finish) ->{
+            finishedGame=finish;
+            if(finishedGame){
+                currentPhase=Phase.ENDGAME;
+                game.setCurrentPhase(currentPhase);
+            }
+        } );
 
         update.getChangedNumPlayer().ifPresent((numPlayer) -> {
             this.addPlayers();
@@ -250,9 +268,9 @@ public class GameHandler {
         try {
             game.refillClouds();
         }catch(Exception e){
-            /*if(e instanceof NoMoreStudentsException){
-                throw new EndGameException("Game ended: the winner is "+getWinner());
-            }*/
+            if(e instanceof NoMoreStudentsException){
+                game.setLastTurn(true);
+            }
             e.printStackTrace();
         }
     }

@@ -32,7 +32,7 @@ public class BlockIslandMessage extends ChooseIslandMessage{
 
         game.disableIsland(i);
 
-        return new Update(null, null, null, null, false, null);
+        return new Update(null, null, null, null, false, null, null, null, null);
     }
 
 }

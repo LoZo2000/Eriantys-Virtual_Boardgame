@@ -29,6 +29,6 @@ public class IslandInfluenceMessage extends ChooseIslandMessage{
 
         game.moveMotherNature(i, false);
 
-        return new Update(null, null, null, null, false, null);
+        return new Update(null, null, null, null, false, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
     }
 }

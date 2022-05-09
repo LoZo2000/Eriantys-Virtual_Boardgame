@@ -33,7 +33,7 @@ public class MoveMotherNatureMessage extends Message{
         int newMTposition = (currentMNposition + movement) % numIslands;
         game.moveMotherNature(islands.get(newMTposition), true);
 
-        return new Update(null, null, null, null, null, true);
+        return new Update(null, null, null, null, null, true, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
     }
 
     public int getMovement(){

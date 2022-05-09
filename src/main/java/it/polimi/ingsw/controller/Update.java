@@ -10,13 +10,22 @@ public class Update {
     private final Boolean activatedCard;
     private final Boolean movedMotherNature;
 
-    public Update(Integer changedNumPlayer, Boolean playedCard, Integer numMovedStudents, Integer remainingClouds, Boolean activatedCard, Boolean movedMotherNature){
+    private final Boolean finishedGame;
+
+    private final String winner;
+
+    private final Boolean isLastTurn;
+
+    public Update(Integer changedNumPlayer, Boolean playedCard, Integer numMovedStudents, Integer remainingClouds, Boolean activatedCard, Boolean movedMotherNature, Boolean finishedGame, String winner, Boolean isLastTurn){
         this.changedNumPlayer = changedNumPlayer;
         this.playedCard = playedCard;
         this.numMovedStudents = numMovedStudents;
         this.remainingNumClouds = remainingClouds;
         this.activatedCard = activatedCard;
         this.movedMotherNature = movedMotherNature;
+        this.finishedGame = finishedGame;
+        this.winner = winner;
+        this.isLastTurn = isLastTurn;
     }
 
     public Optional<Integer> getChangedNumPlayer() {
@@ -42,4 +51,10 @@ public class Update {
     public Optional<Boolean> getMovedMotherNature(){
         return Optional.ofNullable(movedMotherNature);
     }
+
+    public Optional<Boolean> getFinishedGame(){ return Optional.ofNullable(finishedGame);}
+
+    public Optional<String> getWinner(){ return Optional.ofNullable(winner); }
+
+    public Optional<Boolean> getIsLastTurn(){ return Optional.ofNullable(isLastTurn); }
 }

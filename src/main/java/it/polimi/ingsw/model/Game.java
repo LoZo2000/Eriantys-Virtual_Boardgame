@@ -42,6 +42,8 @@ public class Game extends Observable<GameReport> {
     private int remainingMoves;
     private boolean usedCard;
     private boolean finishedGame = false;
+
+    private boolean isLastTurn = false;
     private String winner=null;
 
     //Create game but no players are added;
@@ -103,13 +105,10 @@ public class Game extends Observable<GameReport> {
         return clouds.length;
     }
 
-    public void endGame(ColorTower winner){
+    public void endGame(){
         finishedGame=true;
-        for(Player p : players){
-            if(p.getColor()==winner){
-                this.winner=p.getNickname();
-            }
-        }
+        winner=computeWinner();
+        sendNotifyAll();
     }
 
     private void initClouds(int numPlayers) throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
@@ -248,7 +247,7 @@ public class Game extends Observable<GameReport> {
     //When parameter enableMovement is true the method has the regular behaviour.
     //If enableMovement is false, it will be checked if there's an active card.
     //If not an Exception will be raised
-    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException, EndGameException, NoMoreTokensException {
+    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException, NoMoreTokensException {
         if(enableMovement)
             motherNature.movement(island);
         else{
@@ -284,10 +283,9 @@ public class Game extends Observable<GameReport> {
                             p.getDashboard().removeTowers(report.getTowerNumbers());
                         }
                         if(p.getDashboard().getTowers()==0){
-                            this.winner=p.getNickname();
+                            this.winner=p.getNickname(); // i could use also compute winner but in this case i already know who won
                             this.finishedGame=true;
                             sendNotifyAll();
-                            //TODO notificare il gamehandler
                         }
                     }
                 }
@@ -321,7 +319,7 @@ public class Game extends Observable<GameReport> {
         //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
-    public Island mergeIsland(Island i1, Island i2) throws EndGameException {
+    public Island mergeIsland(Island i1, Island i2){
         Island temp;
         int indx1=islands.indexOf(i1);
         int indx2=islands.indexOf(i2);
@@ -339,8 +337,7 @@ public class Game extends Observable<GameReport> {
         }
         motherNature.movement(temp);
         if(islands.size()<=3){
-            throw new EndGameException();
-            //TODO implementare finire turno
+            this.isLastTurn=true;
         }
         return temp;
     }
@@ -469,6 +466,8 @@ public class Game extends Observable<GameReport> {
         return currentPhase;
     }
     public Boolean getFinishedGame(){ return finishedGame;}
+
+    public Boolean getIsLastTurn(){ return isLastTurn; }
 
     public String getWinner(){ return winner;}
 
@@ -864,10 +863,39 @@ public class Game extends Observable<GameReport> {
                 Student s = this.bag.getRandomStudent();
                 students.add(s);
             } catch (NoMoreStudentsException e) {
+                setLastTurn(true);
                 e.printStackTrace();
             }
         }
 
         return students;
+    }
+
+    private String computeWinner() {
+        ColorTower max;
+        int black = 0;
+        int white = 0;
+        int grey = 0;
+        LinkedList<Island> islands = this.getAllIslands();
+        for (Island i : islands) {
+            if (i.getOwner() != null) {
+                switch (i.getOwner()) {
+                    case BLACK -> black += i.getReport().getTowerNumbers();
+                    case WHITE -> white += i.getReport().getTowerNumbers();
+                    case GREY -> grey += i.getReport().getTowerNumbers();
+                }
+            }
+        }
+        if (black >= white && black >= grey) max= ColorTower.BLACK;
+        else if (white >= black && white >= grey) max= ColorTower.WHITE;
+        else max= ColorTower.GREY;
+        for (Player p : players){
+            if(p.getColor().equals(max)) return p.getNickname();
+        }
+        return null;
+    }
+
+    public void setLastTurn(Boolean lastTurn){
+        isLastTurn=lastTurn;
     }
 }
