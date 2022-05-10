@@ -100,9 +100,4 @@ public class MessageTest {
         IslandInfluenceMessage message = new IslandInfluenceMessage("player", 0);
         assertEquals(0, message.getIdIsland());
     }
-
-    @Test
-    public void ENDGAMEtest(){
-        EndGameMessage message = new EndGameMessage("player", Action.ENDGAME);
-    }
 }

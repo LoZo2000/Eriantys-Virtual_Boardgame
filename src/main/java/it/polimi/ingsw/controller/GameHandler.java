@@ -1,12 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.*;
-import it.polimi.ingsw.messages.CreateMatchMessage;
-import it.polimi.ingsw.messages.EndGameMessage;
-import it.polimi.ingsw.model.ColorTower;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.Island;
-import it.polimi.ingsw.model.Student;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.messages.Message;
 
@@ -158,14 +153,9 @@ public class GameHandler {
 
     private void endGame(){
         currentPhase=Phase.ENDGAME;
+        this.finishedGame=true;
         game.setCurrentPhase(currentPhase);
-        Message endgame= new EndGameMessage("controller", Action.ENDGAME);
-        try{
-            execute(endgame);
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-        }
+        game.endGame();
     }
 
     private void changeCurrentPlayer(boolean sendNotify){
