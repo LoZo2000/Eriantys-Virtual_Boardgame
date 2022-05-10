@@ -152,8 +152,6 @@ class CompleteRulesGameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } catch (EndGameException ex) {
-            ex.printStackTrace();
         }
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
@@ -183,9 +181,9 @@ class CompleteRulesGameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } catch (EndGameException ex) {
+        } /*catch (EndGameException ex) {
             ex.printStackTrace();
-        }
+        } */
 
 
         assertEquals(1, i.getReport().getTowerNumbers());
@@ -208,9 +206,9 @@ class CompleteRulesGameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } catch (EndGameException ex) {
+        } /*catch (EndGameException ex) {
             ex.printStackTrace();
-        }
+        } */
 
         assertEquals(ColorTower.WHITE, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());
@@ -250,9 +248,9 @@ class CompleteRulesGameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } catch (EndGameException ex) {
+        } /*catch (EndGameException ex) {
             ex.printStackTrace();
-        }
+        } */
 
 
         try{
@@ -271,9 +269,9 @@ class CompleteRulesGameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } catch (EndGameException ex) {
+        }/* catch (EndGameException ex) {
             ex.printStackTrace();
-        }
+        } */
 
 
         //THE MERGED ISLAND HAS AN INFLUENCE OF 3 + 2 (Towers) + 2 Random Students
@@ -310,9 +308,9 @@ class CompleteRulesGameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } catch (EndGameException ex) {
+        } /*catch (EndGameException ex) {
             ex.printStackTrace();
-        }
+        } */
 
 
         p2.giveCoin();
@@ -333,9 +331,9 @@ class CompleteRulesGameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } catch (EndGameException ex) {
+        } /*catch (EndGameException ex) {
             ex.printStackTrace();
-        }
+        } */
 
 
         assertEquals(ColorTower.WHITE, i.getReport().getOwner());
@@ -415,9 +413,9 @@ class CompleteRulesGameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } catch (EndGameException ex) {
+        } /*catch (EndGameException ex) {
             ex.printStackTrace();
-        }
+        } */
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());

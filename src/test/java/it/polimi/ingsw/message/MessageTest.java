@@ -104,6 +104,5 @@ public class MessageTest {
     @Test
     public void ENDGAMEtest(){
         EndGameMessage message = new EndGameMessage("player", Action.ENDGAME);
-        assertNull(message.execute(null));
     }
 }
