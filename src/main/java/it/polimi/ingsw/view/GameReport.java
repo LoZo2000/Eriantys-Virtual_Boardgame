@@ -3,17 +3,16 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Phase;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
-
-import static org.fusesource.jansi.Ansi.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class GameReport implements Serializable {
     private final String turnOf;
@@ -33,6 +32,18 @@ public class GameReport implements Serializable {
     private final List<OpponentReport> opponents;
     private final List<CharacterReport> characters;
     private final Map<Color, String> professors;
+
+
+
+    //Attributes for GUI:
+    private int numPlayers = 0;
+    private ArrayList<Card> myCards = new ArrayList<>();
+    private ArrayList<String> allPlayersNick = new ArrayList<>();
+    private ArrayList<ArrayList<Integer>> studentsOnIslands = new ArrayList<>();
+    private int MT;
+    private ArrayList<ArrayList<Student>> studentsOnClouds = new ArrayList<>();
+
+
 
     private record IslandReport (String id, Map<Color, Integer> students, boolean prohibitionToken, int numTowers, ColorTower owner, boolean motherNature) implements Serializable{
         public Map<Color, Integer> students(){
@@ -234,7 +245,26 @@ public class GameReport implements Serializable {
         this.namePlayer = owner.getNickname();
 
         //ISLANDS
+        int numI = 0;
         for(Island i : game.getAllIslands()){
+            //Count colors:
+            int[] colors = {0,0,0,0,0};
+            ArrayList<Student> studOnIsl = i.getAllStudents();
+            for(Student s : studOnIsl){
+                switch (s.getColor()){
+                    case BLUE -> colors[0]++;
+                    case YELLOW -> colors[1]++;
+                    case RED -> colors[2]++;
+                    case GREEN -> colors[3]++;
+                    case PINK -> colors[4]++;
+                }
+            }
+            ArrayList<Integer> prov = new ArrayList<>();
+            for(int j=0; j<5; j++) prov.add(colors[j]);
+            studentsOnIslands.add(prov);
+
+
+
             IslandReport ir;
             Map<Color, Integer> mapNumbers = new HashMap<>();
             for(Color c : Color.values()){
@@ -242,11 +272,12 @@ public class GameReport implements Serializable {
             }
 
             if(game.getMotherNaturePosition().equals(i)){
+                MT = numI;
                 ir = new IslandReport(i.getId(), mapNumbers, i.getProhibition(), i.getReport().getTowerNumbers(), i.getOwner(), true);
             } else{
                 ir = new IslandReport(i.getId(), mapNumbers, i.getProhibition(), i.getReport().getTowerNumbers(), i.getOwner(), false);
             }
-
+            numI++;
             islands.add(ir);
         }
 
@@ -266,10 +297,13 @@ public class GameReport implements Serializable {
                 mapNumbers.put(c, clGame[i].getNumberOfStudentPerColor(c));
             }
             clouds.add(new CloudReport(i, mapNumbers, clGame[i].isFull()));
+            studentsOnClouds.add(clGame[i].getStudents());
         }
 
         //OTHER PLAYERS
+        numPlayers = game.getNumPlayers();
         for(Player p : game.getAllPlayers()){
+            allPlayersNick.add(p.getNickname());
             if(!p.equals(owner)){
                 List<Student> entranceStudents = p.getDashboard().getEntrance().getAllStudents();
 
@@ -294,6 +328,7 @@ public class GameReport implements Serializable {
         }
 
         //PLAYER DASHBOARD
+        myCards = owner.getHand().getAllCards();
         List<Card> hand = owner.getHand().getAllCards();
         List<Student> entrance = owner.getDashboard().getEntrance().getAllStudents();
         Map<Color, List<Student>> mapCanteen = new HashMap<>();
@@ -431,4 +466,25 @@ public class GameReport implements Serializable {
 
     public String getWinner(){ return this.winner;}
 
+
+
+    //Getter for GUI:
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+    public ArrayList<Card> getMyCards(){
+        return myCards;
+    }
+    public ArrayList<String> getOpponentsNick(){
+        return allPlayersNick;
+    }
+    public ArrayList<ArrayList<Integer>> getStudentsOnIslands(){
+        return studentsOnIslands;
+    }
+    public int getMT(){
+        return MT;
+    }
+    public ArrayList<ArrayList<Student>> getStudentsOnClouds(){
+        return studentsOnClouds;
+    }
 }
