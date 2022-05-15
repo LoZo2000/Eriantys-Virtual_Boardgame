@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class CreditsDialog extends JFrame implements ActionListener {
     private boolean isVisible = false;
@@ -19,8 +20,9 @@ public class CreditsDialog extends JFrame implements ActionListener {
         JLabel bgLabel = new JLabel(bgIcon);
         bgLabel.setSize(380,355);
 
-        d = new Dialog(window, "Eriantys - Credits");
+        d = new JDialog(window, "Eriantys - Credits");
         d.setSize(380, 355);
+        d.setResizable(false);
         d.add(bgLabel);
 
         //Title of the label:
@@ -55,7 +57,7 @@ public class CreditsDialog extends JFrame implements ActionListener {
 
         //CranioCreations logo:
         ImageIcon logoIcon = new ImageIcon(this.getClass().getResource("/CranioCreations_logo.png"));
-        Image logoImage = bgIcon.getImage();
+        Image logoImage = logoIcon.getImage();
         newImg = logoImage.getScaledInstance(80, 80,  Image.SCALE_SMOOTH);
         logoIcon = new ImageIcon(newImg);
         JLabel logoLabel = new JLabel(logoIcon);
@@ -86,14 +88,12 @@ public class CreditsDialog extends JFrame implements ActionListener {
         //Button to close dialog:
         closeButton = new JButton();
         closeButton.addActionListener(this);
-        ImageIcon closeIcon = new ImageIcon(this.getClass().getResource("/Cancel.png"));
+        ImageIcon closeIcon = new ImageIcon(this.getClass().getResource("/Back.png"));
         Image closeImage = closeIcon.getImage();
-        newImg = closeImage.getScaledInstance(50, 50,  Image.SCALE_SMOOTH);
+        newImg = closeImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
         closeIcon = new ImageIcon(newImg);
         closeButton.setIcon(closeIcon);
-        closeButton.setOpaque(false);
         closeButton.setContentAreaFilled(false);
-        closeButton.setBorderPainted(false);
         closeButton.setBounds(170, 270, 40, 40);
         bgLabel.add(closeButton);
     }

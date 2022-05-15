@@ -26,7 +26,7 @@ public class GUIEntry{
     private boolean completeRules = false;
     private GameReport report;
     private boolean requestSent = false; //To avoid a client joins more than one match at the same time
-    private JLabel desc; //To display the status of the research
+    private JLabel connDesc, uncDesc; //To display the status of the research
     private JLabel connLabel, uncLabel; //To display the status of the research
     private String nickname;
 
@@ -51,8 +51,9 @@ public class GUIEntry{
             e.printStackTrace();
         }
         while(report.getError() != null && report.getError().equals("This nickname is already taken")){
-            desc.setText("Not playing: find a game!");
+            connDesc.setVisible(false);
             connLabel.setVisible(false);
+            uncDesc.setVisible(true);
             uncLabel.setVisible(true);
             requestSent = false;
             JOptionPane.showMessageDialog(null, "<html>This nickname was already taken!<br/>Please choose another one...</html>","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -99,14 +100,15 @@ public class GUIEntry{
         window.setLocationRelativeTo(null);
 
         //Label containing the setting menu:
-        JLabel label = new JLabel();
-        label.setBounds(100, 200, 500, 155);
-        label.setOpaque(true);
-        Color colorLabel = new Color(128,128,128,175);
-        label.setBackground(colorLabel);
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBounds(100, 200, 500, 155);
+        panel.setOpaque(true);
+        Color colorLabel = new Color(128,128,128,125);
+        panel.setBackground(colorLabel);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
-        label.setBorder(border);
-        bgLabel.add(label);
+        panel.setBorder(border);
+        bgLabel.add(panel);
 
         //Title of the label:
         JLabel title = new JLabel();
@@ -115,7 +117,7 @@ public class GUIEntry{
         title.setVerticalAlignment(SwingConstants.CENTER);
         title.setFont(new Font("MV Boli", Font.BOLD, 18));
         title.setBounds(100,5,300,20);
-        label.add(title);
+        panel.add(title);
 
         //Text to state the requirements for the nickname:
         JLabel nick = new JLabel();
@@ -123,19 +125,19 @@ public class GUIEntry{
         nick.setHorizontalAlignment(SwingConstants.CENTER);
         nick.setVerticalAlignment(SwingConstants.CENTER);
         nick.setBounds(25,30,125,20);
-        label.add(nick);
+        panel.add(nick);
         JLabel req = new JLabel();
         req.setText("(must be different from other players'ones)");
         req.setHorizontalAlignment(SwingConstants.CENTER);
         req.setVerticalAlignment(SwingConstants.CENTER);
         req.setBounds(150, 30, 200, 20);
         req.setFont(new Font("Times New Roman", Font.PLAIN, 11));
-        label.add(req);
+        panel.add(req);
 
         //TextField to get player's nickname
         textField = new JTextField(16);
         textField.setBounds(350,30,125,20);
-        label.add(textField);
+        panel.add(textField);
 
         //Text to insert number of players:
         JLabel pla = new JLabel();
@@ -143,7 +145,7 @@ public class GUIEntry{
         pla.setHorizontalAlignment(SwingConstants.CENTER);
         pla.setVerticalAlignment(SwingConstants.CENTER);
         pla.setBounds(25,55,125,30);
-        label.add(pla);
+        panel.add(pla);
 
         //Slider to select the number of players:
         slider = new JSlider(JSlider.HORIZONTAL,2,4,2);
@@ -151,7 +153,7 @@ public class GUIEntry{
         slider.setPaintLabels(true);
         slider.setOpaque(false);
         slider.setBounds(150,55,75,30);
-        label.add(slider);
+        panel.add(slider);
 
         //Button to choose simple/complete rules:
         ruleButton.setText("using simple rules");
@@ -169,18 +171,14 @@ public class GUIEntry{
                 }
             }
         });
-        label.add(ruleButton);
+        panel.add(ruleButton);
 
         //Play button:
         ImageIcon playIcon = new ImageIcon(this.getClass().getResource("/Play.png"));
         Image playImage = playIcon.getImage();
-        newImg = playImage.getScaledInstance(50, 50,  Image.SCALE_SMOOTH);
+        newImg = playImage.getScaledInstance(60, 60,  Image.SCALE_SMOOTH);
         playIcon = new ImageIcon(newImg);
         playButton.setIcon(playIcon);
-        playButton.setOpaque(false);
-        playButton.setContentAreaFilled(false);
-        playButton.setBorderPainted(false);
-        playButton.setFocusPainted(false);
         playButton.setBounds(220, 90, 60, 60);
         playButton.addActionListener(new ActionListener() {
             @Override
@@ -198,40 +196,50 @@ public class GUIEntry{
                     }catch(Exception ex){
                         ex.printStackTrace();
                     }
-                    desc.setText("Match created: wait for other players...");
+                    uncDesc.setVisible(false);
                     uncLabel.setVisible(false);
+                    connDesc.setVisible(true);
                     connLabel.setVisible(true);
                 }
             }
         });
-        label.add(playButton);
+        panel.add(playButton);
 
         //Status bar:
-        JLabel status = new JLabel();
-        status.setBounds(285, 130, 210, 20);
+        JPanel status = new JPanel();
+        status.setLayout(null);
+        status.setBounds(283, 126, 212, 24);
         status.setOpaque(true);
         status.setBackground(colorLabel);
         status.setBorder(border);
-        label.add(status);
+        panel.add(status);
         JLabel sta = new JLabel();
         sta.setText("Status");
         sta.setHorizontalAlignment(SwingConstants.CENTER);
         sta.setVerticalAlignment(SwingConstants.CENTER);
-        sta.setBounds(2,2,40,16);
+        sta.setBounds(2,4,40,16);
         status.add(sta);
-        desc = new JLabel();
-        desc.setText("Not playing: find a game!");
-        desc.setFont(new Font("Times New Roman", Font.PLAIN, 9));
-        desc.setHorizontalAlignment(SwingConstants.CENTER);
-        desc.setVerticalAlignment(SwingConstants.CENTER);
-        desc.setBounds(42,2,146,16);
-        status.add(desc);
+        uncDesc = new JLabel();
+        uncDesc.setText("Not playing: find a game!");
+        uncDesc.setFont(new Font("Times New Roman", Font.PLAIN, 9));
+        uncDesc.setHorizontalAlignment(SwingConstants.CENTER);
+        uncDesc.setVerticalAlignment(SwingConstants.CENTER);
+        uncDesc.setBounds(42,4,146,16);
+        status.add(uncDesc);
+        connDesc = new JLabel();
+        connDesc.setText("Match created: wait for other players...");
+        connDesc.setFont(new Font("Times New Roman", Font.PLAIN, 9));
+        connDesc.setHorizontalAlignment(SwingConstants.CENTER);
+        connDesc.setVerticalAlignment(SwingConstants.CENTER);
+        connDesc.setBounds(42,4,146,16);
+        connDesc.setVisible(false);
+        status.add(connDesc);
         ImageIcon connIcon = new ImageIcon(this.getClass().getResource("/Connected.png"));
         Image connImage = connIcon.getImage();
         newImg = connImage.getScaledInstance(20, 20,  Image.SCALE_SMOOTH);
         connIcon = new ImageIcon(newImg);
         connLabel = new JLabel(connIcon);
-        connLabel.setBounds(190,0,20,20);
+        connLabel.setBounds(190,2,20,20);
         connLabel.setVisible(false);
         status.add(connLabel);
         ImageIcon uncIcon = new ImageIcon(this.getClass().getResource("/Unconnected.png"));
@@ -239,7 +247,7 @@ public class GUIEntry{
         newImg = uncImage.getScaledInstance(20, 20,  Image.SCALE_SMOOTH);
         uncIcon = new ImageIcon(newImg);
         uncLabel = new JLabel(uncIcon);
-        uncLabel.setBounds(190,0,20,20);
+        uncLabel.setBounds(190,2,20,20);
         status.add(uncLabel);
 
         //Credit button:
@@ -251,7 +259,7 @@ public class GUIEntry{
                 credits.showDialog();
             }
         });
-        label.add(creditButton);
+        panel.add(creditButton);
 
         //Dialog containing all the credits:
         credits = new CreditsDialog(window);

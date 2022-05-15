@@ -5,13 +5,14 @@ import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import java.io.Serializable;
 import java.util.*;
 
-public class Island implements Movable {
+public class Island implements Movable, Serializable {
     //private final int id;
     private final String id;
     private ArrayList<Student> students;
     private boolean prohibitionToken;
     private int maxTowers;
     private ColorTower owner;
+    private String sprite;
 
     public Island(int id){
         //this.id = id;
@@ -20,11 +21,17 @@ public class Island implements Movable {
         maxTowers = 1;
         prohibitionToken = false;
         this.owner = null;
+
+        int rand = 1+(int)(Math.random()*3);
+        if(rand==1) sprite = "/Island_1.png";
+        else if(rand==2) sprite = "/Island_2.png";
+        else sprite = "/Island_3.png";
     }
 
     public Island(Island i1, Island i2){
         //this(i1.id);
         students = new ArrayList<>();
+        sprite = i1.getSprite();
         String s = i1.id + ", " + i2.id;
 
         String[] arr = s.split(", ");
@@ -99,6 +106,10 @@ public class Island implements Movable {
         students.add(s);
     }
 
+    public String getSprite(){
+        return sprite;
+    }
+
     public Student removeStudent(int id) throws NoSuchStudentException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent = new Student(id, Color.BLUE);
@@ -144,5 +155,11 @@ public class Island implements Movable {
         String x = String.format("%02d", idToCheck);
         String[] arr = this.id.split(", ");
         return Arrays.asList(arr).contains(x);
+    }
+
+    public int getStudentsColor(Color color){
+        int cont = 0;
+        for(Student s : students) if(s.getColor().equals(color)) cont++;
+        return cont;
     }
 }

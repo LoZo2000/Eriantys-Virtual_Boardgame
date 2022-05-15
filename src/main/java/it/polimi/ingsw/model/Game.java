@@ -191,12 +191,6 @@ public class Game extends Observable<GameReport> {
         return motherNature.getPosition();
     }
 
-    /*public Island getIsland(int id) throws NoIslandException{
-        for(Island i : islands){
-            if(i.getId() == id) return i;
-        }
-        throw new NoIslandException();
-    }*/
     public Island getIsland(int id) throws NoIslandException {
         for(Island i : islands){
             //if(i.getId() == id) return i;

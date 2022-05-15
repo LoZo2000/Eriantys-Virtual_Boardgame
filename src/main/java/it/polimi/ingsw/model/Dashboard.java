@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import java.util.ArrayList;
 
 public class Dashboard{
-    private Card graveyard;
+    private Card graveyard = null;
     private Canteen canteen;
     private Entrance entrance;
     private final ColorTower color;
