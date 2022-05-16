@@ -79,6 +79,10 @@ public class GUIEntry{
         window.setVisible(false);
     }
 
+    public void showGUI(){
+        window.setVisible(true);
+    }
+
 
 
     private void createGUI(){

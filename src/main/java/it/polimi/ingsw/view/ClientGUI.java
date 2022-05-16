@@ -15,11 +15,17 @@ public class ClientGUI {
     }
 
     public void run() throws IOException{
-        Socket socket = new Socket(ip, port);
-        GUIentry = new GUIEntry(socket);
-        GameReport report = GUIentry.openGUI();
-        GUIgame = new GUIGame(socket, report);
-        GUIentry.hideGUI();
-        GUIgame.openGUI();
+        int anothergame=0;
+        while(anothergame==0){
+            Socket socket = new Socket(ip, port);
+            GUIentry = new GUIEntry(socket);
+            GameReport report = GUIentry.openGUI();
+            GUIgame = new GUIGame(socket, report);
+            GUIentry.hideGUI();
+            anothergame=GUIgame.openGUI();
+            GUIgame.hideGUI();
+            socket.close();
+        }
+        System.exit(0);
     }
 }

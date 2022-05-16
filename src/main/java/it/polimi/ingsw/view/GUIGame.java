@@ -55,7 +55,7 @@ public class GUIGame {
 
 
 
-    public void openGUI(){
+    public int openGUI(){
         window.setVisible(true);
         while(true){
             try {
@@ -63,6 +63,11 @@ public class GUIGame {
                 GameReport report = (GameReport) objectInputStream.readObject();
                 if(report.getError()==null) displayReport(report);
                 else JOptionPane.showMessageDialog(null, report.getError(),"Eriantys - Illegal move", JOptionPane.WARNING_MESSAGE);
+                if(report.getFinishedGame()){
+                    int confirm;
+                    confirm=JOptionPane.showConfirmDialog(null, "The game is finished, the winner is: "+report.getWinner()+". \nDo you want to play another game?", "Eriantys" ,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null);
+                    return confirm;
+                }
             }catch (Exception e){
                 JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -734,5 +739,11 @@ public class GUIGame {
                 OD[i].updateDialog(report, i);
             }
         }
+
+
+    }
+
+    public void hideGUI(){
+            window.setVisible(false);
     }
 }
