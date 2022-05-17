@@ -33,6 +33,7 @@ public class GameReport implements Serializable {
 
 
     //Attributes for GUI:
+    private Phase phase;
     private int numPlayers = 0;
     private ArrayList<Card> myCards = new ArrayList<>();
     private ArrayList<String> allPlayersNick = new ArrayList<>();
@@ -250,6 +251,7 @@ public class GameReport implements Serializable {
         opponents = new ArrayList<>();
         characters = new ArrayList<>();
 
+        this.phase = game.getCurrentPhase();
         this.turnOf = game.getCurrentPlayer();
         this.namePlayer = owner.getNickname();
 
@@ -509,6 +511,9 @@ public class GameReport implements Serializable {
 
 
     //Getter for GUI:
+    public Phase getPhase(){
+        return phase;
+    }
     public int getNumPlayers() {
         return numPlayers;
     }

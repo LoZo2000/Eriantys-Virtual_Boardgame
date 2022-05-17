@@ -108,7 +108,7 @@ public class GUIEntry{
         panel.setLayout(null);
         panel.setBounds(100, 200, 500, 155);
         panel.setOpaque(true);
-        Color colorLabel = new Color(128,128,128,125);
+        Color colorLabel = new Color(128,128,128,255);
         panel.setBackground(colorLabel);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         panel.setBorder(border);
@@ -162,17 +162,14 @@ public class GUIEntry{
         //Button to choose simple/complete rules:
         ruleButton.setText("using simple rules");
         ruleButton.setBounds(300, 55, 175, 30);
-        ruleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(completeRules){
-                    ruleButton.setText("using simple rules");
-                    completeRules = false;
-                }
-                else{
-                    ruleButton.setText("using complete rules");
-                    completeRules = true;
-                }
+        ruleButton.addActionListener(E->{
+            if(completeRules){
+                ruleButton.setText("using simple rules");
+                completeRules = false;
+            }
+            else{
+                ruleButton.setText("using complete rules");
+                completeRules = true;
             }
         });
         panel.add(ruleButton);
@@ -184,27 +181,24 @@ public class GUIEntry{
         playIcon = new ImageIcon(newImg);
         playButton.setIcon(playIcon);
         playButton.setBounds(220, 90, 60, 60);
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(requestSent){
-                    JOptionPane.showMessageDialog(null, "<html>You are waiting to join a match!<br/>Please hold on for a little bit...</html>","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+        playButton.addActionListener(e->{
+            if(requestSent){
+                JOptionPane.showMessageDialog(null, "<html>You are waiting to join a match!<br/>Please hold on for a little bit...</html>","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+            }
+            else{
+                requestSent = true;
+                nickname = textField.getText();
+                Message message = new AddMeMessage(nickname, completeRules, slider.getValue());
+                try {
+                    objectOutputStream = new ObjectOutputStream(outputStream);
+                    objectOutputStream.writeObject(message);
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
-                else{
-                    requestSent = true;
-                    nickname = textField.getText();
-                    Message message = new AddMeMessage(nickname, completeRules, slider.getValue());
-                    try {
-                        objectOutputStream = new ObjectOutputStream(outputStream);
-                        objectOutputStream.writeObject(message);
-                    }catch(Exception ex){
-                        ex.printStackTrace();
-                    }
-                    uncDesc.setVisible(false);
-                    uncLabel.setVisible(false);
-                    connDesc.setVisible(true);
-                    connLabel.setVisible(true);
-                }
+                uncDesc.setVisible(false);
+                uncLabel.setVisible(false);
+                connDesc.setVisible(true);
+                connLabel.setVisible(true);
             }
         });
         panel.add(playButton);
@@ -257,11 +251,8 @@ public class GUIEntry{
         //Credit button:
         creditButton.setText("Credits");
         creditButton.setBounds(5, 130, 75, 20);
-        creditButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                credits.showDialog();
-            }
+        creditButton.addActionListener(e->{
+            credits.showDialog();
         });
         panel.add(creditButton);
 
