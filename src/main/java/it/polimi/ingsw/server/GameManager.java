@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
-    private List<Connection> addedConnections = new ArrayList<>();
+    private List<Controller> activeGames = new ArrayList<>();
     private int[] numPlayers = {0,0,0,0,0,0};
     static private int[] maxPlayers = {2,3,4,2,3,4}; //x6 different kinds of matches, according to number of players and rules (yes or no)
     private Controller[] controllerTypes = new Controller[6];
@@ -21,7 +21,7 @@ public class GameManager {
         int i=message.getNumPlayers()-2+additive;
         if(numPlayers[i]==0){
             gameTypes[i] = new Game(completeRules, message.getNumPlayers());
-            controllerTypes[i] = new Controller(gameTypes[i]);
+            controllerTypes[i] = new Controller(gameTypes[i], this);
             RemoteView remoteView = new RemoteView(c, message.getSender());
             remoteView.addObserver(controllerTypes[i]);
             gameTypes[i].addObserver(remoteView);
@@ -32,7 +32,22 @@ public class GameManager {
             remoteView.addObserver(controllerTypes[i]);
             gameTypes[i].addObserver(remoteView);
             numPlayers[i]++;
-            if(numPlayers[i]==maxPlayers[i]) numPlayers[i]=0;
+            if(numPlayers[i]==maxPlayers[i]) {
+                numPlayers[i]=0;
+                activeGames.add(controllerTypes[i]);
+            }
         }
+    }
+
+    public Controller searchGameByNickname(String nickname){
+        for(Controller c : activeGames){
+            if(c.getNicknames().contains(nickname))
+                return c;
+        }
+        return null;
+    }
+
+    public void removeFinishedGame(Controller controller){
+        this.activeGames.remove(controller);
     }
 }

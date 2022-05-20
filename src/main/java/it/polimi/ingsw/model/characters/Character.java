@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import it.polimi.ingsw.model.rules.Rule;
 
@@ -39,7 +40,7 @@ public abstract class Character implements Serializable {
         return this.typeCharacter;
     }
 
-    public abstract Rule usePower(Player player) throws NotEnoughMoneyException;
+    public abstract Rule usePower(Player player) throws NotEnoughMoneyException, IllegalMoveException;
 
     public String shortString(){
         String s = ansi().bold().a("Desc: ").reset().a(desc + "\n").toString();

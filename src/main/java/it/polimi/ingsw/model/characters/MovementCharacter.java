@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.controller.Location;
-import it.polimi.ingsw.model.exceptions.CannotAddStudentException;
-import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.rules.ActionRule;
+import it.polimi.ingsw.model.rules.Rule;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -71,6 +71,19 @@ public class MovementCharacter extends ActionCharacter implements Movable {
     }
 
     @Override
+    public Rule usePower(Player player) throws NotEnoughMoneyException, IllegalMoveException {
+        if(allowedArrivals.contains(Location.CANTEEN) && locationType == Location.CARD_EXCHANGE){
+            if(checkEmptyCanteen(player)){
+                throw new IllegalMoveException("You can't exchange students with the canteen if there isn't any student in it.");
+            }
+        }
+        player.useCoins(this.getCost());
+        this.increaseTimesUsed();
+
+        return new ActionRule();
+    }
+
+    @Override
     public String shortString(){
         String s = super.shortString();
         s += ansi().a(" - ").bold().a("Students: ").reset().a(students).toString();
@@ -95,5 +108,14 @@ public class MovementCharacter extends ActionCharacter implements Movable {
     @Override
     public void addToken() throws NoMoreTokensException {
         throw new NoMoreTokensException("You can't add students without movement");
+    }
+
+    private boolean checkEmptyCanteen(Player p){
+        for(Color c : Color.values()){
+            if(p.getDashboard().getCanteen().getNumberStudentColor(c) != 0)
+                return false;
+        }
+
+        return true;
     }
 }

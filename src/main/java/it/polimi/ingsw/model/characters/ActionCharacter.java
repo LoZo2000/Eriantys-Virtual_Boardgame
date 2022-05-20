@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
 import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import it.polimi.ingsw.model.rules.ActionRule;
@@ -49,7 +50,7 @@ public class ActionCharacter extends Character{
     }
 
     @Override
-    public Rule usePower(Player player) throws NotEnoughMoneyException {
+    public Rule usePower(Player player) throws NotEnoughMoneyException, IllegalMoveException {
         player.useCoins(this.getCost());
         this.increaseTimesUsed();
 

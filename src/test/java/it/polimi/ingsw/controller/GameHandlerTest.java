@@ -541,19 +541,19 @@ public class GameHandlerTest {
     }
 
     private void testCard10(MovementCharacter c) throws Exception{
-        Message message = new UsePowerMessage("player1", 0);
-        gameHandler.execute(message);
-
-        assertThrows(IllegalMoveException.class, () ->
-                gameHandler.execute(new PutBackMessage("player1", Color.RED))
-        );
-
         ArrayList<Student> students1 = gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
         Student s1 = students1.get(0);
 
         Canteen canteen = gameHandler.getGame().getPlayer("player1").getDashboard().getCanteen();
         canteen.addStudent(new Student(131, s1.getColor()));
         canteen.canGetCoin(Color.RED, true);
+
+        Message message = new UsePowerMessage("player1", 0);
+        gameHandler.execute(message);
+
+        assertThrows(IllegalMoveException.class, () ->
+                gameHandler.execute(new PutBackMessage("player1", Color.RED))
+        );
 
         ArrayList<Student> students2 = canteen.getStudents(s1.getColor());
         Student s2 = students2.get(0);

@@ -29,10 +29,13 @@ public class Client {
     private GameReport gameReport;
     private boolean detailedVisual;
 
+    private Boolean finished;
+
     public Client(String ip, int port){
         this.ip = ip;
         this.port = port;
         this.detailedVisual = false;
+        this.finished = false;
 
         movesDescription = new HashMap<>();
         movesDescription.put(Action.MOVESTUDENT, "to move a students from the CARD to the CANTEEN of the player or an ISLAND, depending on the active card.");
@@ -52,6 +55,7 @@ public class Client {
         OutputStream outputStream = socket.getOutputStream();
         ObjectOutputStream objectOutputStream = null;
         GameReport report;
+        boolean activeClient = true;
 
         //AnsiConsole.systemInstall();
 
@@ -68,10 +72,16 @@ public class Client {
                 objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
                 showBoard(report);
-                gameReport = report;
+
+                if(report.getError() == null || !report.getError().equals("This nickname is already taken"))
+                    gameReport = report;
+
+                if(report.getFinishedGame())
+                    activeClient = false;
+
             }while(report.getTurnOf() == null || !report.getTurnOf().equals(nickname));
 
-            while (true) {
+            while (activeClient) {
                 message = getInput();
                 if (message != null) {
                     objectOutputStream = new ObjectOutputStream(outputStream);
@@ -81,27 +91,31 @@ public class Client {
                         report = (GameReport) objectInputStream.readObject();
                         showBoard(report);
 
-                        if(report.getError() == null)
+                        if(report.getError() == null) {
                             gameReport = report;
-
-                        activeCard = report.getActiveCard();
-                        if(activeCard != -1){
-                            requestedAction = report.getRequestedAction();
-                        } else{
-                            requestedAction = null;
+                            activeCard = report.getActiveCard();
+                            if (activeCard != -1) {
+                                requestedAction = report.getRequestedAction();
+                            } else {
+                                requestedAction = null;
+                            }
                         }
-                    }while(!report.getTurnOf().equals(nickname));
+
+                        if(report.getFinishedGame())
+                            activeClient = false;
+
+                    }while(!report.getFinishedGame() && !report.getTurnOf().equals(nickname));
                 }
             }
         } catch(Exception e){
             e.printStackTrace();
             System.out.println("Connection closed from the client side");
         } finally {
-            stdin.close();
             socketIn.close();
             objectOutputStream.close();
             socket.close();
             System.out.println("Thanks for playing!");
+            stdin.close();
             AnsiConsole.systemUninstall();
         }
     }
@@ -127,8 +141,6 @@ public class Client {
 
         return new AddMeMessage(nickname, completeRules, numPlayers);
     }
-
-
 
     private Message getInput(){
         System.out.println("Select one of the following options (type an integer):");
@@ -392,72 +404,6 @@ public class Client {
         return id;
     }
 
-    public void showBoard(GameStatus gameStatus){
-        if(!gameStatus.getError().equals("")) System.out.println("\n\nFORBIDDEN MOVE: "+gameStatus.getError()+"\nInsert a new legal move...");
-        else{
-            int towerToWin = 8;
-            if(numPlayers==3) towerToWin = 6;
-            System.out.println("\n\nISLANDS:");
-            for(int i=0; i<gameStatus.getIslandsId().size(); i++){
-                System.out.print("Id: "+gameStatus.getIslandsId().get(i)+"\t");
-                if(gameStatus.getOwners().get(i)==null) System.out.print("Owner: nobody\t");
-                else System.out.print("Owner: "+gameStatus.getOwners().get(i)+"\t");
-                System.out.print("Towers: x"+gameStatus.getNumTowers().get(i)+"\t");
-                System.out.print("\u001B[34mBLUE: "+gameStatus.getStudentsOnIsland().get(i).get(0)+"\u001B[0m\t");
-                System.out.print("\u001B[33mYELLOW: "+gameStatus.getStudentsOnIsland().get(i).get(1)+"\u001B[0m\t");
-                System.out.print("\u001B[31mRED: "+gameStatus.getStudentsOnIsland().get(i).get(2)+"\u001B[0m\t");
-                System.out.print("\u001B[32mGREEN: "+gameStatus.getStudentsOnIsland().get(i).get(3)+"\u001B[0m\t");
-                System.out.print("\u001B[35mPINK: "+gameStatus.getStudentsOnIsland().get(i).get(4)+"\u001B[0m\t");
-                if(gameStatus.getMN()==i) System.out.print("MN");
-                System.out.print("\n");
-            }
-            System.out.println("CLOUDS:");
-            for(int i=0; i<gameStatus.getStudentsOnCloud().size(); i++){
-                System.out.print("Cloud "+i+":\t");
-                System.out.print("\u001B[34mBLUE: "+gameStatus.getStudentsOnCloud().get(i).get(0)+"\u001B[0m\t");
-                System.out.print("\u001B[33mYELLOW: "+gameStatus.getStudentsOnCloud().get(i).get(1)+"\u001B[0m\t");
-                System.out.print("\u001B[31mRED: "+gameStatus.getStudentsOnCloud().get(i).get(2)+"\u001B[0m\t");
-                System.out.print("\u001B[32mGREEN: "+gameStatus.getStudentsOnCloud().get(i).get(3)+"\u001B[0m\t");
-                System.out.print("\u001B[35mPINK: "+gameStatus.getStudentsOnCloud().get(i).get(4)+"\u001B[0m\n");
-
-            }
-            System.out.print("PROFESSORS:\t");
-            System.out.print("\u001B[34mBLUE: "+gameStatus.getProfessorsOwners().get(0)+"\u001B[0m\t");
-            System.out.print("\u001B[33mYELLOW: "+gameStatus.getProfessorsOwners().get(1)+"\u001B[0m\t");
-            System.out.print("\u001B[31mRED: "+gameStatus.getProfessorsOwners().get(2)+"\u001B[0m\t");
-            System.out.print("\u001B[32mGREEN: "+gameStatus.getProfessorsOwners().get(3)+"\u001B[0m\t");
-            System.out.print("\u001B[35mPINK: "+gameStatus.getProfessorsOwners().get(4)+"\u001B[0m\n");
-            if(gameStatus.getEnemiesNames()!=null){
-                for(int i=0; i<gameStatus.getEnemiesNames().size(); i++){
-                    System.out.println("DASHBOARD of "+gameStatus.getEnemiesNames().get(i)+" (color: "+gameStatus.getEnemiesColors().get(i)+")\tLast card: "+gameStatus.getEnemiesLastCards().get(i)+"\tTowers: "+(towerToWin-gameStatus.getEnemiesTowers().get(i)));
-                    System.out.print("Entrance:\t");
-                    System.out.print("\u001B[34mBLUE: "+gameStatus.getEnemiesEntrances().get(i).get(0)+"\u001B[0m\t");
-                    System.out.print("\u001B[33mYELLOW: "+gameStatus.getEnemiesEntrances().get(i).get(1)+"\u001B[0m\t");
-                    System.out.print("\u001B[31mRED: "+gameStatus.getEnemiesEntrances().get(i).get(2)+"\u001B[0m\t");
-                    System.out.print("\u001B[32mGREEN: "+gameStatus.getEnemiesEntrances().get(i).get(3)+"\u001B[0m\t");
-                    System.out.print("\u001B[35mPINK: "+gameStatus.getEnemiesEntrances().get(i).get(4)+"\u001B[0m\n");
-                    System.out.print("Canteen:\t");
-                System.out.print("\u001B[34mBLUE: "+gameStatus.getEnemiesCanteen().get(i).get(0)+"/10\u001B[0m\t");
-                    System.out.print("\u001B[33mYELLOW: "+gameStatus.getEnemiesCanteen().get(i).get(1)+"/10\u001B[0m\t");
-                    System.out.print("\u001B[31mRED: "+gameStatus.getEnemiesCanteen().get(i).get(2)+"/10\u001B[0m\t");
-                    System.out.print("\u001B[32mGREEN: "+gameStatus.getEnemiesCanteen().get(i).get(3)+"/10\u001B[0m\t");
-                    System.out.print("\u001B[35mPINK: "+gameStatus.getEnemiesCanteen().get(i).get(4)+"/10\u001B[0m\n");
-                }
-            }
-            System.out.println("YOUR DASHBOARD (color: "+gameStatus.getMyColor()+")\tLast card: "+gameStatus.getMyLastCard()+"\tTowers: "+(towerToWin-gameStatus.getMyTowers()));
-            System.out.println("Your cards: "+gameStatus.getMyCards());
-            System.out.println("Entrance:\t"+gameStatus.getStudentsInEntrance()+"\u001B[0m");
-            System.out.print("Canteen:\t");
-            System.out.print("\u001B[34mBLUE: "+gameStatus.getStudentsInCanteen().get(0)+"\u001B[0m\n");
-            System.out.print("\t\t\t\u001B[33mYELLOW: "+gameStatus.getStudentsInCanteen().get(1)+"\u001B[0m\n");
-            System.out.print("\t\t\t\u001B[31mRED: "+gameStatus.getStudentsInCanteen().get(2)+"\u001B[0m\n");
-            System.out.print("\t\t\t\u001B[32mGREEN: "+gameStatus.getStudentsInCanteen().get(3)+"\u001B[0m\n");
-            System.out.print("\t\t\t\u001B[35mPINK: "+gameStatus.getStudentsInCanteen().get(4)+"\u001B[0m\n");
-            System.out.println("Current phase: "+gameStatus.getCurrentPhase());
-            System.out.println("Current player: "+gameStatus.getTurnOf());
-        }
-    }
-
     public void showBoard(GameReport report){
         if(report.getError() == null) {
             Columns col = new Columns();
@@ -481,7 +427,7 @@ public class Client {
                 col.addColumn(2, "\u001B[1;91mCurrent Rule: \u001B[0m " + report.getActiveRule() + "\n");
             }
             col.printAll();
-            if(report.getFinishedGame()==false){
+            if(!report.getFinishedGame()){
                 System.out.println("Current phase: "+report.getCurrentPhase());
                 System.out.println("Current player: "+report.getTurnOf());
             }
@@ -490,7 +436,9 @@ public class Client {
                 System.out.println("The winner is "+report.getWinner());
             }
 
-        } else if(gameReport != null){
+        } else if((report.getFinishedGame() && report.getError() != null) || this.gameReport == null) {
+            System.err.println(report.getError()+"\n");
+        } else{
             Columns col = new Columns();
             col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");
             col.addColumn(1, gameReport.getIslandsString());
@@ -516,8 +464,6 @@ public class Client {
             System.out.println("\n\nFORBIDDEN MOVE: "+report.getError()+"\nInsert a new legal move...");
             System.out.println("Current phase: "+gameReport.getCurrentPhase());
             System.out.println("Current player: "+gameReport.getTurnOf());
-        } else{
-            System.err.println(report.getError()+"\n");
         }
     }
 
@@ -540,16 +486,5 @@ public class Client {
 
         System.out.println("Current phase: "+gameReport.getCurrentPhase());
         System.out.println("Current player: "+gameReport.getTurnOf());
-    }
-
-    private void clearConsole() {
-        try {
-            if (System.getProperty("os.name").contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            }
-            else {
-                System.out.print("\033\143");
-            }
-        } catch (IOException | InterruptedException ex) {}
     }
 }

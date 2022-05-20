@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.messages.GameStatus;
 import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.server.Connection;
 import it.polimi.ingsw.server.Observer;
@@ -11,7 +10,7 @@ public class RemoteView extends View {
 
         @Override
         public void update(Message message) {
-            System.out.println("Received instruction from: " + message.getSender());
+            System.out.println("Received instruction from: " + message.getSender() + " " + message.getAction());
             try{
                 processChoice(message);
             } catch (IllegalArgumentException e) {
@@ -28,14 +27,6 @@ public class RemoteView extends View {
         this.connection = c;
         this.owner = s;
         c.addObserver(new MessageReceiver());
-    }
-
-    @Override
-    protected void showModel(GameStatus GS) {
-        if(GS.getMyId().equals(owner)){
-            System.out.println("Sending something to the client through "+connection);
-            connection.send(GS);
-        }
     }
 
     @Override

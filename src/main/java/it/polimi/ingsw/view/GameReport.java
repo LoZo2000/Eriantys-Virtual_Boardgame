@@ -198,10 +198,10 @@ public class GameReport implements Serializable {
         }
     }
 
-    public GameReport(String myId, String error, String turnOf){
+    public GameReport(String myId, String error, String turnOf, boolean finished){
         this.namePlayer = myId;
         this.error = error;
-        this.finished =false;
+        this.finished =finished;
         this.winner=null;
         this.turnOf = turnOf;
 

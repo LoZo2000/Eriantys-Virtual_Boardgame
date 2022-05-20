@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.messages.AddMeMessage;
 import it.polimi.ingsw.messages.Message;
 import java.io.IOException;
@@ -36,6 +37,12 @@ public class Server {
     public synchronized void deregisterConnection(Connection c){
         connections.remove(c);
         this.registeredNicknames.remove(c.getNickname());
+        Controller controller = gameMaker.searchGameByNickname(c.getNickname());
+        if(controller != null)
+            controller.disconnectedPlayer(c.getNickname());
+        else
+            //TODO DEBUG MESSAGE
+            System.out.println("ALREADY REMOVED GAME");
         c.closeConnection();
     }
 

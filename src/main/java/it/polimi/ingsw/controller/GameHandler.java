@@ -9,6 +9,7 @@ import java.util.*;
 
 public class GameHandler {
     private final ArrayList<String> players;
+    private final ArrayList<String> originalOrderPlayer;
     private final int maxPlayers; //max players in the game
     private int numPlayers = 0; //current num of players
     private String currentPlayer = null; //the current player in the array players
@@ -29,12 +30,17 @@ public class GameHandler {
         return numPlayers;
     }
 
+    public List<String> getNicknames(){
+        return new ArrayList<>(this.originalOrderPlayer);
+    }
+
     public GameHandler(Game game){ //First instruction of all
         maxPlayers = game.getNumPlayers();
 
         this.game = game;
 
         players = new ArrayList<>();
+        originalOrderPlayer = new ArrayList<>();
         oldPhase = currentPhase;
 
         initLegitActions();
@@ -67,6 +73,7 @@ public class GameHandler {
             if(numFinishedTurn==maxPlayers){
                 game.resetPlayedCards();
                 endTurn();
+                clockwiseOrder();
                 currentPhase=Phase.PRETURN;
                 if(isLastTurn) endGame();
                 numFinishedTurn=0;
@@ -228,7 +235,10 @@ public class GameHandler {
     private void addPlayers(){
         this.numPlayers++;
         if (numPlayers == maxPlayers){
-            game.getAllPlayers().forEach((player -> this.players.add(player.getNickname())));
+            game.getAllPlayers().forEach((player -> {
+                this.players.add(player.getNickname());
+                this.originalOrderPlayer.add(player.getNickname());
+            }));
             nextPhase();
         }
     }
@@ -262,6 +272,15 @@ public class GameHandler {
                 game.setLastTurn(true);
             }
             e.printStackTrace();
+        }
+    }
+
+    private void clockwiseOrder(){
+        int pos = originalOrderPlayer.indexOf(this.players.get(0));
+        this.players.clear();
+        for(int i = 0; i<this.numPlayers; i++){
+            this.players.add(originalOrderPlayer.get(pos));
+            pos = (pos + 1) % numPlayers;
         }
     }
     /*private ColorTower getWinner(){

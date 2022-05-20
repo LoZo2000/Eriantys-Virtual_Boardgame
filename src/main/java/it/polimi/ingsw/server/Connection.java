@@ -1,9 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.messages.AddMeMessage;
-import it.polimi.ingsw.messages.GameStatus;
 import it.polimi.ingsw.messages.Message;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.view.GameReport;
 
 
@@ -42,26 +40,18 @@ public class Connection extends Observable<Message> implements Runnable {
         out.flush();
     }
 
-    public void send(GameStatus GS){
-        try {
-            objectOutputStream = new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(GS);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public void send(GameReport gr){
         try {
             objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(gr);
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Connection with user " + owner + " is already closed");
         }
     }
 
     public synchronized void closeConnection(){
-        send("Connection closed from the server side");
+        //send("Connection closed from the server side");
         try{
             socket.close();
         }catch (IOException e){
@@ -88,7 +78,7 @@ public class Connection extends Observable<Message> implements Runnable {
                 objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
                 if (server.isNotValidNickname(message.getSender())) {
-                    send(new GameReport(null, "This nickname is already taken", null));
+                    send(new GameReport(null, "This nickname is already taken", null, false));
                 }
             }while (server.isNotValidNickname(message.getSender()));
             server.lobby(this, (AddMeMessage) message);

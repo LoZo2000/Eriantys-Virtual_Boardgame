@@ -885,6 +885,42 @@ class CompleteRulesGameTest {
     }
 
     @Test
+    void exchangeStudentEmptyCanteen() throws Exception{
+        Character[] characters = new Character[1];
+        characters[0] = getCharacterFromJSON(10);
+        this.game.setCharactersCards(characters);
+
+        Player p1 = this.game.getPlayer("player1");
+        Entrance e1 = p1.getDashboard().getEntrance();
+        Canteen c1 = p1.getDashboard().getCanteen();
+
+        assertThrows(IllegalMoveException.class, () -> this.game.usePower(p1, 0));
+
+        assertEquals(1, p1.getCoins());
+
+        this.game.moveStudent(1, c1, e1);
+
+        try {
+            this.game.usePower(p1, 0);
+        } catch (NoCharacterSelectedException ex) {
+            fail();
+        }
+
+        assertEquals(0, p1.getCoins());
+
+        this.game.exchangeStudent(17, 1, c1, e1);
+
+        ArrayList<Student> studentCanteenRed = c1.getStudents(Color.RED);
+        ArrayList<Student> studentCanteenBlue = c1.getStudents(Color.BLUE);
+        ArrayList<Student> studentEntrance = e1.getAllStudents();
+
+        assertFalse(studentCanteenRed.contains(new Student(1, Color.RED)));
+        assertTrue(studentCanteenBlue.contains(new Student(17, Color.BLUE)));
+        assertTrue(studentEntrance.contains(new Student(1, Color.RED)));
+        assertFalse(studentEntrance.contains(new Student(17, Color.BLUE)));
+    }
+
+    @Test
     void exchangeStudentCardEntrance() throws Exception{
         Character[] characters = new Character[1];
         characters[0] = getCharacterFromJSON(7);
