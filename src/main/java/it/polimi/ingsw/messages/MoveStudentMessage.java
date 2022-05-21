@@ -18,6 +18,7 @@ public class MoveStudentMessage extends MovementMessage{
     @Override
     public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoPlayerException, NoIslandException, CannotAddStudentException {
         Boolean usedCard = null;
+        boolean activeCard = false;
 
         if(game.getActiveCard() != -1) {
             Action requestedActiveAction = game.getRequestedAction();
@@ -38,6 +39,7 @@ public class MoveStudentMessage extends MovementMessage{
 
         if(game.getActiveCard() != -1){
             usedCard = false;
+            activeCard = true;
         }
 
         try {
@@ -55,7 +57,7 @@ public class MoveStudentMessage extends MovementMessage{
         }
 
         if(game.getActiveCard() == -1) {
-            game.reduceRemainingMoves();
+            game.reduceRemainingMoves(activeCard);
         }
 
         return new Update(null, null, game.getRemainingMoves(), null, usedCard, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());

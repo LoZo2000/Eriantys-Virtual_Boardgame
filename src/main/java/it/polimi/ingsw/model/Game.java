@@ -472,9 +472,10 @@ public class Game extends Observable<GameReport> {
     public void resetRemainingMoves(){
         this.remainingMoves = this.numPlayers==3 ? 4 : 3;
     }
-    public void reduceRemainingMoves(){
-        this.remainingMoves--;
-        if(remainingMoves != 0)
+    public void reduceRemainingMoves(boolean activeCard){
+        if(!activeCard)
+            this.remainingMoves--;
+        if(remainingMoves != 0 && !activeCard)
             sendNotifyAll();
     }
     public int getRemainingMoves(){
