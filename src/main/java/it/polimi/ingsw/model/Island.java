@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Island implements Movable, Serializable {
-    //private final int id;
     private final String id;
     private ArrayList<Student> students;
     private boolean prohibitionToken;

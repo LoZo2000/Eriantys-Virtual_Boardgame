@@ -2,14 +2,14 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
-import it.polimi.ingsw.messages.MoveMotherNatureMessage;
-import it.polimi.ingsw.messages.MoveStudentMessage;
-import it.polimi.ingsw.messages.PlayCardMessage;
-import it.polimi.ingsw.messages.SelectCloudMessage;
+import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.Card;
 import it.polimi.ingsw.model.ColorTower;
 import it.polimi.ingsw.model.Island;
 import it.polimi.ingsw.model.Student;
+import it.polimi.ingsw.model.characters.ActionCharacter;
+import it.polimi.ingsw.model.characters.CharacterType;
+import it.polimi.ingsw.model.characters.MovementCharacter;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -35,11 +35,15 @@ public class GUIGame {
     private JPanel containerDash = new JPanel();
     private JPanel containerCard = new JPanel();
     private JPanel containerLastCard = new JPanel();
+    private ArrayList<JPanel> containerCharacters = new ArrayList<>();
     private Phase currentPhase;
+    private JLabel numC; //To display coins available
 
     //Variables to move a student:
     private int idStudentToMove = -1;
     private it.polimi.ingsw.model.Color colorStudentToMove;
+    private Location departureType;
+    private int departureID;
 
     //Variable to move MotherNature:
     private int posMT;
@@ -114,7 +118,7 @@ public class GUIGame {
         //Coins:
         JPanel coins = new JPanel();
         coins.setLayout(null);
-        coins.setBounds(605, 430, 81, 20);
+        coins.setBounds(605, 430, 91, 20);
         Color colorPanel = new Color(128,128,128,125);
         coins.setBackground(colorPanel);
         coins.setBorder(border);
@@ -126,7 +130,7 @@ public class GUIGame {
         titleCo.setFont(new Font("MV Boli", Font.BOLD, 9));
         titleCo.setBounds(0,0,50,20);
         coins.add(titleCo);
-        JLabel numC = new JLabel();
+        numC = new JLabel();
         numC.setText("x0");
         numC.setHorizontalAlignment(SwingConstants.CENTER);
         numC.setVerticalAlignment(SwingConstants.CENTER);
@@ -137,7 +141,7 @@ public class GUIGame {
         //Last card:
         JPanel card = new JPanel();
         card.setLayout(null);
-        card.setBounds(605, 455, 81, 145);
+        card.setBounds(605, 455, 91, 145);
         Color colorLabel = new Color(128,128,128,255);
         card.setBackground(colorLabel);
         card.setBorder(border);
@@ -147,18 +151,18 @@ public class GUIGame {
         titleCa.setHorizontalAlignment(SwingConstants.CENTER);
         titleCa.setVerticalAlignment(SwingConstants.CENTER);
         titleCa.setFont(new Font("MV Boli", Font.BOLD, 9));
-        titleCa.setBounds(0,0,81,20);
+        titleCa.setBounds(0,0,91,20);
         card.add(titleCa);
         containerLastCard.setLayout(null);
-        containerLastCard.setBounds(3, 17, 75, 125);
+        containerLastCard.setBounds(3, 17, 85, 125);
         card.add(containerLastCard);
         JLabel c = new JLabel();
         ImageIcon cIcon = new ImageIcon(this.getClass().getResource("/Char_back.png"));
         Image cImage = cIcon.getImage();
-        newImg = cImage.getScaledInstance(75, 125,  Image.SCALE_SMOOTH);
+        newImg = cImage.getScaledInstance(85, 125,  Image.SCALE_SMOOTH);
         cIcon = new ImageIcon(newImg);
         c.setIcon(cIcon);
-        c.setBounds(0, 0, 75, 125);
+        c.setBounds(0, 0, 85, 125);
         containerLastCard.add(c);
 
         //My cards'panel:
@@ -185,7 +189,7 @@ public class GUIGame {
         //Opponents'container:
         JPanel opponents = new JPanel();
         opponents.setLayout(null);
-        opponents.setBounds(740, 100, 150, 24+report.getNumPlayers()*22);
+        opponents.setBounds(710, 75, 180, 24+report.getNumPlayers()*22);
         opponents.setBackground(colorLabel);
         opponents.setBorder(border);
         bgLabel.add(opponents);
@@ -195,7 +199,7 @@ public class GUIGame {
         titleO.setHorizontalAlignment(SwingConstants.CENTER);
         titleO.setVerticalAlignment(SwingConstants.CENTER);
         titleO.setFont(new Font("MV Boli", Font.BOLD, 13));
-        titleO.setBounds(2,0,150,20);
+        titleO.setBounds(2,0,170,20);
         opponents.add(titleO);
 
         for(int i=0; i<report.getNumPlayers(); i++){
@@ -213,14 +217,14 @@ public class GUIGame {
                     OD[f].showDialog();
                 });
             }
-            od.setBounds(2, 22+22*i, 146, 20);
+            od.setBounds(2, 22+22*i, 170, 20);
             opponents.add(od);
         }
 
         //Other infos container:
         JPanel info = new JPanel();
         info.setLayout(null);
-        info.setBounds(740, 20, 150, 40);
+        info.setBounds(710, 20, 180, 40);
         info.setBackground(colorLabel);
         info.setBorder(border);
         bgLabel.add(info);
@@ -241,7 +245,7 @@ public class GUIGame {
         info1.setBounds(2,20,70,20);
         info.add(info1);
 
-        containerInfo.setBounds(72, 0, 80, 40);
+        containerInfo.setBounds(72, 0, 105, 60);
         containerInfo.setLayout(null);
         containerInfo.setOpaque(false);
         info.add(containerInfo);
@@ -250,6 +254,39 @@ public class GUIGame {
         containerIslands.setLayout(null);
         containerIslands.setOpaque(false);
         bgLabel.add(containerIslands);
+
+        //Show characters'cards if complete rules:
+        for(int i=0; i<report.getChar().size(); i++){
+            ImageIcon charIcon = new ImageIcon(this.getClass().getResource(report.getChar().get(i).getSprite()));
+            Image charImage = charIcon.getImage();
+            newImg = charImage.getScaledInstance(105, 145,  Image.SCALE_SMOOTH);
+            charIcon = new ImageIcon(newImg);
+            JLabel charLabel = new JLabel(charIcon);
+            charLabel.setBounds(765, 150*i+150, 105, 145);
+            charLabel.setBorder(border);
+            bgLabel.add(charLabel);
+
+            containerCharacters.add(new JPanel());
+            containerCharacters.get(i).setBounds(15, 5, 90, 60);
+            containerCharacters.get(i).setLayout(null);
+            containerCharacters.get(i).setOpaque(false);
+            charLabel.add(containerCharacters.get(i));
+
+            JButton cb = new JButton();
+            cb.setContentAreaFilled(false);
+            cb.setBounds(0, 75, 105, 70);
+            charLabel.add(cb);
+
+            final int numThisCard = i;
+            cb.addActionListener(e-> {
+                try{
+                    objectOutputStream = new ObjectOutputStream(outputStream);
+                    objectOutputStream.writeObject(new UsePowerMessage(myNick, numThisCard));
+                }catch (Exception ex){
+                    JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
     }
 
 
@@ -303,6 +340,19 @@ public class GUIGame {
             else if(i<11) is.setBounds(420-140*(i-7), 280, 140, 140);
             else is.setBounds(0, 140, 140, 140);
             containerIslands.add(is);
+
+            if(allI.get(i).getProhibition()){
+                JLabel soc = new JLabel();
+                ImageIcon socIcon = new ImageIcon(this.getClass().getResource("/Block.png"));
+                Image socImage = socIcon.getImage();
+                newImg = socImage.getScaledInstance(26,26,Image.SCALE_SMOOTH);
+                socIcon = new ImageIcon(newImg);
+                soc.setIcon(socIcon);
+                Border border = BorderFactory.createLineBorder(Color.BLACK);
+                soc.setBorder(border);
+                soc.setBounds(4,110,26,26);
+                is.add(soc);
+            }
 
             if(allI.get(i).getStudentsColor(it.polimi.ingsw.model.Color.BLUE) > 0){
                 JLabel sb = new JLabel();
@@ -450,7 +500,7 @@ public class GUIGame {
                     if(idStudentToMove != -1){
                         try {
                             objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, Location.ENTRANCE, -1, Location.ISLAND, idIsland));
+                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -463,6 +513,32 @@ public class GUIGame {
                         objectOutputStream.writeObject(new MoveMotherNatureMessage(myNick, (numIslands+posIsland-posMT)%numIslands));
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else if(currentPhase==Phase.ACTIVECARD){
+                    if(report.getChar().get(report.getActiveCard()).getId()==1){
+                        try {
+                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                        }catch (Exception ex){
+                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    else if(report.getChar().get(report.getActiveCard()).getId()==3){
+                        try {
+                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.writeObject(new IslandInfluenceMessage(myNick, idIsland));
+                        }catch (Exception ex){
+                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                    else if(report.getChar().get(report.getActiveCard()).getId()==5){
+                        try {
+                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.writeObject(new BlockIslandMessage(myNick, idIsland));
+                        }catch (Exception ex){
+                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             });
@@ -550,14 +626,19 @@ public class GUIGame {
         name.setHorizontalAlignment(SwingConstants.CENTER);
         name.setVerticalAlignment(SwingConstants.CENTER);
         name.setFont(new Font("MV Boli", Font.BOLD, 9));
-        name.setBounds(0,0,80,20);
+        name.setBounds(0,0,105,20);
         containerInfo.add(name);
         JLabel phase = new JLabel();
-        phase.setText(report.getCurrentPhase());
+        //phase.setText(report.getCurrentPhase());
+        if(report.getPhase()==Phase.PRETURN) phase.setText("Choose a card");
+        else if(report.getPhase()==Phase.MIDDLETURN) phase.setText("Move x"+report.getRemainingMoves()+" students");
+        else if(report.getPhase()==Phase.MOVEMNTURN) phase.setText("Move Mother Nature");
+        else if(report.getPhase()==Phase.ENDTURN) phase.setText("Select a cloud");
+        else if(report.getPhase()==Phase.ACTIVECARD) phase.setText("Activating card");
         phase.setHorizontalAlignment(SwingConstants.CENTER);
         phase.setVerticalAlignment(SwingConstants.CENTER);
         phase.setFont(new Font("MV Boli", Font.BOLD, 9));
-        phase.setBounds(0,20,80,20);
+        phase.setBounds(0,20,105,20);
         containerInfo.add(phase);
         containerInfo.repaint();
 
@@ -578,8 +659,20 @@ public class GUIGame {
             final int idStudent = report.getMyEntrance().get(i).getId();
             final it.polimi.ingsw.model.Color colorStudent = report.getMyEntrance().get(i).getColor();
             st.addActionListener(e-> {
-                idStudentToMove = idStudent;
-                colorStudentToMove = colorStudent;
+                if(report.getActiveCard()>-1 && report.getChar().get(report.getActiveCard()).getId()==7 && idStudentToMove!=-1){
+                    try {
+                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(new ExchangeStudentMessage(myNick, idStudentToMove, idStudent, departureType, departureID, Location.ENTRANCE, -1));
+                    }catch (Exception ex){
+                        JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else{
+                    idStudentToMove = idStudent;
+                    colorStudentToMove = colorStudent;
+                    departureType = Location.ENTRANCE;
+                    departureID = -1;
+                }
             });
         }
         for(int i=0; i<5; i++){
@@ -616,11 +709,36 @@ public class GUIGame {
                 case 3 -> colorTable = it.polimi.ingsw.model.Color.PINK;
                 default -> colorTable = it.polimi.ingsw.model.Color.BLUE;
             }
+            final int pos = i;
             taButton.addActionListener(e->{
-                if(colorStudentToMove==colorTable){
+                if(report.getActiveCard()>-1 && report.getChar().get(report.getActiveCard()).getId()==9){
                     try {
                         objectOutputStream = new ObjectOutputStream(outputStream);
-                        objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, Location.ENTRANCE, -1, Location.CANTEEN, -1));
+                        objectOutputStream.writeObject(new BlockColorMessage(myNick, colorTable));
+                    }catch (Exception ex){
+                        JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else if(report.getActiveCard()>-1 && report.getChar().get(report.getActiveCard()).getId()==10 && report.getMyCanteen().get(pos)>0){
+                    try {
+                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(new ExchangeStudentMessage(myNick, idStudentToMove, report.getLastMyCanteen().get(pos), Location.ENTRANCE, -1, Location.CANTEEN, -1));
+                    }catch (Exception ex){
+                        JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else if(report.getActiveCard()>-1 && report.getChar().get(report.getActiveCard()).getId()==12){
+                    try {
+                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(new PutBackMessage(myNick, colorTable));
+                    }catch (Exception ex){
+                        JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else if(colorStudentToMove==colorTable){
+                    try {
+                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.CANTEEN, -1));
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -648,7 +766,25 @@ public class GUIGame {
             else to.setBounds(405+35*(i%2),115-30*(i/2),  35, 45);
             containerDash.add(to);
         }
+        it.polimi.ingsw.model.Color[] colInDashC = {it.polimi.ingsw.model.Color.GREEN, it.polimi.ingsw.model.Color.RED, it.polimi.ingsw.model.Color.YELLOW, it.polimi.ingsw.model.Color.PINK, it.polimi.ingsw.model.Color.BLUE};
+        String[] colInDashS = {"/Prof_green.png", "/Prof_red.png", "/Prof_yellow.png", "/Prof_pink.png", "/Prof_blue.png"};
+        for(int i=0; i<5; i++){
+            if(report.getProfessors().get(colInDashC[i]).equals(report.getNamePlayer())){
+                JLabel pro = new JLabel();
+                ImageIcon proIcon = new ImageIcon(this.getClass().getResource(colInDashS[i]));
+                Image proImage = proIcon.getImage();
+                Image newImg = proImage.getScaledInstance(23, 23,  Image.SCALE_SMOOTH);
+                proIcon = new ImageIcon(newImg);
+                pro.setIcon(proIcon);
+                pro.setOpaque(false);
+                pro.setBounds(352,22+32*i,  23, 23);
+                containerDash.add(pro);
+            }
+        }
         containerDash.repaint();
+
+        //Show coins:
+        numC.setText("x"+report.getMyCoins());
 
         //Show played card:
         if(report.getMyLastCard() != null){
@@ -656,12 +792,62 @@ public class GUIGame {
             JLabel c = new JLabel();
             ImageIcon cIcon = new ImageIcon(this.getClass().getResource(report.getMyLastCard().getFront()));
             Image cImage = cIcon.getImage();
-            Image newImg = cImage.getScaledInstance(75, 125,  Image.SCALE_SMOOTH);
+            Image newImg = cImage.getScaledInstance(85, 125,  Image.SCALE_SMOOTH);
             cIcon = new ImageIcon(newImg);
             c.setIcon(cIcon);
-            c.setBounds(0, 0, 75, 125);
+            c.setBounds(0, 0, 85, 125);
             containerLastCard.add(c);
             containerLastCard.repaint();
+        }
+
+        //Show students on card (if available):
+        for(int i=0; i<report.getChar().size(); i++){
+            containerCharacters.get(i).removeAll();
+            if(report.getChar().get(i).getTypeCharacter() == CharacterType.MOVEMENT){
+                MovementCharacter mc = (MovementCharacter)report.getChar().get(i);
+                ArrayList<Student> studs = mc.getStudents();
+                for(int j=0; j<studs.size(); j++){
+                    JButton soc = new JButton();
+                    ImageIcon socIcon = new ImageIcon(this.getClass().getResource(studs.get(j).getSprite()));
+                    Image socImage = socIcon.getImage();
+                    Image newImg = socImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                    socIcon = new ImageIcon(newImg);
+                    soc.setIcon(socIcon);
+                    soc.setContentAreaFilled(false);
+                    soc.setBounds((j/2)*30,j%2*30,30, 30);
+                    containerCharacters.get(i).add(soc);
+
+                    final int idStudent = studs.get(j).getId();
+                    final it.polimi.ingsw.model.Color colorStudent = studs.get(j).getColor();
+                    Location prov = Location.CARD_ISLAND;
+                    if(report.getChar().get(i).getId()==1) prov = Location.CARD_ISLAND;
+                    else if(report.getChar().get(i).getId()==7) prov = Location.CARD_EXCHANGE;
+                    else if(report.getChar().get(i).getId()==11) prov = Location.CARD_CANTEEN;
+                    final Location dest = prov;
+                    soc.addActionListener(e-> {
+                        idStudentToMove = idStudent;
+                        colorStudentToMove = colorStudent;
+                        departureType = dest;
+                        departureID = -1;
+                    });
+                }
+            }
+            else if(report.getChar().get(i).getTypeCharacter() == CharacterType.ACTION){
+                ActionCharacter ac = (ActionCharacter) report.getChar().get(i);
+                for(int j=0; j<ac.getNumTokens(); j++){
+                    JLabel soc = new JLabel();
+                    ImageIcon socIcon = new ImageIcon(this.getClass().getResource("/Block.png"));
+                    Image socImage = socIcon.getImage();
+                    Image newImg = socImage.getScaledInstance(26,26,Image.SCALE_SMOOTH);
+                    socIcon = new ImageIcon(newImg);
+                    soc.setIcon(socIcon);
+                    Border border = BorderFactory.createLineBorder(Color.BLACK);
+                    soc.setBorder(border);
+                    soc.setBounds(j%2*30,(j/2)*30,26,26);
+                    containerCharacters.get(i).add(soc);
+                }
+            }
+            containerCharacters.get(i).repaint();
         }
 
         //Opponents'dialogs:

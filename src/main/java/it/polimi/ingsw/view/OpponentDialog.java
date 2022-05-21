@@ -1,7 +1,5 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.controller.Location;
-import it.polimi.ingsw.messages.MoveStudentMessage;
 import it.polimi.ingsw.model.ColorTower;
 
 import javax.swing.*;
@@ -9,7 +7,6 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ObjectOutputStream;
 
 public class OpponentDialog extends JFrame implements ActionListener {
     private boolean isVisible = false;
@@ -19,6 +16,7 @@ public class OpponentDialog extends JFrame implements ActionListener {
 
     private JPanel containerDash = new JPanel();
     private JPanel containerCard = new JPanel();
+    private JLabel numC;
 
 
 
@@ -27,13 +25,13 @@ public class OpponentDialog extends JFrame implements ActionListener {
 
         ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("/Game_bg.jpg"));
         Image bgImage = bgIcon.getImage();
-        Image newImg = bgImage.getScaledInstance(600, 225,  Image.SCALE_SMOOTH);
+        Image newImg = bgImage.getScaledInstance(610, 225,  Image.SCALE_SMOOTH);
         bgIcon = new ImageIcon(newImg);
         JLabel bgLabel = new JLabel(bgIcon);
-        bgLabel.setSize(600,225);
+        bgLabel.setSize(610,225);
 
         d = new JDialog(window, "Eriantys - " + opponent +"'s dashboard");
-        d.setSize(610, 260);
+        d.setSize(620, 260);
         d.setResizable(false);
         d.add(bgLabel);
 
@@ -56,7 +54,7 @@ public class OpponentDialog extends JFrame implements ActionListener {
         //Coins:
         JPanel coins = new JPanel();
         coins.setLayout(null);
-        coins.setBounds(510, 5, 81, 20);
+        coins.setBounds(510, 5, 91, 20);
         Color colorPanel = new Color(128,128,128,125);
         coins.setBackground(colorPanel);
         coins.setBorder(border);
@@ -68,7 +66,7 @@ public class OpponentDialog extends JFrame implements ActionListener {
         titleCo.setFont(new Font("MV Boli", Font.BOLD, 9));
         titleCo.setBounds(0,0,50,20);
         coins.add(titleCo);
-        JLabel numC = new JLabel();
+        numC = new JLabel();
         numC.setText("x0");
         numC.setHorizontalAlignment(SwingConstants.CENTER);
         numC.setVerticalAlignment(SwingConstants.CENTER);
@@ -79,7 +77,7 @@ public class OpponentDialog extends JFrame implements ActionListener {
         //Last card:
         JPanel card = new JPanel();
         card.setLayout(null);
-        card.setBounds(510, 30, 81, 145);
+        card.setBounds(510, 30, 91, 145);
         card.setBackground(colorPanel);
         card.setBorder(border);
         bgLabel.add(card);
@@ -88,18 +86,18 @@ public class OpponentDialog extends JFrame implements ActionListener {
         titleCa.setHorizontalAlignment(SwingConstants.CENTER);
         titleCa.setVerticalAlignment(SwingConstants.CENTER);
         titleCa.setFont(new Font("MV Boli", Font.BOLD, 9));
-        titleCa.setBounds(0,0,81,20);
+        titleCa.setBounds(0,0,91,20);
         card.add(titleCa);
         containerCard.setLayout(null);
-        containerCard.setBounds(3, 17, 75, 125);
+        containerCard.setBounds(3, 17, 85, 125);
         card.add(containerCard);
         JLabel c = new JLabel();
         ImageIcon cIcon = new ImageIcon(this.getClass().getResource("/Char_back.png"));
         Image cImage = cIcon.getImage();
-        newImg = cImage.getScaledInstance(75, 125,  Image.SCALE_SMOOTH);
+        newImg = cImage.getScaledInstance(85, 125,  Image.SCALE_SMOOTH);
         cIcon = new ImageIcon(newImg);
         c.setIcon(cIcon);
-        c.setBounds(0, 0, 75, 125);
+        c.setBounds(0, 0, 85, 125);
         containerCard.add(c);
 
         //Button to close dialog:
@@ -180,7 +178,25 @@ public class OpponentDialog extends JFrame implements ActionListener {
             else to.setBounds(405+35*(i%2),115-30*(i/2),  35, 45);
             containerDash.add(to);
         }
+        it.polimi.ingsw.model.Color[] colInDashC = {it.polimi.ingsw.model.Color.GREEN, it.polimi.ingsw.model.Color.RED, it.polimi.ingsw.model.Color.YELLOW, it.polimi.ingsw.model.Color.PINK, it.polimi.ingsw.model.Color.BLUE};
+        String[] colInDashS = {"/Prof_green.png", "/Prof_red.png", "/Prof_yellow.png", "/Prof_pink.png", "/Prof_blue.png"};
+        for(int i=0; i<5; i++){
+            if(report.getProfessors().get(colInDashC[i]).equals(report.getOpponentsNick().get(position))){
+                JLabel pro = new JLabel();
+                ImageIcon proIcon = new ImageIcon(this.getClass().getResource(colInDashS[i]));
+                Image proImage = proIcon.getImage();
+                Image newImg = proImage.getScaledInstance(23, 23,  Image.SCALE_SMOOTH);
+                proIcon = new ImageIcon(newImg);
+                pro.setIcon(proIcon);
+                pro.setOpaque(false);
+                pro.setBounds(352,22+32*i,  23, 23);
+                containerDash.add(pro);
+            }
+        }
         containerDash.repaint();
+
+        //Show coins:
+        numC.setText("x"+report.getOpponentsCoins().get(position));
 
         //Show played card:
         if(report.getOpponentsLastCard().get(position) != null){
@@ -188,10 +204,10 @@ public class OpponentDialog extends JFrame implements ActionListener {
             JLabel c = new JLabel();
             ImageIcon cIcon = new ImageIcon(this.getClass().getResource(report.getOpponentsLastCard().get(position).getFront()));
             Image cImage = cIcon.getImage();
-            Image newImg = cImage.getScaledInstance(75, 125,  Image.SCALE_SMOOTH);
+            Image newImg = cImage.getScaledInstance(85, 125,  Image.SCALE_SMOOTH);
             cIcon = new ImageIcon(newImg);
             c.setIcon(cIcon);
-            c.setBounds(0, 0, 75, 125);
+            c.setBounds(0, 0, 85, 125);
             containerCard.add(c);
             containerCard.repaint();
         }

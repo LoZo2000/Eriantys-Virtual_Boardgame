@@ -45,11 +45,15 @@ public class GameReport implements Serializable {
     private ArrayList<Student> myEntrance = new ArrayList<>();
     private ArrayList<ArrayList<Student>> opponentsEntrance = new ArrayList<>();
     private ArrayList<Integer> myCanteen = new ArrayList<>();
+    private ArrayList<Integer> lastMyCanteen = new ArrayList<>();
     private ArrayList<ArrayList<Integer>> opponentsCanteen = new ArrayList<>();
     private Card myLastCard;
     private ArrayList<Card> opponentsLastCard = new ArrayList<>();
     private int myTowers;
     private ArrayList<Integer> towersInDash = new ArrayList<>();
+    private ArrayList<Character> charId = new ArrayList<>();
+    private int myCoins;
+    private ArrayList<Integer> opponentsCoins = new ArrayList<>();
 
 
 
@@ -324,6 +328,7 @@ public class GameReport implements Serializable {
             prov.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE));
             opponentsCanteen.add(prov);
             opponentsLastCard.add(p.getDashboard().getGraveyard());
+            opponentsCoins.add(p.getCoins());
 
             if(!p.equals(owner)){
 
@@ -350,13 +355,24 @@ public class GameReport implements Serializable {
         }
 
         //PLAYER DASHBOARD
+        myCoins = owner.getCoins();
         myCards = owner.getHand().getAllCards();
         myEntrance = owner.getDashboard().getEntrance().getAllStudents();
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.GREEN));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.GREEN)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.GREEN).get(0).getId());
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.RED));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.RED)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.RED).get(0).getId());
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.YELLOW));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.YELLOW)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.YELLOW).get(0).getId());
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.PINK));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.PINK)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.PINK).get(0).getId());
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.BLUE).get(0).getId());
         myLastCard = owner.getDashboard().getGraveyard();
         List<Card> hand = owner.getHand().getAllCards();
         List<Student> entrance = owner.getDashboard().getEntrance().getAllStudents();
@@ -391,6 +407,7 @@ public class GameReport implements Serializable {
             //CHARACTERS
             for(Character c : game.getCharactersCards()){
                 characters.add(new CharacterReport(c));
+                charId.add(c);
             }
 
             //ACTIVE CARD
@@ -561,5 +578,23 @@ public class GameReport implements Serializable {
     }
     public ArrayList<Integer> getTowersInDash(){
         return towersInDash;
+    }
+    public Map<Color, String> getProfessors(){
+        return professors;
+    }
+    public ArrayList<Character> getChar(){
+        return charId;
+    }
+    public int getMyCoins(){
+        return myCoins;
+    }
+    public ArrayList<Integer> getOpponentsCoins(){
+        return opponentsCoins;
+    }
+    public int getRemainingMoves(){
+        return remainingMoves;
+    }
+    public ArrayList<Integer> getLastMyCanteen(){
+        return lastMyCanteen;
     }
 }
