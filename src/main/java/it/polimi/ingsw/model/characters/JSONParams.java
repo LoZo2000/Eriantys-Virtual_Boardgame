@@ -16,10 +16,10 @@ public class JSONParams {
 
     private final Boolean towersDisabled;
     private final Integer extraPoints;
-
     private final Integer extraMNMovement;
+    private final Integer maxMoves;
 
-    public JSONParams(Action typeAction, Integer numThingOnIt, Location locationType, Boolean refill, Set<Location> allowedDepartures, Set<Location> allowedArrivals, Boolean towersDisabled, Integer extraPoints, Integer extraMNMovement) {
+    public JSONParams(Action typeAction, Integer numThingOnIt, Location locationType, Boolean refill, Set<Location> allowedDepartures, Set<Location> allowedArrivals, Boolean towersDisabled, Integer extraPoints, Integer extraMNMovement, Integer maxMoves) {
         this.typeAction = typeAction;
         this.numThingsOnIt = numThingOnIt;
         this.locationType = locationType;
@@ -29,6 +29,7 @@ public class JSONParams {
         this.towersDisabled = towersDisabled;
         this.extraPoints = extraPoints;
         this.extraMNMovement = extraMNMovement;
+        this.maxMoves = maxMoves;
     }
 
     public Action getTypeAction() {
@@ -65,5 +66,9 @@ public class JSONParams {
 
     public Integer getExtraMNMovement() {
         return extraMNMovement;
+    }
+
+    public Integer getMaxMoves(){
+        return maxMoves;
     }
 }

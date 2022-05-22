@@ -11,9 +11,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MotherNatureRuleTest {
+class ExchangeRuleTest {
 
-    private MotherNatureRule rule;
+    private ExchangeRule rule;
     private Report rep;
     private Map<Color, ColorTower> professors;
 
@@ -37,7 +37,7 @@ class MotherNatureRuleTest {
         //BLACK: 4 + 2 (Towers)
         //WHITE: 5
 
-        this.rule = new MotherNatureRule(2);
+        this.rule = new ExchangeRule(3);
     }
 
     @Test
@@ -85,16 +85,16 @@ class MotherNatureRuleTest {
 
     @Test
     void isActionNeededInfluence(){
-        assertFalse(this.rule.isActionNeeded());
+        assertTrue(this.rule.isActionNeeded());
     }
 
     @Test
     void getMotherNatureExtraMovement(){
-        assertEquals(2, this.rule.getMotherNatureExtraMovement());
+        assertEquals(0, this.rule.getMotherNatureExtraMovement());
     }
 
     @Test
     void getMaximumExchangeMoves(){
-        assertEquals(0, this.rule.getMaximumExchangeMoves());
+        assertEquals(3, this.rule.getMaximumExchangeMoves());
     }
 }

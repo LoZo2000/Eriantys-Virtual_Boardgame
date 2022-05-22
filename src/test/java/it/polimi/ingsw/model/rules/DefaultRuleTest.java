@@ -248,4 +248,9 @@ class DefaultRuleTest {
     void getMotherNatureExtraMovement(){
         assertEquals(0, this.rule.getMotherNatureExtraMovement());
     }
+
+    @Test
+    void getMaximumExchangeMoves(){
+        assertEquals(0, this.rule.getMaximumExchangeMoves());
+    }
 }

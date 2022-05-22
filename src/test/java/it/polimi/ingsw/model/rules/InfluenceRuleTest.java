@@ -146,4 +146,10 @@ class InfluenceRuleTest {
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
         assertEquals(0, this.rule.getMotherNatureExtraMovement());
     }
+
+    @Test
+    void getMaximumExchangeMoves(){
+        this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
+        assertEquals(0, this.rule.getMaximumExchangeMoves());
+    }
 }

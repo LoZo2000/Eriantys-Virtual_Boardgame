@@ -38,9 +38,9 @@ public class Game extends Observable<GameReport> {
     private Phase currentPhase = Phase.PREGAME;
     private Map<Player, Card> playedCards;
     private int remainingMoves;
+    private int remainingExchanges;
     private boolean usedCard;
     private boolean finishedGame = false;
-
     private boolean isLastTurn = false;
     private String winner=null;
 
@@ -269,7 +269,7 @@ public class Game extends Observable<GameReport> {
                 island.conquest(higherInfluence);
                 //TODO Necesario passare per Team
                 for (Player p : this.players) {
-                    System.out.println("il giocatore "+p.getNickname()+"ha nella dashbord num torri"+ p.getDashboard().getTowers());
+                    //System.out.println("il giocatore "+p.getNickname()+"ha nella dashbord num torri"+ p.getDashboard().getTowers());
                     if (p.getColor() == report.getOwner()) {
                         p.getDashboard().addTowers(report.getTowerNumbers());
                     }
@@ -419,10 +419,6 @@ public class Game extends Observable<GameReport> {
             this.assignCoins(c2, true, c1 == c2);
         //}
 
-        //if(this.activeCard != -1){
-            this.activeCard = -1;
-            this.currentRule = new DefaultRule();
-        //}
     }
 
     public void refillClouds() throws NoMoreStudentsException {
@@ -516,6 +512,11 @@ public class Game extends Observable<GameReport> {
                 case ACTION:
                     allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
                     break;
+
+                case EXCHANGE:
+                    ArrayList<Student> s2 = extractFromBag(jc.getParams().getNumThingOnIt());
+                    allCharacters.add(new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), s2, jc.getParams()));
+                    break;
             }
         }
 
@@ -588,6 +589,29 @@ public class Game extends Observable<GameReport> {
         }
 
         return this.currentRule.isActionNeeded();
+    }
+
+    public boolean canExchange(){
+        return (this.currentRule.getMaximumExchangeMoves() != 0);
+    }
+
+    public void resetRemainingExchanges(){
+        this.remainingExchanges = this.currentRule.getMaximumExchangeMoves();
+        sendNotifyAll();
+    }
+
+    public void reduceRemainingExchanges(){
+        this.remainingExchanges--;
+
+        if(remainingExchanges == 0){
+            this.activeCard = -1;
+            this.currentRule = new DefaultRule();
+        }
+
+        sendNotifyAll();
+    }
+    public int getRemainingExchanges(){
+        return remainingExchanges;
     }
 
     public Action getRequestedAction() throws NoActiveCardException{

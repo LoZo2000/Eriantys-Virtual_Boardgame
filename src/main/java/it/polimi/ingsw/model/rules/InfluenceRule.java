@@ -56,6 +56,11 @@ public class InfluenceRule extends DecoratedRule{
         return this.defaultRules.getMotherNatureExtraMovement();
     }
 
+    @Override
+    public int getMaximumExchangeMoves() {
+        return this.defaultRules.getMaximumExchangeMoves();
+    }
+
     public ColorTower getPlayerWhoUsed() {
         return playerWhoUsed;
     }

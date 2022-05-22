@@ -68,7 +68,7 @@
   {
     "id": 7,
     "desc": "Exchange between students on this card and students at the Entrance",
-    "typeCharacter": "MOVEMENT",
+    "typeCharacter": "EXCHANGE",
     "cost": 1,
     "params": {
       "typeAction": "EXCHANGESTUDENT",
@@ -82,7 +82,8 @@
       "allowedArrivals": [
         "CARD_EXCHANGE",
         "ENTRANCE"
-      ]
+      ],
+      "maxMoves": 3
     }
   },
   {
@@ -108,7 +109,7 @@
   {
     "id": 10,
     "desc": "Exchange between students at the Entrance and students in the Canteen",
-    "typeCharacter": "MOVEMENT",
+    "typeCharacter": "EXCHANGE",
     "cost": 1,
     "params": {
       "typeAction": "EXCHANGESTUDENT",
@@ -122,7 +123,8 @@
       "allowedArrivals": [
         "CANTEEN",
         "ENTRANCE"
-      ]
+      ],
+      "maxMoves": 2
     }
   },
   {

@@ -97,4 +97,9 @@ public class DefaultRule implements Rule, Serializable {
     public int getMotherNatureExtraMovement() {
         return 0;
     }
+
+    @Override
+    public int getMaximumExchangeMoves() {
+        return 0;
+    }
 }

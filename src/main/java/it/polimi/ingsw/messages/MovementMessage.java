@@ -56,7 +56,7 @@ public abstract class MovementMessage extends Message{
     protected MovementCharacter getMovementCharacterCard(Game game, Location typeCard){
         Character[] characters = game.getCharactersCards();
         for(Character ch : characters){
-            if(ch.getTypeCharacter() == CharacterType.MOVEMENT){
+            if(ch.getTypeCharacter() == CharacterType.MOVEMENT || ch.getTypeCharacter() == CharacterType.EXCHANGE){
                 MovementCharacter mc = (MovementCharacter) ch;
                 if(mc.getLocationType() == typeCard)
                     return mc;

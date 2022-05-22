@@ -135,4 +135,10 @@ class ProfessorRuleTest {
         this.rule = new ProfessorRule("player1");
         assertEquals(0, this.rule.getMotherNatureExtraMovement());
     }
+
+    @Test
+    void getMaximumExchangeMoves(){
+        this.rule = new ProfessorRule("player1");
+        assertEquals(0, this.rule.getMaximumExchangeMoves());
+    }
 }

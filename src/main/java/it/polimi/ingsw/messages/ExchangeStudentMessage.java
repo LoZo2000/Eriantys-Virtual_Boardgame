@@ -19,14 +19,12 @@ public class ExchangeStudentMessage extends MovementMessage{
 
     @Override
     public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoIslandException, NoPlayerException {
-        if(game.getActiveCard() != -1) {
-            Action requestedActiveAction = game.getRequestedAction();
-            if (requestedActiveAction != Action.EXCHANGESTUDENT)
-                throw new IllegalMoveException("Wrong move: you should not move students now!");
-
+        if(game.canExchange()) {
             if (checkErrorMovementLocations(game))
                 throw new IllegalMoveException("You can't move students from these locations");
 
+        } else{
+            throw new IllegalMoveException("Wrong move: you should not exchange students now!");
         }
 
         Movable departure, arrival;
@@ -41,7 +39,9 @@ public class ExchangeStudentMessage extends MovementMessage{
             throw new IllegalMoveException("Student, arrival or departure missing...");
         }
 
-        return new Update(null, null, null, null, false, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
+        game.reduceRemainingExchanges();
+
+        return new Update(null, null, null, null, null, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
 
     }
 

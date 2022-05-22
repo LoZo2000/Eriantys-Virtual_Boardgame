@@ -31,4 +31,6 @@ public interface Rule {
     boolean isActionNeeded();
 
     int getMotherNatureExtraMovement();
+
+    int getMaximumExchangeMoves();
 }

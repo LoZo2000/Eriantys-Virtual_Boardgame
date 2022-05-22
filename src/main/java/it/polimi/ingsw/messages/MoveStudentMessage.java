@@ -20,7 +20,7 @@ public class MoveStudentMessage extends MovementMessage{
         Boolean usedCard = null;
         boolean activeCard = false;
 
-        if(game.getActiveCard() != -1) {
+        if(game.getActiveCard() != -1 && game.getRequestedAction() != Action.EXCHANGESTUDENT) {
             Action requestedActiveAction = game.getRequestedAction();
             if (requestedActiveAction != Action.MOVESTUDENT)
                 throw new IllegalMoveException("Wrong move: you should not move students now!");
@@ -37,7 +37,7 @@ public class MoveStudentMessage extends MovementMessage{
 
         arrival = getLocation(game, arrivalType, arrivalId);
 
-        if(game.getActiveCard() != -1){
+        if(game.getActiveCard() != -1 && game.getRequestedAction() == Action.MOVESTUDENT){
             usedCard = false;
             activeCard = true;
         }
@@ -56,7 +56,7 @@ public class MoveStudentMessage extends MovementMessage{
             game.setLastTurn(true);
         }
 
-        if(game.getActiveCard() == -1) {
+        if(game.getActiveCard() == -1 || game.getRequestedAction() == Action.EXCHANGESTUDENT) {
             game.reduceRemainingMoves(activeCard);
         }
 

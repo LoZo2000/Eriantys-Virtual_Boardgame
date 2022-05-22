@@ -26,6 +26,10 @@ public class UsePowerMessage extends Message{
 
         game.setUsedCard(true);
 
+        if(game.canExchange()){
+            game.resetRemainingExchanges();
+        }
+
         if(!activeCard)
             activeCard = null;
 

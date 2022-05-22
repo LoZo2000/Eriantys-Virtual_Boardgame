@@ -91,10 +91,6 @@ class CompleteRulesGameTest {
                         s.add(new Student(33, Color.GREEN));
                         s.add(new Student(34, Color.PINK));
                     }
-                    if(jc.getParams().getNumThingOnIt() == 6) {
-                        s.add(new Student(35, Color.BLUE));
-                        s.add(new Student(36, Color.BLUE));
-                    }
                     allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), s, jc.getParams()));
                     break;
 
@@ -112,6 +108,21 @@ class CompleteRulesGameTest {
 
                 case ACTION:
                     allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    break;
+
+                case EXCHANGE:
+                    s = new ArrayList<>();
+                    if(jc.getParams().getNumThingOnIt() > 0) {
+                        s.add(new Student(31, Color.RED));
+                        s.add(new Student(32, Color.BLUE));
+                        s.add(new Student(33, Color.GREEN));
+                        s.add(new Student(34, Color.PINK));
+                    }
+                    if(jc.getParams().getNumThingOnIt() == 6) {
+                        s.add(new Student(35, Color.BLUE));
+                        s.add(new Student(36, Color.BLUE));
+                    }
+                    allCharacters.add(new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), s, jc.getParams()));
                     break;
             }
         }

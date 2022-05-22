@@ -12,11 +12,11 @@ import java.util.Set;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class MovementCharacter extends ActionCharacter implements Movable {
-    private final Location locationType;
-    private final boolean refill;
-    private ArrayList<Student> students;
-    private final Set<Location> allowedDepartures;
-    private final Set<Location> allowedArrivals;
+    protected final Location locationType;
+    protected final boolean refill;
+    protected ArrayList<Student> students;
+    protected final Set<Location> allowedDepartures;
+    protected final Set<Location> allowedArrivals;
 
     public MovementCharacter(int id, CharacterType type, String desc, int cost, ArrayList<Student> students, JSONParams params){
         super(id, type, desc, cost, params);
@@ -71,19 +71,6 @@ public class MovementCharacter extends ActionCharacter implements Movable {
     }
 
     @Override
-    public Rule usePower(Player player) throws NotEnoughMoneyException, IllegalMoveException {
-        if(allowedArrivals.contains(Location.CANTEEN) && locationType == Location.CARD_EXCHANGE){
-            if(checkEmptyCanteen(player)){
-                throw new IllegalMoveException("You can't exchange students with the canteen if there isn't any student in it.");
-            }
-        }
-        player.useCoins(this.getCost());
-        this.increaseTimesUsed();
-
-        return new ActionRule();
-    }
-
-    @Override
     public String shortString(){
         String s = super.shortString();
         s += ansi().a(" - ").bold().a("Students: ").reset().a(students).toString();
@@ -108,14 +95,5 @@ public class MovementCharacter extends ActionCharacter implements Movable {
     @Override
     public void addToken() throws NoMoreTokensException {
         throw new NoMoreTokensException("You can't add students without movement");
-    }
-
-    private boolean checkEmptyCanteen(Player p){
-        for(Color c : Color.values()){
-            if(p.getDashboard().getCanteen().getNumberStudentColor(c) != 0)
-                return false;
-        }
-
-        return true;
     }
 }

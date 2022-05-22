@@ -20,7 +20,7 @@ class CharactersTest {
 
     @Test
     void actionCharacterWithTokensTest(){
-        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0);
+        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0, 0);
         ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
@@ -50,7 +50,7 @@ class CharactersTest {
 
     @Test
     void actionCharacterWithoutTokensTest(){
-        JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence without moving Mother Nature", 3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0);
+        JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence without moving Mother Nature", 3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0, 0);
         ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
@@ -72,7 +72,7 @@ class CharactersTest {
 
     @Test
     void influenceCharacterDisableTowersTest(){
-        JSONCharacter jc = new JSONCharacter(6, CharacterType.INFLUENCE, "Disable towers Influence", 2, null, 0, null, false, null, null, true, 0, 0);
+        JSONCharacter jc = new JSONCharacter(6, CharacterType.INFLUENCE, "Disable towers Influence", 2, null, 0, null, false, null, null, true, 0, 0, 0);
         InfluenceCharacter character = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
@@ -88,7 +88,7 @@ class CharactersTest {
 
     @Test
     void influenceCharacterExtraPointsTest(){
-        JSONCharacter jc = new JSONCharacter(8, CharacterType.INFLUENCE, "Influence + 2", 2, null, 0, null, false, null, null, false, 2, 0);
+        JSONCharacter jc = new JSONCharacter(8, CharacterType.INFLUENCE, "Influence + 2", 2, null, 0, null, false, null, null, false, 2, 0, 0);
         InfluenceCharacter character = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
@@ -104,7 +104,7 @@ class CharactersTest {
 
     @Test
     void motherNatureCharacterTest(){
-        JSONCharacter jc = new JSONCharacter(4, CharacterType.MOTHERNATURE, "Maximum movement + 2", 1, null, 0, null, false, null, null, false, 0, 2);
+        JSONCharacter jc = new JSONCharacter(4, CharacterType.MOTHERNATURE, "Maximum movement + 2", 1, null, 0, null, false, null, null, false, 0, 2, 0);
         MotherNatureCharacter character = new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
@@ -119,7 +119,7 @@ class CharactersTest {
 
     @Test
     void professorCharacterTest(){
-        JSONCharacter jc = new JSONCharacter(2, CharacterType.PROFESSOR, "Professor change with tie", 2, null, 0, null, false, null, null, false, 0, 0);
+        JSONCharacter jc = new JSONCharacter(2, CharacterType.PROFESSOR, "Professor change with tie", 2, null, 0, null, false, null, null, false, 0, 0, 0);
         ProfessorCharacter character = new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost());
 
         //Check if the parameters of the character are correct
@@ -139,7 +139,7 @@ class CharactersTest {
         students.add(new Student(2, Color.BLUE));
         students.add(new Student(3, Color.GREEN));
         students.add(new Student(4, Color.PINK));
-        JSONCharacter jc = new JSONCharacter(1, CharacterType.MOVEMENT, "Move students from card to island", 1, Action.MOVESTUDENT, 4, Location.CARD_ISLAND, true, allowedDepartures, allowedArrivals, false, 0, 0);
+        JSONCharacter jc = new JSONCharacter(1, CharacterType.MOVEMENT, "Move students from card to island", 1, Action.MOVESTUDENT, 4, Location.CARD_ISLAND, true, allowedDepartures, allowedArrivals, false, 0, 0, 0);
         MovementCharacter character = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
 
         //Check if the parameters of the character are correct
@@ -186,6 +186,75 @@ class CharactersTest {
         character.addStudent(new Student(5, Color.RED));
 
         stud.add(new Student(5, Color.RED));
+
+        assertEquals(stud, character.getStudents());
+
+        assertThrows(NoSuchStudentException.class, () -> character.removeStudent(15));
+    }
+
+    @Test
+    void exchangeCharacterTest() throws NoSuchStudentException, CannotAddStudentException {
+        Set<Location> allowedDepartures = Set.of(Location.CARD_EXCHANGE, Location.ENTRANCE);
+        Set<Location> allowedArrivals = Set.of(Location.CARD_EXCHANGE, Location.ENTRANCE);
+
+        ArrayList<Student> students = new ArrayList<>();
+        students.add(new Student(1, Color.RED));
+        students.add(new Student(2, Color.BLUE));
+        students.add(new Student(3, Color.GREEN));
+        students.add(new Student(4, Color.PINK));
+        students.add(new Student(5, Color.YELLOW));
+        students.add(new Student(6, Color.RED));
+        JSONCharacter jc = new JSONCharacter(7, CharacterType.EXCHANGE, "Exchange students between card and entrance", 1, Action.EXCHANGESTUDENT, 6, Location.CARD_EXCHANGE, false, allowedDepartures, allowedArrivals, false, 0, 0, 3);
+        ExchangeCharacter character = new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
+
+        //Check if the parameters of the character are correct
+        assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 7"), "The ID is 7");
+        assertEquals(7, character.getId());
+        assertTrue(character.toString().contains("\u001B[1mType:\u001B[0m " + CharacterType.EXCHANGE), "It's a Exchange Character");
+        assertTrue(character.toString().contains("\u001B[1mCost:\u001B[0m 1"), "It's costs 1 Coins");
+
+        //Check Movement Params
+        assertTrue(character.toString().contains("\u001B[1mActionType:\u001B[0m " + Action.EXCHANGESTUDENT), "It allows the exchange of students");
+        assertTrue(character.toString().contains("\u001B[1mMaxNumTokens:\u001B[0m 6"), "It has 6 tokens on it");
+        assertTrue(character.toString().contains("\u001B[1mLocation Type:\u001B[0m " + Location.CARD_EXCHANGE), "Its the Card that exchanges students with entrance");
+        assertTrue(character.toString().contains("\u001B[1mNeeds Refill?\u001B[0m false"), "The card doesn't students refill");
+        assertTrue(character.toString().contains("\u001B[1mAllowed Departures:\u001B[0m " + allowedDepartures), "The card permits movement only between CARD_EXCHANGE and ENTRANCE");
+        assertTrue(character.toString().contains("\u001B[1mAllowed Arrivals:\u001B[0m " + allowedArrivals), "The card permits movement only to CARD_EXCHANGE and ENTRANCE");
+        assertTrue(character.toString().contains("\u001B[1mMaximum Exchanges:\u001B[0m 3"), "The card permits movement only 3 exchanges");
+
+        assertTrue(character.shortString().contains(ansi().bold().a("Students: ").reset().a(students).toString()));
+
+        //Check Values
+        assertEquals(Action.EXCHANGESTUDENT, character.getType(), "Allows only exchange of students");
+        assertEquals(6, character.getNumTokens(), "There are 6 students on card");
+        assertEquals(Location.CARD_EXCHANGE, character.getLocationType());
+        assertFalse(character.isRefill());
+        assertEquals(allowedDepartures, character.getAllowedDepartures());
+        assertEquals(allowedArrivals, character.getAllowedArrivals());
+        assertEquals(students, character.getStudents());
+        assertEquals(3, character.getMaxMoves());
+
+        //Check Methods
+        assertThrows(NoMoreTokensException.class, character::addToken, "The only way to add a token on the card is through the students' movement");
+        assertThrows(NoMoreTokensException.class, character::removeToken, "The only way to remove a token on the card is through the students' movement");
+
+        assertThrows(CannotAddStudentException.class, ()->character.addStudent(new Student(7, Color.RED)));
+
+        Student s = character.removeStudent(1);
+        assertEquals(new Student(1, Color.RED), s);
+
+        ArrayList<Student> stud = new ArrayList<>();
+        stud.add(new Student(2, Color.BLUE));
+        stud.add(new Student(3, Color.GREEN));
+        stud.add(new Student(4, Color.PINK));
+        stud.add(new Student(5, Color.YELLOW));
+        stud.add(new Student(6, Color.RED));
+
+        assertEquals(stud, character.getStudents());
+
+        character.addStudent(new Student(7, Color.RED));
+
+        stud.add(new Student(7, Color.RED));
 
         assertEquals(stud, character.getStudents());
 

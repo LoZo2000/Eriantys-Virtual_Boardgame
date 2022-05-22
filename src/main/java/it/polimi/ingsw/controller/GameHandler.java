@@ -108,12 +108,14 @@ public class GameHandler {
         temp.clear();
         temp.add(Action.MOVESTUDENT);
         temp.add(Action.USEPOWER);
+        temp.add(Action.EXCHANGESTUDENT);
         temp.add(Action.SHOWME);
         legitAction.put(Phase.MIDDLETURN, (ArrayList<Action>) temp.clone());
 
         temp.clear();
         temp.add(Action.MOVEMOTHERNATURE);
         temp.add(Action.USEPOWER);
+        temp.add(Action.EXCHANGESTUDENT);
         temp.add(Action.SHOWME);
         legitAction.put(Phase.MOVEMNTURN, (ArrayList<Action>) temp.clone());
 
@@ -124,7 +126,6 @@ public class GameHandler {
 
         temp.clear();
         temp.add(Action.MOVESTUDENT);
-        temp.add(Action.EXCHANGESTUDENT);
         temp.add(Action.ISLAND_INFLUENCE);
         temp.add(Action.BLOCK_ISLAND);
         temp.add(Action.BLOCK_COLOR);
@@ -205,9 +206,15 @@ public class GameHandler {
 
         update.getActivatedCard().ifPresent((activatedCard) -> {
             if(activatedCard){
-                this.oldPhase = this.currentPhase;
-                this.currentPhase = Phase.ACTIVECARD;
-                game.setCurrentPhase(currentPhase);
+                try {
+                    if(game.getRequestedAction() != Action.EXCHANGESTUDENT) {
+                        this.oldPhase = this.currentPhase;
+                        this.currentPhase = Phase.ACTIVECARD;
+                        game.setCurrentPhase(currentPhase);
+                    }
+                } catch (NoActiveCardException e) {
+                    //Can't get here
+                }
             } else{
                 nextPhase();
             }

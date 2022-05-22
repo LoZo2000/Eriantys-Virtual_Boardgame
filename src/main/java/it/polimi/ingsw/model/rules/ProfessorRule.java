@@ -34,4 +34,9 @@ public class ProfessorRule extends DecoratedRule{
     public int getMotherNatureExtraMovement() {
         return this.defaultRules.getMotherNatureExtraMovement();
     }
+
+    @Override
+    public int getMaximumExchangeMoves() {
+        return this.defaultRules.getMaximumExchangeMoves();
+    }
 }

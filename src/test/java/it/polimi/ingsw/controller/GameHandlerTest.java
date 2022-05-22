@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.IllegalActionException;
-import it.polimi.ingsw.controller.exceptions.IllegalMessageException;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characters.*;
@@ -9,11 +8,7 @@ import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoIslandException;
 import it.polimi.ingsw.model.exceptions.NotYourTurnException;
-import it.polimi.ingsw.model.rules.InfluenceRule;
-import it.polimi.ingsw.model.rules.MotherNatureRule;
-import it.polimi.ingsw.model.rules.ProfessorRule;
-import it.polimi.ingsw.view.Columns;
-import it.polimi.ingsw.view.GameReport;
+import it.polimi.ingsw.model.rules.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -127,6 +122,10 @@ public class GameHandlerTest {
         addPlayers();
         playCards();
 
+        assertThrows(IllegalMoveException.class, () ->
+                gameHandler.execute(new ExchangeStudentMessage("player3", 1, 2, Location.ENTRANCE, -1, Location.CANTEEN, -1))
+        );
+
         List<Student> s = moveStudents("player3");
 
         assertEquals(Phase.MOVEMNTURN, gameHandler.getPhase());
@@ -172,15 +171,23 @@ public class GameHandlerTest {
 
         message = new MoveStudentMessage(sender, students.get(0).getId(), Location.ENTRANCE, -1, Location.CANTEEN, -1);
         gameHandler.execute(message);
+        
+        assertEquals(3, gameHandler.getGame().getRemainingMoves());
 
         message = new MoveStudentMessage(sender, students.get(1).getId(), Location.ENTRANCE, -1, Location.CANTEEN, -1);
         gameHandler.execute(message);
 
+        assertEquals(2, gameHandler.getGame().getRemainingMoves());
+
         message = new MoveStudentMessage(sender, students.get(2).getId(), Location.ENTRANCE, -1, Location.ISLAND, 8);
         gameHandler.execute(message);
 
+        assertEquals(1, gameHandler.getGame().getRemainingMoves());
+
         message = new MoveStudentMessage(sender, students.get(3).getId(), Location.ENTRANCE, -1, Location.ISLAND, 9);
         gameHandler.execute(message);
+
+        assertEquals(4, gameHandler.getGame().getRemainingMoves());
 
         return students;
     }
@@ -301,10 +308,10 @@ public class GameHandlerTest {
                 case 4 -> testCard4((MotherNatureCharacter) c);
                 case 5 -> testCard5((ActionCharacter) c);
                 case 6 -> testCard6((InfluenceCharacter) c);
-                case 7 -> testCard7((MovementCharacter) c);
+                case 7 -> testCard7((ExchangeCharacter) c);
                 case 8 -> testCard8((InfluenceCharacter) c);
                 case 9 -> testCard9((ActionCharacter) c);
-                case 10 -> testCard10((MovementCharacter) c);
+                case 10 -> testCard10((ExchangeCharacter) c);
                 case 11 -> testCard11((MovementCharacter) c);
                 case 12 -> testCard12((ActionCharacter) c);
             }
@@ -315,11 +322,15 @@ public class GameHandlerTest {
     }
 
     private void testCard1(MovementCharacter c) throws Exception{
+        assertThrows(IllegalMoveException.class, () ->
+                gameHandler.execute(new ExchangeStudentMessage("player1", 1, 2, Location.ENTRANCE, -1, Location.CANTEEN, -1))
+        );
+
         Message message = new UsePowerMessage("player1", 0);
         gameHandler.execute(message);
 
         assertThrows(IllegalMoveException.class, () ->
-                gameHandler.execute(new ExchangeStudentMessage("player1", 1, 2, Location.ENTRANCE, -1, Location.CANTEEN, -1))
+                gameHandler.execute(new BlockColorMessage("player1", Color.RED))
         );
 
         ArrayList<Student> students = c.getStudents();
@@ -335,6 +346,8 @@ public class GameHandlerTest {
 
         Message m = new MoveStudentMessage("player1", s.getId(), Location.CARD_ISLAND, -1, Location.ISLAND, 1);
         gameHandler.execute(m);
+
+        assertEquals(3, gameHandler.getGame().getRemainingMoves());
 
         assertTrue(gameHandler.getGame().getIsland(1).getAllStudents().contains(s));
         assertEquals(4, c.getStudents().size());
@@ -450,13 +463,13 @@ public class GameHandlerTest {
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
-    private void testCard7(MovementCharacter c) throws Exception{
+    private void testCard7(ExchangeCharacter c) throws Exception{
         Message message = new UsePowerMessage("player1", 0);
         gameHandler.execute(message);
 
-        assertThrows(IllegalMoveException.class, () ->
-                gameHandler.execute(new BlockColorMessage("player1", Color.RED))
-        );
+        assertEquals(ExchangeRule.class, gameHandler.getGame().getCurrentRule().getClass());
+        assertTrue(gameHandler.getGame().canExchange());
+        assertEquals(3, gameHandler.getGame().getRemainingExchanges());
 
         ArrayList<Student> students1 = gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
         Student s1 = students1.get(0);
@@ -479,10 +492,40 @@ public class GameHandlerTest {
         Message m = new ExchangeStudentMessage("player1", s1.getId(), s2.getId(), Location.ENTRANCE, -1, Location.CARD_EXCHANGE, -1);
         gameHandler.execute(m);
 
+        assertEquals(2, gameHandler.getGame().getRemainingExchanges());
         assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents().contains(s2));
         assertTrue(c.getStudents().contains(s1));
-        assertEquals(6, c.getStudents().size());
 
+        moveStudentsTwoPlayer();
+
+        assertEquals(Phase.MOVEMNTURN, gameHandler.getPhase());
+
+        students1 = gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
+        students2 = c.getStudents();
+
+        Student s3 = students1.get(0);
+        Student s4 = students2.get(0);
+        m = new ExchangeStudentMessage("player1", s3.getId(), s4.getId(), Location.ENTRANCE, -1, Location.CARD_EXCHANGE, -1);
+        gameHandler.execute(m);
+
+        assertEquals(1, gameHandler.getGame().getRemainingExchanges());
+        assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents().contains(s4));
+        assertTrue(c.getStudents().contains(s3));
+
+        Student s5 = students1.get(1);
+        Student s6 = students2.get(1);
+        m = new ExchangeStudentMessage("player1", s5.getId(), s6.getId(), Location.ENTRANCE, -1, Location.CARD_EXCHANGE, -1);
+        gameHandler.execute(m);
+
+        assertEquals(0, gameHandler.getGame().getRemainingExchanges());
+        assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents().contains(s6));
+        assertTrue(c.getStudents().contains(s5));
+
+        assertFalse(gameHandler.getGame().canExchange());
+        assertEquals(DefaultRule.class, gameHandler.getGame().getCurrentRule().getClass());
+        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new ExchangeStudentMessage("player1", s5.getId(), s6.getId(), Location.ENTRANCE, -1, Location.CARD_EXCHANGE, -1)));
+
+        assertEquals(6, c.getStudents().size());
         //System.out.println("Card 7");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
@@ -540,7 +583,9 @@ public class GameHandlerTest {
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
-    private void testCard10(MovementCharacter c) throws Exception{
+    private void testCard10(ExchangeCharacter c) throws Exception{
+        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)), "Empty Dining room");
+
         ArrayList<Student> students1 = gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
         Student s1 = students1.get(0);
 
@@ -551,9 +596,9 @@ public class GameHandlerTest {
         Message message = new UsePowerMessage("player1", 0);
         gameHandler.execute(message);
 
-        assertThrows(IllegalMoveException.class, () ->
-                gameHandler.execute(new PutBackMessage("player1", Color.RED))
-        );
+        assertEquals(ExchangeRule.class, gameHandler.getGame().getCurrentRule().getClass());
+        assertTrue(gameHandler.getGame().canExchange());
+        assertEquals(2, gameHandler.getGame().getRemainingExchanges());
 
         ArrayList<Student> students2 = canteen.getStudents(s1.getColor());
         Student s2 = students2.get(0);
@@ -576,20 +621,48 @@ public class GameHandlerTest {
         Message m = new ExchangeStudentMessage("player1", s1.getId(), s2.getId(), Location.ENTRANCE, -1, Location.CANTEEN, -1);
         gameHandler.execute(m);
 
+        assertEquals(1, gameHandler.getGame().getRemainingExchanges());
         assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents().contains(s2));
         assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getCanteen().getStudents(s1.getColor()).contains(s1));
-        assertEquals(0, c.getStudents().size());
 
+        moveStudentsTwoPlayer();
+        assertEquals(Phase.MOVEMNTURN, gameHandler.getPhase());
+
+        students1 = gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
+        Student s3 = students1.get(0);
+
+        canteen.addStudent(new Student(132, s3.getColor()));
+        canteen.canGetCoin(Color.RED, true);
+
+        students2 = canteen.getStudents(s3.getColor());
+        Student s4 = students2.get(0);
+
+        m = new ExchangeStudentMessage("player1", s3.getId(), s4.getId(), Location.ENTRANCE, -1, Location.CANTEEN, -1);
+        gameHandler.execute(m);
+
+        assertEquals(0, gameHandler.getGame().getRemainingExchanges());
+        assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents().contains(s4));
+        assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getCanteen().getStudents(s3.getColor()).contains(s3));
+
+        assertFalse(gameHandler.getGame().canExchange());
+        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new ExchangeStudentMessage("player1", s3.getId(), s4.getId(), Location.ENTRANCE, -1, Location.CANTEEN, -1)));
+        assertEquals(DefaultRule.class, gameHandler.getGame().getCurrentRule().getClass());
+
+        assertEquals(0, c.getStudents().size());
         //System.out.println("Card 10");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
     }
 
     private void testCard11(MovementCharacter c) throws Exception{
+        assertThrows(IllegalMoveException.class, () ->
+            gameHandler.execute(new ExchangeStudentMessage("player1", 1, 2, Location.ENTRANCE, -1, Location.CANTEEN, -1))
+        );
+
         Message message = new UsePowerMessage("player1", 0);
         gameHandler.execute(message);
 
         assertThrows(IllegalMoveException.class, () ->
-                gameHandler.execute(new ExchangeStudentMessage("player1", 1, 2, Location.ENTRANCE, -1, Location.CANTEEN, -1))
+                gameHandler.execute(new PutBackMessage("player1", Color.RED))
         );
 
         ArrayList<Student> students = c.getStudents();
@@ -608,6 +681,8 @@ public class GameHandlerTest {
 
         Message m = new MoveStudentMessage("player1", s.getId(), Location.CARD_CANTEEN, -1, Location.CANTEEN, -1);
         gameHandler.execute(m);
+
+        assertEquals(3, gameHandler.getGame().getRemainingMoves());
 
         assertTrue(gameHandler.getGame().getPlayer("player1").getDashboard().getCanteen().getStudents(s.getColor()).contains(s));
         assertEquals(4, c.getStudents().size());
@@ -651,5 +726,29 @@ public class GameHandlerTest {
 
         //System.out.println("Card 12");
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(new UsePowerMessage("player1", 0)));
+    }
+
+    private void moveStudentsTwoPlayer() throws Exception{
+        Message message;
+
+        List<Student> students = gameHandler.getGame().getPlayer("player1").getDashboard().getEntrance().getAllStudents();
+
+        assertEquals(Phase.MIDDLETURN, gameHandler.getPhase());
+
+        message = new MoveStudentMessage("player1", students.get(0).getId(), Location.ENTRANCE, -1, Location.CANTEEN, -1);
+        gameHandler.execute(message);
+
+        assertEquals(2, gameHandler.getGame().getRemainingMoves());
+
+        message = new MoveStudentMessage("player1", students.get(1).getId(), Location.ENTRANCE, -1, Location.CANTEEN, -1);
+        gameHandler.execute(message);
+
+        assertEquals(1, gameHandler.getGame().getRemainingMoves());
+
+        message = new MoveStudentMessage("player1", students.get(2).getId(), Location.ENTRANCE, -1, Location.ISLAND, 8);
+        gameHandler.execute(message);
+
+        assertEquals(3, gameHandler.getGame().getRemainingMoves());
+
     }
 }

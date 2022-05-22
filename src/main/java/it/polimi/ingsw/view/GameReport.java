@@ -21,6 +21,7 @@ public class GameReport implements Serializable {
     private final String namePlayer;
     private final String error;
     private final int remainingMoves;
+    private final int remainingExchanges;
     private final int activeCard;
     private final Action requestedAction;
     private final String activeRule;
@@ -210,6 +211,7 @@ public class GameReport implements Serializable {
         this.activeCard = -1;
         this.requestedAction = null;
         this.remainingMoves = -1;
+        this.remainingExchanges = -1;
         this.currentPhase = null;
         this.player = null;
         this.islands = null;
@@ -328,10 +330,17 @@ public class GameReport implements Serializable {
                 requestedAction = null;
             }
 
+            if(requestedAction == Action.EXCHANGESTUDENT){
+                this.remainingExchanges = game.getRemainingExchanges();
+            } else{
+                this.remainingExchanges = -1;
+            }
+
             activeRule = game.getCurrentRule().getClass().getSimpleName();
         } else{
             activeCard = -1;
             requestedAction = null;
+            remainingExchanges = -1;
             activeRule = null;
         }
     }
@@ -403,12 +412,19 @@ public class GameReport implements Serializable {
         return namePlayer;
     }
 
-    public String getCurrentPhase(){
+    public String getCurrentPhaseString(){
+        String result = "";
         if(currentPhase == Phase.MIDDLETURN){
-            return currentPhase +" - "+remainingMoves + " Remaining Moves";
+            result += currentPhase +" - "+remainingMoves + " Remaining Moves";
         } else{
-            return currentPhase.name();
+            result += currentPhase.name();
         }
+
+        if(remainingExchanges != -1 && (currentPhase == Phase.MIDDLETURN || currentPhase == Phase.MOVEMNTURN)){
+            result += " - "+remainingExchanges + " Remaining Exchanges";
+        }
+
+        return result;
     }
 
     public int getActiveCard(){
@@ -421,6 +437,10 @@ public class GameReport implements Serializable {
 
     public String getActiveRule(){
         return activeRule;
+    }
+
+    public Phase getCurrentPhase(){
+        return currentPhase;
     }
 
     public String getError(){

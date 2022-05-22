@@ -2,6 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
+import it.polimi.ingsw.controller.Phase;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.*;
 import org.fusesource.jansi.Ansi;
@@ -19,13 +20,11 @@ public class Client {
 
     private Message message;
     private String nickname;
-    private int numPlayers, priority, studentId, studentId2, arrivalId, departureId, MNmovement, position, numCard, action, lo, rule;
-    private Location arrivalType, departureType;
-    private Color chosenColor;
     private boolean completeRules;
     private final Map<Action, String> movesDescription;
     private int activeCard = -1;
     private Action requestedAction = null;
+    private Phase currentPhase = null;
     private GameReport gameReport;
     private boolean detailedVisual;
 
@@ -81,6 +80,8 @@ public class Client {
 
             }while(report.getTurnOf() == null || !report.getTurnOf().equals(nickname));
 
+            currentPhase = report.getCurrentPhase();
+
             while (activeClient) {
                 message = getInput();
                 if (message != null) {
@@ -94,6 +95,7 @@ public class Client {
                         if(report.getError() == null) {
                             gameReport = report;
                             activeCard = report.getActiveCard();
+                            currentPhase = report.getCurrentPhase();
                             if (activeCard != -1) {
                                 requestedAction = report.getRequestedAction();
                             } else {
@@ -124,6 +126,7 @@ public class Client {
         System.out.println(Ansi.ansi().eraseScreen().toString());
         System.out.println("Welcome in the magic world of Eriantys!\nPlease, insert your nickname:");
         nickname = stdin.nextLine();
+        int numPlayers;
         do {
             System.out.println("How many players do you want to play with? (a number between 2 and 4)");
             try{
@@ -131,10 +134,10 @@ public class Client {
             } catch (NumberFormatException e){
                 numPlayers = -1;
             }
-        }while(numPlayers<2 || numPlayers>4);
+        }while(numPlayers <2 || numPlayers >4);
 
         System.out.println("Do you want to play by simple (type 0) or complete rules (type 1)?");
-        rule = stdin.nextInt();
+        int rule = stdin.nextInt();
         stdin.nextLine();
 
         completeRules = rule == 1;
@@ -144,18 +147,31 @@ public class Client {
 
     private Message getInput(){
         System.out.println("Select one of the following options (type an integer):");
-        if(activeCard == -1) {
-            System.out.println("\t-'1) PLAYCARD' to play an assistant-card");
-            System.out.println("\t-'2) MOVESTUDENT' to move a student from your ENTRANCE to your CANTEEN or an ISLAND");
-            System.out.println("\t-'3) MOVEMOTHERNATURE' to move Mother Nature");
-            System.out.println("\t-'4) SELECTCLOUD' to refill your ENTRANCE with students from a cloud");
+        if(activeCard == -1 || requestedAction == Action.EXCHANGESTUDENT) {
+            if(currentPhase == Phase.PRETURN)
+                System.out.println("\t-'1) PLAYCARD' to play an assistant-card");
+
+            if(currentPhase == Phase.MIDDLETURN)
+                System.out.println("\t-'2) MOVESTUDENT' to move a student from your ENTRANCE to your CANTEEN or an ISLAND");
+
+            if(currentPhase == Phase.MOVEMNTURN)
+                System.out.println("\t-'3) MOVEMOTHERNATURE' to move Mother Nature");
+
+            if(currentPhase == Phase.ENDTURN)
+                System.out.println("\t-'4) SELECTCLOUD' to refill your ENTRANCE with students from a cloud");
 
             if(completeRules) {
-                System.out.println("\t-'5) USEPOWER' to select a character card and activate its power.");
+                if(currentPhase == Phase.MIDDLETURN || currentPhase == Phase.MOVEMNTURN)
+                    System.out.println("\t-'5) USEPOWER' to select a character card and activate its power.");
                 if(!detailedVisual)
                     System.out.println("\t-'6) DETAILED CARD INFO' to print the detailed information about the draw characters");
                 else
                     System.out.println("\t-'6) CLOSE DETAILED CARD INFO' to return to normal view");
+
+                if(requestedAction == Action.EXCHANGESTUDENT && (currentPhase == Phase.MIDDLETURN || currentPhase == Phase.MOVEMNTURN)){
+                    System.out.println("\t-'7) EXCHANGESTUDENT' to exchange two students between the CARD and the ENTRANCE or between the ENTRANCE and the CANTEEN.");
+                }
+
             }
         } else{
             System.out.println("\t-'1) "+requestedAction+"' "+movesDescription.get(requestedAction));
@@ -164,6 +180,7 @@ public class Client {
             else
                 System.out.println("\t-'2) CLOSE DETAILED CARD INFO' to return to normal view");
         }
+        int action;
         try {
             action = Integer.parseInt(stdin.nextLine());
         } catch (NumberFormatException e) {
@@ -171,7 +188,17 @@ public class Client {
             return null;
         }
 
-        if(activeCard == -1) {
+        int studentId;
+        int arrivalId;
+        int departureId;
+        int lo;
+        Location arrivalType;
+        Location departureType;
+        if(activeCard == -1 || requestedAction == Action.EXCHANGESTUDENT) {
+            int priority;
+            int studentId2;
+            int mnMovement;
+            int position;
             switch (action) {
                 case 1:
                     System.out.println("Choose which card do you want to play (priority):");
@@ -214,12 +241,12 @@ public class Client {
                 case 3:
                     System.out.println("Insert Mother Nature's movement:");
                     try {
-                        MNmovement = Integer.parseInt(stdin.nextLine());
+                        mnMovement = Integer.parseInt(stdin.nextLine());
                     } catch (NumberFormatException e) {
                         System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
-                    return new MoveMotherNatureMessage(nickname, MNmovement);
+                    return new MoveMotherNatureMessage(nickname, mnMovement);
                 case 4:
                     System.out.println("Select which cloud you have chosen: (position)");
                     try {
@@ -232,7 +259,7 @@ public class Client {
                 case 5:
                     if (completeRules) {
                         System.out.print("Choose which card you want to activate (0,1,2): ");
-                        numCard = -1;
+                        int numCard = -1;
                         try {
                             numCard = Integer.parseInt(stdin.nextLine());
                         } catch (NumberFormatException e) {
@@ -255,12 +282,51 @@ public class Client {
                         System.out.println("You can't use characters card with simple rules");
                     }
                     return null;
+                case 7:
+                    System.out.print("Which student do you want to move? (studentId) ");
+                    try {
+                        studentId = Integer.parseInt(stdin.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("The inserted value isn't a valid number");
+                        return null;
+                    }
+
+                    System.out.println("Where is the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
+                    try {
+                        lo = Integer.parseInt(stdin.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("The inserted value isn't a valid number");
+                        return null;
+                    }
+                    departureType = getLocation(lo);
+                    departureId = getLocationId(departureType);
+
+                    System.out.println("Which is the other student do you want to move? (studentId) ");
+                    try {
+                        studentId2 = Integer.parseInt(stdin.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("The inserted value isn't a valid number");
+                        return null;
+                    }
+
+                    System.out.println("Where is the this second student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
+                    try {
+                        lo = Integer.parseInt(stdin.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("The inserted value isn't a valid number");
+                        return null;
+                    }
+                    arrivalType = getLocation(lo);
+                    arrivalId = getLocationId(arrivalType);
+
+                    return new ExchangeStudentMessage(nickname, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
                 default:
                     System.out.println("Invalid action!");
                     return null;
             }
         } else{
             if(action == 1) {
+                Color chosenColor;
                 switch (requestedAction) {
                     case MOVESTUDENT -> {
                         System.out.println("Which student do you want to move? (studentId)");
@@ -291,45 +357,6 @@ public class Client {
                         arrivalId = getLocationId(arrivalType);
 
                         return new MoveStudentMessage(nickname, studentId, departureType, departureId, arrivalType, arrivalId);
-                    }
-                    case EXCHANGESTUDENT -> {
-                        System.out.print("Which student do you want to move? (studentId) ");
-                        try {
-                            studentId = Integer.parseInt(stdin.nextLine());
-                        } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
-                            return null;
-                        }
-
-                        System.out.println("Where is the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
-                        try {
-                            lo = Integer.parseInt(stdin.nextLine());
-                        } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
-                            return null;
-                        }
-                        departureType = getLocation(lo);
-                        departureId = getLocationId(departureType);
-
-                        System.out.println("Which is the other student do you want to move? (studentId) ");
-                        try {
-                            studentId2 = Integer.parseInt(stdin.nextLine());
-                        } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
-                            return null;
-                        }
-
-                        System.out.println("Where is the this second student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
-                        try {
-                            lo = Integer.parseInt(stdin.nextLine());
-                        } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
-                            return null;
-                        }
-                        arrivalType = getLocation(lo);
-                        arrivalId = getLocationId(arrivalType);
-
-                        return new ExchangeStudentMessage(nickname, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
                     }
                     case ISLAND_INFLUENCE -> {
                         System.out.println("Choose island: (islandId)");
@@ -458,7 +485,7 @@ public class Client {
             }
             col.printAll();
             if(!report.getFinishedGame()){
-                System.out.println("Current phase: "+report.getCurrentPhase());
+                System.out.println("Current phase: "+report.getCurrentPhaseString());
                 System.out.println("Current player: "+report.getTurnOf());
             }
             else{
@@ -491,8 +518,8 @@ public class Client {
             }
             col.printAll();
 
-            System.out.println("\n\nFORBIDDEN MOVE: "+report.getError()+"\nInsert a new legal move...");
-            System.out.println("Current phase: "+gameReport.getCurrentPhase());
+            System.err.println("\n\nFORBIDDEN MOVE: "+report.getError()+"\n");
+            System.out.println("Current phase: "+gameReport.getCurrentPhaseString());
             System.out.println("Current player: "+gameReport.getTurnOf());
         }
     }
@@ -514,7 +541,7 @@ public class Client {
         }
         col.printAll();
 
-        System.out.println("Current phase: "+gameReport.getCurrentPhase());
+        System.out.println("Current phase: "+gameReport.getCurrentPhaseString());
         System.out.println("Current player: "+gameReport.getTurnOf());
     }
 }

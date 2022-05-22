@@ -6,11 +6,11 @@ import it.polimi.ingsw.model.Report;
 
 import java.util.Map;
 
-public class MotherNatureRule extends DecoratedRule{
-    private final int extraMovement;
+public class ExchangeRule extends DecoratedRule{
+    private final int maximumExchangeMoves;
 
-    public MotherNatureRule(int extraMovement){
-        this.extraMovement = extraMovement;
+    public ExchangeRule(int maximumMoves){
+        this.maximumExchangeMoves = maximumMoves;
     }
 
     @Override
@@ -25,16 +25,16 @@ public class MotherNatureRule extends DecoratedRule{
 
     @Override
     public boolean isActionNeeded() {
-        return false;
+        return true;
     }
 
     @Override
     public int getMotherNatureExtraMovement() {
-        return this.extraMovement + this.defaultRules.getMotherNatureExtraMovement();
+        return this.defaultRules.getMotherNatureExtraMovement();
     }
 
     @Override
     public int getMaximumExchangeMoves() {
-        return this.defaultRules.getMaximumExchangeMoves();
+        return this.maximumExchangeMoves;
     }
 }
