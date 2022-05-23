@@ -21,6 +21,7 @@ public class GameHandler {
     private boolean finishedGame=false;
 
     private boolean isLastTurn= false;
+    private boolean nextLastTurn=false;
 
     public Phase getPhase(){
         return currentPhase;
@@ -48,6 +49,10 @@ public class GameHandler {
             game.setCurrentPhase(currentPhase);
         }
         else if(currentPhase==Phase.PRETURN) {
+            if(nextLastTurn){
+                isLastTurn=true;
+                game.setLastTurn(true);
+            }
             numFinishedTurn=0;
             game.resetRemainingMoves();
             currentPhase=Phase.MIDDLETURN;
@@ -55,7 +60,6 @@ public class GameHandler {
         }
         else if(currentPhase==Phase.MIDDLETURN) {
             currentPhase = Phase.MOVEMNTURN;
-            //System.out.println("CAMBIO fase"+currentPhase);
             game.setCurrentPhase(currentPhase);
         }
         else if(currentPhase==Phase.MOVEMNTURN){
@@ -259,7 +263,8 @@ public class GameHandler {
             game.refillClouds();
         }catch(Exception e){
             if(e instanceof NoMoreStudentsException){
-                game.setLastTurn(true);
+                game.setNextLastTurn(true);
+                this.nextLastTurn=true;
             }
             e.printStackTrace();
         }
