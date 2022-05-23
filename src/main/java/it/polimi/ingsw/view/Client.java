@@ -335,6 +335,37 @@ public class Client {
 
                         return new PutBackMessage(nickname, chosenColor);
                     }
+                    case MOVESTUDENT -> {
+                        System.out.print("Which student do you want to move? (studentId) ");
+                        try {
+                            studentId = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
+
+                        System.out.println("Where is the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
+                        try {
+                            lo = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
+                        departureType = getLocation(lo);
+                        departureId = getLocationId(departureType);
+
+                        System.out.println("Where do you want to move it? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND)");
+                        try {
+                            lo = Integer.parseInt(stdin.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            return null;
+                        }
+                        arrivalType = getLocation(lo);
+                        arrivalId = getLocationId(arrivalType);
+
+                        return new MoveStudentMessage(nickname, studentId, departureType, departureId, arrivalType, arrivalId);
+                    }
                 }
             } else if(action == 2) {
                 if(detailedVisual)

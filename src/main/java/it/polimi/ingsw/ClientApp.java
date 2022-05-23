@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.view.Client;
 import it.polimi.ingsw.view.ClientGUI;
 
 import java.io.IOException;
