@@ -42,6 +42,7 @@ public class Game extends Observable<GameReport> {
     private boolean usedCard;
     private boolean finishedGame = false;
     private boolean isLastTurn = false;
+    private boolean nextLastTurn = false;
     private String winner=null;
 
     //Create game but no players are added;
@@ -189,12 +190,6 @@ public class Game extends Observable<GameReport> {
         return motherNature.getPosition();
     }
 
-    /*public Island getIsland(int id) throws NoIslandException{
-        for(Island i : islands){
-            if(i.getId() == id) return i;
-        }
-        throw new NoIslandException();
-    }*/
     public Island getIsland(int id) throws NoIslandException {
         for(Island i : islands){
             //if(i.getId() == id) return i;
@@ -229,7 +224,10 @@ public class Game extends Observable<GameReport> {
         Card c = h.playCard(priority);
         playedCards.put(player, c);
         player.getDashboard().setGraveyard(c);
-
+        cards= h.getAllCards();
+        if(cards.size()==0){
+            this.isLastTurn=true;
+        }
         //PlayCard has worked: update all the clients!
         //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
@@ -422,6 +420,9 @@ public class Game extends Observable<GameReport> {
     }
 
     public void refillClouds() throws NoMoreStudentsException {
+        for(int i=0; i<clouds.length; i++){
+            clouds[i].setIsFull(true);
+        }
         for (int i=0; i<clouds.length; i++){
             if (numPlayers==3) clouds[i].refillCloud(bag.getRandomStudent(4));
             else clouds[i].refillCloud(bag.getRandomStudent(3));
@@ -811,5 +812,8 @@ public class Game extends Observable<GameReport> {
 
     public void setLastTurn(Boolean lastTurn){
         isLastTurn=lastTurn;
+    }
+    public void setNextLastTurn(Boolean lastTurn){
+        nextLastTurn=lastTurn;
     }
 }

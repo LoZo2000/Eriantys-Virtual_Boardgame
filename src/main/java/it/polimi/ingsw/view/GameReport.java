@@ -3,17 +3,13 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Phase;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.Color;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 
-import static org.fusesource.jansi.Ansi.*;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class GameReport implements Serializable {
     private final String turnOf;
@@ -34,6 +30,33 @@ public class GameReport implements Serializable {
     private final List<OpponentReport> opponents;
     private final List<CharacterReport> characters;
     private final Map<Color, String> professors;
+
+
+
+    //Attributes for GUI:
+    private Phase phase;
+    private int numPlayers = 0;
+    private ArrayList<Card> myCards = new ArrayList<>();
+    private ArrayList<String> allPlayersNick = new ArrayList<>();
+    private ColorTower myColor;
+    private ArrayList<ColorTower> allPlayersColor = new ArrayList<>();
+    private LinkedList<Island> allIslands = new LinkedList<>();
+    private int MT;
+    private ArrayList<ArrayList<Student>> studentsOnClouds = new ArrayList<>();
+    private ArrayList<Student> myEntrance = new ArrayList<>();
+    private ArrayList<ArrayList<Student>> opponentsEntrance = new ArrayList<>();
+    private ArrayList<Integer> myCanteen = new ArrayList<>();
+    private ArrayList<Integer> lastMyCanteen = new ArrayList<>();
+    private ArrayList<ArrayList<Integer>> opponentsCanteen = new ArrayList<>();
+    private Card myLastCard;
+    private ArrayList<Card> opponentsLastCard = new ArrayList<>();
+    private int myTowers;
+    private ArrayList<Integer> towersInDash = new ArrayList<>();
+    private ArrayList<Character> charId = new ArrayList<>();
+    private int myCoins;
+    private ArrayList<Integer> opponentsCoins = new ArrayList<>();
+
+
 
     private record IslandReport (String id, Map<Color, Integer> students, boolean prohibitionToken, int numTowers, ColorTower owner, boolean motherNature) implements Serializable{
         public Map<Color, Integer> students(){
@@ -222,6 +245,8 @@ public class GameReport implements Serializable {
 
 
     public GameReport(Game game, Player owner){
+        System.out.println("BuildingGameRep");
+
         this.error = null;
         this.finished =game.getFinishedGame();
         this.winner=game.getWinner();
@@ -232,11 +257,25 @@ public class GameReport implements Serializable {
         opponents = new ArrayList<>();
         characters = new ArrayList<>();
 
+        this.phase = game.getCurrentPhase();
         this.turnOf = game.getCurrentPlayer();
         this.namePlayer = owner.getNickname();
 
         //ISLANDS
+        int b = 8;
+        int w = 8;
+        int g = 6;
+        if(game.getNumPlayers()==3){
+            b = 6;
+            w = 6;
+        }
+        int numI = 0;
+        allIslands = game.getAllIslands();
         for(Island i : game.getAllIslands()){
+            if(i.getReport().getOwner()==ColorTower.BLACK) b -= i.getReport().getTowerNumbers();
+            else if(i.getReport().getOwner()==ColorTower.WHITE) w -= i.getReport().getTowerNumbers();
+            else if(i.getReport().getOwner()==ColorTower.GREY) g -= i.getReport().getTowerNumbers();
+
             IslandReport ir;
             Map<Color, Integer> mapNumbers = new HashMap<>();
             for(Color c : Color.values()){
@@ -244,11 +283,12 @@ public class GameReport implements Serializable {
             }
 
             if(game.getMotherNaturePosition().equals(i)){
+                MT = numI;
                 ir = new IslandReport(i.getId(), mapNumbers, i.getProhibition(), i.getReport().getTowerNumbers(), i.getOwner(), true);
             } else{
                 ir = new IslandReport(i.getId(), mapNumbers, i.getProhibition(), i.getReport().getTowerNumbers(), i.getOwner(), false);
             }
-
+            numI++;
             islands.add(ir);
         }
 
@@ -268,11 +308,32 @@ public class GameReport implements Serializable {
                 mapNumbers.put(c, clGame[i].getNumberOfStudentPerColor(c));
             }
             clouds.add(new CloudReport(i, mapNumbers, clGame[i].isFull()));
+            studentsOnClouds.add(clGame[i].getStudents());
         }
 
         //OTHER PLAYERS
+        numPlayers = game.getNumPlayers();
         for(Player p : game.getAllPlayers()){
+            allPlayersNick.add(p.getNickname());
+            allPlayersColor.add(p.getColor());
+            switch (p.getColor()){
+                case BLACK -> towersInDash.add(b);
+                case WHITE -> towersInDash.add(w);
+                case GREY -> towersInDash.add(g);
+            }
+            opponentsEntrance.add(p.getDashboard().getEntrance().getAllStudents());
+            ArrayList<Integer> prov = new ArrayList<>();
+            prov.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.GREEN));
+            prov.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.RED));
+            prov.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.YELLOW));
+            prov.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.PINK));
+            prov.add(p.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE));
+            opponentsCanteen.add(prov);
+            opponentsLastCard.add(p.getDashboard().getGraveyard());
+            opponentsCoins.add(p.getCoins());
+
             if(!p.equals(owner)){
+
                 List<Student> entranceStudents = p.getDashboard().getEntrance().getAllStudents();
 
                 Map<Color, Integer> mapEntrance = new HashMap<>();
@@ -296,9 +357,41 @@ public class GameReport implements Serializable {
         }
 
         //PLAYER DASHBOARD
+        myCoins = owner.getCoins();
+        myCards = owner.getHand().getAllCards();
+        myEntrance = owner.getDashboard().getEntrance().getAllStudents();
+        myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.GREEN));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.GREEN)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.GREEN).get(0).getId());
+        myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.RED));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.RED)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.RED).get(0).getId());
+        myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.YELLOW));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.YELLOW)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.YELLOW).get(0).getId());
+        myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.PINK));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.PINK)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.PINK).get(0).getId());
+        myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE));
+        if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE)==0) lastMyCanteen.add(-1);
+        else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.BLUE).get(0).getId());
+        myLastCard = owner.getDashboard().getGraveyard();
         List<Card> hand = owner.getHand().getAllCards();
         List<Student> entrance = owner.getDashboard().getEntrance().getAllStudents();
         Map<Color, List<Student>> mapCanteen = new HashMap<>();
+        switch (owner.getColor()){
+            case BLACK:
+                myTowers = b;
+                myColor = ColorTower.BLACK;
+                break;
+            case WHITE:
+                myTowers = w;
+                myColor = ColorTower.WHITE;
+                break;
+            case GREY:
+                myTowers = g;
+                myColor = ColorTower.GREY;
+        }
 
         for(Color c : Color.values()){
             mapCanteen.put(c, owner.getDashboard().getCanteen().getStudents(c));
@@ -316,6 +409,7 @@ public class GameReport implements Serializable {
             //CHARACTERS
             for(Character c : game.getCharactersCards()){
                 characters.add(new CharacterReport(c));
+                charId.add(c);
             }
 
             //ACTIVE CARD
@@ -451,4 +545,76 @@ public class GameReport implements Serializable {
 
     public String getWinner(){ return this.winner;}
 
+
+
+    //Getter for GUI:
+    public Phase getPhase(){
+        return phase;
+    }
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+    public ArrayList<Card> getMyCards(){
+        return myCards;
+    }
+    public ArrayList<String> getOpponentsNick(){
+        return allPlayersNick;
+    }
+    public ColorTower getMyColor(){
+        return myColor;
+    }
+    public ArrayList<ColorTower> getAllPlayersColor(){
+        return allPlayersColor;
+    }
+    public LinkedList<Island> getAllIslands(){
+        return allIslands;
+    }
+    public int getMT(){
+        return MT;
+    }
+    public ArrayList<ArrayList<Student>> getStudentsOnClouds(){
+        return studentsOnClouds;
+    }
+    public ArrayList<Student> getMyEntrance(){
+        return myEntrance;
+    }
+    public ArrayList<ArrayList<Student>> getOpponentsEntrance(){
+        return opponentsEntrance;
+    }
+    public ArrayList<Integer> getMyCanteen(){
+        return myCanteen;
+    }
+    public ArrayList<ArrayList<Integer>> getOpponentsCanteen(){
+        return opponentsCanteen;
+    }
+    public Card getMyLastCard(){
+        return myLastCard;
+    }
+    public ArrayList<Card> getOpponentsLastCard(){
+        return opponentsLastCard;
+    }
+    public int getMyTowers(){
+        return myTowers;
+    }
+    public ArrayList<Integer> getTowersInDash(){
+        return towersInDash;
+    }
+    public Map<Color, String> getProfessors(){
+        return professors;
+    }
+    public ArrayList<Character> getChar(){
+        return charId;
+    }
+    public int getMyCoins(){
+        return myCoins;
+    }
+    public ArrayList<Integer> getOpponentsCoins(){
+        return opponentsCoins;
+    }
+    public int getRemainingMoves(){
+        return remainingMoves;
+    }
+    public ArrayList<Integer> getLastMyCanteen(){
+        return lastMyCanteen;
+    }
 }

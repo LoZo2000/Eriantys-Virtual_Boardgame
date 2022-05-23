@@ -53,4 +53,8 @@ public class Cloud {
     public boolean isFull(){
         return isFull;
     }
+
+    public void setIsFull(Boolean isFull){
+        this.isFull=isFull;
+    }
 }

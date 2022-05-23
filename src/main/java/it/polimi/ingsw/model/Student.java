@@ -5,11 +5,19 @@ import static org.fusesource.jansi.Ansi.*;
 
 public class Student implements Serializable {
     private final int id;
-    private Color color;
+    private final Color color;
+    private String sprite;
 
     public Student(int id, Color color){
         this.id = id;
         this.color = color;
+        switch (color){
+            case BLUE -> sprite = "/Stud_blue.png";
+            case YELLOW -> sprite = "/Stud_yellow.png";
+            case RED -> sprite = "/Stud_red.png";
+            case GREEN -> sprite = "/Stud_green.png";
+            case PINK -> sprite = "/Stud_pink.png";
+        }
     }
 
     public int getId(){
@@ -17,6 +25,9 @@ public class Student implements Serializable {
     }
     public Color getColor(){
         return this.color;
+    }
+    public String getSprite(){
+        return sprite;
     }
 
     public boolean equals(Object o){
