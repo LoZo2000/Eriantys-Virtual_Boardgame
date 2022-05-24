@@ -145,7 +145,7 @@ public class Game extends Observable<GameReport> {
         }
     }
 
-    //TODO TEMPORARY METHOD
+    //TODO TEMPORARY METHOD only for test
     public void addPlayer(Player p){
         this.players.add(p);
 
@@ -279,9 +279,10 @@ public class Game extends Observable<GameReport> {
                             p.getDashboard().removeTowers(report.getTowerNumbers());
                         }
                         if(p.getDashboard().getTowers()==0){
-                            this.winner=p.getNickname(); // i could use also compute winner but in this case i already know who won
+                            this.winner=computeWinner();
                             this.finishedGame=true;
                             sendNotifyAll();
+                            break;
                         }
                     }
                 }
@@ -804,11 +805,28 @@ public class Game extends Observable<GameReport> {
         if (black >= white && black >= grey) max= ColorTower.BLACK;
         else if (white >= black && white >= grey) max= ColorTower.WHITE;
         else max= ColorTower.GREY;
-        for (Player p : players){
-            if(p.getColor().equals(max)) return p.getNickname();
+        if (numPlayers == 4) {
+            findTeam(max);
+        }
+        else{
+            for (Player p : players){
+                if(p.getColor().equals(max)) return p.getNickname();
+            }
         }
         return null;
     }
+
+    private String findTeam(ColorTower max){
+        ArrayList<String> Teamplayers= new ArrayList<>();
+        for (Player p : players){
+            if(p.getColor().equals(max)){
+                Teamplayers.add(p.getNickname());
+            }
+        }
+        String winner="the team of"+Teamplayers.get(0)+"and"+Teamplayers.get(1);
+        return winner;
+    }
+
 
     public void setLastTurn(Boolean lastTurn){
         isLastTurn=lastTurn;

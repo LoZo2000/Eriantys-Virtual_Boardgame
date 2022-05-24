@@ -49,6 +49,8 @@ public class GUIEntry{
             report = (GameReport) objectInputStream.readObject();
         }catch(Exception e){
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
         while(report.getError() != null && report.getError().equals("This nickname is already taken")){
             connDesc.setVisible(false);
@@ -62,6 +64,8 @@ public class GUIEntry{
                 report = (GameReport) objectInputStream.readObject();
             }catch(Exception e){
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
             }
         }
         while(report.getTurnOf() == null){
@@ -70,6 +74,8 @@ public class GUIEntry{
                 report = (GameReport) objectInputStream.readObject();
             }catch(Exception e){
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
             }
         }
         return report;

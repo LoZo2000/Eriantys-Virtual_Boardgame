@@ -2,8 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.controller.Phase;
-import it.polimi.ingsw.view.Columns;
-import it.polimi.ingsw.view.GameReport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;

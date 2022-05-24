@@ -17,7 +17,7 @@ public class AddMeMessage extends Message{
 
     @Override
     public Update execute(Game game) {
-        if(game.getRegisteredNumPlayers() == 1)
+        if(game.getRegisteredNumPlayers() == 1 || game.getRegisteredNumPlayers()==3)
             game.addPlayer(sender, ColorTower.WHITE);
         else if(game.getRegisteredNumPlayers() == 0 && game.getNumPlayers() == 3)
             game.addPlayer(sender, ColorTower.GREY);
