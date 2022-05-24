@@ -70,7 +70,8 @@ public class GUIGame {
                 System.out.println("il valore di finished game è"+report.getFinishedGame());
                 if(report.getFinishedGame()){
                     int confirm;
-                    confirm=JOptionPane.showConfirmDialog(null, "The game is finished, the winner is: "+report.getWinner()+". \nDo you want to play another game?", "Eriantys" ,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null);
+                    if(report.getWinner()==null){ confirm=JOptionPane.showConfirmDialog(null, "The game is finished."+" \nDo you want to play another game?", "Eriantys" ,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null);}
+                    else{confirm=JOptionPane.showConfirmDialog(null, "The game is finished, the winner is: "+report.getWinner()+". \nDo you want to play another game?", "Eriantys" ,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null);}
                     return confirm;
                 }
             }catch (Exception e){
