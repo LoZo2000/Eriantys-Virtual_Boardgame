@@ -260,4 +260,13 @@ class CharactersTest {
 
         assertThrows(NoSuchStudentException.class, () -> character.removeStudent(15));
     }
+
+    @Test
+    public void getterTest(){
+        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0, 0);
+        ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+
+        assertEquals(2, character.getOriginalCost());
+        assertEquals("/Char_5.jpg", character.getSprite());
+    }
 }

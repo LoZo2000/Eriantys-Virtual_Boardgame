@@ -15,6 +15,11 @@ public class StudentTest{
                 Student s = new Student(i, c);
                 assertEquals(i, s.getId());
                 assertEquals(c, s.getColor());
+                if(s.getColor()==Color.BLUE) assertEquals("/Stud_blue.png", s.getSprite());
+                else if(s.getColor()==Color.YELLOW) assertEquals("/Stud_yellow.png", s.getSprite());
+                else if(s.getColor()==Color.RED) assertEquals("/Stud_red.png", s.getSprite());
+                else if(s.getColor()==Color.GREEN) assertEquals("/Stud_green.png", s.getSprite());
+                else assertEquals("/Stud_pink.png", s.getSprite());
             }
         }
     }

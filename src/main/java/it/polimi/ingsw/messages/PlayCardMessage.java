@@ -4,10 +4,7 @@ import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Update;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.exceptions.AlreadyPlayedCardException;
-import it.polimi.ingsw.model.exceptions.IllegalMoveException;
-import it.polimi.ingsw.model.exceptions.NoPlayerException;
-import it.polimi.ingsw.model.exceptions.OverflowCardException;
+import it.polimi.ingsw.model.exceptions.*;
 
 public class PlayCardMessage extends Message{
     final private int priority;

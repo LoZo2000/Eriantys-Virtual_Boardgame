@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Canteen;
-import it.polimi.ingsw.model.Color;
-import it.polimi.ingsw.model.Student;
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -15,6 +15,7 @@ public class CardTest{
                 Card c = new Card(i,j);
                 assertEquals(i, c.getPriority());
                 assertEquals(j, c.getMovement());
+                assertEquals("/Ass_"+i+".png", c.getFront());
             }
         }
     }

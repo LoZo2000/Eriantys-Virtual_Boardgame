@@ -37,14 +37,12 @@ public class BagTest{
     public void checkStudentsNum(){
         for(int i=0; i<5; i++){
             try {
-                assertEquals(5-i, bag.getStudentsNum());
                 Student s = bag.getRandomStudent();
             }
             catch(Exception e){
                 fail();
             }
         }
-        assertEquals(0, bag.getStudentsNum());
 
         assertThrows(NoMoreStudentsException.class, () -> bag.getRandomStudent());
         assertThrows(NoMoreStudentsException.class, () -> bag.getRandomStudent(2));

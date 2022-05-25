@@ -45,7 +45,13 @@ public class Game extends Observable<GameReport> {
     private boolean nextLastTurn = false;
     private String winner=null;
 
-    //Create game but no players are added;
+    /**
+     * Creator of the class Game. It represent the entire match and from Game it is possible to
+     * reach every other entity and information. It only creates a Game, without any player in it
+     * @param completeRules is a boolean value to determine if the match has to be played according
+     *                      to complete or simple rules
+     * @param numPlayers is the number of players who can join this match
+     */
     public Game(boolean completeRules, int numPlayers){
         this.numPlayers=numPlayers;
         this.completeRules=completeRules;
@@ -96,21 +102,22 @@ public class Game extends Observable<GameReport> {
         }
     }
 
-    public int getNumberOfStudentPerColorOnCloud(int i, Color color){
-        return clouds[i].getNumberOfStudentPerColor(color);
-    }
-
-    public int getNumberOfClouds(){
-        return clouds.length;
-    }
-
+    /**
+     * Method to be called when the match is finished
+     */
     public void endGame(){
         finishedGame=true;
         winner=computeWinner();
         sendNotifyAll();
     }
 
-    private void initClouds(int numPlayers) throws NoMoreStudentsException, TooManyStudentsException, StillStudentException {
+    /**
+     * This method initialize and refill all the clouds of the match, according to the number of
+     * the players
+     * @param numPlayers is the number of players who can join the match
+     * @throws NoMoreStudentsException is thrown if, while this method is refilling a cloud, there
+     */
+    private void initClouds(int numPlayers) throws NoMoreStudentsException {
         switch(numPlayers){
             case 2:
             case 4:
@@ -132,6 +139,11 @@ public class Game extends Observable<GameReport> {
         }
     }
 
+    /**
+     * This method initialize and put a student on every island of the match
+     * @param initBag is a temporary bag that contains only 10 students (2x every color) to fill
+     *                the islands
+     */
     private void initIslands(Bag initBag){
         for(int i=0; i<12; i++){
             islands.add(new Island(i));
@@ -145,6 +157,11 @@ public class Game extends Observable<GameReport> {
         }
     }
 
+    /**
+     * Temporary method needed only to test the software. It adds a (already built) player with
+     * a pre-determined set of students in Entrance
+     * @param p the Player to be added
+     */
     //TODO TEMPORARY METHOD
     public void addPlayer(Player p){
         this.players.add(p);
@@ -153,7 +170,6 @@ public class Game extends Observable<GameReport> {
         //for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
     }
 
-    //TODO TEMPORARY METHOD
     public Map<Color, Player> getProfessors(){
         return this.professors;
     }
@@ -169,9 +185,6 @@ public class Game extends Observable<GameReport> {
         if(players.size() < numPlayers){
             sendErrorNote(nickname, "Waiting for other players...", null);
         }
-
-        //AddPlayer has worked: update all the clients!
-        //for(Player pl : getAllPlayers()) notify(getGameStatus(pl.getNickname()));
     }
 
     public int getNumPlayers(){
@@ -195,14 +208,14 @@ public class Game extends Observable<GameReport> {
             //if(i.getId() == id) return i;
             if(i.checkContainedId(id)) return i;
         }
-        throw new NoIslandException();
+        throw new NoIslandException("There is no such island!");
     }
 
     public Player getPlayer(String nickName) throws NoPlayerException{
         for(Player p : players){
             if(p.getNickname().equals(nickName)) return p;
         }
-        throw new NoPlayerException();
+        throw new NoPlayerException("There is no such player!");
     }
 
     public ArrayList<Player> getAllPlayers(){
@@ -214,7 +227,6 @@ public class Game extends Observable<GameReport> {
 
         List<Card> cards = h.getAllCards();
         if(!playedCards.values().containsAll(cards)){
-            //Card card = cards.get(priority-1);
             Card card = new Card(priority, priority/2+priority%2);
             if(playedCards.containsValue(card)){
                 throw new AlreadyPlayedCardException("Another player already played this card");
@@ -228,8 +240,6 @@ public class Game extends Observable<GameReport> {
         if(cards.size()==0){
             this.isLastTurn=true;
         }
-        //PlayCard has worked: update all the clients!
-        //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     public void resetPlayedCards(){
@@ -720,13 +730,6 @@ public class Game extends Observable<GameReport> {
         } catch(ClassCastException ex){
             return false;
         }
-
-        /*if(!mc.isRefill()){
-            if(this.activeCard != -1){
-                this.activeCard = -1;
-                this.currentRule = new DefaultRule();
-            }
-        }*/
 
         return mc.isRefill();
     }

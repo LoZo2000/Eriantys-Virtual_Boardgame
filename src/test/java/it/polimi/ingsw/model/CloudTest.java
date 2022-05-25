@@ -63,7 +63,9 @@ class CloudTest {
 
         try {
             for(Student s : students){
-                this.cloud.addStudent(s);
+                ArrayList AL = new ArrayList<>();
+                AL.add(s);
+                this.cloud.refillCloud(AL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,9 +94,11 @@ class CloudTest {
     @Test
     public void fillTest(){
         try{
-            cloud.addStudent(new Student(0, Color.BLUE));
-            cloud.addStudent(new Student(1, Color.BLUE));
-            cloud.addStudent(new Student(2, Color.BLUE));
+            ArrayList AL = new ArrayList();
+            AL.add(new Student(0, Color.BLUE));
+            AL.add(new Student(1, Color.BLUE));
+            AL.add(new Student(2, Color.BLUE));
+            cloud.refillCloud(AL);
         }
         catch(Exception e){fail();}
 
@@ -110,7 +114,9 @@ class CloudTest {
         assertEquals(0, s3.size());
 
         try{
-            cloud.addStudent(new Student(4, Color.BLUE));
+            ArrayList AL = new ArrayList();
+            AL.add(new Student(4, Color.BLUE));
+            cloud.refillCloud(AL);
         }
         catch(Exception e){fail();}
     }
