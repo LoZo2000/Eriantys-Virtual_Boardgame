@@ -18,7 +18,10 @@ public class ControllerTest {
         Game game = new Game(true, 2);
         GameManager gameManager = new GameManager();
         controller = new Controller(game, gameManager);
+    }
 
+    @Test
+    public void test(){
         Message mes = new AddMeMessage("player1", true, 2);
         controller.update(mes);
         mes = new AddMeMessage("player2", true, 2);
