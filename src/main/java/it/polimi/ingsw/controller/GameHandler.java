@@ -245,11 +245,16 @@ public class GameHandler {
 
     private void addPlayers(){
         this.numPlayers++;
+
+        //Each time a player is added to the Game the list of nicknames of players is updated
+        this.players.clear();
+        this.originalOrderPlayer.clear();
+        game.getAllPlayers().forEach((player -> {
+            this.players.add(player.getNickname());
+            this.originalOrderPlayer.add(player.getNickname());
+        }));
+
         if (numPlayers == maxPlayers){
-            game.getAllPlayers().forEach((player -> {
-                this.players.add(player.getNickname());
-                this.originalOrderPlayer.add(player.getNickname());
-            }));
             nextPhase();
         }
     }

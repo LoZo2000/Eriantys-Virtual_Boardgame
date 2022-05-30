@@ -77,6 +77,6 @@ public class Server {
     }
 
     public synchronized boolean isNotValidNickname(String nickname){
-        return this.registeredNicknames.contains(nickname);
+        return this.registeredNicknames.contains(nickname) || nickname == null;
     }
 }

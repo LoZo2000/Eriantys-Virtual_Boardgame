@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.messages.AddMeMessage;
 import it.polimi.ingsw.messages.Message;
 import it.polimi.ingsw.view.GameReport;
@@ -62,7 +63,7 @@ public class Connection extends Observable<Message> implements Runnable {
 
     private void close(){
         closeConnection();
-        System.out.println("Deregistering client...");
+        System.out.println("Deregistering client " + owner);
         server.deregisterConnection(this);
         System.out.println("Done!");
     }
@@ -71,14 +72,20 @@ public class Connection extends Observable<Message> implements Runnable {
     public void run() {
         try{
             System.out.println("Start new connection!");
+
+            this.socket.setSoTimeout(20000);
+
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             out = new PrintWriter(socket.getOutputStream());
             do {
                 objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
-                if (server.isNotValidNickname(message.getSender())) {
-                    send(new GameReport(null, "This nickname is already taken", null, false));
+
+                if(message.getAction() != Action.PING) {
+                    if (server.isNotValidNickname(message.getSender())) {
+                        send(new GameReport(null, "This nickname is already taken", null, false));
+                    }
                 }
             }while (server.isNotValidNickname(message.getSender()));
             server.lobby(this, (AddMeMessage) message);
@@ -88,7 +95,9 @@ public class Connection extends Observable<Message> implements Runnable {
             while(isActive()){
                 objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
-                notify(message);
+
+                if(message.getAction() != Action.PING)
+                    notify(message);
             }
         } catch(Exception e){
             System.err.println(e.getMessage());
