@@ -7,9 +7,7 @@ import it.polimi.ingsw.model.Movable;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.characters.CharacterType;
 import it.polimi.ingsw.model.characters.MovementCharacter;
-import it.polimi.ingsw.model.exceptions.NoActiveCardException;
-import it.polimi.ingsw.model.exceptions.NoIslandException;
-import it.polimi.ingsw.model.exceptions.NoPlayerException;
+import it.polimi.ingsw.model.exceptions.*;
 
 import java.util.Set;
 

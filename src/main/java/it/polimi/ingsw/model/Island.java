@@ -155,10 +155,4 @@ public class Island implements Movable, Serializable {
         String[] arr = this.id.split(", ");
         return Arrays.asList(arr).contains(x);
     }
-
-    public int getStudentsColor(Color color){
-        int cont = 0;
-        for(Student s : students) if(s.getColor().equals(color)) cont++;
-        return cont;
-    }
 }

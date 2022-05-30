@@ -36,7 +36,6 @@ public class PlayerTest {
     public void getter(){
         assertEquals("player1", player.getNickname());
         assertEquals(8, player.getDashboard().getTowers());
-        assertEquals(10, player.getHand().getNumCards());
     }
 
     @Test

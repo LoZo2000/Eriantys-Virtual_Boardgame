@@ -13,6 +13,9 @@ public class Canteen implements Movable{
     private boolean giveCoin;
     private Color removedColor;
 
+    /**
+     * Creator for an object Canteen
+     */
     public Canteen(){
         blue = new ArrayList<>();
         yellow = new ArrayList<>();
@@ -24,6 +27,11 @@ public class Canteen implements Movable{
         this.removedColor = null;
     }
 
+    /**
+     * Method to add a student in the canteen. The method automatically insert the new student in
+     * an ArrayList according to its color
+     * @param s is the student you want to add in the canteen
+     */
     public void addStudent(Student s){
         switch (s.getColor()){
             case BLUE -> blue.add(s);
@@ -36,6 +44,11 @@ public class Canteen implements Movable{
         this.giveCoin = true;
     }
 
+    /**
+     * This method returns all the students of color C currently in the Canteen
+     * @param c is the color of the students you want
+     * @return an ArrayList of students of that color
+     */
     public ArrayList<Student> getStudents(Color c){
         switch (c){
             case BLUE:
@@ -51,6 +64,11 @@ public class Canteen implements Movable{
         }
     }
 
+    /**
+     * This method, given a Color c, returns the number of students in the Canteen of Color c
+     * @param c is the color of the students you want
+     * @return an integer representing the number of students of Color c in the canteen
+     */
     public int getNumberStudentColor(Color c){
         switch (c){
             case BLUE:
@@ -66,6 +84,12 @@ public class Canteen implements Movable{
         }
     }
 
+    /**
+     * Method to remove a student from the Canteen (needed only when certain characters are activated
+     * @param id the identification number corresponding to the student you want to remove
+     * @return the Student with the corresponding id (if it is in the Canteen)
+     * @throws NoSuchStudentException if there is no such Student in this Canteen
+     */
     public Student removeStudent(int id) throws NoSuchStudentException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent;
@@ -129,9 +153,14 @@ public class Canteen implements Movable{
         throw new NoSuchStudentException("There isn't any Student with that id in the lists");
     }
 
-    //Reset is a flag that set to false the giveCoin boolean. When we exchange 2 students this flag can't be reset
-    //for the first color because we don't know if the first Movable in the moveStudents method was the Canteen or
-    //the Entrance.
+    /**
+     * Method to check if a player is eligible to get a coin. after a move
+     * @param c is the Color of the last Student moved to the Canteen
+     * @param reset is a flag that set to false the giveCoin boolean. When we exchange 2 students this flag can't be reset
+     *     for the first color because we don't know if the first Movable in the moveStudents method was the Canteen or
+     *     the Entrance.
+     * @return true if the player is eligible to get a coin, false otherwise
+     */
     public boolean canGetCoin(Color c, boolean reset){
         boolean result = false;
         if(this.giveCoin && this.getNumberStudentColor(c) % 3 == 0 && this.getNumberStudentColor(c) != 0 && this.removedColor != c){
@@ -141,7 +170,6 @@ public class Canteen implements Movable{
             this.giveCoin = false;
             this.removedColor = null;
         }
-
         return result;
     }
 }

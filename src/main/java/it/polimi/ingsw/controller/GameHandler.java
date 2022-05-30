@@ -151,11 +151,6 @@ public class GameHandler {
 
     //Check if the player og the actio is legit
     private boolean isLegitPlayer(String player){
-        //if(!message.getSender().equals(orderPlayers.get(0))) throw new NotYourTurnException("This is not your turn");
-        /*if(currentPlayer==-1) return true;
-        else {
-            return (player.equals(players.get(currentPlayer)));
-        }*/
         if(currentPlayer == null)
             return true;
 
@@ -178,10 +173,10 @@ public class GameHandler {
 
     public void execute(Message message) throws NotYourTurnException, IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, EndGameException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException {
         if(!isLegitPlayer(message.getSender())) {
-            throw new NotYourTurnException();
+            throw new NotYourTurnException("This is not your turn: please wait...");
         }
         if(!isLegitAction(message.getAction())) {
-            throw new IllegalActionException();
+            throw new IllegalActionException("Illegal move!");
         }
 
         Update update = message.execute(game);

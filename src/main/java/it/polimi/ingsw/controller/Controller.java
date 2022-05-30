@@ -27,7 +27,7 @@ public class Controller implements Observer<Message> {
                 this.gameManager.removeFinishedGame(this);
             }
         }catch(Exception e){
-            game.sendErrorNote(message.getSender(), e.toString(), game.getCurrentPlayer());
+            game.sendErrorNote(message.getSender(), e.getMessage(), game.getCurrentPlayer());
         }
     }
 

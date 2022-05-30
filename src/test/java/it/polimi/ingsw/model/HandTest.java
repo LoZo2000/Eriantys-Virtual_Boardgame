@@ -24,7 +24,6 @@ public class HandTest {
     @Test
     public void getNumCardTest(){
         for(int i=0; i <10; i++){
-            assertEquals(10-i, hand.getNumCards());
             try{
                 hand.playCard(i+1);
             }
@@ -32,9 +31,7 @@ public class HandTest {
                 fail();
             }
         }
-        assertEquals(0, hand.getNumCards());
         assertThrows(OverflowCardException.class, () -> hand.playCard(0));
-        assertEquals(0, hand.getNumCards());
     }
 
     //Checks if the exception is thrown if the position requested from playCard is higher than the size of the ArrayList
@@ -54,12 +51,10 @@ public class HandTest {
     @RepeatedTest(10)
     public void testExtraction(){
         int rand = (int)(Math.random()*10);
-        assertEquals(10, hand.getNumCards());
         try {
             Card c = hand.getAllCards().get(rand);
             Card c2 = hand.playCard(rand+1);
             assertEquals(c, c2);
-            assertEquals(9, hand.getNumCards());
         }
         catch(Exception e){
             fail();

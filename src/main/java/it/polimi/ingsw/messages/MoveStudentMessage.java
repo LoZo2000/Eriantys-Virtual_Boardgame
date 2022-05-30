@@ -52,7 +52,6 @@ public class MoveStudentMessage extends MovementMessage{
             if(game.needsRefill())
                 game.refillActiveCard();
         }catch( NoMoreStudentsException e){
-            //throw new EndGameException("Game ended: the winner is "+getWinner());
             game.setLastTurn(true);
         }
 

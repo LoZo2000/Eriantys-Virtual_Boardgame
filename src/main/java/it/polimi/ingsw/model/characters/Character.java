@@ -46,6 +46,9 @@ public abstract class Character implements Serializable {
     public int getCost() {
         return cost + numberTimesUsed;
     }
+    public int getOriginalCost(){
+        return cost;
+    }
 
     protected void increaseTimesUsed(){
         this.numberTimesUsed += 1;

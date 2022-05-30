@@ -4,8 +4,7 @@ import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Update;
 import it.polimi.ingsw.model.Cloud;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.exceptions.IllegalMoveException;
-import it.polimi.ingsw.model.exceptions.NoPlayerException;
+import it.polimi.ingsw.model.exceptions.*;
 
 import java.util.Arrays;
 

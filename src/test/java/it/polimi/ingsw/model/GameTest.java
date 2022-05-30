@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.controller.Phase;
+import it.polimi.ingsw.view.Columns;
+import it.polimi.ingsw.view.GameReport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -300,7 +302,6 @@ class GameTest {
 
     @Test
     void getterTest(){
-        for(int i=0; i<game.getNumberOfClouds(); i++) assertEquals(3, game.getNumberOfStudentPerColorOnCloud(i, Color.BLUE)+game.getNumberOfStudentPerColorOnCloud(i, Color.YELLOW)+game.getNumberOfStudentPerColorOnCloud(i, Color.RED)+game.getNumberOfStudentPerColorOnCloud(i, Color.GREEN)+game.getNumberOfStudentPerColorOnCloud(i, Color.PINK));
         assertEquals(2, game.getNumPlayers());
         assertEquals(2, game.getRegisteredNumPlayers());
         assertEquals("00", game.getMotherNaturePosition().getId());
@@ -408,5 +409,12 @@ class GameTest {
         assertThrows(NoActiveCardException.class, () -> game.putBackInBag(Color.RED));
         assertFalse(game.needsRefill());
         assertThrows(NoActiveCardException.class, () -> game.refillActiveCard());
+    }
+
+    @Test
+    void notifyAndEndGameTest(){
+        game.endGame();
+        game.setNextLastTurn(false);
+        game.sendDisconnectionAll("player1");
     }
 }

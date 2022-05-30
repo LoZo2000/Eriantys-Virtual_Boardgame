@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Player implements Comparable<Player> {
-
     final private Hand hand;
     final private Dashboard dashboard;
     final private String nickname;

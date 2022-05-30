@@ -1,9 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.TooManyStudentsException;
-import it.polimi.ingsw.model.exceptions.StillStudentException;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Cloud {
@@ -12,12 +8,21 @@ public class Cloud {
     private boolean isFull;
     private ArrayList<Student> students;
 
+    /**
+     * Creator of the entity Cloud
+     * @param maxStudents is the maximum number of students the cloud can contain. It depends from
+     *                    the number of players in the match
+     */
     public Cloud(int maxStudents){
         this.maxStudents = maxStudents;
         this.isFull = false;
         students = new ArrayList<>();
     }
 
+    /**
+     * Method to refill cloud with 3 or 4 Students, according to the number of players
+     * @param newStudents ArrayList containing the new students to be added
+     */
     public void refillCloud(ArrayList<Student> newStudents) {
         for(Student s : newStudents){
             addStudent(s);
@@ -25,6 +30,11 @@ public class Cloud {
         this.isFull = true;
     }
 
+    /**
+     * Method to return how many students of a Color are available on this Cloud
+     * @param color is the color of the students you are interested in
+     * @return an integer representing the number of students of that color on this Cloud
+     */
     public int getNumberOfStudentPerColor(Color color){
         long contStudents = this.students.stream()
                 .filter((s) -> s.getColor() == color)
@@ -32,17 +42,22 @@ public class Cloud {
         return (int) contStudents;
     }
 
-    //To pass students one at a time
-    public void addStudent(Student student) {
+    private void addStudent(Student student) {
         if(students.size()<maxStudents) students.add(student);
     }
 
-    //Returns a copy of students (to let the users examine the cloud)
+    /**
+     * Returns a copy of the students on the Cloud (to let the users to examine the cloud)
+     * @return an ArrayList containing the copy of all these students
+     */
     public ArrayList<Student> getStudents(){
         return (ArrayList<Student>)students.clone();
     }
 
-    //Returns the students and empties the cloud
+    /**
+     * Returns the students on the cloud and empties the cloud
+     * @return these students
+     */
     public ArrayList<Student> chooseCloud(){
         ArrayList<Student> s = (ArrayList<Student>)students.clone();
         students.clear();
@@ -50,10 +65,19 @@ public class Cloud {
         return s;
     }
 
+    /**
+     * To check if a cloud is full (and therefore to check if a cloud has been already selected
+     * from another player)
+     * @return true if the cloud has still students on it, false elsewhere
+     */
     public boolean isFull(){
         return isFull;
     }
 
+    /**
+     * To set the value of the attribute isFull
+     * @param isFull is a boolean value to be assigned to the private attribute isFull
+     */
     public void setIsFull(Boolean isFull){
         this.isFull=isFull;
     }
