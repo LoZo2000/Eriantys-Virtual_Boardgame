@@ -127,7 +127,7 @@ public class Client {
                 } catch (TimeoutException e) {
                     message = null;
                     if(!finished.get())
-                        System.err.println("\nAre you still playing?\n");
+                        System.out.println("\n\n\u001B[1;31mAre you still playing?\u001B[0m\n");
                     canWrite.set(true);
                 }
                 if (message != null && !finished.get()) {
@@ -301,83 +301,6 @@ public class Client {
         System.out.println("\nThanks for Playing!");
     }
 
-    /*public void run() throws IOException {
-        Socket socket = new Socket(ip, port);
-        System.out.println("Connection established");
-        Scanner socketIn = new Scanner(socket.getInputStream());
-        InputStream inputStream = socket.getInputStream();
-        ObjectInputStream objectInputStream;
-        OutputStream outputStream = socket.getOutputStream();
-        ObjectOutputStream objectOutputStream = null;
-        GameReport report;
-        boolean activeClient = true;
-
-        //AnsiConsole.systemInstall();
-
-        activeCard = -1;
-
-        stdin = new Scanner(System.in);
-        try{
-            do {
-                if(gameReport == null || (gameReport.getError() != null && gameReport.getError().equals("This nickname is already taken"))) {
-                    message = getInputStart();
-                    objectOutputStream = new ObjectOutputStream(outputStream);
-                    objectOutputStream.writeObject(message);
-                }
-                objectInputStream = new ObjectInputStream(inputStream);
-                report = (GameReport) objectInputStream.readObject();
-                showBoard(report);
-
-                if(report.getError() == null || !report.getError().equals("This nickname is already taken"))
-                    gameReport = report;
-
-                if(report.getFinishedGame())
-                    activeClient = false;
-
-            }while(report.getTurnOf() == null || !report.getTurnOf().equals(nickname));
-
-            currentPhase = report.getCurrentPhase();
-
-            while (activeClient) {
-                message = getInput();
-                if (message != null) {
-                    objectOutputStream = new ObjectOutputStream(outputStream);
-                    objectOutputStream.writeObject(message);
-                    do {
-                        objectInputStream = new ObjectInputStream(inputStream);
-                        report = (GameReport) objectInputStream.readObject();
-                        showBoard(report);
-
-                        if(report.getError() == null) {
-                            gameReport = report;
-                            activeCard = report.getActiveCard();
-                            currentPhase = report.getCurrentPhase();
-                            if (activeCard != -1) {
-                                requestedAction = report.getRequestedAction();
-                            } else {
-                                requestedAction = null;
-                            }
-                        }
-
-                        if(report.getFinishedGame())
-                            activeClient = false;
-
-                    }while(!report.getFinishedGame() && !report.getTurnOf().equals(nickname));
-                }
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-            System.out.println("Connection closed from the client side");
-        } finally {
-            socketIn.close();
-            objectOutputStream.close();
-            socket.close();
-            System.out.println("Thanks for playing!");
-            stdin.close();
-            AnsiConsole.systemUninstall();
-        }
-    }*/
-
     private Message getInputStart() throws TimeoutException {
         int numPlayers, rule;
         System.out.println(Ansi.ansi().eraseScreen().toString());
@@ -446,6 +369,8 @@ public class Client {
                 System.out.println("\t-'2) CLOSE DETAILED CARD INFO' to return to normal view");
         }
 
+        System.out.println("\t-'0) CLOSE GAME' to close the client. If you do that the game will end and no winner will be declared");
+        System.out.print("Selection: ");
         try {
             action = Integer.parseInt(readLineTimeout());
         } catch (NumberFormatException e) {
@@ -575,6 +500,25 @@ public class Client {
                     arrivalId = getLocationId(arrivalType);
 
                     return new ExchangeStudentMessage(nickname, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
+                case 0:
+                    System.out.println("Are you sure you want to close the client? (The game will end for everyone in this match)");
+                    System.out.println("\t1) Yes");
+                    System.out.println("\t2) No");
+                    int sel = 0;
+                    while(sel != 1 && sel != 2) {
+                        System.out.print("Selection: ");
+                        try {
+                            sel = Integer.parseInt(readLineTimeout());
+                        } catch (NumberFormatException e) {
+                            System.out.println("The inserted value isn't a valid number");
+                            sel = 0;
+                        }
+                    }
+
+                    if(sel == 1){
+                        System.exit(0);
+                    }
+                    return null;
                 default:
                     System.out.println("Invalid action!");
                     return null;
@@ -666,6 +610,25 @@ public class Client {
                     showCardInfo();
                 detailedVisual = !detailedVisual;
                 return null;
+            } else if(action == 0){
+                System.out.println("Are you sure you want to close the client? (The game will end for everyone in this match)");
+                System.out.println("\t1) Yes");
+                System.out.println("\t2) No");
+                int sel = 0;
+                while(sel != 1 && sel != 2) {
+                    System.out.print("Selection: ");
+                    try {
+                        sel = Integer.parseInt(readLineTimeout());
+                    } catch (NumberFormatException e) {
+                        System.out.println("The inserted value isn't a valid number");
+                        sel = 0;
+                    }
+                }
+
+                if(sel == 1){
+                    System.exit(0);
+                }
+                return null;
             }
         }
 
@@ -748,7 +711,7 @@ public class Client {
             }
 
         } else if((report.getFinishedGame() && report.getError() != null) || this.gameReport == null) {
-            System.err.println(report.getError()+"\n");
+            System.out.println("\u001B[1;31m" + report.getError()+"\u001B[0m\n");
         } else{
             Columns col = new Columns();
             col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");
@@ -770,9 +733,13 @@ public class Client {
 
                 col.addColumn(2, "\u001B[1;91mCurrent Rule: \u001B[0m " + gameReport.getActiveRule() + "\n");
             }
+
+            col.addColumn(1, "\n\u001B[1;31mFORBIDDEN MOVE: "+report.getError()+"\u001B[0m\n");
+
             col.printAll();
 
-            System.err.println("\n\nFORBIDDEN MOVE: "+report.getError()+"\n");
+            //System.out.println("\n\nFORBIDDEN MOVE: "+report.getError()+"\n");
+            //System.out.println("\n\u001B[1;31mFORBIDDEN MOVE: "+report.getError()+"\u001B[0m\n");
             System.out.println("Current phase: "+gameReport.getCurrentPhaseString());
             System.out.println("Current player: "+gameReport.getTurnOf());
         }
