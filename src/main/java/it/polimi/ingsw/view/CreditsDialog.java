@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class CreditsDialog extends JFrame implements ActionListener {
-    private boolean isVisible = false;
     private Dialog d;
     private JButton closeButton;
 
@@ -94,7 +93,9 @@ public class CreditsDialog extends JFrame implements ActionListener {
         closeIcon = new ImageIcon(newImg);
         closeButton.setIcon(closeIcon);
         closeButton.setContentAreaFilled(false);
+        closeButton.setBorderPainted(false);
         closeButton.setBounds(170, 270, 40, 40);
+        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(closeButton);
     }
 

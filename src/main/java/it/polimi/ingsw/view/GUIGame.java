@@ -37,6 +37,7 @@ public class GUIGame {
     private JPanel containerInfo = new JPanel();
     private JPanel containerDash = new JPanel();
     private JPanel containerCard = new JPanel();
+    private JPanel containerZoomedCard = new JPanel();
     private JPanel containerLastCard = new JPanel();
     private ArrayList<JPanel> containerCharacters = new ArrayList<>();
     private Phase currentPhase;
@@ -113,14 +114,70 @@ public class GUIGame {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
 
+        //My cards'panel:
+        JPanel myCards = new JPanel();
+        myCards.setLayout(null);
+        myCards.setBounds(-2, 630, 900, 45);
+        Color colorLabel = new Color(128,128,128,255);
+        myCards.setBackground(colorLabel);
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        myCards.setBorder(border);
+        bgLabel.add(myCards);
+
+        JLabel titleC = new JLabel();
+        titleC.setText("Your cards:");
+        titleC.setHorizontalAlignment(SwingConstants.CENTER);
+        titleC.setVerticalAlignment(SwingConstants.CENTER);
+        titleC.setFont(new Font("MV Boli", Font.BOLD, 13));
+        titleC.setBounds(5,10,75,20);
+        myCards.add(titleC);
+
+        containerCard.setBounds(90, 2, 900, 45);
+        containerCard.setLayout(null);
+        containerCard.setOpaque(false);
+        myCards.add(containerCard);
+
+        containerZoomedCard.setBounds(75, 480, 900, 155);
+        containerZoomedCard.setLayout(null);
+        containerZoomedCard.setOpaque(false);
+        bgLabel.add(containerZoomedCard);
+
+        //Show help Buttons:
+        JButton ruleButton = new JButton();
+        ImageIcon ruleIcon = new ImageIcon(this.getClass().getResource("/Book.png"));
+        Image ruleImage = ruleIcon.getImage();
+        newImg = ruleImage.getScaledInstance(35, 35,  Image.SCALE_SMOOTH);
+        ruleIcon = new ImageIcon(newImg);
+        ruleButton.setIcon(ruleIcon);
+        ruleButton.setContentAreaFilled(false);
+        ruleButton.setBorderPainted(false);
+        ruleButton.setBounds(10,430,  35, 35);
+        ruleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        bgLabel.add(ruleButton);
+        RulesDialog rulesDialog = new RulesDialog(window);
+        ruleButton.addActionListener(e->{
+            rulesDialog.showDialog();
+        });
+
+        JButton tutorButton = new JButton();
+        ImageIcon tutorIcon = new ImageIcon(this.getClass().getResource("/Help.png"));
+        Image tutorImage = tutorIcon.getImage();
+        newImg = tutorImage.getScaledInstance(35, 35,  Image.SCALE_SMOOTH);
+        tutorIcon = new ImageIcon(newImg);
+        tutorButton.setIcon(tutorIcon);
+        tutorButton.setContentAreaFilled(false);
+        tutorButton.setBorderPainted(false);
+        tutorButton.setBounds(10,470,  35, 35);
+        tutorButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        bgLabel.add(tutorButton);
+
         //Show my dashboards:
         ImageIcon dashIcon = new ImageIcon(this.getClass().getResource("/Dashboard.png"));
         Image dashImage = dashIcon.getImage();
         newImg = dashImage.getScaledInstance(500, 200,  Image.SCALE_SMOOTH);
         dashIcon = new ImageIcon(newImg);
         JLabel dashLabel = new JLabel(dashIcon);
-        dashLabel.setBounds(100, 430, 500, 200);
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        dashLabel.setBounds(55, 430, 500, 200);
         dashLabel.setBorder(border);
         bgLabel.add(dashLabel);
 
@@ -132,7 +189,7 @@ public class GUIGame {
         //Coins:
         JPanel coins = new JPanel();
         coins.setLayout(null);
-        coins.setBounds(605, 430, 91, 20);
+        coins.setBounds(565, 430, 91, 20);
         Color colorPanel = new Color(128,128,128,255);
         coins.setBackground(colorPanel);
         coins.setBorder(border);
@@ -155,8 +212,7 @@ public class GUIGame {
         //Last card:
         JPanel card = new JPanel();
         card.setLayout(null);
-        card.setBounds(605, 455, 91, 145);
-        Color colorLabel = new Color(128,128,128,255);
+        card.setBounds(565, 460, 91, 145);
         card.setBackground(colorLabel);
         card.setBorder(border);
         bgLabel.add(card);
@@ -178,27 +234,6 @@ public class GUIGame {
         c.setIcon(cIcon);
         c.setBounds(0, 0, 85, 125);
         containerLastCard.add(c);
-
-        //My cards'panel:
-        JPanel myCards = new JPanel();
-        myCards.setLayout(null);
-        myCards.setBounds(-2, 630, 900, 45);
-        myCards.setBackground(colorLabel);
-        myCards.setBorder(border);
-        bgLabel.add(myCards);
-
-        JLabel titleC = new JLabel();
-        titleC.setText("Your cards:");
-        titleC.setHorizontalAlignment(SwingConstants.CENTER);
-        titleC.setVerticalAlignment(SwingConstants.CENTER);
-        titleC.setFont(new Font("MV Boli", Font.BOLD, 13));
-        titleC.setBounds(5,10,75,20);
-        myCards.add(titleC);
-
-        containerCard.setBounds(90, 2, 900, 45);
-        containerCard.setLayout(null);
-        containerCard.setOpaque(false);
-        myCards.add(containerCard);
 
         //Opponents'container:
         JPanel opponents = new JPanel();
@@ -314,15 +349,27 @@ public class GUIGame {
     private void displayReport(GameReport report){
         currentPhase = report.getPhase();
 
-        //Display my cards:
-        containerCard.removeAll();
+        //Display my cards and the zoomed hidden ones:
         ArrayList<Card> myC = report.getMyCards();
         int len = myC.size();
+        containerZoomedCard.removeAll();
+        containerCard.removeAll();
         for(int i=0; i<len; i++){
+            ImageIcon bcIcon = new ImageIcon(this.getClass().getResource(myC.get(i).getFront()));
+            Image bcImage = bcIcon.getImage();
+            Image newImg = bcImage.getScaledInstance(105, 155,  Image.SCALE_SMOOTH);
+            bcIcon = new ImageIcon(newImg);
+            final JLabel bcLabel = new JLabel(bcIcon);
+            Border border = BorderFactory.createLineBorder(Color.BLACK);
+            bcLabel.setBorder(border);
+            bcLabel.setBounds(80*i, 0, 105, 155);
+            bcLabel.setVisible(false);
+            containerZoomedCard.add(bcLabel);
+
             JButton bc = new JButton();
             ImageIcon cIcon = new ImageIcon(this.getClass().getResource(myC.get(i).getFront()));
             Image cImage = cIcon.getImage();
-            Image newImg = cImage.getScaledInstance(75, 125,  Image.SCALE_SMOOTH);
+            newImg = cImage.getScaledInstance(75, 125,  Image.SCALE_SMOOTH);
             cIcon = new ImageIcon(newImg);
             bc.setIcon(cIcon);
             bc.setBounds(80*i, 0, 75, 125);
@@ -339,9 +386,22 @@ public class GUIGame {
                     JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
+            bc.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    super.mouseEntered(e);
+                    bcLabel.setVisible(true);
+                }
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    super.mouseEntered(e);
+                    bcLabel.setVisible(false);
+                }
+            });
             bc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         containerCard.repaint();
+        containerZoomedCard.repaint();
 
         //Display all islands:
         containerIslands.removeAll();

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class OpponentDialog extends JFrame implements ActionListener {
-    private boolean isVisible = false;
     private Dialog d;
     private JButton closeButton;
     private String opponent;
@@ -109,7 +108,9 @@ public class OpponentDialog extends JFrame implements ActionListener {
         closeIcon = new ImageIcon(newImg);
         closeButton.setIcon(closeIcon);
         closeButton.setContentAreaFilled(false);
+        closeButton.setBorderPainted(false);
         closeButton.setBounds(530, 180, 40, 40);
+        closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(closeButton);
     }
 

@@ -22,7 +22,6 @@ public class GUIEntry{
     private JButton ruleButton = new JButton(); //To change rules
     private JButton creditButton = new JButton(); //To open credits dialog
     private JButton playButton = new JButton(); //To join a match
-    private CreditsDialog credits;
     private boolean completeRules = false;
     private GameReport report;
     private boolean requestSent = false; //To avoid a client joins more than one match at the same time
@@ -33,6 +32,8 @@ public class GUIEntry{
     private final Object lockWrite;
 
     public GUIEntry(Socket socket, Object lockWrite) throws IOException{
+        System.setProperty("sun.java2d.uiScale", "1.0");
+
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
 
@@ -103,6 +104,39 @@ public class GUIEntry{
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
 
+        //Show help Buttons:
+        JButton creditButton = new JButton();
+        ImageIcon creditIcon = new ImageIcon(this.getClass().getResource("/Credits.png"));
+        Image creditImage = creditIcon.getImage();
+        newImg = creditImage.getScaledInstance(35, 35,  Image.SCALE_SMOOTH);
+        creditIcon = new ImageIcon(newImg);
+        creditButton.setIcon(creditIcon);
+        creditButton.setContentAreaFilled(false);
+        creditButton.setBorderPainted(false);
+        creditButton.setBounds(10,10,  35, 35);
+        creditButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        CreditsDialog credits = new CreditsDialog(window);
+        creditButton.addActionListener(e->{
+            credits.showDialog();
+        });
+        bgLabel.add(creditButton);
+
+        JButton ruleButton = new JButton();
+        ImageIcon ruleIcon = new ImageIcon(this.getClass().getResource("/Book.png"));
+        Image ruleImage = ruleIcon.getImage();
+        newImg = ruleImage.getScaledInstance(35, 35,  Image.SCALE_SMOOTH);
+        ruleIcon = new ImageIcon(newImg);
+        ruleButton.setIcon(ruleIcon);
+        ruleButton.setContentAreaFilled(false);
+        ruleButton.setBorderPainted(false);
+        ruleButton.setBounds(10,55,  35, 35);
+        ruleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        bgLabel.add(ruleButton);
+        RulesDialog rulesDialog = new RulesDialog(window);
+        ruleButton.addActionListener(e->{
+            rulesDialog.showDialog();
+        });
+
         //Label containing the setting menu:
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -157,6 +191,7 @@ public class GUIEntry{
         slider.setPaintLabels(true);
         slider.setOpaque(false);
         slider.setBounds(150,55,75,30);
+        slider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         panel.add(slider);
 
         //Text to choose the rule type:
@@ -177,21 +212,8 @@ public class GUIEntry{
         ButtonGroup group = new ButtonGroup();
         group.add(option1);
         group.add(option2);
-
-        //Button to choose simple/complete rules:
-        /*ruleButton.setText("using simple rules");
-        ruleButton.setBounds(300, 55, 175, 30);
-        ruleButton.addActionListener(E->{
-            if(completeRules){
-                ruleButton.setText("using simple rules");
-                completeRules = false;
-            }
-            else{
-                ruleButton.setText("using complete rules");
-                completeRules = true;
-            }
-        });
-        panel.add(ruleButton);*/
+        option1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        option2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         //Play button:
         ImageIcon playIcon = new ImageIcon(this.getClass().getResource("/Play.png"));
@@ -200,6 +222,7 @@ public class GUIEntry{
         playIcon = new ImageIcon(newImg);
         playButton.setIcon(playIcon);
         playButton.setBounds(220, 90, 60, 60);
+        playButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         playButton.addActionListener(e->{
             if(requestSent){
                 JOptionPane.showMessageDialog(null, "<html>You are waiting to join a match!<br/>Please hold on for a little bit...</html>","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -268,16 +291,5 @@ public class GUIEntry{
         uncLabel = new JLabel(uncIcon);
         uncLabel.setBounds(190,2,20,20);
         status.add(uncLabel);
-
-        //Credit button:
-        creditButton.setText("Credits");
-        creditButton.setBounds(5, 130, 75, 20);
-        creditButton.addActionListener(e->{
-            credits.showDialog();
-        });
-        panel.add(creditButton);
-
-        //Dialog containing all the credits:
-        credits = new CreditsDialog(window);
     }
 }
