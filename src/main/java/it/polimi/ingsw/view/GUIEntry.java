@@ -30,16 +30,16 @@ public class GUIEntry{
     private JLabel connLabel, uncLabel; //To display the status of the research
     private String nickname;
 
+    private final Object lockWrite;
 
-
-
-    public GUIEntry(Socket socket) throws IOException{
+    public GUIEntry(Socket socket, Object lockWrite) throws IOException{
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
+
+        this.lockWrite = lockWrite;
+
         createGUI();
     }
-
-
 
     public GameReport openGUI(){
         window.setVisible(true);
@@ -209,8 +209,10 @@ public class GUIEntry{
                 nickname = textField.getText();
                 Message message = new AddMeMessage(nickname, option2.isSelected(), slider.getValue());
                 try {
-                    objectOutputStream = new ObjectOutputStream(outputStream);
-                    objectOutputStream.writeObject(message);
+                    synchronized (lockWrite) {
+                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(message);
+                    }
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }

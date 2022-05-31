@@ -22,6 +22,7 @@ public class GameManager {
         if(numPlayers[i]==0){
             gameTypes[i] = new Game(completeRules, message.getNumPlayers());
             controllerTypes[i] = new Controller(gameTypes[i], this);
+            activeGames.add(controllerTypes[i]);
             RemoteView remoteView = new RemoteView(c, message.getSender());
             remoteView.addObserver(controllerTypes[i]);
             gameTypes[i].addObserver(remoteView);
@@ -34,7 +35,6 @@ public class GameManager {
             numPlayers[i]++;
             if(numPlayers[i]==maxPlayers[i]) {
                 numPlayers[i]=0;
-                activeGames.add(controllerTypes[i]);
             }
         }
     }
