@@ -5,6 +5,10 @@ import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * The class island represent an island in the game, in the island can be stored students, and can be present a different
+ * number of towers, an island ccan have an owner if a player conquer it through the rule game
+ */
 public class Island implements Movable, Serializable {
     private final String id;
     private ArrayList<Student> students;

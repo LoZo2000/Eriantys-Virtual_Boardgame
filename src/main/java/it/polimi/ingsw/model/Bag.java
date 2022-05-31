@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
+/**
+ * The class bag represent the bag of the game, in the bag there are the students implemented as a stack, and
+ * there are the methods to get random students from the bag and put them in the bag
+ */
 public class Bag{
     private final Stack<Student> students;
 

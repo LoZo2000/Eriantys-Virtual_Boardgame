@@ -19,6 +19,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
 
+/**
+ * Game is the central class of the model, inside game are present of the method neccessary to alter the model, and all the
+ * entities that represent the game, it is an observable due to the utilization of the observer pattern, when a part of the game
+ * is modified a notify is sent
+ */
 public class Game extends Observable<GameReport> {
     private MotherNature motherNature;
     private LinkedList <Island> islands = new LinkedList<>();

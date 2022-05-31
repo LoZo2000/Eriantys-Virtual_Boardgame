@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model;
 
+/**
+ * The class MotherNature represent the entity mother nature in the game, so have an attribute to show her position
+ * and some method to get and set her position
+ */
 public class MotherNature{
     private Island position;
 
