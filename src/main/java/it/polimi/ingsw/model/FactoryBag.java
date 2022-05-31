@@ -7,6 +7,10 @@ public class FactoryBag{
     Bag bag;
     Bag initBag;
 
+    /**
+     * Creator of the class FactoryBag. Aim of this entity is to create one bag for every match and one
+     * temporary bag only to fill the islands
+     */
     public FactoryBag(){
         students = new Stack<>();
         int id = 0;
@@ -28,10 +32,18 @@ public class FactoryBag{
         bag = new Bag(students);
     }
 
+    /**
+     * This method returns a full bag (x24 students for every color)
+     * @return the object Bag
+     */
     public Bag getBag() {
         return bag;
     }
 
+    /**
+     * This method returns the temporary bag (x2 students for every color)
+     * @return an object Bag representing a temporary Bag
+     */
     public Bag getInitBag(){
         return initBag;
     }

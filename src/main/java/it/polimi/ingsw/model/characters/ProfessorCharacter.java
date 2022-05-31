@@ -6,8 +6,8 @@ import it.polimi.ingsw.model.rules.ProfessorRule;
 import it.polimi.ingsw.model.rules.Rule;
 
 public class ProfessorCharacter extends Character{
-    public ProfessorCharacter(int id, CharacterType type, String desc, int cost){
-        super(id, type, desc, cost);
+    public ProfessorCharacter(int id, CharacterType type, String desc, String desc_short, int cost){
+        super(id, type, desc, desc_short, cost);
     }
 
     @Override

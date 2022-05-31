@@ -93,20 +93,4 @@ public class IslandTest {
     public void toStringTest(){
         assertEquals("00", island.toString());
     }
-
-    @Test
-    public void getStudentsIdTest(){
-        ArrayList<Integer> ids;
-
-        island.addStudent(new Student(0, Color.BLUE));
-        island.addStudent(new Student(1, Color.YELLOW));
-        island.addStudent(new Student(2, Color.RED));
-        island.addStudent(new Student(3, Color.GREEN));
-        island.addStudent(new Student(4, Color.PINK));
-        ids = island.getStudentsId(Color.BLUE, 1);
-
-        assertEquals(0, ids.get(0));
-
-    }
-
 }

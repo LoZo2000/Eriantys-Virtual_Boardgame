@@ -14,6 +14,9 @@ import it.polimi.ingsw.model.characters.MovementCharacter;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -47,6 +50,9 @@ public class GUIGame {
 
     //Variable to move MotherNature:
     private int posMT;
+
+    //Characters'buttons:
+    private ArrayList<JButton> characterButtons = new ArrayList<>();
 
 
 
@@ -194,7 +200,7 @@ public class GUIGame {
         //Opponents'container:
         JPanel opponents = new JPanel();
         opponents.setLayout(null);
-        opponents.setBounds(710, 75, 180, 24+report.getNumPlayers()*22);
+        opponents.setBounds(710, 55, 180, 24+report.getNumPlayers()*22);
         opponents.setBackground(colorLabel);
         opponents.setBorder(border);
         bgLabel.add(opponents);
@@ -224,12 +230,13 @@ public class GUIGame {
             }
             od.setBounds(2, 22+22*i, 170, 20);
             opponents.add(od);
+            od.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
 
         //Other infos container:
         JPanel info = new JPanel();
         info.setLayout(null);
-        info.setBounds(710, 20, 180, 40);
+        info.setBounds(710, 10, 180, 40);
         info.setBackground(colorLabel);
         info.setBorder(border);
         bgLabel.add(info);
@@ -267,20 +274,15 @@ public class GUIGame {
             newImg = charImage.getScaledInstance(105, 145,  Image.SCALE_SMOOTH);
             charIcon = new ImageIcon(newImg);
             JLabel charLabel = new JLabel(charIcon);
-            charLabel.setBounds(765, 150*i+150, 105, 145);
+            charLabel.setBounds(770, 150*i+175, 105, 145);
             charLabel.setBorder(border);
             bgLabel.add(charLabel);
 
-            containerCharacters.add(new JPanel());
-            containerCharacters.get(i).setBounds(0, 5, 105, 60);
-            containerCharacters.get(i).setLayout(null);
-            containerCharacters.get(i).setOpaque(false);
-            charLabel.add(containerCharacters.get(i));
-
             JButton cb = new JButton();
             cb.setContentAreaFilled(false);
-            cb.setBounds(0, 75, 105, 70);
+            cb.setBounds(0, 0, 105, 145);
             charLabel.add(cb);
+            characterButtons.add(cb);
 
             final int numThisCard = i;
             cb.addActionListener(e-> {
@@ -291,6 +293,14 @@ public class GUIGame {
                     JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
+            cb.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            cb.setToolTipText(report.getChar().get(i).getDesc_short());
+
+            containerCharacters.add(new JPanel());
+            containerCharacters.get(i).setBounds(0, 0, 105, 145);
+            containerCharacters.get(i).setLayout(null);
+            containerCharacters.get(i).setOpaque(false);
+            charLabel.add(containerCharacters.get(i));
         }
     }
 
@@ -322,6 +332,7 @@ public class GUIGame {
                     JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
+            bc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         containerCard.repaint();
 
@@ -345,6 +356,66 @@ public class GUIGame {
             else if(i<11) is.setBounds(420-140*(i-7), 280, 140, 140);
             else is.setBounds(0, 140, 140, 140);
             containerIslands.add(is);
+
+            final int numIslands = report.getAllIslands().size();
+
+            JButton iButton = new JButton();
+            iButton.setContentAreaFilled(false);
+            iButton.setBorderPainted(false);
+            iButton.setBounds(0, 0, 140, 140);
+            is.add(iButton);
+
+            iButton.addActionListener(e->{
+                if(currentPhase==Phase.MIDDLETURN){
+                    if(idStudentToMove != -1){
+                        try {
+                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                        }catch (Exception ex){
+                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        idStudentToMove = -1;
+                    }
+                }
+                else if(currentPhase==Phase.MOVEMNTURN){
+                    try {
+                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.writeObject(new MoveMotherNatureMessage(myNick, (numIslands+posIsland-posMT)%numIslands));
+                    }catch (Exception ex){
+                        JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else if(currentPhase==Phase.ACTIVECARD){
+                    if(report.getChar().get(report.getActiveCard()).getId()==1){
+                        try {
+                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                        }catch (Exception ex){
+                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        idStudentToMove = -1;
+                    }
+                    else if(report.getChar().get(report.getActiveCard()).getId()==3){
+                        try {
+                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.writeObject(new IslandInfluenceMessage(myNick, idIsland));
+                        }catch (Exception ex){
+                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        idStudentToMove = -1;
+                    }
+                    else if(report.getChar().get(report.getActiveCard()).getId()==5){
+                        try {
+                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.writeObject(new BlockIslandMessage(myNick, idIsland));
+                        }catch (Exception ex){
+                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        idStudentToMove = -1;
+                    }
+                }
+            });
+            iButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             if(allI.get(i).getProhibition()){
                 JLabel soc = new JLabel();
@@ -492,64 +563,6 @@ public class GUIGame {
                 nt.setBounds(75,50,35,10);
                 is.add(nt);
             }
-
-            final int numIslands = report.getAllIslands().size();
-
-            JButton iButton = new JButton();
-            iButton.setContentAreaFilled(false);
-            iButton.setBounds(0, 0, 140, 140);
-            is.add(iButton);
-
-            iButton.addActionListener(e->{
-                if(currentPhase==Phase.MIDDLETURN){
-                    if(idStudentToMove != -1){
-                        try {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
-                        }catch (Exception ex){
-                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        idStudentToMove = -1;
-                    }
-                }
-                else if(currentPhase==Phase.MOVEMNTURN){
-                    try {
-                        objectOutputStream = new ObjectOutputStream(outputStream);
-                        objectOutputStream.writeObject(new MoveMotherNatureMessage(myNick, (numIslands+posIsland-posMT)%numIslands));
-                    }catch (Exception ex){
-                        JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                else if(currentPhase==Phase.ACTIVECARD){
-                    if(report.getChar().get(report.getActiveCard()).getId()==1){
-                        try {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
-                        }catch (Exception ex){
-                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        idStudentToMove = -1;
-                    }
-                    else if(report.getChar().get(report.getActiveCard()).getId()==3){
-                        try {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new IslandInfluenceMessage(myNick, idIsland));
-                        }catch (Exception ex){
-                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        idStudentToMove = -1;
-                    }
-                    else if(report.getChar().get(report.getActiveCard()).getId()==5){
-                        try {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new BlockIslandMessage(myNick, idIsland));
-                        }catch (Exception ex){
-                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        idStudentToMove = -1;
-                    }
-                }
-            });
         }
 
         //Display clouds:
@@ -612,6 +625,7 @@ public class GUIGame {
 
             JButton clButton = new JButton();
             clButton.setContentAreaFilled(false);
+            clButton.setBorderPainted(false);
             clButton.setBounds(150+105*i, 160, 100, 100);
             containerIslands.add(clButton);
 
@@ -624,6 +638,7 @@ public class GUIGame {
                     JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
+            clButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         containerIslands.repaint();
 
@@ -661,6 +676,7 @@ public class GUIGame {
             stIcon = new ImageIcon(newImg);
             st.setIcon(stIcon);
             st.setContentAreaFilled(false);
+            st.setBorderPainted(false);
             st.setBounds(10+30*((i+1)%2),20+31*((i+1)/2),  30, 30);
             containerDash.add(st);
 
@@ -683,6 +699,7 @@ public class GUIGame {
                     departureID = -1;
                 }
             });
+            st.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         for(int i=0; i<5; i++){
             len = report.getMyCanteen().get(i);
@@ -707,6 +724,7 @@ public class GUIGame {
 
             JButton taButton = new JButton();
             taButton.setContentAreaFilled(false);
+            taButton.setBorderPainted(false);
             taButton.setBounds(95, 22+32*i, 24*10, 23);
             containerDash.add(taButton);
 
@@ -754,6 +772,7 @@ public class GUIGame {
                     colorStudentToMove = null;
                 }
             });
+            taButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         len = report.getMyTowers();
         ColorTower myCT = report.getMyColor();
@@ -809,6 +828,14 @@ public class GUIGame {
             containerLastCard.repaint();
         }
 
+        //Enable/disable character'cards if it was activated in the previous move:
+        if(report.getActiveCard()!=-1) characterButtons.get(report.getActiveCard()).setVisible(false);
+        else{
+            for (JButton cb : characterButtons){
+                if(!cb.isVisible()) cb.setVisible(true);
+            }
+        }
+
         //Show students on card (if available):
         for(int i=0; i<report.getChar().size(); i++){
             containerCharacters.get(i).removeAll();
@@ -824,7 +851,8 @@ public class GUIGame {
                     socIcon = new ImageIcon(newImg);
                     soc.setIcon(socIcon);
                     soc.setContentAreaFilled(false);
-                    soc.setBounds(15+(j/2)*30,j%2*30,30, 30);
+                    soc.setBorderPainted(false);
+                    soc.setBounds(22+j%2*30,(j/2)*30+55,30, 30);
                     containerCharacters.get(i).add(soc);
 
                     final int idStudent = studs.get(j).getId();
@@ -840,6 +868,7 @@ public class GUIGame {
                         departureType = dest;
                         departureID = -1;
                     });
+                    soc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
             }
             else if(report.getChar().get(i).getTypeCharacter() == CharacterType.ACTION){
@@ -853,7 +882,7 @@ public class GUIGame {
                     soc.setIcon(socIcon);
                     Border border = BorderFactory.createLineBorder(Color.BLACK);
                     soc.setBorder(border);
-                    soc.setBounds(15+j%2*30,(j/2)*30,26,26);
+                    soc.setBounds(22+j%2*30,(j/2)*30+70,26,26);
                     containerCharacters.get(i).add(soc);
                 }
             }
@@ -868,7 +897,7 @@ public class GUIGame {
                 moIcon = new ImageIcon(newImg);
                 mo.setIcon(moIcon);
                 mo.setOpaque(false);
-                mo.setBounds(1, 18+j*10, 25, 15);
+                mo.setBounds(5, 18+j*10, 25, 15);
                 containerCharacters.get(i).add(mo);
             }
 

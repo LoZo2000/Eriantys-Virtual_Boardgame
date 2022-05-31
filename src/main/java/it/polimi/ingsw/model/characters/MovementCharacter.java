@@ -18,8 +18,8 @@ public class MovementCharacter extends ActionCharacter implements Movable {
     protected final Set<Location> allowedDepartures;
     protected final Set<Location> allowedArrivals;
 
-    public MovementCharacter(int id, CharacterType type, String desc, int cost, ArrayList<Student> students, JSONParams params){
-        super(id, type, desc, cost, params);
+    public MovementCharacter(int id, CharacterType type, String desc, String desc_short, int cost, ArrayList<Student> students, JSONParams params){
+        super(id, type, desc, desc_short, cost, params);
 
         this.locationType = params.getLocationType();
         this.refill = params.getRefill();

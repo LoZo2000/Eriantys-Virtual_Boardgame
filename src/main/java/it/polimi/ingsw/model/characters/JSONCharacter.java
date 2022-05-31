@@ -9,13 +9,15 @@ public class JSONCharacter {
     private final int id;
     private final CharacterType typeCharacter;
     private final String desc;
+    private final String desc_short;
     private final int cost;
     private final JSONParams params;
 
-    public JSONCharacter(int id, CharacterType typeCharacter, String desc, int cost, Action typeAction, Integer numThingOnIt, Location locationType, Boolean refill, Set<Location> allowedDepartures, Set<Location> allowedArrivals, Boolean towersDisabled, Integer extraInfluencePoints, Integer extraMNMovement, Integer maxMoves) {
+    public JSONCharacter(int id, CharacterType typeCharacter, String desc, String desc_short, int cost, Action typeAction, Integer numThingOnIt, Location locationType, Boolean refill, Set<Location> allowedDepartures, Set<Location> allowedArrivals, Boolean towersDisabled, Integer extraInfluencePoints, Integer extraMNMovement, Integer maxMoves) {
         this.id = id;
         this.typeCharacter = typeCharacter;
         this.desc = desc;
+        this.desc_short = desc_short;
         this.cost = cost;
         this.params = new JSONParams(typeAction, numThingOnIt, locationType, refill, allowedDepartures, allowedArrivals, towersDisabled, extraInfluencePoints, extraMNMovement, maxMoves);
     }
@@ -30,6 +32,10 @@ public class JSONCharacter {
 
     public String getDesc() {
         return desc;
+    }
+
+    public String getDesc_short() {
+        return desc_short;
     }
 
     public int getCost() {

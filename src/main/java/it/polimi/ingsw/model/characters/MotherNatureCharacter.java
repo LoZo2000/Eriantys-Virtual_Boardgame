@@ -8,8 +8,8 @@ import it.polimi.ingsw.model.rules.Rule;
 public class MotherNatureCharacter extends Character{
     private final int extraMovement;
 
-    public MotherNatureCharacter(int id, CharacterType type, String desc, int cost, JSONParams params){
-        super(id, type, desc, cost);
+    public MotherNatureCharacter(int id, CharacterType type, String desc, String desc_short, int cost, JSONParams params){
+        super(id, type, desc, desc_short, cost);
 
         this.extraMovement = params.getExtraMNMovement();
     }

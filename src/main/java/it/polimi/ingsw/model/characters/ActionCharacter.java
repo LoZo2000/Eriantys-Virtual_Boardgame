@@ -15,8 +15,8 @@ public class ActionCharacter extends Character{
     private final int maxNumTokens;
     private int numTokens;
 
-    public ActionCharacter(int id, CharacterType type, String desc, int cost, JSONParams params){
-        super(id, type, desc, cost);
+    public ActionCharacter(int id, CharacterType type, String desc, String desc_short, int cost, JSONParams params){
+        super(id, type, desc, desc_short, cost);
 
         this.maxNumTokens = params.getNumThingOnIt();
         this.numTokens = params.getNumThingOnIt();
