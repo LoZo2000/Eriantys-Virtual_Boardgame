@@ -376,8 +376,10 @@ public class GUIGame {
                 if(currentPhase==Phase.MIDDLETURN){
                     if(idStudentToMove != -1){
                         try {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                            synchronized (lockWrite) {
+                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                            }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -386,8 +388,10 @@ public class GUIGame {
                 }
                 else if(currentPhase==Phase.MOVEMNTURN){
                     try {
-                        objectOutputStream = new ObjectOutputStream(outputStream);
-                        objectOutputStream.writeObject(new MoveMotherNatureMessage(myNick, (numIslands+posIsland-posMT)%numIslands));
+                        synchronized (lockWrite) {
+                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.writeObject(new MoveMotherNatureMessage(myNick, (numIslands + posIsland - posMT) % numIslands));
+                        }
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -395,8 +399,10 @@ public class GUIGame {
                 else if(currentPhase==Phase.ACTIVECARD){
                     if(report.getChar().get(report.getActiveCard()).getId()==1){
                         try {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                            synchronized (lockWrite) {
+                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                            }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -404,8 +410,10 @@ public class GUIGame {
                     }
                     else if(report.getChar().get(report.getActiveCard()).getId()==3){
                         try {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new IslandInfluenceMessage(myNick, idIsland));
+                            synchronized (lockWrite) {
+                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.writeObject(new IslandInfluenceMessage(myNick, idIsland));
+                            }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -413,8 +421,10 @@ public class GUIGame {
                     }
                     else if(report.getChar().get(report.getActiveCard()).getId()==5){
                         try {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new BlockIslandMessage(myNick, idIsland));
+                            synchronized (lockWrite) {
+                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.writeObject(new BlockIslandMessage(myNick, idIsland));
+                            }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -570,74 +580,6 @@ public class GUIGame {
                 nt.setBounds(75,50,35,10);
                 is.add(nt);
             }
-
-            final int numIslands = report.getAllIslands().size();
-
-            JButton iButton = new JButton();
-            iButton.setContentAreaFilled(false);
-            iButton.setBounds(0, 0, 140, 140);
-            is.add(iButton);
-
-            iButton.addActionListener(e->{
-                if(currentPhase==Phase.MIDDLETURN){
-                    if(idStudentToMove != -1){
-                        try {
-                            synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
-                                objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
-                            }
-                        }catch (Exception ex){
-                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        idStudentToMove = -1;
-                    }
-                }
-                else if(currentPhase==Phase.MOVEMNTURN){
-                    try {
-                        synchronized (lockWrite) {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(new MoveMotherNatureMessage(myNick, (numIslands + posIsland - posMT) % numIslands));
-                        }
-                    }catch (Exception ex){
-                        JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                else if(currentPhase==Phase.ACTIVECARD){
-                    if(report.getChar().get(report.getActiveCard()).getId()==1){
-                        try {
-                            synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
-                                objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
-                            }
-                        }catch (Exception ex){
-                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        idStudentToMove = -1;
-                    }
-                    else if(report.getChar().get(report.getActiveCard()).getId()==3){
-                        try {
-                            synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
-                                objectOutputStream.writeObject(new IslandInfluenceMessage(myNick, idIsland));
-                            }
-                        }catch (Exception ex){
-                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        idStudentToMove = -1;
-                    }
-                    else if(report.getChar().get(report.getActiveCard()).getId()==5){
-                        try {
-                            synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
-                                objectOutputStream.writeObject(new BlockIslandMessage(myNick, idIsland));
-                            }
-                        }catch (Exception ex){
-                            JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        idStudentToMove = -1;
-                    }
-                }
-            });
         }
 
         //Display clouds:
