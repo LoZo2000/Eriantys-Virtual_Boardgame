@@ -159,8 +159,27 @@ public class GUIEntry{
         slider.setBounds(150,55,75,30);
         panel.add(slider);
 
+        //Text to choose the rule type:
+        JLabel rul = new JLabel();
+        rul.setText("Set of rules:");
+        rul.setHorizontalAlignment(SwingConstants.CENTER);
+        rul.setVerticalAlignment(SwingConstants.CENTER);
+        rul.setBounds(260,55,75,30);
+        panel.add(rul);
+        JRadioButton option1 = new JRadioButton("Simple",true);
+        option1.setOpaque(false);
+        option1.setBounds(335,55,65,30);
+        panel.add(option1);
+        JRadioButton option2 = new JRadioButton("Complete",false);
+        option2.setOpaque(false);
+        option2.setBounds(400,55,100,30);
+        panel.add(option2);
+        ButtonGroup group = new ButtonGroup();
+        group.add(option1);
+        group.add(option2);
+
         //Button to choose simple/complete rules:
-        ruleButton.setText("using simple rules");
+        /*ruleButton.setText("using simple rules");
         ruleButton.setBounds(300, 55, 175, 30);
         ruleButton.addActionListener(E->{
             if(completeRules){
@@ -172,7 +191,7 @@ public class GUIEntry{
                 completeRules = true;
             }
         });
-        panel.add(ruleButton);
+        panel.add(ruleButton);*/
 
         //Play button:
         ImageIcon playIcon = new ImageIcon(this.getClass().getResource("/Play.png"));
@@ -188,7 +207,7 @@ public class GUIEntry{
             else{
                 requestSent = true;
                 nickname = textField.getText();
-                Message message = new AddMeMessage(nickname, completeRules, slider.getValue());
+                Message message = new AddMeMessage(nickname, option2.isSelected(), slider.getValue());
                 try {
                     synchronized (lockWrite) {
                         objectOutputStream = new ObjectOutputStream(outputStream);

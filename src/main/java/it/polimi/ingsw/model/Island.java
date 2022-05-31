@@ -13,6 +13,10 @@ public class Island implements Movable, Serializable {
     private ColorTower owner;
     private String sprite;
 
+    /**
+     * Creator of the entity Island
+     * @param id is the identification number (the first nickname) of the island
+     */
     public Island(int id){
         //this.id = id;
         this.id = String.format("%02d", id);
@@ -27,8 +31,12 @@ public class Island implements Movable, Serializable {
         else sprite = "/Island_3.png";
     }
 
+    /**
+     * Creator of a new Island merging two others
+     * @param i1 is the first Island to be merged
+     * @param i2 is the second Island to be merged
+     */
     public Island(Island i1, Island i2){
-        //this(i1.id);
         students = new ArrayList<>();
         sprite = i1.getSprite();
         String s = i1.id + ", " + i2.id;
@@ -49,27 +57,28 @@ public class Island implements Movable, Serializable {
         prohibitionToken = i1.prohibitionToken || i2.prohibitionToken;
     }
 
+    /**
+     * Method to return the id of the Island
+     * @return the String representing the id of the Island (or all the id of the Islands which made the major
+     * Island)
+     */
     public String getId(){
         return id;
     }
 
-    public ArrayList<Integer> getStudentsId(Color color, int numberOfStudents){
-        ArrayList<Integer> ids = new ArrayList<Integer>();
-        int cont=0;
-        for(Student s : students){
-            if(cont>=numberOfStudents) break;
-            if(s.getColor() == color){
-                ids.add(s.getId());
-                cont++;
-            }
-        }
-        return ids;
-    }
-
+    /**
+     * Method to get the current owner of the Island
+     * @return the tower's color representing the current Player/Team owner
+     */
     public ColorTower getOwner(){
         return this.owner;
     }
 
+    /**
+     * Method to return the Report of the Island (the Report contains all the info useful to compute
+     * the influence of the Players on the Island
+     * @return tne Report of the Island
+     */
     public Report getReport(){
         int numTowers;
         if(owner==null){
@@ -97,18 +106,36 @@ public class Island implements Movable, Serializable {
         return new Report(owner, numTowers, colors, null, 0);
     }
 
+    /**
+     * Method to return the copy of all the Students contained on the Island
+     * @return the ArrayList containing all the Students on the Island
+     */
     public ArrayList<Student> getAllStudents(){
         return (ArrayList<Student>)students.clone();
     }
 
+    /**
+     * Method to add a Student on an Island
+     * @param s is the Student to be added on the Island
+     */
     public void addStudent(Student s){
         students.add(s);
     }
 
+    /**
+     * This method returns the sprite of the Island
+     * @return the Sprite of the Island
+     */
     public String getSprite(){
         return sprite;
     }
 
+    /**
+     * Method to remove a Student from the Island
+     * @param id is the id of the Student to be removed
+     * @return the Student removed
+     * @throws NoSuchStudentException if there is no Student with such id on this Island
+     */
     public Student removeStudent(int id) throws NoSuchStudentException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent = new Student(id, Color.BLUE);
@@ -124,20 +151,36 @@ public class Island implements Movable, Serializable {
         return removedStudent;
     }
 
-    //Change the owner of the island
+    /**
+     * Method to change the owner of the Island
+     * @param t is the Player's color who has to become the new owner of the Island
+     */
     public void conquest(ColorTower t) {
         owner=t;
     }
 
+    /**
+     * Method to place a Prohibition-Token on the Island
+     * @param prohibitionToken is the boolean indicating if a Token is placed or not on the Island
+     */
     public void setProhibition(boolean prohibitionToken) {
         this.prohibitionToken = prohibitionToken;
     }
 
+    /**
+     * Method to return if a Prohibition-Token is on the Island or not
+     * @return true if the Token is on the Island, false otherwise
+     */
     public boolean getProhibition(){
         return prohibitionToken;
     }
 
-
+    /**
+     * Overriding method to compare two Islands
+     * @param o is the Island to be compared with this
+     * @return true if two Islands are the same (if the id are the same), false otherwise
+     */
+    @Override
     public boolean equals(Object o){
         if(o instanceof Island){
             return ((Island) o).getId().equals(id);
@@ -145,11 +188,23 @@ public class Island implements Movable, Serializable {
         return false;
     }
 
+    /**
+     * Overriding method to return the id of the Island
+     * @return the entire id of the Island
+     */
+    @Override
     public String toString(){
         //return String.valueOf(id);
         return id;
     }
 
+    /**
+     * Method to check if the id of the Island contains idToCheck. In fact this.id is made by all the
+     * ids of the previous Islands, so through this method it is possible to check if this.Island is
+     * made by an Island
+     * @param idToCheck is the id of the Island to check if it is contained to this
+     * @return true if idToCheck is contained into this.id
+     */
     public boolean checkContainedId(int idToCheck){
         String x = String.format("%02d", idToCheck);
         String[] arr = this.id.split(", ");

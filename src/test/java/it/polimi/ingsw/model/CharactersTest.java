@@ -20,8 +20,8 @@ class CharactersTest {
 
     @Test
     void actionCharacterWithTokensTest(){
-        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0, 0);
-        ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island","Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0, 0);
+        ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 5"), "The ID is 5");
@@ -50,8 +50,8 @@ class CharactersTest {
 
     @Test
     void actionCharacterWithoutTokensTest(){
-        JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence without moving Mother Nature", 3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0, 0);
-        ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence without moving Mother Nature", "Calculate influence without moving Mother Nature",3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0, 0);
+        ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 3"), "The ID is 3");
@@ -72,8 +72,8 @@ class CharactersTest {
 
     @Test
     void influenceCharacterDisableTowersTest(){
-        JSONCharacter jc = new JSONCharacter(6, CharacterType.INFLUENCE, "Disable towers Influence", 2, null, 0, null, false, null, null, true, 0, 0, 0);
-        InfluenceCharacter character = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        JSONCharacter jc = new JSONCharacter(6, CharacterType.INFLUENCE, "Disable towers Influence","Disable towers Influence",2, null, 0, null, false, null, null, true, 0, 0, 0);
+        InfluenceCharacter character = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 6"), "The ID is 6");
@@ -88,8 +88,8 @@ class CharactersTest {
 
     @Test
     void influenceCharacterExtraPointsTest(){
-        JSONCharacter jc = new JSONCharacter(8, CharacterType.INFLUENCE, "Influence + 2", 2, null, 0, null, false, null, null, false, 2, 0, 0);
-        InfluenceCharacter character = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        JSONCharacter jc = new JSONCharacter(8, CharacterType.INFLUENCE, "Influence + 2","Influence + 2",2, null, 0, null, false, null, null, false, 2, 0, 0);
+        InfluenceCharacter character = new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 8"), "The ID is 8");
@@ -104,8 +104,8 @@ class CharactersTest {
 
     @Test
     void motherNatureCharacterTest(){
-        JSONCharacter jc = new JSONCharacter(4, CharacterType.MOTHERNATURE, "Maximum movement + 2", 1, null, 0, null, false, null, null, false, 0, 2, 0);
-        MotherNatureCharacter character = new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        JSONCharacter jc = new JSONCharacter(4, CharacterType.MOTHERNATURE, "Maximum movement + 2","Maximum movement + 2",1, null, 0, null, false, null, null, false, 0, 2, 0);
+        MotherNatureCharacter character = new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams());
 
         //Check if the parameters of the character are correct
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 4"), "The ID is 4");
@@ -119,8 +119,8 @@ class CharactersTest {
 
     @Test
     void professorCharacterTest(){
-        JSONCharacter jc = new JSONCharacter(2, CharacterType.PROFESSOR, "Professor change with tie", 2, null, 0, null, false, null, null, false, 0, 0, 0);
-        ProfessorCharacter character = new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost());
+        JSONCharacter jc = new JSONCharacter(2, CharacterType.PROFESSOR, "Professor change with tie","Professor change with tie",2, null, 0, null, false, null, null, false, 0, 0, 0);
+        ProfessorCharacter character = new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost());
 
         //Check if the parameters of the character are correct
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 2"), "The ID is 2");
@@ -139,8 +139,8 @@ class CharactersTest {
         students.add(new Student(2, Color.BLUE));
         students.add(new Student(3, Color.GREEN));
         students.add(new Student(4, Color.PINK));
-        JSONCharacter jc = new JSONCharacter(1, CharacterType.MOVEMENT, "Move students from card to island", 1, Action.MOVESTUDENT, 4, Location.CARD_ISLAND, true, allowedDepartures, allowedArrivals, false, 0, 0, 0);
-        MovementCharacter character = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
+        JSONCharacter jc = new JSONCharacter(1, CharacterType.MOVEMENT, "Move students from card to island","Move students from card to island",1, Action.MOVESTUDENT, 4, Location.CARD_ISLAND, true, allowedDepartures, allowedArrivals, false, 0, 0, 0);
+        MovementCharacter character = new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), students, jc.getParams());
 
         //Check if the parameters of the character are correct
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 1"), "The ID is 1");
@@ -204,8 +204,8 @@ class CharactersTest {
         students.add(new Student(4, Color.PINK));
         students.add(new Student(5, Color.YELLOW));
         students.add(new Student(6, Color.RED));
-        JSONCharacter jc = new JSONCharacter(7, CharacterType.EXCHANGE, "Exchange students between card and entrance", 1, Action.EXCHANGESTUDENT, 6, Location.CARD_EXCHANGE, false, allowedDepartures, allowedArrivals, false, 0, 0, 3);
-        ExchangeCharacter character = new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), students, jc.getParams());
+        JSONCharacter jc = new JSONCharacter(7, CharacterType.EXCHANGE, "Exchange students between card and entrance","Exchange students between card and entrance",1, Action.EXCHANGESTUDENT, 6, Location.CARD_EXCHANGE, false, allowedDepartures, allowedArrivals, false, 0, 0, 3);
+        ExchangeCharacter character = new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), students, jc.getParams());
 
         //Check if the parameters of the character are correct
         assertTrue(character.toString().contains("\u001B[1mID:\u001B[0m 7"), "The ID is 7");
@@ -263,8 +263,8 @@ class CharactersTest {
 
     @Test
     public void getterTest(){
-        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0, 0);
-        ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams());
+        JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island","Block island",2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0, 0);
+        ActionCharacter character = new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams());
 
         assertEquals(2, character.getOriginalCost());
         assertEquals("/Char_5.jpg", character.getSprite());

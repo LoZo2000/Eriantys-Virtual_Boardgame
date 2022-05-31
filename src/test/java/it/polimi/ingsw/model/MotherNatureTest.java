@@ -17,24 +17,10 @@ public class MotherNatureTest {
     }
 
     @Test
-    public void createTest(){
-        Island i0 = new Island(0);
-        motherNature = new MotherNature(i0);
-        assertEquals(i0, motherNature.getPosition());
-    }
-
-    @Test
     public void movementTest(){
         assertNull(motherNature.getPosition());
         Island i0 = new Island(0);
         motherNature.movement(i0);
         assertEquals(i0, motherNature.getPosition());
-    }
-
-    @Test
-    public void createMNTest(){
-        Island i1 = new Island(1);
-        MotherNature mn1 = new MotherNature(i1);
-        assertEquals(i1, mn1.getPosition());
     }
 }

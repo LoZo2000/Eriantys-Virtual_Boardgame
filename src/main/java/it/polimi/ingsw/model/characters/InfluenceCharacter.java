@@ -9,8 +9,8 @@ public class InfluenceCharacter extends Character{
     private final boolean towersDisabled;
     private final int extraPoints;
 
-    public InfluenceCharacter(int id, CharacterType type, String desc, int cost, JSONParams params){
-        super(id, type, desc, cost);
+    public InfluenceCharacter(int id, CharacterType type, String desc, String desc_short, int cost, JSONParams params){
+        super(id, type, desc, desc_short, cost);
 
         this.towersDisabled = params.getTowersDisabled();
         this.extraPoints = params.getExtraInfluencePoints();

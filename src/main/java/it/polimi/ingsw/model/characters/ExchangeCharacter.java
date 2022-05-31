@@ -16,8 +16,8 @@ public class ExchangeCharacter extends MovementCharacter implements Movable {
 
     private final int maxMoves;
 
-    public ExchangeCharacter(int id, CharacterType type, String desc, int cost, ArrayList<Student> students, JSONParams params){
-        super(id, type, desc, cost, students, params);
+    public ExchangeCharacter(int id, CharacterType type, String desc, String desc_short, int cost, ArrayList<Student> students, JSONParams params){
+        super(id, type, desc, desc_short, cost, students, params);
 
         maxMoves = params.getMaxMoves();
     }

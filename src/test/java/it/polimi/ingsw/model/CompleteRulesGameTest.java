@@ -91,23 +91,23 @@ class CompleteRulesGameTest {
                         s.add(new Student(33, Color.GREEN));
                         s.add(new Student(34, Color.PINK));
                     }
-                    allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), s, jc.getParams()));
+                        allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s, jc.getParams()));
                     break;
 
                 case INFLUENCE:
-                    allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
                     break;
 
                 case PROFESSOR:
-                    allCharacters.add(new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost()));
+                    allCharacters.add(new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost()));
                     break;
 
                 case MOTHERNATURE:
-                    allCharacters.add(new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    allCharacters.add(new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
                     break;
 
                 case ACTION:
-                    allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), jc.getParams()));
+                    allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
                     break;
 
                 case EXCHANGE:
@@ -122,7 +122,7 @@ class CompleteRulesGameTest {
                         s.add(new Student(35, Color.BLUE));
                         s.add(new Student(36, Color.BLUE));
                     }
-                    allCharacters.add(new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getCost(), s, jc.getParams()));
+                    allCharacters.add(new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s, jc.getParams()));
                     break;
             }
         }

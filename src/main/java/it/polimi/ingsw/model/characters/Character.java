@@ -12,15 +12,17 @@ import static org.fusesource.jansi.Ansi.*;
 public abstract class Character implements Serializable {
     private final int id;
     private final String desc;
+    private final String desc_short;
     private final CharacterType typeCharacter;
     private final int cost;
     private int numberTimesUsed;
     private String sprite = null;
 
-    public Character(int id, CharacterType type, String desc, int cost){
+    public Character(int id, CharacterType type, String desc, String desc_short, int cost){
         this.id = id;
         this.typeCharacter = type;
         this.desc = desc;
+        this.desc_short = desc_short;
         this.cost = cost;
         this.numberTimesUsed = 0;
         switch (id){
@@ -76,5 +78,9 @@ public abstract class Character implements Serializable {
 
     public String getSprite(){
         return sprite;
+    }
+
+    public String getDesc_short(){
+        return desc_short;
     }
 }
