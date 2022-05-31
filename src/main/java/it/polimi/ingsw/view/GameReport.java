@@ -479,7 +479,11 @@ public class GameReport implements Serializable {
     public String getShortCharacters(){
         StringBuilder s = new StringBuilder();
         for(int i = 0; i < characters.size(); i++){
-            s.append(ansi().fgBrightBlue().a("Card " + i).reset().toString()).append("\n");
+            if(activeCard == i){
+                s.append(ansi().fgBrightBlue().a("Card " + i).fgBrightCyan().a(" ACTIVE").reset().toString()).append("\n");
+            }else {
+                s.append(ansi().fgBrightBlue().a("Card " + i).reset().toString()).append("\n");
+            }
             s.append(characters.get(i).shortString()).append("\n\n");
         }
         return s.toString();
