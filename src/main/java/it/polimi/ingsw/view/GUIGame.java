@@ -79,7 +79,6 @@ public class GUIGame {
                     JOptionPane.showMessageDialog(null, report.getError(),"Eriantys - Illegal move", JOptionPane.WARNING_MESSAGE);
                     idStudentToMove = -1;
                 }
-                System.out.println("il valore di finished game è"+report.getFinishedGame());
                 if(report.getFinishedGame()){
                     int confirm;
                     if(report.getWinner()==null){ confirm=JOptionPane.showConfirmDialog(null, "The game is finished."+" \nDo you want to play another game?", "Eriantys" ,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null);}
@@ -88,6 +87,7 @@ public class GUIGame {
                 }
             }catch (Exception e){
                 JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                return 0;
             }
         }
     }

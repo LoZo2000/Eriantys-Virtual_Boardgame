@@ -2,6 +2,11 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
+/**
+ * The class cloud represent the cloud in the game, the cloud store the student until they are choosen at the end
+ * of the turn, a cloud can be full or not, depending if it was already choose in the turn, the most important methods in the
+ * class cloud are refill cloud to refill the students in the cloud and choosecloud to permit the player to choose the cloud
+ */
 public class Cloud {
     private final int maxStudents;
 

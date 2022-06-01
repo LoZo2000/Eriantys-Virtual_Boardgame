@@ -2,6 +2,11 @@ package it.polimi.ingsw.model;
 
 import java.util.Stack;
 
+/**
+ * The class bag is a class that permit to implement the factory pattern, it is called at the beginning of the game to create the bag,
+ * it can create two different bag, the initbag is used to place students at the beginning of the game in the islands because are two
+ * per color, bag is the normal bag used during the game with 24 students per color
+ */
 public class FactoryBag{
     Stack<Student> students;
     Bag bag;
