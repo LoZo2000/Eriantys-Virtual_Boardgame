@@ -23,6 +23,7 @@ public class GameHandler {
 
     private boolean isLastTurn= false;
     private boolean nextLastTurn=false;
+    private boolean started;
 
     public Phase getPhase(){
         return currentPhase;
@@ -35,6 +36,10 @@ public class GameHandler {
         return new ArrayList<>(this.originalOrderPlayer);
     }
 
+    public boolean isStarted(){
+        return this.started;
+    }
+
     public GameHandler(Game game){ //First instruction of all
         maxPlayers = game.getNumPlayers();
 
@@ -43,6 +48,8 @@ public class GameHandler {
         players = new ArrayList<>();
         originalOrderPlayer = new ArrayList<>();
         oldPhase = currentPhase;
+
+        started = false;
 
         initLegitActions();
     }
@@ -250,6 +257,7 @@ public class GameHandler {
         }));
 
         if (numPlayers == maxPlayers){
+            this.started = true;
             nextPhase();
         }
     }

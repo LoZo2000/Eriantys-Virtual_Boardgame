@@ -40,8 +40,7 @@ public class Client {
     private OutputStream outputStream;
     private InputStream inputStream;
 
-    //Used executor to get input from the user because can it supports Callable, used to get input from keyboard
-    private final ExecutorService ex = Executors.newCachedThreadPool();
+    private final Scanner stdin;
 
     public Client(String ip, int port){
         this.ip = ip;
@@ -54,6 +53,8 @@ public class Client {
         this.canWrite = new AtomicBoolean(true);
         this.yourTurn = new AtomicBoolean(true);
         this.finished = new AtomicBoolean();
+        
+        this.stdin = new Scanner(System.in);
 
         movesDescription = new HashMap<>();
         movesDescription.put(Action.MOVESTUDENT, "to move a students from the CARD to the CANTEEN of the player or an ISLAND, depending on the active card.");
@@ -78,31 +79,14 @@ public class Client {
         this.completeRules = false;
         this.currentPhase = null;
     }
-
-    /**
-     * Method used to read the input stream with a timeout.
-     * If the user doesn't provide anything in 60 seconds, a TimeoutException will be raised.
-     * To be read by this method the buffer must contain a '\n'.
-     * @return A string provided by the user from the input stream.
-     * @throws TimeoutException if no input is provided within 60 seconds.
-     */
-    private String readLineTimeout() throws TimeoutException {
-        String line = null;
-        Future<String> result = ex.submit(new ReadInputTask(finished));
-        try {
-            line = result.get(60, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException e) {
-            e.getCause().printStackTrace();
-        } catch (TimeoutException ex){
-            result.cancel(true);
-            throw ex;
+    
+    private String readLine(){
+        String line = stdin.nextLine();
+        if(finished.get()){
+            return "FINISHED GAME";
+        } else{
+            return line;
         }
-
-        if(line == null){
-            throw new TimeoutException();
-        }
-
-        return line;
     }
 
     public void sendToServer() {
@@ -117,19 +101,13 @@ public class Client {
                     }
                 }
 
-                try {
-                    if(!finished.get()) {
-                        if (started.get())
-                            message = getInput();
-                        else
-                            message = getInputStart();
-                    }
-                } catch (TimeoutException e) {
-                    message = null;
-                    if(!finished.get())
-                        System.out.println("\n\n\u001B[1;31mAre you still playing?\u001B[0m\n");
-                    canWrite.set(true);
+                if(!finished.get()) {
+                    if (started.get())
+                        message = getInput();
+                    else
+                        message = getInputStart();
                 }
+
                 if (message != null && !finished.get()) {
                     canWrite.set(false);
                     try{
@@ -159,9 +137,11 @@ public class Client {
                 showBoard(report);
 
                 if(report.getError() != null && report.getError().equals("This nickname is already taken")){
-                    yourTurn.set(true);
-                    canWrite.set(true);
-                    lock.notifyAll();
+                    synchronized (lock) {
+                        yourTurn.set(true);
+                        canWrite.set(true);
+                        lock.notifyAll();
+                    }
                 }
 
             }while(report.getTurnOf() == null);
@@ -184,9 +164,11 @@ public class Client {
                     canWrite.set(true);
                     lock.notifyAll();
                 }
+            } else{
+                yourTurn.set(false);
             }
 
-            do {
+            while(!finished.get()){
                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
                 showBoard(report);
@@ -220,7 +202,7 @@ public class Client {
                     yourTurn.set(false);
                 }
 
-            }while(!finished.get());
+            }
             inputStream.close();
         } catch(Exception e){
             System.err.println(e.getMessage());
@@ -255,7 +237,6 @@ public class Client {
     }
 
     public void startClient() throws IOException, InterruptedException {
-        Scanner stdin = new Scanner(System.in);
         boolean repeat;
 
         do {
@@ -287,6 +268,7 @@ public class Client {
             System.out.println("Do you want to play another game?");
             System.out.println("1) Yes");
             System.out.println("2) No");
+            System.out.print("Selection: ");
 
             int selection;
             try{
@@ -297,29 +279,32 @@ public class Client {
 
             repeat = selection == 1;
         }while(repeat);
-        ex.shutdownNow();
         System.out.println("\nThanks for Playing!");
     }
 
-    private Message getInputStart() throws TimeoutException {
+    private Message getInputStart() throws IOException {
         int numPlayers, rule;
         System.out.println(Ansi.ansi().eraseScreen().toString());
         System.out.println("Welcome in the magic world of Eriantys!\nPlease, insert your nickname:");
-        nickname = readLineTimeout();
+        nickname = readLine();
         do {
             System.out.println("How many players do you want to play with? (a number between 2 and 4)");
             try{
-                numPlayers = Integer.parseInt(readLineTimeout());
+                numPlayers = Integer.parseInt(readLine());
             } catch (NumberFormatException e){
                 numPlayers = -1;
+                if(finished.get())
+                    return null;
             }
         }while(numPlayers <2 || numPlayers >4);
 
         System.out.println("Do you want to play by simple (type 0) or complete rules (type 1)?");
         try{
-            rule = Integer.parseInt(readLineTimeout());
+            rule = Integer.parseInt(readLine());
         } catch (NumberFormatException e){
             rule = 0;
+            if(finished.get())
+                return null;
         }
 
         completeRules = rule == 1;
@@ -327,7 +312,7 @@ public class Client {
         return new AddMeMessage(nickname, completeRules, numPlayers);
     }
 
-    private Message getInput() throws TimeoutException {
+    private Message getInput() throws IOException {
         int action, studentId, studentId2, arrivalId, departureId;
         int priority, mnMovement, cloudSelected;
         int location;
@@ -337,44 +322,45 @@ public class Client {
         System.out.println("Select one of the following options (type an integer):");
         if(activeCard == -1 || requestedAction == Action.EXCHANGESTUDENT) {
             if(currentPhase == Phase.PRETURN)
-                System.out.println("\t-'1) PLAYCARD' to play an assistant-card");
+                System.out.println("    - '1) PLAYCARD' to play an assistant-card");
 
             if(currentPhase == Phase.MIDDLETURN)
-                System.out.println("\t-'2) MOVESTUDENT' to move a student from your ENTRANCE to your CANTEEN or an ISLAND");
+                System.out.println("    - '2) MOVESTUDENT' to move a student from your ENTRANCE to your CANTEEN or an ISLAND");
 
             if(currentPhase == Phase.MOVEMNTURN)
-                System.out.println("\t-'3) MOVEMOTHERNATURE' to move Mother Nature");
+                System.out.println("    - '3) MOVEMOTHERNATURE' to move Mother Nature");
 
             if(currentPhase == Phase.ENDTURN)
-                System.out.println("\t-'4) SELECTCLOUD' to refill your ENTRANCE with students from a cloud");
+                System.out.println("    - '4) SELECTCLOUD' to refill your ENTRANCE with students from a cloud");
 
             if(completeRules) {
                 if(currentPhase == Phase.MIDDLETURN || currentPhase == Phase.MOVEMNTURN)
-                    System.out.println("\t-'5) USEPOWER' to select a character card and activate its power.");
+                    System.out.println("    - '5) USEPOWER' to select a character card and activate its power.");
                 if(!detailedVisual)
-                    System.out.println("\t-'6) DETAILED CARD INFO' to print the detailed information about the draw characters");
+                    System.out.println("    - '6) DETAILED CARD INFO' to print the detailed information about the draw characters");
                 else
-                    System.out.println("\t-'6) CLOSE DETAILED CARD INFO' to return to normal view");
+                    System.out.println("    - '6) CLOSE DETAILED CARD INFO' to return to normal view");
 
                 if(requestedAction == Action.EXCHANGESTUDENT && (currentPhase == Phase.MIDDLETURN || currentPhase == Phase.MOVEMNTURN)){
-                    System.out.println("\t-'7) EXCHANGESTUDENT' to exchange two students between the CARD and the ENTRANCE or between the ENTRANCE and the CANTEEN.");
+                    System.out.println("    - '7) EXCHANGESTUDENT' to exchange two students between the CARD and the ENTRANCE or between the ENTRANCE and the CANTEEN.");
                 }
 
             }
         } else{
-            System.out.println("\t-'1) "+requestedAction+"' "+movesDescription.get(requestedAction));
+            System.out.println("    - '1) "+requestedAction+"' "+movesDescription.get(requestedAction));
             if(!detailedVisual)
-                System.out.println("\t-'2) DETAILED CARD INFO' to print the detailed information about the draw characters");
+                System.out.println("    - '2) DETAILED CARD INFO' to print the detailed information about the draw characters");
             else
-                System.out.println("\t-'2) CLOSE DETAILED CARD INFO' to return to normal view");
+                System.out.println("    - '2) CLOSE DETAILED CARD INFO' to return to normal view");
         }
 
-        System.out.println("\t-'0) CLOSE GAME' to close the client. If you do that the game will end and no winner will be declared");
+        System.out.println("    - '0) CLOSE GAME' to close the client. If you do that the game will end and no winner will be declared");
         System.out.print("Selection: ");
         try {
-            action = Integer.parseInt(readLineTimeout());
+            action = Integer.parseInt(readLine());
         } catch (NumberFormatException e) {
-            System.out.println("The inserted value isn't a valid number");
+            if(!finished.get())
+                System.out.println("The inserted value isn't a valid number");
             return null;
         }
 
@@ -383,25 +369,28 @@ public class Client {
                 case 1:
                     System.out.println("Choose which card do you want to play (priority):");
                     try {
-                        priority = Integer.parseInt(readLineTimeout());
+                        priority = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
                     return new PlayCardMessage(nickname, priority);
                 case 2:
                     System.out.println("Which student do you want to move? (studentId)");
                     try {
-                        studentId = Integer.parseInt(readLineTimeout());
+                        studentId = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
                     System.out.println("Where is the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
                     try {
-                        location = Integer.parseInt(readLineTimeout());
+                        location = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
                     departureType = getLocation(location);
@@ -409,9 +398,10 @@ public class Client {
                     //sc.nextLine();
                     System.out.println("Where do you want to move the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
                     try {
-                        location = Integer.parseInt(readLineTimeout());
+                        location = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
                     arrivalType = getLocation(location);
@@ -421,18 +411,20 @@ public class Client {
                 case 3:
                     System.out.println("Insert Mother Nature's movement:");
                     try {
-                        mnMovement = Integer.parseInt(readLineTimeout());
+                        mnMovement = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
                     return new MoveMotherNatureMessage(nickname, mnMovement);
                 case 4:
                     System.out.println("Select which cloud you have chosen: (position)");
                     try {
-                        cloudSelected = Integer.parseInt(readLineTimeout());
+                        cloudSelected = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
                     return new SelectCloudMessage(nickname, cloudSelected);
@@ -441,9 +433,10 @@ public class Client {
                         System.out.print("Choose which card you want to activate (0,1,2): ");
                         int numCard = -1;
                         try {
-                            numCard = Integer.parseInt(readLineTimeout());
+                            numCard = Integer.parseInt(readLine());
                         } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             return null;
                         }
                         return new UsePowerMessage(nickname, numCard);
@@ -465,17 +458,19 @@ public class Client {
                 case 7:
                     System.out.print("Which student do you want to move? (studentId) ");
                     try {
-                        studentId = Integer.parseInt(readLineTimeout());
+                        studentId = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
 
                     System.out.println("Where is the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
                     try {
-                        location = Integer.parseInt(readLineTimeout());
+                        location = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
                     departureType = getLocation(location);
@@ -483,17 +478,19 @@ public class Client {
 
                     System.out.println("Which is the other student do you want to move? (studentId) ");
                     try {
-                        studentId2 = Integer.parseInt(readLineTimeout());
+                        studentId2 = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
 
                     System.out.println("Where is the this second student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
                     try {
-                        location = Integer.parseInt(readLineTimeout());
+                        location = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         return null;
                     }
                     arrivalType = getLocation(location);
@@ -502,15 +499,16 @@ public class Client {
                     return new ExchangeStudentMessage(nickname, studentId, studentId2, departureType, departureId, arrivalType, arrivalId);
                 case 0:
                     System.out.println("Are you sure you want to close the client? (The game will end for everyone in this match)");
-                    System.out.println("\t1) Yes");
-                    System.out.println("\t2) No");
+                    System.out.println("    1) Yes");
+                    System.out.println("    2) No");
                     int sel = 0;
                     while(sel != 1 && sel != 2) {
                         System.out.print("Selection: ");
                         try {
-                            sel = Integer.parseInt(readLineTimeout());
+                            sel = Integer.parseInt(readLine());
                         } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             sel = 0;
                         }
                     }
@@ -529,16 +527,18 @@ public class Client {
                     case MOVESTUDENT -> {
                         System.out.println("Which student do you want to move? (studentId)");
                         try {
-                            studentId = Integer.parseInt(readLineTimeout());
+                            studentId = Integer.parseInt(readLine());
                         } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             return null;
                         }
                         System.out.println("Where is the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
                         try {
-                            location = Integer.parseInt(readLineTimeout());
+                            location = Integer.parseInt(readLine());
                         } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             return null;
                         }
                         departureType = getLocation(location);
@@ -546,9 +546,10 @@ public class Client {
                         //sc.nextLine();
                         System.out.println("Where do you want to move the student? (type 1 for ENTRANCE, 2 for CANTEEN, 3 for ISLAND, 4 for CARD_ISLAND, 5 for CARD_CANTEEN, 6 for CARD_EXCHANGE)");
                         try {
-                            location = Integer.parseInt(readLineTimeout());
+                            location = Integer.parseInt(readLine());
                         } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             return null;
                         }
                         arrivalType = getLocation(location);
@@ -559,9 +560,10 @@ public class Client {
                     case ISLAND_INFLUENCE -> {
                         System.out.println("Choose island: (islandId)");
                         try {
-                            arrivalId = Integer.parseInt(readLineTimeout());
+                            arrivalId = Integer.parseInt(readLine());
                         } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             return null;
                         }
                         return new IslandInfluenceMessage(nickname, arrivalId);
@@ -569,21 +571,23 @@ public class Client {
                     case BLOCK_ISLAND -> {
                         System.out.println("Choose island: (islandId)");
                         try {
-                            arrivalId = Integer.parseInt(readLineTimeout());
+                            arrivalId = Integer.parseInt(readLine());
                         } catch (NumberFormatException e) {
-                            System.out.println("The inserted value isn't a valid number");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             return null;
                         }
                         return new BlockIslandMessage(nickname, arrivalId);
                     }
                     case BLOCK_COLOR -> {
                         System.out.println("Choose color: (Color)");
-                        String color = readLineTimeout().toUpperCase();
+                        String color = readLine().toUpperCase();
 
                         try {
                             chosenColor = Color.valueOf(color);
                         } catch (IllegalArgumentException e) {
-                            System.out.println("The inserted value isn't a valid color");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             return null;
                         }
 
@@ -591,12 +595,13 @@ public class Client {
                     }
                     case PUT_BACK -> {
                         System.out.println("Choose color: (Color)");
-                        String color = readLineTimeout().toUpperCase();
+                        String color = readLine().toUpperCase();
 
                         try {
                             chosenColor = Color.valueOf(color);
                         } catch (IllegalArgumentException e) {
-                            System.out.println("The inserted value isn't a valid color");
+                            if(!finished.get())
+                                System.out.println("The inserted value isn't a valid number");
                             return null;
                         }
 
@@ -612,15 +617,16 @@ public class Client {
                 return null;
             } else if(action == 0){
                 System.out.println("Are you sure you want to close the client? (The game will end for everyone in this match)");
-                System.out.println("\t1) Yes");
-                System.out.println("\t2) No");
+                System.out.println("    1) Yes");
+                System.out.println("    2) No");
                 int sel = 0;
                 while(sel != 1 && sel != 2) {
                     System.out.print("Selection: ");
                     try {
-                        sel = Integer.parseInt(readLineTimeout());
+                        sel = Integer.parseInt(readLine());
                     } catch (NumberFormatException e) {
-                        System.out.println("The inserted value isn't a valid number");
+                        if(!finished.get())
+                            System.out.println("The inserted value isn't a valid number");
                         sel = 0;
                     }
                 }
@@ -661,14 +667,15 @@ public class Client {
         }
     }
 
-    private int getLocationId(Location type) throws TimeoutException {
+    private int getLocationId(Location type) {
         int id;
         if(type == Location.ISLAND){
             System.out.println("Choose island: (islandId)");
             try {
-                id = Integer.parseInt(readLineTimeout());
+                id = Integer.parseInt(readLine());
             } catch (NumberFormatException e) {
-                System.out.println("The inserted value isn't a valid number");
+                if(!finished.get())
+                    System.out.println("The inserted value isn't a valid number");
                 return -1;
             }
         } else{
@@ -711,7 +718,11 @@ public class Client {
             }
 
         } else if((report.getFinishedGame() && report.getError() != null) || this.gameReport == null) {
-            System.out.println("\u001B[1;31m" + report.getError()+"\u001B[0m\n");
+            System.out.println("\n\u001B[1;31m" + report.getError()+"\u001B[0m");
+            if(yourTurn.get() && started.get()){
+                System.out.println("\u001B[1;31mPress ENTER to continue...\u001B[0m");
+            }
+            System.out.println();
         } else{
             Columns col = new Columns();
             col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");
@@ -738,8 +749,6 @@ public class Client {
 
             col.printAll();
 
-            //System.out.println("\n\nFORBIDDEN MOVE: "+report.getError()+"\n");
-            //System.out.println("\n\u001B[1;31mFORBIDDEN MOVE: "+report.getError()+"\u001B[0m\n");
             System.out.println("Current phase: "+gameReport.getCurrentPhaseString());
             System.out.println("Current player: "+gameReport.getTurnOf());
         }
