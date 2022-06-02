@@ -55,6 +55,10 @@ public class GameHandler {
         return new ArrayList<>(this.originalOrderPlayer);
     }
 
+    /**
+     * Method that report if the game is started
+     * @return a boolean that report if the game is started
+     */
     public boolean isStarted(){
         return this.started;
     }
@@ -181,7 +185,7 @@ public class GameHandler {
         return legitAction.get(currentPhase).contains(action);
     }
 
-    //Check if the player og the actio is legit
+    //Check if the player og the action is legit
     private boolean isLegitPlayer(String player){
         if(currentPlayer == null)
             return true;

@@ -54,10 +54,18 @@ public class Controller implements Observer<Message> {
         return gameHandler.getNicknames();
     }
 
+    /**
+     * Method that return the number of players in the game
+     * @return an int representing the number of players in the game
+     */
     public int getNumPlayers(){
         return game.getNumPlayers();
     }
 
+    /**
+     * Method that report if the game is simple or with the complete rules
+     * @return a boolean that report if the game is simple or complete
+     */
     public boolean getCompleteRules(){
         return game.getCompleteRules();
     }
