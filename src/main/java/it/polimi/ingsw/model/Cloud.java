@@ -11,7 +11,7 @@ public class Cloud {
     private final int maxStudents;
 
     private boolean isFull;
-    private ArrayList<Student> students;
+    private final ArrayList<Student> students;
 
     /**
      * Creator of the entity Cloud

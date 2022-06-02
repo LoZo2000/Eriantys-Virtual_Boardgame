@@ -39,7 +39,7 @@ public class Controller implements Observer<Message> {
         try {
             gameHandler.execute(message);
             if(game.getFinishedGame()){
-                this.gameManager.removeFinishedGame(this);
+                this.gameManager.removeFinishedGame(this, false);
             }
         }catch(Exception e){
             game.sendErrorNote(message.getSender(), e.getMessage(), game.getCurrentPlayer());
@@ -54,12 +54,20 @@ public class Controller implements Observer<Message> {
         return gameHandler.getNicknames();
     }
 
+    public int getNumPlayers(){
+        return game.getNumPlayers();
+    }
+
+    public boolean getCompleteRules(){
+        return game.getCompleteRules();
+    }
+
     /**
      * This method is called when a player leave the game, reports to all the players to disconnect
      * @param nickname is the name of the player that left the game
      */
     public void disconnectedPlayer(String nickname){
-        this.gameManager.removeFinishedGame(this);
+        this.gameManager.removeFinishedGame(this, !gameHandler.isStarted());
         this.game.sendDisconnectionAll(nickname);
     }
 }

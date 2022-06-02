@@ -47,7 +47,14 @@ public class GameManager {
         return null;
     }
 
-    public void removeFinishedGame(Controller controller){
+    public void removeFinishedGame(Controller controller, boolean resetPlayers){
         this.activeGames.remove(controller);
+        if(resetPlayers){
+            int additive = 0;
+            if(controller.getCompleteRules())
+                additive=3;
+            int i = controller.getNumPlayers()-2+additive;
+            numPlayers[i]=0;
+        }
     }
 }

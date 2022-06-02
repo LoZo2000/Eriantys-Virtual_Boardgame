@@ -245,7 +245,7 @@ public class GameReport implements Serializable {
 
 
     public GameReport(Game game, Player owner){
-        System.out.println("BuildingGameRep");
+        //System.out.println("BuildingGameRep");
 
         this.error = null;
         this.finished =game.getFinishedGame();

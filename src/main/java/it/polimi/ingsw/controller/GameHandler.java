@@ -29,6 +29,7 @@ public class GameHandler {
 
     private boolean isLastTurn= false;
     private boolean nextLastTurn=false;
+    private boolean started;
 
     /**
      * Method to return the current phase of the game
@@ -54,6 +55,10 @@ public class GameHandler {
         return new ArrayList<>(this.originalOrderPlayer);
     }
 
+    public boolean isStarted(){
+        return this.started;
+    }
+
     /**
      * Is the constructor of GameHandler
      * @param game is given to the constructor to associate the GameHandler with the Game
@@ -66,6 +71,8 @@ public class GameHandler {
         players = new ArrayList<>();
         originalOrderPlayer = new ArrayList<>();
         oldPhase = currentPhase;
+
+        started = false;
 
         initLegitActions();
     }
@@ -299,6 +306,7 @@ public class GameHandler {
         }));
 
         if (numPlayers == maxPlayers){
+            this.started = true;
             nextPhase();
         }
     }
