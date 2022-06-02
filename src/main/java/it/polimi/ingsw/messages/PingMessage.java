@@ -12,7 +12,7 @@ public class PingMessage extends Message{
     }
 
     @Override
-    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoPlayerException, NoIslandException, EndGameException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException {
+    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoPlayerException, NoIslandException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException {
         return null;
     }
 }

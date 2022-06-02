@@ -3,6 +3,10 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.OverflowCardException;
 import java.util.ArrayList;
 
+/**
+ * The class hand represent the hand of a player, inside this class are stored all the card remaining to the player,
+ * the principal methods in the class are a getter of all the cards and a method that permit to play a card
+ */
 public class Hand{
     private ArrayList<Card> cards;
 

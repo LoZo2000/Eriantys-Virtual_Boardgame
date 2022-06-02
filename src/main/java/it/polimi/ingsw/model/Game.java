@@ -14,11 +14,14 @@ import it.polimi.ingsw.model.rules.Rule;
 import it.polimi.ingsw.server.Observable;
 import it.polimi.ingsw.view.GameReport;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.*;
 
+/**
+ * Game is the central class of the model, inside game are present of the method neccessary to alter the model, and all the
+ * entities that represent the game, it is an observable due to the utilization of the observer pattern, when a part of the game
+ * is modified a notify is sent
+ */
 public class Game extends Observable<GameReport> {
     private MotherNature motherNature;
     private LinkedList <Island> islands = new LinkedList<>();
@@ -33,7 +36,7 @@ public class Game extends Observable<GameReport> {
     private int activeCard;
     private Character[] charactersCards;
 
-    private final String JSON_PATH = "characters.json";
+    private final String JSON_PATH = "/characters.json";
     private String currentPlayer = null;
     private Phase currentPhase = Phase.PREGAME;
     private Map<Player, Card> playedCards;
@@ -649,52 +652,55 @@ public class Game extends Observable<GameReport> {
      * @throws IOException if something goes wrong and the JSON file cannot be read
      */
     public Character[] initCardsFromJSON() throws IOException{
-        Reader reader = new FileReader(JSON_PATH);
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        try (InputStream inputStream = getClass().getResourceAsStream(JSON_PATH);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
-        JSONCharacter[] jsonCharacters = gson.fromJson(reader, JSONCharacter[].class);
-        List<Character> allCharacters = new ArrayList<>();
-        for (JSONCharacter jc : jsonCharacters) {
-            switch (jc.getTypeCharacter()) {
-                case MOVEMENT:
-                    ArrayList<Student> s = extractFromBag(jc.getParams().getNumThingOnIt());
-                    allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s, jc.getParams()));
-                    break;
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
 
-                case INFLUENCE:
-                    allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
-                    break;
+            JSONCharacter[] jsonCharacters = gson.fromJson(reader, JSONCharacter[].class);
+            List<Character> allCharacters = new ArrayList<>();
+            for (JSONCharacter jc : jsonCharacters) {
+                switch (jc.getTypeCharacter()) {
+                    case MOVEMENT:
+                        ArrayList<Student> s = extractFromBag(jc.getParams().getNumThingOnIt());
+                        allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s, jc.getParams()));
+                        break;
 
-                case PROFESSOR:
-                    allCharacters.add(new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost()));
-                    break;
+                    case INFLUENCE:
+                        allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
+                        break;
 
-                case MOTHERNATURE:
-                    allCharacters.add(new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
-                    break;
+                    case PROFESSOR:
+                        allCharacters.add(new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost()));
+                        break;
 
-                case ACTION:
-                    allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
-                    break;
+                    case MOTHERNATURE:
+                        allCharacters.add(new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
+                        break;
 
-                case EXCHANGE:
-                    ArrayList<Student> s2 = extractFromBag(jc.getParams().getNumThingOnIt());
-                    allCharacters.add(new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s2, jc.getParams()));
-                    break;
+                    case ACTION:
+                        allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
+                        break;
+
+                    case EXCHANGE:
+                        ArrayList<Student> s2 = extractFromBag(jc.getParams().getNumThingOnIt());
+                        allCharacters.add(new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s2, jc.getParams()));
+                        break;
+                }
             }
-        }
 
-        Character[] selectedCharacter = new Character[3];
-        for(int i=0; i<3; i++){
-            Random rand = new Random();
-            int randomPos = rand.nextInt(allCharacters.size());
-            selectedCharacter[i] = allCharacters.get(randomPos);
-            allCharacters.remove(randomPos);
-        }
+            Character[] selectedCharacter = new Character[3];
+            for(int i=0; i<3; i++){
+                Random rand = new Random();
+                int randomPos = rand.nextInt(allCharacters.size());
+                selectedCharacter[i] = allCharacters.get(randomPos);
+                allCharacters.remove(randomPos);
+            }
 
-        return selectedCharacter;
+            return selectedCharacter;
+        }
     }
 
     //TODO Refill method for cards which need it (Wait for controller) or use a flag in moveStudent (The Card will always be the departure Movable)

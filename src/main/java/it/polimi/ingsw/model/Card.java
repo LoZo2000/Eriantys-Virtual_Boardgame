@@ -2,6 +2,10 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 
+/**
+ * The class card represent the assistent card, after being inizialized in the first part of the game they only represent an
+ * object in the game, so the only methods in the class are getter and an override of equal and tostring
+ */
 public class Card implements Serializable {
     private final int priority;
     private final int movement;

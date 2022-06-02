@@ -100,4 +100,12 @@ public class MessageTest {
         IslandInfluenceMessage message = new IslandInfluenceMessage("player", 0);
         assertEquals(0, message.getIdIsland());
     }
+
+    @Test
+    public void PINGtest() throws Exception{
+        PingMessage message = new PingMessage();
+        assertNull(message.getSender());
+        assertEquals(Action.PING, message.getAction());
+        assertNull(message.execute(null));
+    }
 }

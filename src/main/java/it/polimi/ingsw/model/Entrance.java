@@ -3,6 +3,10 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import java.util.ArrayList;
 
+/**
+ * The class entrance represent the entrance inside the dashboard, in the entrance can be stored students and implements the
+ * class movable to add or remove students from it
+ */
 public class Entrance implements Movable{
     ArrayList<Student> students;
 

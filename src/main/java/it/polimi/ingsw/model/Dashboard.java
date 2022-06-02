@@ -2,6 +2,11 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
+/**
+ * The class dashboard represent the dashboard of the player, so inside the class are stored the graveyard (last ccard played)
+ * the canteen, the entrance, the towers and the color of tha player who owns the dashboard, the class dashboard is a way to
+ * unify all this elements in the game so is method are principally setter and getter
+ */
 public class Dashboard{
     private Card graveyard = null;
     private Canteen canteen;

@@ -3,6 +3,10 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 import java.util.ArrayList;
 
+/**
+ * the class canteen represent a part of the player dashboard, inside the canteen can be stored students, and can give coins
+ * to the players depending by the number of students in it
+ */
 public class Canteen implements Movable{
     private ArrayList<Student> blue;
     private ArrayList<Student> yellow;

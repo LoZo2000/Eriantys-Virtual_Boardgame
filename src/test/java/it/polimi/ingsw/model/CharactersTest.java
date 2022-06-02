@@ -268,5 +268,6 @@ class CharactersTest {
 
         assertEquals(2, character.getOriginalCost());
         assertEquals("/Char_5.jpg", character.getSprite());
+        assertEquals("Block island", character.getDesc_short());
     }
 }

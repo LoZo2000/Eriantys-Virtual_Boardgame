@@ -12,16 +12,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CompleteRulesGameTest {
     private Game game;
-    private final String JSON_PATH = "characters.json";
+    private final String JSON_PATH = "/characters.json";
 
     @BeforeEach
     void init(){
@@ -68,66 +66,63 @@ class CompleteRulesGameTest {
         assertThrows(NoCharacterSelectedException.class, () -> game.usePower(player1, 15));
     }
 
-    private Character getCharacterFromJSON(int id){
-        Reader reader = null;
-        try {
-            reader = new FileReader(JSON_PATH);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+    private Character getCharacterFromJSON(int id) throws IOException {
+        try (InputStream inputStream = getClass().getResourceAsStream(JSON_PATH);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
 
-        JSONCharacter[] jsonCharacters = gson.fromJson(reader, JSONCharacter[].class);
-        List<Character> allCharacters = new ArrayList<>();
-        for (JSONCharacter jc : jsonCharacters) {
-            switch (jc.getTypeCharacter()) {
-                case MOVEMENT:
-                    ArrayList<Student> s = new ArrayList<>();
-                    if(jc.getParams().getNumThingOnIt() > 0) {
-                        s.add(new Student(31, Color.RED));
-                        s.add(new Student(32, Color.BLUE));
-                        s.add(new Student(33, Color.GREEN));
-                        s.add(new Student(34, Color.PINK));
-                    }
+            JSONCharacter[] jsonCharacters = gson.fromJson(reader, JSONCharacter[].class);
+            List<Character> allCharacters = new ArrayList<>();
+            for (JSONCharacter jc : jsonCharacters) {
+                switch (jc.getTypeCharacter()) {
+                    case MOVEMENT:
+                        ArrayList<Student> s = new ArrayList<>();
+                        if (jc.getParams().getNumThingOnIt() > 0) {
+                            s.add(new Student(31, Color.RED));
+                            s.add(new Student(32, Color.BLUE));
+                            s.add(new Student(33, Color.GREEN));
+                            s.add(new Student(34, Color.PINK));
+                        }
                         allCharacters.add(new MovementCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s, jc.getParams()));
-                    break;
+                        break;
 
-                case INFLUENCE:
-                    allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
-                    break;
+                    case INFLUENCE:
+                        allCharacters.add(new InfluenceCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
+                        break;
 
-                case PROFESSOR:
-                    allCharacters.add(new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost()));
-                    break;
+                    case PROFESSOR:
+                        allCharacters.add(new ProfessorCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost()));
+                        break;
 
-                case MOTHERNATURE:
-                    allCharacters.add(new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
-                    break;
+                    case MOTHERNATURE:
+                        allCharacters.add(new MotherNatureCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
+                        break;
 
-                case ACTION:
-                    allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
-                    break;
+                    case ACTION:
+                        allCharacters.add(new ActionCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), jc.getParams()));
+                        break;
 
-                case EXCHANGE:
-                    s = new ArrayList<>();
-                    if(jc.getParams().getNumThingOnIt() > 0) {
-                        s.add(new Student(31, Color.RED));
-                        s.add(new Student(32, Color.BLUE));
-                        s.add(new Student(33, Color.GREEN));
-                        s.add(new Student(34, Color.PINK));
-                    }
-                    if(jc.getParams().getNumThingOnIt() == 6) {
-                        s.add(new Student(35, Color.BLUE));
-                        s.add(new Student(36, Color.BLUE));
-                    }
-                    allCharacters.add(new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s, jc.getParams()));
-                    break;
+                    case EXCHANGE:
+                        s = new ArrayList<>();
+                        if (jc.getParams().getNumThingOnIt() > 0) {
+                            s.add(new Student(31, Color.RED));
+                            s.add(new Student(32, Color.BLUE));
+                            s.add(new Student(33, Color.GREEN));
+                            s.add(new Student(34, Color.PINK));
+                        }
+                        if (jc.getParams().getNumThingOnIt() == 6) {
+                            s.add(new Student(35, Color.BLUE));
+                            s.add(new Student(36, Color.BLUE));
+                        }
+                        allCharacters.add(new ExchangeCharacter(jc.getId(), jc.getTypeCharacter(), jc.getDesc(), jc.getDesc_short(), jc.getCost(), s, jc.getParams()));
+                        break;
+                }
             }
-        }
 
-        return allCharacters.get(id-1);
+            return allCharacters.get(id - 1);
+        }
     }
 
     @RepeatedTest(10)

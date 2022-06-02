@@ -5,6 +5,10 @@ import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * The class player represent the player in the game, so its attribute are an hand, a dashboard, a nickname and a coin
+ * the methods in the class are getter to access to its attribute and methods to modify the number of coins of the player
+ */
 public class Player implements Comparable<Player> {
     final private Hand hand;
     final private Dashboard dashboard;

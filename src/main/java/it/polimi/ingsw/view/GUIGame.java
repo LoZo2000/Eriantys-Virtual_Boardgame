@@ -90,6 +90,7 @@ public class GUIGame {
                 }
             }catch (Exception e){
                 JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                return 0;
             }
         }
     }

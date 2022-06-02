@@ -63,7 +63,7 @@ class CloudTest {
 
         try {
             for(Student s : students){
-                ArrayList AL = new ArrayList<>();
+                ArrayList<Student> AL = new ArrayList<>();
                 AL.add(s);
                 this.cloud.refillCloud(AL);
             }
@@ -94,7 +94,7 @@ class CloudTest {
     @Test
     public void fillTest(){
         try{
-            ArrayList AL = new ArrayList();
+            ArrayList<Student> AL = new ArrayList<>();
             AL.add(new Student(0, Color.BLUE));
             AL.add(new Student(1, Color.BLUE));
             AL.add(new Student(2, Color.BLUE));
@@ -114,7 +114,7 @@ class CloudTest {
         assertEquals(0, s3.size());
 
         try{
-            ArrayList AL = new ArrayList();
+            ArrayList<Student> AL = new ArrayList<>();
             AL.add(new Student(4, Color.BLUE));
             cloud.refillCloud(AL);
         }
