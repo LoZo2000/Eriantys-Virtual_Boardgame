@@ -2,6 +2,8 @@ package it.polimi.ingsw.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class RulesDialog extends JFrame{
     private Dialog d;
@@ -68,8 +70,32 @@ public class RulesDialog extends JFrame{
         closeButton.setBounds(165, 315, 40, 40);
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(closeButton);
+
+        JLabel halo = new JLabel();
+        ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo_purple.png"));
+        Image haloImage = haloIcon.getImage();
+        newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+        haloIcon = new ImageIcon(newImg);
+        halo.setIcon(haloIcon);
+        halo.setOpaque(false);
+        halo.setBounds(165, 315, 40, 40);
+        halo.setVisible(false);
+        bgLabel.add(halo);
+
         closeButton.addActionListener(e->{
             d.setVisible(false);
+        });
+        closeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                halo.setVisible(true);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseEntered(e);
+                halo.setVisible(false);
+            }
         });
     }
 

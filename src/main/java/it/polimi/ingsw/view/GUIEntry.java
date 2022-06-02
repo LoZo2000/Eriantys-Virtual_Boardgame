@@ -8,6 +8,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.Socket;
 
@@ -108,33 +110,81 @@ public class GUIEntry{
         JButton creditButton = new JButton();
         ImageIcon creditIcon = new ImageIcon(this.getClass().getResource("/Credits.png"));
         Image creditImage = creditIcon.getImage();
-        newImg = creditImage.getScaledInstance(35, 35,  Image.SCALE_SMOOTH);
+        newImg = creditImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
         creditIcon = new ImageIcon(newImg);
         creditButton.setIcon(creditIcon);
         creditButton.setContentAreaFilled(false);
         creditButton.setBorderPainted(false);
-        creditButton.setBounds(10,10,  35, 35);
+        creditButton.setBounds(10,10,  40, 40);
         creditButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        bgLabel.add(creditButton);
+
+        JLabel halo = new JLabel();
+        ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo_light.png"));
+        Image haloImage = haloIcon.getImage();
+        newImg =haloImage.getScaledInstance(50, 50,  Image.SCALE_SMOOTH);
+        haloIcon = new ImageIcon(newImg);
+        halo.setIcon(haloIcon);
+        halo.setOpaque(false);
+        halo.setBounds(5, 5, 50, 50);
+        halo.setVisible(false);
+        bgLabel.add(halo);
+
         CreditsDialog credits = new CreditsDialog(window);
         creditButton.addActionListener(e->{
             credits.showDialog();
         });
-        bgLabel.add(creditButton);
+        creditButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                halo.setVisible(true);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseEntered(e);
+                halo.setVisible(false);
+            }
+        });
 
         JButton ruleButton = new JButton();
         ImageIcon ruleIcon = new ImageIcon(this.getClass().getResource("/Book.png"));
         Image ruleImage = ruleIcon.getImage();
-        newImg = ruleImage.getScaledInstance(35, 35,  Image.SCALE_SMOOTH);
+        newImg = ruleImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
         ruleIcon = new ImageIcon(newImg);
         ruleButton.setIcon(ruleIcon);
         ruleButton.setContentAreaFilled(false);
         ruleButton.setBorderPainted(false);
-        ruleButton.setBounds(10,55,  35, 35);
+        ruleButton.setBounds(10,60,  40, 40);
         ruleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(ruleButton);
+
+        JLabel halo2 = new JLabel();
+        ImageIcon haloIcon2 = new ImageIcon(this.getClass().getResource("/Halo_red.png"));
+        Image haloImage2 = haloIcon2.getImage();
+        newImg = haloImage2.getScaledInstance(50, 50,  Image.SCALE_SMOOTH);
+        haloIcon2 = new ImageIcon(newImg);
+        halo2.setIcon(haloIcon2);
+        halo2.setOpaque(false);
+        halo2.setBounds(5, 55, 50, 50);
+        halo2.setVisible(false);
+        bgLabel.add(halo2);
+
         RulesDialog rulesDialog = new RulesDialog(window);
         ruleButton.addActionListener(e->{
             rulesDialog.showDialog();
+        });
+        ruleButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                halo2.setVisible(true);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseEntered(e);
+                halo2.setVisible(false);
+            }
         });
 
         //Label containing the setting menu:

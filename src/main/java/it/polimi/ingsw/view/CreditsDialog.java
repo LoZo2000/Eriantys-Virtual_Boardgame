@@ -2,11 +2,9 @@ package it.polimi.ingsw.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
-public class CreditsDialog extends JFrame implements ActionListener {
+public class CreditsDialog extends JFrame{
     private Dialog d;
     private JButton closeButton;
 
@@ -86,7 +84,6 @@ public class CreditsDialog extends JFrame implements ActionListener {
 
         //Button to close dialog:
         closeButton = new JButton();
-        closeButton.addActionListener(this);
         ImageIcon closeIcon = new ImageIcon(this.getClass().getResource("/Back.png"));
         Image closeImage = closeIcon.getImage();
         newImg = closeImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
@@ -97,6 +94,33 @@ public class CreditsDialog extends JFrame implements ActionListener {
         closeButton.setBounds(170, 270, 40, 40);
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(closeButton);
+
+        JLabel halo = new JLabel();
+        ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo_purple.png"));
+        Image haloImage = haloIcon.getImage();
+        newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+        haloIcon = new ImageIcon(newImg);
+        halo.setIcon(haloIcon);
+        halo.setOpaque(false);
+        halo.setBounds(170, 270, 40, 40);
+        halo.setVisible(false);
+        bgLabel.add(halo);
+
+        closeButton.addActionListener(e->{
+            d.setVisible(false);
+        });
+        closeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                halo.setVisible(true);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseEntered(e);
+                halo.setVisible(false);
+            }
+        });
     }
 
 
@@ -104,14 +128,5 @@ public class CreditsDialog extends JFrame implements ActionListener {
     public void showDialog(){
         if(d.isVisible()) d.setVisible(false);
         else d.setVisible(true);
-    }
-
-
-
-    @Override
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource() == closeButton){
-            d.setVisible(false);
-        }
     }
 }

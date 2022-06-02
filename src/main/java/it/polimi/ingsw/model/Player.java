@@ -23,7 +23,6 @@ public class Player implements Comparable<Player> {
         this.nickname = nickname;
         this.hand = new Hand();
         this.dashboard = new Dashboard(numPlayers, entranceStudents, color);
-        //TODO IT'S 1 (DEBUG)
         this.coins = 1;
     }
 

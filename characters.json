@@ -52,7 +52,7 @@
   {
     "id": 5,
     "desc": "Block influence calculation on a particular Island",
-    "desc_short": "<html>Block influence calculation<br>on a particular Island</html>",
+    "desc_short": "<html>Block influence calculation<br>on a particular Island<br>Click on the island<br>you want to lock</html>",
     "typeCharacter": "ACTION",
     "cost": 2,
     "params": {
@@ -74,7 +74,7 @@
   {
     "id": 7,
     "desc": "Exchange between students on this card and students at the Entrance",
-    "desc_short": "<html>Exchange between students on this<br>card and students at the Entrance</html>",
+    "desc_short": "<html>Exchange between students on this<br>card and students at the Entrance<br>Select first a student in the Entrance,<br>then one on this card</html>",
     "typeCharacter": "EXCHANGE",
     "cost": 1,
     "params": {
@@ -107,7 +107,7 @@
   {
     "id": 9,
     "desc": "Choose a color and disable it during the calculation of the influence during this turn",
-    "desc_short": "<html>Choose a color and disable it during the<br>calculation of the influence during this turn</html>",
+    "desc_short": "<html>Choose a color and disable it during the<br>calculation of the influence during this turn<br>Select the table of the corresponding color</html>",
     "typeCharacter": "ACTION",
     "cost": 3,
     "params": {
@@ -117,8 +117,8 @@
   },
   {
     "id": 10,
-    "desc": "Exchange between students at the Entrance and students in the Canteen",
-    "desc_short": "<html>Exchange between students at the<br>Entrance and students in the Canteen</html>",
+    "desc": "Exchange between students at the Entrance and students in the canteen",
+    "desc_short": "<html>Exchange between students at the<br>Entrance and students in the canteen<br>Select first the student in the Entrance,<br>then the one in the canteen</html>",
     "typeCharacter": "EXCHANGE",
     "cost": 1,
     "params": {
@@ -159,7 +159,7 @@
   {
     "id": 12,
     "desc": "Choose a color and everyone put back 3 students from the Canteen to the Bag",
-    "desc_short": "<html>Choose a color and everyone put back<br>3 students from the Canteen to the Bag</html>",
+    "desc_short": "<html>Choose a color and everyone put back<br>3 students from the Canteen to the Bag<br>Select the table of the corresponding color</html>",
     "typeCharacter": "ACTION",
     "cost": 3,
     "params": {

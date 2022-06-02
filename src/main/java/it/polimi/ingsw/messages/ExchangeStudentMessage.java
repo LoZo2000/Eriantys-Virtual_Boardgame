@@ -36,6 +36,7 @@ public class ExchangeStudentMessage extends MovementMessage{
         try {
             game.exchangeStudent(studentId1, studentId2, arrival, departure);
         }catch (Exception e){
+            System.out.println(e);
             throw new IllegalMoveException("Student, arrival or departure missing...");
         }
 

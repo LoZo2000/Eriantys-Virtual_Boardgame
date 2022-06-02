@@ -7,8 +7,10 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class OpponentDialog extends JFrame implements ActionListener {
+public class OpponentDialog extends JFrame{
     private Dialog d;
     private JButton closeButton;
     private String opponent;
@@ -101,7 +103,6 @@ public class OpponentDialog extends JFrame implements ActionListener {
 
         //Button to close dialog:
         closeButton = new JButton();
-        closeButton.addActionListener(this);
         ImageIcon closeIcon = new ImageIcon(this.getClass().getResource("/Back.png"));
         Image closeImage = closeIcon.getImage();
         newImg = closeImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
@@ -112,6 +113,33 @@ public class OpponentDialog extends JFrame implements ActionListener {
         closeButton.setBounds(530, 180, 40, 40);
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(closeButton);
+
+        JLabel halo = new JLabel();
+        ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo_purple.png"));
+        Image haloImage = haloIcon.getImage();
+        newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+        haloIcon = new ImageIcon(newImg);
+        halo.setIcon(haloIcon);
+        halo.setOpaque(false);
+        halo.setBounds(530, 180, 40, 40);
+        halo.setVisible(false);
+        bgLabel.add(halo);
+
+        closeButton.addActionListener(e->{
+            d.setVisible(false);
+        });
+        closeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                halo.setVisible(true);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseEntered(e);
+                halo.setVisible(false);
+            }
+        });
     }
 
 
@@ -211,15 +239,6 @@ public class OpponentDialog extends JFrame implements ActionListener {
             c.setBounds(0, 0, 85, 125);
             containerCard.add(c);
             containerCard.repaint();
-        }
-    }
-
-
-
-    @Override
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource() == closeButton){
-            d.setVisible(false);
         }
     }
 }

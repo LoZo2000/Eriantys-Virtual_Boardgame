@@ -3,7 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.view.Client;
 import it.polimi.ingsw.view.ClientGUI;
 
-import java.io.IOException;
+
 
 public class ClientApp {
     public static void main(String[] args){
@@ -14,7 +14,7 @@ public class ClientApp {
         try{
             //client.startClient();
             clientGUI.run();
-        }catch (IOException e){
+        }catch (Exception e){
             System.err.println(e.getMessage());
             System.exit(0);
         }
