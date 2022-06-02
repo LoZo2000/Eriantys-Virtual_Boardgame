@@ -18,7 +18,7 @@ public class MoveMotherNatureMessage extends Message{
     }
 
     @Override
-    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, EndGameException, NoMoreTokensException, NoPlayerException {
+    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoMoreTokensException, NoPlayerException {
         LinkedList<Island> islands = game.getAllIslands();
         int currentMNposition = islands.indexOf(game.getMotherNaturePosition());
         int numIslands = islands.size();

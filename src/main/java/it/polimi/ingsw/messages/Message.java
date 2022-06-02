@@ -16,7 +16,7 @@ public abstract class Message implements Serializable {
         this.action = action;
     }
 
-    public abstract Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoPlayerException, NoIslandException, EndGameException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException;
+    public abstract Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoPlayerException, NoIslandException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException;
 
     public String getSender(){
         return sender;

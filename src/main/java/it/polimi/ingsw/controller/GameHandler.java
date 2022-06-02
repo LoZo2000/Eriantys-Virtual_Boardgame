@@ -7,6 +7,12 @@ import it.polimi.ingsw.messages.Message;
 
 import java.util.*;
 
+/**
+ * The class Gamehandler is the core of the controller, its role is to manage the turn in the game, the current player, the legit action for each player and
+ * phase, the game is divided in phases, every phase has a set of permitted action, if the action is permitted and the sender of the action is the current player
+ * the method execute is call, execute is a method inside every message that modify the game, execute return an object called update that permit the gamehandler to
+ * refresh the state of the GameHandler (turn, phase)
+ */
 public class GameHandler {
     private final ArrayList<String> players;
     private final ArrayList<String> originalOrderPlayer;
@@ -24,17 +30,34 @@ public class GameHandler {
     private boolean isLastTurn= false;
     private boolean nextLastTurn=false;
 
+    /**
+     * Method to return the current phase of the game
+     * @return a phase object that represent the current phase in the turn
+     */
     public Phase getPhase(){
         return currentPhase;
     }
+
+    /**
+     * Method that return the num of player that joined the game
+     * @return an int that represent the number of players that joined the game
+     */
     public int getActivePlayers(){ //return the number of players in the game
         return numPlayers;
     }
 
+    /**
+     * Method that return the nicknames of the players of the game
+     * @return a list of string that contain the nicknames of the players of the game
+     */
     public List<String> getNicknames(){
         return new ArrayList<>(this.originalOrderPlayer);
     }
 
+    /**
+     * Is the constructor of GameHandler
+     * @param game is given to the constructor to associate the GameHandler with the Game
+     */
     public GameHandler(Game game){ //First instruction of all
         maxPlayers = game.getNumPlayers();
 
@@ -46,6 +69,8 @@ public class GameHandler {
 
         initLegitActions();
     }
+
+
 
     private void nextPhase(){
         if(currentPhase==Phase.PREGAME){
@@ -171,7 +196,27 @@ public class GameHandler {
         game.setCurrentPlayer(currentPlayer, sendNotify);
     }
 
-    public void execute(Message message) throws NotYourTurnException, IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, EndGameException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException {
+    /**
+     * The method execute take the message arrived from the users, check if the sender of the action is the current player, check if the action is legit in that phase
+     * of the turn and then call the method execute of message, every message has an override of the method execute of the super class Message, in every
+     * message the execute method modify tha game in a different way and return an update object, the update object id analyzed by the execute method of
+     * gamehandler to refresh the state of the turn and phase
+     * @param message is the message that will be checked and eventually executed
+     * @throws NotYourTurnException is the exception thrown when a player send a message and is not the current player
+     * @throws IllegalActionException is the exception thrown when the current player try to do an action not permitted in the current phase
+     * @throws IllegalMoveException is the exception thrown when is not possible to use a card
+     * @throws NoActiveCardException is the exception thrown when there is no an active card and someone try to use it
+     * @throws NoIslandException is the exception thrown when is requested an island that doesn't exist
+     * @throws NoPlayerException is the exception thrown when is requested a player that doesn't exist
+     * @throws NoMoreTokensException is the exception thrown when the tokens are finished and someone try to use them
+     * @throws NotEnoughMoneyException is the exception thrown when the money are finished and someone try to use them
+     * @throws NoCharacterSelectedException is the exception thrown when in the method usePower in game someone try to use a character with
+     * a wrong index
+     * @throws NoSuchStudentException is the exception thrown when are trying to move a student that doesn't
+     * exist in that location (by studentid)
+     * @throws CannotAddStudentException is the exception thrown when is not possible to add a student
+     */
+    public void execute(Message message) throws NotYourTurnException, IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException {
         if(!isLegitPlayer(message.getSender())) {
             throw new NotYourTurnException("This is not your turn: please wait...");
         }
@@ -234,6 +279,10 @@ public class GameHandler {
         return game;
     }
 
+    /**
+     * Method to return the players in the fame
+     * @return a list of String with the nicknames of the players
+     */
     public List<String> getPlayers(){
         return (List<String>) players.clone();
     }
@@ -295,6 +344,8 @@ public class GameHandler {
             pos = (pos + 1) % numPlayers;
         }
     }
+
+    //Todo eliminate this commented code
     /*private ColorTower getWinner(){
         int black=0;
         int white=0;

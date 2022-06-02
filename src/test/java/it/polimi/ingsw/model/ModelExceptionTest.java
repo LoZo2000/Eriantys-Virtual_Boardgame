@@ -69,10 +69,13 @@ public class ModelExceptionTest {
         if(withString) throw new CannotJoinException("helo");
         throw new CannotJoinException();
     }
+    /*
     private void testEndGameException(boolean withString) throws EndGameException{
         if(withString) throw new EndGameException("helo");
         throw new EndGameException();
     }
+
+     */
     private void testIllegalMoveException(boolean withString) throws IllegalMoveException {
         if(withString) throw new IllegalMoveException("helo");
         throw new IllegalMoveException();

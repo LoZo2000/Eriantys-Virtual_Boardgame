@@ -13,7 +13,7 @@ public class IslandInfluenceMessage extends ChooseIslandMessage{
     }
 
     @Override
-    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoMoreTokensException, EndGameException {
+    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoMoreTokensException {
         if (game.getActiveCard() != -1) {
             Action requestedActiveAction = game.getRequestedAction();
             if (requestedActiveAction != Action.ISLAND_INFLUENCE)
