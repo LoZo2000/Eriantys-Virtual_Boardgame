@@ -16,9 +16,6 @@ public class ModelExceptionTest {
         assertThrows(CannotJoinException.class, () -> testCannotJoinException(true));
         assertThrows(CannotJoinException.class, () -> testCannotJoinException(false));
 
-        assertThrows(EndGameException.class, () -> testEndGameException(true));
-        assertThrows(EndGameException.class, () -> testEndGameException(false));
-
         assertThrows(IllegalMoveException.class, () -> testIllegalMoveException(true));
         assertThrows(IllegalMoveException.class, () -> testIllegalMoveException(false));
 

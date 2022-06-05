@@ -10,15 +10,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MessageTest {
-
-    @Test
-    public void CREATEMATCHtest(){
-        CreateMatchMessage message = new CreateMatchMessage("player", false, 2);
-        assertFalse(message.getCompleteRules());
-        assertEquals(2, message.getNumPlayers());
-        assertNull(message.execute(null));
-    }
-
     @Test
     public void ADDMEtest(){
         AddMeMessage message = new AddMeMessage("player", false, 3);
@@ -52,12 +43,6 @@ public class MessageTest {
     public void SELECTCLOUDtest(){
         SelectCloudMessage message = new SelectCloudMessage("player", 2);
         assertEquals(2, message.getCloudPosition());
-    }
-
-    @Test
-    public void SHOWMEtest(){
-        ShowMeMessage message = new ShowMeMessage("player", Action.SHOWME);
-        assertNull(message.execute(null));
     }
 
     @Test

@@ -176,7 +176,7 @@ public class Game extends Observable<GameReport> {
     /**
      * Method to get the Map of the professors. Every professor is linked to the nickname of the player who owns
      * that professor
-     * @return a Map<Color,Player>
+     * @return a Map of player and color
      */
     public Map<Color, Player> getProfessors(){
         return this.professors;
