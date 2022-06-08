@@ -51,15 +51,6 @@ public class ModelExceptionTest {
 
         assertThrows(OverflowCardException.class, () -> testOverflowCardException(true));
         assertThrows(OverflowCardException.class, () -> testOverflowCardException(false));
-
-        assertThrows(StillStudentException.class, () -> testStillStudentException(true));
-        assertThrows(StillStudentException.class, () -> testStillStudentException(false));
-
-        assertThrows(TooManyStudentsException.class, () -> testTooManyStudentsException(true));
-        assertThrows(TooManyStudentsException.class, () -> testTooManyStudentsException(false));
-
-        assertThrows(UnrecognizedPlayerOrActionException.class, () -> testUnrecognizedPlayerOrActionException(true));
-        assertThrows(UnrecognizedPlayerOrActionException.class, () -> testUnrecognizedPlayerOrActionException(false));
     }
 
     private void testCannotJoinException(boolean withString) throws CannotJoinException{
@@ -120,18 +111,6 @@ public class ModelExceptionTest {
     private void testOverflowCardException(boolean withString) throws OverflowCardException {
         if(withString) throw new OverflowCardException("helo");
         throw new OverflowCardException();
-    }
-    private void testStillStudentException(boolean withString) throws StillStudentException {
-        if(withString) throw new StillStudentException("helo");
-        throw new StillStudentException();
-    }
-    private void testTooManyStudentsException(boolean withString) throws TooManyStudentsException {
-        if(withString) throw new TooManyStudentsException("helo");
-        throw new TooManyStudentsException();
-    }
-    private void testUnrecognizedPlayerOrActionException(boolean withString) throws UnrecognizedPlayerOrActionException {
-        if(withString) throw new UnrecognizedPlayerOrActionException("helo");
-        throw new UnrecognizedPlayerOrActionException();
     }
 
     private void testAlreadyPlayedCardException(boolean withString) throws AlreadyPlayedCardException {

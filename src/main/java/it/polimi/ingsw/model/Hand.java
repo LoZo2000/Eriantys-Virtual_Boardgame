@@ -30,7 +30,7 @@ public class Hand{
 
     /**
      * Method to play a card. It removes the card from the Hand and returns it to the caller
-     * @param pos is the priority (and consequentely the id) of the card to play
+     * @param pos is the priority (and consequently the id) of the card to play
      * @return the card itself
      * @throws OverflowCardException if the card with that priority has been already played
      */
