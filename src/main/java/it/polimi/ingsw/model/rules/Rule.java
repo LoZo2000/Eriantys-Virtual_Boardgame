@@ -6,6 +6,12 @@ import it.polimi.ingsw.model.Report;
 
 import java.util.Map;
 
+/**
+ * The interface Rule has to be implemented by every Rule class, it assures the implementation of the methods calculateInfluence,
+ *  updateProfessor, isActionNeeded, getMotherNatureExtraMovement, getMaximumExchangeMoves, exists different type of rules
+ *  depending on the current active CharacterCard, and this methods cover the aspects that change in the game if a different card
+ *  is active
+ */
 public interface Rule {
     /**
      * This method is used to establish the team that has the higher influence on the Island.
@@ -28,9 +34,21 @@ public interface Rule {
      */
     String updateProfessor(String nameOwner, Map<String, Integer> canteenStudents);
 
+    /**
+     * This method return a boolean that report if is needed an action or not
+     * @return a boolean reporting if is needed an action by the player
+     */
     boolean isActionNeeded();
 
+    /**
+     * This method return the extra movement possible for mother nature
+     * @return an int representing the extra movement mother nature can do
+     */
     int getMotherNatureExtraMovement();
 
+    /**
+     * This method return the maximum number of move of type exchange student the player can do
+     * @return an int representing the number of exchange student tha player can do
+     */
     int getMaximumExchangeMoves();
 }
