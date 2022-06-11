@@ -206,8 +206,9 @@ public class Client {
             inputStream.close();
         } catch(Exception e){
             System.err.println(e.getMessage());
-            e.printStackTrace();
-            System.out.println("Connection closed from the client side");
+            //e.printStackTrace();
+            System.out.println("\nThe server closed the connection, wait a bit before retry starting a new game");
+            System.exit(0);
             synchronized (lock){
                 finished.set(true);
                 canWrite.set(true);
