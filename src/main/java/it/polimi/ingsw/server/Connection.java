@@ -10,6 +10,11 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
+/**
+ * The class connection represent the connection of every socket, it implements the observer pattern and is observed by the private
+ * class MessageReceiver in the RemoteView, the role of the class connection is to manage the connection, take the messages sent by
+ * the client and notify them
+ */
 public class Connection extends Observable<Message> implements Runnable {
 
     private Socket socket;
@@ -25,7 +30,11 @@ public class Connection extends Observable<Message> implements Runnable {
     private boolean active = true;
 
 
-
+    /**
+     * This method is the constructor of the class
+     * @param socket is the socket associated with the connection
+     * @param server is the Server class associated
+     */
     public Connection(Socket socket, Server server){
         this.socket = socket;
         this.server = server;
@@ -36,11 +45,19 @@ public class Connection extends Observable<Message> implements Runnable {
         return active;
     }
 
+    /**
+     * This method is used to send String through the connection
+     * @param message is the string to send
+     */
     public void send(String message){
         out.println(message);
         out.flush();
     }
 
+    /**
+     * This method is used to send the GameReport through the connection
+     * @param gr is the GameReport to send
+     */
     public void send(GameReport gr){
         try {
             objectOutputStream = new ObjectOutputStream(outputStream);
@@ -51,6 +68,9 @@ public class Connection extends Observable<Message> implements Runnable {
         }
     }
 
+    /**
+     * This method is used to close the socket (and the connection)
+     */
     public synchronized void closeConnection(){
         //send("Connection closed from the server side");
         try{
@@ -68,6 +88,10 @@ public class Connection extends Observable<Message> implements Runnable {
         System.out.println("Done!");
     }
 
+    /**
+     * This method is the principal method of the class, receive the messages and notify them to the RemoteView through
+     * the message receiver
+     */
     @Override
     public void run() {
         try{
@@ -106,10 +130,18 @@ public class Connection extends Observable<Message> implements Runnable {
         }
     }
 
+    /**
+     * This method return the nickname of the owner of the connection
+     * @return a String containing the name of the owner of the connection
+     */
     public String getNickname(){
         return owner;
     }
 
+    /**
+     * This method is the override of the method ToString for this class
+     * @return the string to print if the method is called
+     */
     public String toString(){
         return "Connection server-"+owner;
     }

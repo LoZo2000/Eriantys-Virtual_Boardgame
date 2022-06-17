@@ -6,33 +6,67 @@ import it.polimi.ingsw.model.Report;
 
 import java.util.Map;
 
+/**
+ * The class ExchangeRule represent the rule active when is activated a card that require to enable exchanging
+ */
 public class ExchangeRule extends DecoratedRule{
     private final int maximumExchangeMoves;
 
+    /**
+     * This method is the constructor of the class
+     * @param maximumMoves is the maximum of exchange moves allowed
+     */
     public ExchangeRule(int maximumMoves){
         this.maximumExchangeMoves = maximumMoves;
     }
 
+    /**
+     * This method calculate the influence of an Island
+     * @param report Report with the status of the Island on which we are calculating the influence.
+     * @param professors Map which has the Color of the professor as key and as value the ColorTower that is the team
+     *                   that has the professor.
+     * @return the enum ColorTower representing the player or team that have conquest the island
+     */
     @Override
     public ColorTower calculateInfluence(Report report, Map<Color, ColorTower> professors) {
         return this.defaultRules.calculateInfluence(report, professors);
     }
 
+    /**
+     * This method calculate and return the player that owns the professor
+     * @param nameOwner Nickname of the player that has the ownership of the professor of a particular color at that
+     *                  moment.
+     * @param canteenStudents Map which has as key the nickname of a player and as value the number of students of that
+     *                        color in the canteen of that player.
+     * @return a String representing the nickname of the player that owns the professor
+     */
     @Override
     public String updateProfessor(String nameOwner, Map<String, Integer> canteenStudents) {
         return this.defaultRules.updateProfessor(nameOwner, canteenStudents);
     }
 
+    /**
+     * This method return a boolean that report if is needed an action or not
+     * @return a boolean reporting if is needed an action by the player
+     */
     @Override
     public boolean isActionNeeded() {
         return true;
     }
 
+    /**
+     * This method return the extra movement possible for mother nature
+     * @return an int representing the extra movement mother nature can do
+     */
     @Override
     public int getMotherNatureExtraMovement() {
         return this.defaultRules.getMotherNatureExtraMovement();
     }
 
+    /**
+     * This method return the maximum number of move of type exchange student the player can do
+     * @return an int representing the number of exchange student tha player can do
+     */
     @Override
     public int getMaximumExchangeMoves() {
         return this.maximumExchangeMoves;

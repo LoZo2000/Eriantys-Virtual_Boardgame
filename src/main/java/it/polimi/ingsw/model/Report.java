@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import java.util.Map;
 
 /**
- * The report class represent the situation present in an island and permit the computation of the influence,
+ * The report class represent the situation present of an island and permit the computation of the influence,
  * to represent the situation of the island the report have the attributes to represent
  * the owner of an island, the number of tower, the students for each color, and the extra point for a ColorTower due to the
  * activation of a character card
