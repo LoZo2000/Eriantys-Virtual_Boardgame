@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -360,21 +361,27 @@ public class GameReport implements Serializable {
         myCoins = owner.getCoins();
         myCards = owner.getHand().getAllCards();
         myEntrance = owner.getDashboard().getEntrance().getAllStudents();
+
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.GREEN));
         if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.GREEN)==0) lastMyCanteen.add(-1);
         else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.GREEN).get(0).getId());
+
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.RED));
         if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.RED)==0) lastMyCanteen.add(-1);
         else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.RED).get(0).getId());
+
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.YELLOW));
         if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.YELLOW)==0) lastMyCanteen.add(-1);
         else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.YELLOW).get(0).getId());
+
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.PINK));
         if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.PINK)==0) lastMyCanteen.add(-1);
         else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.PINK).get(0).getId());
+
         myCanteen.add(owner.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE));
         if(owner.getDashboard().getCanteen().getNumberStudentColor(Color.BLUE)==0) lastMyCanteen.add(-1);
         else lastMyCanteen.add(owner.getDashboard().getCanteen().getStudents(Color.BLUE).get(0).getId());
+
         myLastCard = owner.getDashboard().getGraveyard();
         List<Card> hand = owner.getHand().getAllCards();
         List<Student> entrance = owner.getDashboard().getEntrance().getAllStudents();
@@ -597,6 +604,7 @@ public class GameReport implements Serializable {
     public ArrayList<Card> getOpponentsLastCard(){
         return opponentsLastCard;
     }
+
     public int getMyTowers(){
         return myTowers;
     }

@@ -31,7 +31,7 @@ public class Update {
      * @param movedMotherNature reports if mother nature has been moved
      * @param finishedGame reports if the is finished
      * @param winner reports who is the winner (if the game is finished)
-     * @param isLastTurn reports if the l<st turn of the game
+     * @param isLastTurn reports if the last turn of the game
      */
     public Update(Integer changedNumPlayer, Boolean playedCard, Integer numMovedStudents, Integer remainingClouds, Boolean activatedCard, Boolean movedMotherNature, Boolean finishedGame, String winner, Boolean isLastTurn){
         this.changedNumPlayer = changedNumPlayer;

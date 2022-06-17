@@ -2,6 +2,10 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.messages.PingMessage;
 
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -19,6 +23,27 @@ public class ClientGUI {
     public ClientGUI(String ip, int port){
         this.ip = ip;
         this.port = port;
+
+        System.setProperty("sun.java2d.uiScale.enabled", "false");
+        System.setProperty("sun.java2d.uiScale", "1.0");
+
+        UIManager.put("OptionPane.minimumSize",new Dimension(ScalingUtils.scaleX(262), ScalingUtils.scaleY(85)));
+
+        FontUIResource old = (FontUIResource) UIManager.getFont("OptionPane.font");
+        FontUIResource newFont = new FontUIResource(old.getFamily(), Font.BOLD, ScalingUtils.scaleFont(old.getSize()));
+        UIManager.put("OptionPane.messageFont", newFont);
+
+        FontUIResource newFontButton = new FontUIResource(old.getFamily(), old.getStyle(), ScalingUtils.scaleFont(old.getSize()));
+        UIManager.put("OptionPane.buttonFont", newFontButton);
+
+        Icon iconError = UIManager.getIcon("OptionPane.errorIcon");
+        UIManager.put("OptionPane.errorIcon", ScalingUtils.scaleDefaultIcon(iconError));
+
+        Icon iconWarning = UIManager.getIcon("OptionPane.warningIcon");
+        UIManager.put("OptionPane.warningIcon", ScalingUtils.scaleDefaultIcon(iconWarning));
+
+        Icon iconQuestion = UIManager.getIcon("OptionPane.questionIcon");
+        UIManager.put("OptionPane.questionIcon", ScalingUtils.scaleDefaultIcon(iconQuestion));
 
         this.lockWrite = new Object();
     }

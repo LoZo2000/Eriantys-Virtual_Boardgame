@@ -16,31 +16,45 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class GUIGame {
-    private InputStream inputStream;
+
+    private static class TransparentPanel extends JPanel {
+        public TransparentPanel(){
+            setOpaque(false);
+        }
+
+        public void paintComponent(Graphics g) {
+            g.setColor(getBackground());
+            Rectangle r = g.getClipBounds();
+            g.fillRect(r.x, r.y, r.width, r.height);
+            super.paintComponent(g);
+        }
+    }
+
+    private final InputStream inputStream;
     private ObjectInputStream objectInputStream;
-    private OutputStream outputStream;
+    private final OutputStream outputStream;
     private ObjectOutputStream objectOutputStream;
-    private JFrame window = new JFrame("Eriantys"); //Main window
+    private final JFrame window = new JFrame("Eriantys"); //Main window
+    private final JLayeredPane layered = new JLayeredPane();
     private JLabel bgLabel; //Main background
     private String myNick;
     private OpponentDialog[] OD = new OpponentDialog[4];
     private ArrayList<JLabel> halos;
 
     //Container to empty and refill every time we receive a GameReport
-    private JPanel containerIslands = new JPanel();
-    private JPanel containerInfo = new JPanel();
-    private JPanel containerDash = new JPanel();
-    private JPanel containerCard = new JPanel();
-    private JPanel containerZoomedCard = new JPanel();
-    private JPanel containerLastCard = new JPanel();
-    private ArrayList<JPanel> containerCharacters = new ArrayList<>();
+    private final JPanel containerIslands = new JPanel();
+    private final JPanel containerInfo = new JPanel();
+    private final JPanel containerDash = new JPanel();
+    private final JPanel containerCard = new JPanel();
+    private final JPanel containerZoomedCard = new JPanel();
+    private final JPanel containerLastCard = new JPanel();
+    private final ArrayList<JPanel> containerCharacters = new ArrayList<>();
     private Phase currentPhase;
     private JLabel numC; //To display coins available
 
@@ -55,8 +69,9 @@ public class GUIGame {
 
     private final Object lockWrite;
     //Characters'buttons:
-    private ArrayList<JButton> characterButtons = new ArrayList<>();
+    private final ArrayList<JButton> characterButtons = new ArrayList<>();
 
+    private final JPanel loading = new TransparentPanel();
 
     public GUIGame(Socket socket, GameReport report, Object lockWrite) throws IOException {
         inputStream = socket.getInputStream();
@@ -67,8 +82,6 @@ public class GUIGame {
         createGUI(report);
         displayReport(report);
     }
-
-
 
     public int openGUI(){
         window.setVisible(true);
@@ -95,22 +108,24 @@ public class GUIGame {
         }
     }
 
-
-
     private void createGUI(GameReport report){
         myNick = report.getNamePlayer();
 
         //Background image:
-        ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("/Game_bg.jpg"));
+        ImageIcon bgIcon = ScalingUtils.getImage("/Game_bg.jpg");
         Image bgImage = bgIcon.getImage();
-        Image newImg = bgImage.getScaledInstance(900, 670,  Image.SCALE_SMOOTH);
+        Image newImg = bgImage.getScaledInstance(ScalingUtils.scaleX(910), ScalingUtils.scaleY(670),  Image.SCALE_SMOOTH);
         bgIcon = new ImageIcon(newImg);
         bgLabel = new JLabel(bgIcon);
-        bgLabel.setSize(900,670);
+        bgLabel.setSize(ScalingUtils.scaleX(910), ScalingUtils.scaleY(670));
+
+        layered.add(bgLabel, Integer.valueOf(5));
+        layered.setSize(ScalingUtils.scaleX(910), ScalingUtils.scaleY(705));
+        layered.setLayout(null);
 
         //Main window:
-        window.add(bgLabel);
-        window.setSize(900, 705);
+        window.add(layered);
+        window.setSize(ScalingUtils.scaleX(910), ScalingUtils.scaleY(705));
         window.setResizable(false);
         window.setLayout(null);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,15 +135,15 @@ public class GUIGame {
         JPanel helpScreen = new JPanel();
         helpScreen.setLayout(null);
         helpScreen.setOpaque(false);
-        helpScreen.setBounds(0,0,900,705);
+        helpScreen.setBounds(0,0, ScalingUtils.scaleX(900), ScalingUtils.scaleY(705));
         helpScreen.setVisible(false);
         buildHelpScreen(helpScreen, report.getNumPlayers());
-        bgLabel.add(helpScreen);
+        layered.add(helpScreen, Integer.valueOf(7));
 
         //My cards'panel:
         JPanel myCards = new JPanel();
         myCards.setLayout(null);
-        myCards.setBounds(-2, 630, 900, 45);
+        myCards.setBounds(ScalingUtils.scaleX(-2), ScalingUtils.scaleY(631), ScalingUtils.scaleX(900), ScalingUtils.scaleY(50));
         Color colorLabel = new Color(128,128,128,255);
         myCards.setBackground(colorLabel);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
@@ -139,16 +154,16 @@ public class GUIGame {
         titleC.setText("Your cards:");
         titleC.setHorizontalAlignment(SwingConstants.CENTER);
         titleC.setVerticalAlignment(SwingConstants.CENTER);
-        titleC.setFont(new Font("MV Boli", Font.BOLD, 13));
-        titleC.setBounds(5,10,75,20);
+        titleC.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(13)));
+        titleC.setBounds(ScalingUtils.scaleX(5, 900), ScalingUtils.scaleY(10, 45), ScalingUtils.scaleX(75, 900), ScalingUtils.scaleY(20, 45));
         myCards.add(titleC);
 
-        containerCard.setBounds(90, 2, 900, 45);
+        containerCard.setBounds(ScalingUtils.scaleX(85, 900), ScalingUtils.scaleY(2, 45), ScalingUtils.scaleX(900, 900), ScalingUtils.scaleY(45, 45));
         containerCard.setLayout(null);
         containerCard.setOpaque(false);
         myCards.add(containerCard);
 
-        containerZoomedCard.setBounds(75, 480, 900, 155);
+        containerZoomedCard.setBounds(ScalingUtils.scaleX(70), ScalingUtils.scaleY(480), ScalingUtils.scaleX(900), ScalingUtils.scaleY(155));
         containerZoomedCard.setLayout(null);
         containerZoomedCard.setOpaque(false);
         containerZoomedCard.setVisible(false);
@@ -156,25 +171,25 @@ public class GUIGame {
 
         //Show help Buttons:
         JButton ruleButton = new JButton();
-        ImageIcon ruleIcon = new ImageIcon(this.getClass().getResource("/Book.png"));
+        ImageIcon ruleIcon = ScalingUtils.getImage("/Book.png");
         Image ruleImage = ruleIcon.getImage();
-        newImg = ruleImage.getScaledInstance(35, 35,  Image.SCALE_SMOOTH);
+        newImg = ruleImage.getScaledInstance(ScalingUtils.scaleX(35), ScalingUtils.scaleY(35),  Image.SCALE_SMOOTH);
         ruleIcon = new ImageIcon(newImg);
         ruleButton.setIcon(ruleIcon);
         ruleButton.setContentAreaFilled(false);
         ruleButton.setBorderPainted(false);
-        ruleButton.setBounds(10,430,  35, 35);
+        ruleButton.setBounds(ScalingUtils.scaleX(10), ScalingUtils.scaleY(430),  ScalingUtils.scaleX(35), ScalingUtils.scaleY(35));
         ruleButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(ruleButton);
 
         JLabel halo = new JLabel();
-        ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo_red.png"));
+        ImageIcon haloIcon = ScalingUtils.getImage("/Halo_red.png");
         Image haloImage = haloIcon.getImage();
-        newImg =haloImage.getScaledInstance(43, 43,  Image.SCALE_SMOOTH);
+        newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(43), ScalingUtils.scaleY(43),  Image.SCALE_SMOOTH);
         haloIcon = new ImageIcon(newImg);
         halo.setIcon(haloIcon);
         halo.setOpaque(false);
-        halo.setBounds(6, 426, 43, 43);
+        halo.setBounds(ScalingUtils.scaleX(6), ScalingUtils.scaleY(426), ScalingUtils.scaleX(43), ScalingUtils.scaleY(43));
         halo.setVisible(false);
         bgLabel.add(halo);
 
@@ -196,25 +211,25 @@ public class GUIGame {
         });
 
         JButton tutorButton = new JButton();
-        ImageIcon tutorIcon = new ImageIcon(this.getClass().getResource("/Help.png"));
+        ImageIcon tutorIcon = ScalingUtils.getImage("/Help.png");
         Image tutorImage = tutorIcon.getImage();
-        newImg = tutorImage.getScaledInstance(35, 35,  Image.SCALE_SMOOTH);
+        newImg = tutorImage.getScaledInstance(ScalingUtils.scaleX(35), ScalingUtils.scaleY(35),  Image.SCALE_SMOOTH);
         tutorIcon = new ImageIcon(newImg);
         tutorButton.setIcon(tutorIcon);
         tutorButton.setContentAreaFilled(false);
         tutorButton.setBorderPainted(false);
-        tutorButton.setBounds(10,470,  35, 35);
+        tutorButton.setBounds(ScalingUtils.scaleX(10), ScalingUtils.scaleY(470),  ScalingUtils.scaleX(35), ScalingUtils.scaleY(35));
         tutorButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(tutorButton);
 
         JLabel halo2 = new JLabel();
-        ImageIcon halo2Icon = new ImageIcon(this.getClass().getResource("/Halo_black.png"));
+        ImageIcon halo2Icon = ScalingUtils.getImage("/Halo_black.png");
         Image halo2Image = halo2Icon.getImage();
-        newImg =halo2Image.getScaledInstance(45, 45,  Image.SCALE_SMOOTH);
+        newImg =halo2Image.getScaledInstance(ScalingUtils.scaleX(45), ScalingUtils.scaleY(45),  Image.SCALE_SMOOTH);
         halo2Icon = new ImageIcon(newImg);
         halo2.setIcon(halo2Icon);
         halo2.setOpaque(false);
-        halo2.setBounds(5, 465, 45, 45);
+        halo2.setBounds(ScalingUtils.scaleX(5), ScalingUtils.scaleY(465), ScalingUtils.scaleX(45), ScalingUtils.scaleY(45));
         halo2.setVisible(false);
         bgLabel.add(halo2);
 
@@ -236,16 +251,16 @@ public class GUIGame {
         });
 
         //Show my dashboards:
-        ImageIcon dashIcon = new ImageIcon(this.getClass().getResource("/Dashboard.png"));
+        ImageIcon dashIcon = ScalingUtils.getImage("/Dashboard.png");
         Image dashImage = dashIcon.getImage();
-        newImg = dashImage.getScaledInstance(500, 200,  Image.SCALE_SMOOTH);
+        newImg = dashImage.getScaledInstance(ScalingUtils.scaleX(500), ScalingUtils.scaleY(200),  Image.SCALE_SMOOTH);
         dashIcon = new ImageIcon(newImg);
         JLabel dashLabel = new JLabel(dashIcon);
-        dashLabel.setBounds(55, 430, 500, 200);
+        dashLabel.setBounds(ScalingUtils.scaleX(55), ScalingUtils.scaleY(430), ScalingUtils.scaleX(500), ScalingUtils.scaleY(200));
         dashLabel.setBorder(border);
         bgLabel.add(dashLabel);
 
-        containerDash.setBounds(0, 0, 500, 200);
+        containerDash.setBounds(0, 0, ScalingUtils.scaleX(500, 500), ScalingUtils.scaleY(200, 200));
         containerDash.setLayout(null);
         containerDash.setOpaque(false);
         dashLabel.add(containerDash);
@@ -253,7 +268,7 @@ public class GUIGame {
         //Coins:
         JPanel coins = new JPanel();
         coins.setLayout(null);
-        coins.setBounds(565, 430, 91, 20);
+        coins.setBounds(ScalingUtils.scaleX(565), ScalingUtils.scaleY(430), ScalingUtils.scaleX(91), ScalingUtils.scaleY(20));
         Color colorPanel = new Color(128,128,128,255);
         coins.setBackground(colorPanel);
         coins.setBorder(border);
@@ -262,21 +277,21 @@ public class GUIGame {
         titleCo.setText("Coins:");
         titleCo.setHorizontalAlignment(SwingConstants.CENTER);
         titleCo.setVerticalAlignment(SwingConstants.CENTER);
-        titleCo.setFont(new Font("MV Boli", Font.BOLD, 9));
-        titleCo.setBounds(0,0,50,20);
+        titleCo.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        titleCo.setBounds(0,0, ScalingUtils.scaleX(50, 91), ScalingUtils.scaleY(20, 20));
         coins.add(titleCo);
         numC = new JLabel();
         numC.setText("x0");
         numC.setHorizontalAlignment(SwingConstants.CENTER);
         numC.setVerticalAlignment(SwingConstants.CENTER);
-        numC.setFont(new Font("MV Boli", Font.BOLD, 9));
-        numC.setBounds(50,0,31,20);
+        numC.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        numC.setBounds(ScalingUtils.scaleX(50, 91),0, ScalingUtils.scaleX(31, 91), ScalingUtils.scaleY(20, 20));
         coins.add(numC);
 
         //Last card:
         JPanel card = new JPanel();
         card.setLayout(null);
-        card.setBounds(565, 460, 91, 145);
+        card.setBounds(ScalingUtils.scaleX(565), ScalingUtils.scaleY(460), ScalingUtils.scaleX(91), ScalingUtils.scaleY(145));
         card.setBackground(colorLabel);
         card.setBorder(border);
         bgLabel.add(card);
@@ -284,25 +299,25 @@ public class GUIGame {
         titleCa.setText("Last played card:");
         titleCa.setHorizontalAlignment(SwingConstants.CENTER);
         titleCa.setVerticalAlignment(SwingConstants.CENTER);
-        titleCa.setFont(new Font("MV Boli", Font.BOLD, 9));
-        titleCa.setBounds(0,0,91,20);
+        titleCa.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        titleCa.setBounds(0,0, ScalingUtils.scaleX(91, 91), ScalingUtils.scaleY(20, 145));
         card.add(titleCa);
         containerLastCard.setLayout(null);
-        containerLastCard.setBounds(3, 17, 85, 125);
+        containerLastCard.setBounds(ScalingUtils.scaleX(3, 91), ScalingUtils.scaleY(17, 145), ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145));
         card.add(containerLastCard);
         JLabel c = new JLabel();
-        ImageIcon cIcon = new ImageIcon(this.getClass().getResource("/Char_back.png"));
+        ImageIcon cIcon = ScalingUtils.getImage("/Char_back.png");
         Image cImage = cIcon.getImage();
-        newImg = cImage.getScaledInstance(85, 125,  Image.SCALE_SMOOTH);
+        newImg = cImage.getScaledInstance(ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145),  Image.SCALE_SMOOTH);
         cIcon = new ImageIcon(newImg);
         c.setIcon(cIcon);
-        c.setBounds(0, 0, 85, 125);
+        c.setBounds(0, 0, ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145));
         containerLastCard.add(c);
 
         //Opponents'container:
         JPanel opponents = new JPanel();
         opponents.setLayout(null);
-        opponents.setBounds(710, 55, 180, 24+report.getNumPlayers()*22);
+        opponents.setBounds(ScalingUtils.scaleX(710), ScalingUtils.scaleY(55), ScalingUtils.scaleX(180), ScalingUtils.scaleY(24+report.getNumPlayers()*22));
         opponents.setBackground(colorLabel);
         opponents.setBorder(border);
         bgLabel.add(opponents);
@@ -311,15 +326,18 @@ public class GUIGame {
         titleO.setText("All players:");
         titleO.setHorizontalAlignment(SwingConstants.CENTER);
         titleO.setVerticalAlignment(SwingConstants.CENTER);
-        titleO.setFont(new Font("MV Boli", Font.BOLD, 13));
-        titleO.setBounds(2,0,170,20);
+        titleO.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(13)));
+        titleO.setBounds(ScalingUtils.scaleX(2, 180),0, ScalingUtils.scaleX(170, 180), ScalingUtils.scaleY(20, 24+report.getNumPlayers()*22));
         opponents.add(titleO);
 
         for(int i=0; i<report.getNumPlayers(); i++){
             JButton od = new JButton(report.getOpponentsNick().get(i));
             switch (report.getAllPlayersColor().get(i)){
                 case WHITE -> od.setBackground(new Color(255, 255, 255, 255));
-                case BLACK -> od.setBackground(new Color(0, 0, 0, 255));
+                case BLACK -> {
+                    od.setBackground(new Color(0, 0, 0, 255));
+                    od.setForeground(new Color(255, 255, 255, 255));
+                }
                 case GREY -> od.setBackground(new Color(130, 130, 130, 255));
             }
             if(report.getOpponentsNick().get(i).equals(report.getNamePlayer())) od.setEnabled(false);
@@ -330,7 +348,7 @@ public class GUIGame {
                     OD[f].showDialog();
                 });
             }
-            od.setBounds(2, 22+22*i, 170, 20);
+            od.setBounds(ScalingUtils.scaleX(2, 180), ScalingUtils.scaleY(22+22*i, 24+report.getNumPlayers()*22), ScalingUtils.scaleX(170, 180), ScalingUtils.scaleY(20, 24+report.getNumPlayers()*22));
             opponents.add(od);
             od.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
@@ -338,7 +356,7 @@ public class GUIGame {
         //Other infos container:
         JPanel info = new JPanel();
         info.setLayout(null);
-        info.setBounds(710, 10, 180, 40);
+        info.setBounds(ScalingUtils.scaleX(710), ScalingUtils.scaleY(10), ScalingUtils.scaleX(180), ScalingUtils.scaleY(40));
         info.setBackground(colorLabel);
         info.setBorder(border);
         bgLabel.add(info);
@@ -347,42 +365,55 @@ public class GUIGame {
         infoO.setText("Current player:");
         infoO.setHorizontalAlignment(SwingConstants.CENTER);
         infoO.setVerticalAlignment(SwingConstants.CENTER);
-        infoO.setFont(new Font("MV Boli", Font.BOLD, 9));
-        infoO.setBounds(2,0,70,20);
+        infoO.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        infoO.setBounds(ScalingUtils.scaleX(2, 180),0, ScalingUtils.scaleX(70, 180), ScalingUtils.scaleY(20, 40));
         info.add(infoO);
 
         JLabel info1 = new JLabel();
         info1.setText("Current phase:");
         info1.setHorizontalAlignment(SwingConstants.CENTER);
         info1.setVerticalAlignment(SwingConstants.CENTER);
-        info1.setFont(new Font("MV Boli", Font.BOLD, 9));
-        info1.setBounds(2,20,70,20);
+        info1.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        info1.setBounds(ScalingUtils.scaleX(2, 180), ScalingUtils.scaleY(20, 40), ScalingUtils.scaleX(70, 180), ScalingUtils.scaleY(20, 40));
         info.add(info1);
 
-        containerInfo.setBounds(72, 0, 105, 60);
+        containerInfo.setBounds(ScalingUtils.scaleX(72, 180), 0, ScalingUtils.scaleX(105, 180), ScalingUtils.scaleY(60, 40));
         containerInfo.setLayout(null);
         containerInfo.setOpaque(false);
         info.add(containerInfo);
 
-        containerIslands.setBounds(5, 5, 700, 420);
+        containerIslands.setBounds(ScalingUtils.scaleX(5), ScalingUtils.scaleY(5), ScalingUtils.scaleX(700), ScalingUtils.scaleY(420));
         containerIslands.setLayout(null);
         containerIslands.setOpaque(false);
         bgLabel.add(containerIslands);
 
+        //Loading Panel
+        loading.setLayout(null);
+        loading.setBackground(new Color(210, 210, 210, 150));
+        loading.setSize(ScalingUtils.scaleX(910), ScalingUtils.scaleY(670));
+        JLabel wait = new JLabel();
+        wait.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(20)));
+        wait.setBounds(0, 0, ScalingUtils.scaleX(910, 910), ScalingUtils.scaleY(670, 670));
+        wait.setText("Waiting server response...");
+        wait.setVerticalAlignment(SwingConstants.CENTER);
+        wait.setHorizontalAlignment(SwingConstants.CENTER);
+        loading.add(wait);
+        layered.add(loading, Integer.valueOf(1));
+
         //Show characters'cards if complete rules:
         for(int i=0; i<report.getChar().size(); i++){
-            ImageIcon charIcon = new ImageIcon(this.getClass().getResource(report.getChar().get(i).getSprite()));
+            ImageIcon charIcon = ScalingUtils.getImage(report.getChar().get(i).getSprite());
             Image charImage = charIcon.getImage();
-            newImg = charImage.getScaledInstance(105, 145,  Image.SCALE_SMOOTH);
+            newImg = charImage.getScaledInstance(ScalingUtils.scaleX(105), ScalingUtils.scaleY(145),  Image.SCALE_SMOOTH);
             charIcon = new ImageIcon(newImg);
             JLabel charLabel = new JLabel(charIcon);
-            charLabel.setBounds(770, 150*i+175, 105, 145);
+            charLabel.setBounds(ScalingUtils.scaleX(770), ScalingUtils.scaleY(150*i+175), ScalingUtils.scaleX(105), ScalingUtils.scaleY(145));
             charLabel.setBorder(border);
             bgLabel.add(charLabel);
 
             JButton cb = new JButton();
             cb.setContentAreaFilled(false);
-            cb.setBounds(0, 0, 105, 145);
+            cb.setBounds(0, 0, ScalingUtils.scaleX(105, 105), ScalingUtils.scaleY(145, 145));
             charLabel.add(cb);
             characterButtons.add(cb);
 
@@ -401,51 +432,47 @@ public class GUIGame {
             cb.setToolTipText(report.getChar().get(i).getDesc_short());
 
             containerCharacters.add(new JPanel());
-            containerCharacters.get(i).setBounds(0, 0, 105, 145);
+            containerCharacters.get(i).setBounds(0, 0, ScalingUtils.scaleX(105, 105), ScalingUtils.scaleY(145, 145));
             containerCharacters.get(i).setLayout(null);
             containerCharacters.get(i).setOpaque(false);
             charLabel.add(containerCharacters.get(i));
         }
     }
 
-
-
-
-
-
-
-
-
-
     private void displayReport(GameReport report){
+        layered.setLayer(loading, 10);
+        layered.repaint();
+
         currentPhase = report.getPhase();
         halos = new ArrayList<>();
 
         //Display my cards and the zoomed hidden ones:
         ArrayList<Card> myC = report.getMyCards();
         int len = myC.size();
-        containerZoomedCard.removeAll();
-        containerCard.removeAll();
+        //containerZoomedCard.removeAll();
+        //containerCard.removeAll();
+        ArrayList<Component> zoomedCards = new ArrayList<>();
+        ArrayList<Component> smallCards = new ArrayList<>();
         for(int i=0; i<len; i++){
-            ImageIcon bcIcon = new ImageIcon(this.getClass().getResource(myC.get(i).getFront()));
+            ImageIcon bcIcon = ScalingUtils.getImage(myC.get(i).getFront());
             Image bcImage = bcIcon.getImage();
-            Image newImg = bcImage.getScaledInstance(105, 155,  Image.SCALE_SMOOTH);
+            Image newImg = bcImage.getScaledInstance(ScalingUtils.scaleX(105, 900), ScalingUtils.scaleY(155, 155),  Image.SCALE_SMOOTH);
             bcIcon = new ImageIcon(newImg);
             final JLabel bcLabel = new JLabel(bcIcon);
             Border border = BorderFactory.createLineBorder(Color.BLACK);
             bcLabel.setBorder(border);
-            bcLabel.setBounds(80*i, 0, 105, 155);
+            bcLabel.setBounds(ScalingUtils.scaleX(80*i, 900), 0, ScalingUtils.scaleX(105, 900), ScalingUtils.scaleY(155, 155));
             bcLabel.setVisible(false);
-            containerZoomedCard.add(bcLabel);
+            zoomedCards.add(bcLabel);
 
             JButton bc = new JButton();
-            ImageIcon cIcon = new ImageIcon(this.getClass().getResource(myC.get(i).getFront()));
+            ImageIcon cIcon = ScalingUtils.getImage(myC.get(i).getFront());
             Image cImage = cIcon.getImage();
-            newImg = cImage.getScaledInstance(75, 125,  Image.SCALE_SMOOTH);
+            newImg = cImage.getScaledInstance(ScalingUtils.scaleX(75, 900), ScalingUtils.scaleY(125, 45),  Image.SCALE_SMOOTH);
             cIcon = new ImageIcon(newImg);
             bc.setIcon(cIcon);
-            bc.setBounds(80*i, 0, 75, 125);
-            containerCard.add(bc);
+            bc.setBounds(ScalingUtils.scaleX(80*i, 900), 0, ScalingUtils.scaleX(75, 900), ScalingUtils.scaleY(125, 45));
+            smallCards.add(bc);
 
             final int p = report.getMyCards().get(i).getPriority();
             bc.addActionListener(e->{
@@ -474,13 +501,38 @@ public class GUIGame {
             });
             bc.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
+
+        containerCard.removeAll();
+        for(Component c : smallCards){
+            containerCard.add(c);
+        }
         containerCard.repaint();
+
+        containerZoomedCard.removeAll();
+        for(Component c : zoomedCards){
+            containerZoomedCard.add(c);
+        }
         containerZoomedCard.repaint();
 
+        //Show played card:
+        if(report.getMyLastCard() != null){
+            containerLastCard.removeAll();
+            JLabel c = new JLabel();
+            ImageIcon cIcon = ScalingUtils.getImage(report.getMyLastCard().getFront());
+            Image cImage = cIcon.getImage();
+            Image newImg = cImage.getScaledInstance(ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145),  Image.SCALE_SMOOTH);
+            cIcon = new ImageIcon(newImg);
+            c.setIcon(cIcon);
+            c.setBounds(0, 0, ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145));
+            containerLastCard.add(c);
+            containerLastCard.repaint();
+        }
+
         //Display all islands:
-        containerIslands.removeAll();
+        //containerIslands.removeAll();
         LinkedList<Island> allI = report.getAllIslands();
         len = allI.size();
+        ArrayList<Component> islands = new ArrayList<>();
         for(int i=0; i<len; i++){
             final int idIsland = Character.getNumericValue(report.getAllIslands().get(i).toString().charAt(0))*10+Character.getNumericValue(report.getAllIslands().get(i).toString().charAt(1));
             final int posIsland = i;
@@ -488,139 +540,142 @@ public class GUIGame {
             JPanel is = new JPanel();
             is.setLayout(null);
             is.setOpaque(false);
-            if(i<5) is.setBounds(140*i, 0, 140, 140);
-            else if(i<7) is.setBounds(560, 140+140*(i-5), 140, 140);
-            else if(i<11) is.setBounds(420-140*(i-7), 280, 140, 140);
-            else is.setBounds(0, 140, 140, 140);
+            if(i<5) is.setBounds(ScalingUtils.scaleX(140*i, 700), 0, ScalingUtils.scaleX(140, 700), ScalingUtils.scaleY(140, 420));
+            else if(i<7) is.setBounds(ScalingUtils.scaleX(560, 700), ScalingUtils.scaleY(140+140*(i-5), 420), ScalingUtils.scaleX(140, 700), ScalingUtils.scaleY(140, 420));
+            else if(i<11) is.setBounds(ScalingUtils.scaleX(420-140*(i-7), 700), ScalingUtils.scaleY(280, 420), ScalingUtils.scaleX(140, 700), ScalingUtils.scaleY(140, 420));
+            else is.setBounds(0, ScalingUtils.scaleY(140, 420), ScalingUtils.scaleX(140, 700), ScalingUtils.scaleY(140, 420));
             containerIslands.add(is);
 
             final int numIslands = report.getAllIslands().size();
 
+            int widthIsland = is.getWidth();
+            int heightIsland = is.getHeight();
+
             JButton iButton = new JButton();
             iButton.setContentAreaFilled(false);
             iButton.setBorderPainted(false);
-            iButton.setBounds(0, 0, 140, 140);
+            iButton.setBounds(0, 0, ScalingUtils.scaleX(140, widthIsland), ScalingUtils.scaleY(140, heightIsland));
             is.add(iButton);
 
             if(allI.get(i).getProhibition()){
                 JLabel soc = new JLabel();
-                ImageIcon socIcon = new ImageIcon(this.getClass().getResource("/Block.png"));
+                ImageIcon socIcon = ScalingUtils.getImage("/Block.png");
                 Image socImage = socIcon.getImage();
                 Image newImg = socImage.getScaledInstance(26,26,Image.SCALE_SMOOTH);
                 socIcon = new ImageIcon(newImg);
                 soc.setIcon(socIcon);
                 Border border = BorderFactory.createLineBorder(Color.BLACK);
                 soc.setBorder(border);
-                soc.setBounds(4,110,26,26);
+                soc.setBounds(ScalingUtils.scaleX(4, widthIsland), ScalingUtils.scaleY(110, heightIsland), ScalingUtils.scaleX(26, widthIsland), ScalingUtils.scaleY(26, heightIsland));
                 is.add(soc);
             }
 
             if(allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.BLUE) > 0){
                 JLabel sb = new JLabel();
-                ImageIcon sbIcon = new ImageIcon(this.getClass().getResource("/Stud_blue.png"));
+                ImageIcon sbIcon = ScalingUtils.getImage("/Stud_blue.png");
                 Image sbImage = sbIcon.getImage();
-                Image newImg =sbImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                Image newImg =sbImage.getScaledInstance(ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland),  Image.SCALE_SMOOTH);
                 sbIcon = new ImageIcon(newImg);
                 sb.setIcon(sbIcon);
                 sb.setOpaque(false);
-                sb.setBounds(15, 60, 30, 30);
+                sb.setBounds(ScalingUtils.scaleX(15, widthIsland), ScalingUtils.scaleY(60, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland));
                 is.add(sb);
                 JLabel b = new JLabel();
                 b.setText("x"+allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.BLUE));
                 b.setHorizontalAlignment(SwingConstants.CENTER);
                 b.setVerticalAlignment(SwingConstants.CENTER);
-                b.setFont(new Font("MV Boli", Font.PLAIN, 10));
-                b.setBounds(15,90,30,10);
+                b.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
+                b.setBounds(ScalingUtils.scaleX(15, widthIsland), ScalingUtils.scaleY(90, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(10, heightIsland));
                 is.add(b);
             }
 
             if(allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.YELLOW) > 0){
                 JLabel sy = new JLabel();
-                ImageIcon syIcon = new ImageIcon(this.getClass().getResource("/Stud_yellow.png"));
+                ImageIcon syIcon = ScalingUtils.getImage("/Stud_yellow.png");
                 Image syImage = syIcon.getImage();
-                Image newImg =syImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                Image newImg =syImage.getScaledInstance(ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland),  Image.SCALE_SMOOTH);
                 syIcon = new ImageIcon(newImg);
                 sy.setIcon(syIcon);
-                sy.setOpaque(false);;
-                sy.setBounds(55, 60, 30, 30);
+                sy.setOpaque(false);
+                sy.setBounds(ScalingUtils.scaleX(55, widthIsland), ScalingUtils.scaleY(60, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland));
                 is.add(sy);
                 JLabel y = new JLabel();
                 y.setText("x"+allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.YELLOW));
                 y.setHorizontalAlignment(SwingConstants.CENTER);
                 y.setVerticalAlignment(SwingConstants.CENTER);
-                y.setFont(new Font("MV Boli", Font.PLAIN, 10));
-                y.setBounds(55,90,30,10);
+                y.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
+                y.setBounds(ScalingUtils.scaleX(55, widthIsland), ScalingUtils.scaleY(90, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(10, heightIsland));
                 is.add(y);
             }
 
             if(allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.RED) > 0){
                 JLabel sr = new JLabel();
-                ImageIcon srIcon = new ImageIcon(this.getClass().getResource("/Stud_red.png"));
+                ImageIcon srIcon = ScalingUtils.getImage("/Stud_red.png");
                 Image srImage = srIcon.getImage();
-                Image newImg =srImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                Image newImg =srImage.getScaledInstance(ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland),  Image.SCALE_SMOOTH);
                 srIcon = new ImageIcon(newImg);
                 sr.setIcon(srIcon);
-                sr.setOpaque(false);;
-                sr.setBounds(95, 60, 30, 30);
+                sr.setOpaque(false);
+                sr.setBounds(ScalingUtils.scaleX(95, widthIsland), ScalingUtils.scaleY(60, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland));
                 is.add(sr);
                 JLabel r = new JLabel();
                 r.setText("x"+allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.RED));
                 r.setHorizontalAlignment(SwingConstants.CENTER);
                 r.setVerticalAlignment(SwingConstants.CENTER);
-                r.setFont(new Font("MV Boli", Font.PLAIN, 10));
-                r.setBounds(95,90,30,10);
+                r.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
+                r.setBounds(ScalingUtils.scaleX(95, widthIsland), ScalingUtils.scaleY(90, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(10, heightIsland));
                 is.add(r);
             }
 
             if(allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.GREEN) > 0){
                 JLabel sg = new JLabel();
-                ImageIcon sgIcon = new ImageIcon(this.getClass().getResource("/Stud_green.png"));
+                ImageIcon sgIcon = ScalingUtils.getImage("/Stud_green.png");
                 Image sgImage = sgIcon.getImage();
-                Image newImg =sgImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                Image newImg =sgImage.getScaledInstance(ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland),  Image.SCALE_SMOOTH);
                 sgIcon = new ImageIcon(newImg);
                 sg.setIcon(sgIcon);
-                sg.setOpaque(false);;
-                sg.setBounds(35, 100, 30, 30);
+                sg.setOpaque(false);
+                sg.setBounds(ScalingUtils.scaleX(35, widthIsland), ScalingUtils.scaleY(100, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland));
                 is.add(sg);
                 JLabel g = new JLabel();
                 g.setText("x"+allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.GREEN));
                 g.setHorizontalAlignment(SwingConstants.CENTER);
                 g.setVerticalAlignment(SwingConstants.CENTER);
-                g.setFont(new Font("MV Boli", Font.PLAIN, 10));
-                g.setBounds(35,130,30,10);
+                g.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
+                g.setBounds(ScalingUtils.scaleX(35, widthIsland), ScalingUtils.scaleY(130, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(10, heightIsland));
                 is.add(g);
             }
 
             if(allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.PINK) > 0){
                 JLabel sp = new JLabel();
-                ImageIcon spIcon = new ImageIcon(this.getClass().getResource("/Stud_pink.png"));
+                ImageIcon spIcon = ScalingUtils.getImage("/Stud_pink.png");
                 Image spImage = spIcon.getImage();
-                Image newImg =spImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                Image newImg =spImage.getScaledInstance(ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland),  Image.SCALE_SMOOTH);
                 spIcon = new ImageIcon(newImg);
                 sp.setIcon(spIcon);
-                sp.setOpaque(false);;
-                sp.setBounds(75, 100, 30, 30);
+                sp.setOpaque(false);
+                sp.setBounds(ScalingUtils.scaleX(75, widthIsland), ScalingUtils.scaleY(100, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(30, heightIsland));
                 is.add(sp);
                 JLabel p = new JLabel();
                 p.setText("x"+allI.get(i).getReport().getColorStudents(it.polimi.ingsw.model.Color.PINK));
                 p.setHorizontalAlignment(SwingConstants.CENTER);
                 p.setVerticalAlignment(SwingConstants.CENTER);
-                p.setFont(new Font("MV Boli", Font.PLAIN, 10));
-                p.setBounds(75,130,30,10);
+                p.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
+                p.setBounds(ScalingUtils.scaleX(75, widthIsland), ScalingUtils.scaleY(130, heightIsland), ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(10, heightIsland));
                 is.add(p);
             }
 
             //Show Mother Nature:
             if(report.getMT()==i){
                 JLabel mt = new JLabel();
-                ImageIcon mtIcon = new ImageIcon(this.getClass().getResource("/MT.png"));
+                ImageIcon mtIcon = ScalingUtils.getImage("/MT.png");
                 posMT = i;
                 Image mtImage = mtIcon.getImage();
-                Image newImg =mtImage.getScaledInstance(35, 45,  Image.SCALE_SMOOTH);
+                Image newImg =mtImage.getScaledInstance(ScalingUtils.scaleX(35, widthIsland), ScalingUtils.scaleY(45, heightIsland),  Image.SCALE_SMOOTH);
                 mtIcon = new ImageIcon(newImg);
                 mt.setIcon(mtIcon);
-                mt.setOpaque(false);;
-                mt.setBounds(30, 5, 35, 45);
+                mt.setOpaque(false);
+                mt.setBounds(ScalingUtils.scaleX(30, widthIsland), ScalingUtils.scaleY(5, heightIsland), ScalingUtils.scaleX(35, widthIsland), ScalingUtils.scaleY(45, heightIsland));
                 is.add(mt);
             }
 
@@ -629,44 +684,44 @@ public class GUIGame {
                 JLabel to = new JLabel();
                 ImageIcon toIcon;
                 switch (allI.get(i).getReport().getOwner()){
-                    case WHITE -> toIcon = new ImageIcon(this.getClass().getResource("/Tower_white.png"));
-                    case BLACK -> toIcon = new ImageIcon(this.getClass().getResource("/Tower_black.png"));
-                    default -> toIcon = new ImageIcon(this.getClass().getResource("/Tower_grey.png"));
+                    case WHITE -> toIcon = ScalingUtils.getImage("/Tower_white.png");
+                    case BLACK -> toIcon = ScalingUtils.getImage("/Tower_black.png");
+                    default -> toIcon = ScalingUtils.getImage("/Tower_grey.png");
                 }
                 Image toImage = toIcon.getImage();
-                Image newImg = toImage.getScaledInstance(35, 45,  Image.SCALE_SMOOTH);
+                Image newImg = toImage.getScaledInstance(ScalingUtils.scaleX(35, widthIsland), ScalingUtils.scaleY(45, heightIsland),  Image.SCALE_SMOOTH);
                 toIcon = new ImageIcon(newImg);
                 to.setIcon(toIcon);
                 to.setOpaque(false);
-                to.setBounds(75, 5, 35, 45);
+                to.setBounds(ScalingUtils.scaleX(75, widthIsland), ScalingUtils.scaleY(5, heightIsland), ScalingUtils.scaleX(35, widthIsland), ScalingUtils.scaleY(45, heightIsland));
                 is.add(to);
                 JLabel nt = new JLabel();
                 nt.setText("x"+allI.get(i).getReport().getTowerNumbers());
                 nt.setHorizontalAlignment(SwingConstants.CENTER);
                 nt.setVerticalAlignment(SwingConstants.CENTER);
-                nt.setFont(new Font("MV Boli", Font.PLAIN, 10));
-                nt.setBounds(75,50,35,10);
+                nt.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
+                nt.setBounds(ScalingUtils.scaleX(75, widthIsland), ScalingUtils.scaleY(50, heightIsland), ScalingUtils.scaleX(35, widthIsland), ScalingUtils.scaleY(10, heightIsland));
                 is.add(nt);
             }
 
             JLabel island = new JLabel();
-            ImageIcon islandIcon = new ImageIcon(this.getClass().getResource(allI.get(i).getSprite()));
+            ImageIcon islandIcon = ScalingUtils.getImage(allI.get(i).getSprite());
             Image islandImage = islandIcon.getImage();
-            Image newImg = islandImage.getScaledInstance(140, 140,  Image.SCALE_SMOOTH);
+            Image newImg = islandImage.getScaledInstance(ScalingUtils.scaleX(140, widthIsland), ScalingUtils.scaleY(140, heightIsland),  Image.SCALE_SMOOTH);
             islandIcon = new ImageIcon(newImg);
             island.setIcon(islandIcon);
-            island.setOpaque(false);;
-            island.setBounds(0, 0, 140, 140);
+            island.setOpaque(false);
+            island.setBounds(0, 0, ScalingUtils.scaleX(140, widthIsland), ScalingUtils.scaleY(140, heightIsland));
             is.add(island);
 
             JLabel halo = new JLabel();
-            ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo.png"));
+            ImageIcon haloIcon = ScalingUtils.getImage("/Halo.png");
             Image haloImage = haloIcon.getImage();
-            newImg =haloImage.getScaledInstance(140, 140,  Image.SCALE_SMOOTH);
+            newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(140, widthIsland), ScalingUtils.scaleY(140, heightIsland),  Image.SCALE_SMOOTH);
             haloIcon = new ImageIcon(newImg);
             halo.setIcon(haloIcon);
-            halo.setOpaque(false);;
-            halo.setBounds(0, 0, 140, 140);
+            halo.setOpaque(false);
+            halo.setBounds(0, 0, ScalingUtils.scaleX(140, widthIsland), ScalingUtils.scaleY(140, heightIsland));
             halo.setVisible(false);
             is.add(halo);
 
@@ -743,6 +798,8 @@ public class GUIGame {
                 }
             });
             iButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            islands.add(is);
         }
 
         //Display clouds:
@@ -752,77 +809,81 @@ public class GUIGame {
             JButton clButton = new JButton();
             clButton.setContentAreaFilled(false);
             clButton.setBorderPainted(false);
-            clButton.setBounds(150+105*i, 160, 100, 100);
-            containerIslands.add(clButton);
+            clButton.setBounds(ScalingUtils.scaleX(150+105*i, 700), ScalingUtils.scaleY(160, 420), ScalingUtils.scaleX(100, 700), ScalingUtils.scaleY(100, 420));
+            islands.add(clButton);
 
             JPanel cl = new JPanel();
             cl.setOpaque(false);
             cl.setLayout(null);
+            cl.setBounds(ScalingUtils.scaleX(150+105*i, 700), ScalingUtils.scaleY(160, 420), ScalingUtils.scaleX(100, 700), ScalingUtils.scaleY(100, 420));
+
+            int widthCloud = cl.getWidth();
+            int heightCloud = cl.getHeight();
+
             ImageIcon clIcon;
             if(report.getNumPlayers()==3){
-                if(i==0) clIcon = new ImageIcon(this.getClass().getResource("/CloudX4_1.png"));
-                else if(i==1) clIcon = new ImageIcon(this.getClass().getResource("/CloudX4_2.png"));
-                else clIcon = new ImageIcon(this.getClass().getResource("/CloudX4_3.png"));
+                if(i==0) clIcon = ScalingUtils.getImage("/CloudX4_1.png");
+                else if(i==1) clIcon = ScalingUtils.getImage("/CloudX4_2.png");
+                else clIcon = ScalingUtils.getImage("/CloudX4_3.png");
 
                 for(int j=0; j<allS.get(i).size(); j++){
                     JLabel st = new JLabel();
-                    ImageIcon stIcon = new ImageIcon(this.getClass().getResource(allS.get(i).get(j).getSprite()));
+                    ImageIcon stIcon = ScalingUtils.getImage(allS.get(i).get(j).getSprite());
                     Image stImage = stIcon.getImage();
-                    Image newImg = stImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                    Image newImg = stImage.getScaledInstance(ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud),  Image.SCALE_SMOOTH);
                     stIcon = new ImageIcon(newImg);
                     st.setIcon(stIcon);
                     st.setOpaque(false);
                     switch(j){
-                        case 0 -> st.setBounds(5, 15, 30, 30);
-                        case 1 -> st.setBounds(54, 5, 30, 30);
-                        case 2 -> st.setBounds(59, 56, 30, 30);
-                        case 3 -> st.setBounds(11, 60, 30, 30);
+                        case 0 -> st.setBounds(ScalingUtils.scaleX(5, widthCloud), ScalingUtils.scaleY(15, heightCloud), ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud));
+                        case 1 -> st.setBounds(ScalingUtils.scaleX(54, widthCloud), ScalingUtils.scaleY(5, heightCloud), ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud));
+                        case 2 -> st.setBounds(ScalingUtils.scaleX(59, widthCloud), ScalingUtils.scaleY(56, heightCloud), ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud));
+                        case 3 -> st.setBounds(ScalingUtils.scaleX(11, widthCloud), ScalingUtils.scaleY(60, heightCloud), ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud));
                     }
                     cl.add(st);
                 }
             }
             else{
-                if(i==0) clIcon = new ImageIcon(this.getClass().getResource("/CloudX3_1.png"));
-                else if(i==1) clIcon = new ImageIcon(this.getClass().getResource("/CloudX3_2.png"));
-                else if(i==2) clIcon = new ImageIcon(this.getClass().getResource("/CloudX3_3.png"));
-                else clIcon = new ImageIcon(this.getClass().getResource("/CloudX3_4.png"));
+                if(i==0) clIcon = ScalingUtils.getImage("/CloudX3_1.png");
+                else if(i==1) clIcon = ScalingUtils.getImage("/CloudX3_2.png");
+                else if(i==2) clIcon = ScalingUtils.getImage("/CloudX3_3.png");
+                else clIcon = ScalingUtils.getImage("/CloudX3_4.png");
 
                 for(int j=0; j<allS.get(i).size(); j++){
                     JLabel st = new JLabel();
-                    ImageIcon stIcon = new ImageIcon(this.getClass().getResource(allS.get(i).get(j).getSprite()));
+                    ImageIcon stIcon = ScalingUtils.getImage(allS.get(i).get(j).getSprite());
                     Image stImage = stIcon.getImage();
-                    Image newImg = stImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                    Image newImg = stImage.getScaledInstance(ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud),  Image.SCALE_SMOOTH);
                     stIcon = new ImageIcon(newImg);
                     st.setIcon(stIcon);
                     st.setOpaque(false);
                     switch(j){
-                        case 0 -> st.setBounds(8, 27, 30, 30);
-                        case 1 -> st.setBounds(54, 13, 30, 30);
-                        case 2 -> st.setBounds(44, 61, 30, 30);
+                        case 0 -> st.setBounds(ScalingUtils.scaleX(8, widthCloud), ScalingUtils.scaleY(27, heightCloud), ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud));
+                        case 1 -> st.setBounds(ScalingUtils.scaleX(54, widthCloud), ScalingUtils.scaleY(13, heightCloud), ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud));
+                        case 2 -> st.setBounds(ScalingUtils.scaleX(44, widthCloud), ScalingUtils.scaleY(61, heightCloud), ScalingUtils.scaleX(30, widthCloud), ScalingUtils.scaleY(30, heightCloud));
                     }
                     cl.add(st);
                 }
             }
-            cl.setBounds(150+105*i, 160, 100, 100);
-            containerIslands.add(cl);
+            islands.add(cl);
 
             JLabel cloud = new JLabel();
             Image cloudImage = clIcon.getImage();
-            Image newImg = cloudImage.getScaledInstance(100, 100,  Image.SCALE_SMOOTH);
+            Image newImg = cloudImage.getScaledInstance(ScalingUtils.scaleX(100, widthCloud), ScalingUtils.scaleY(100, heightCloud),  Image.SCALE_SMOOTH);
             clIcon = new ImageIcon(newImg);
             cloud.setIcon(clIcon);
-            cloud.setOpaque(false);;
-            cloud.setBounds(0, 0, 100, 100);
+            cloud.setOpaque(false);
+            cloud.setBounds(0, 0, ScalingUtils.scaleX(100, widthCloud), ScalingUtils.scaleY(100, heightCloud));
             cl.add(cloud);
 
             JLabel halo = new JLabel();
-            ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo.png"));
+            ImageIcon haloIcon = ScalingUtils.getImage("/Halo.png");
             Image haloImage = haloIcon.getImage();
-            newImg =haloImage.getScaledInstance(100, 100,  Image.SCALE_SMOOTH);
+            newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(100, widthCloud), ScalingUtils.scaleY(100, heightCloud),  Image.SCALE_SMOOTH);
             haloIcon = new ImageIcon(newImg);
             halo.setIcon(haloIcon);
             halo.setOpaque(false);
-            halo.setBounds(0, 0, 100, 100);
+            halo.setBounds(0, 0, ScalingUtils.scaleX(100, widthCloud), ScalingUtils.scaleY(100, heightCloud));
             halo.setVisible(false);
             cl.add(halo);
 
@@ -851,7 +912,14 @@ public class GUIGame {
             });
             clButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
+
+        containerIslands.removeAll();
+        for(Component c : islands){
+            containerIslands.add(c);
+        }
         containerIslands.repaint();
+
+        //containerIslands.repaint();
 
         //Display info:
         containerInfo.removeAll();
@@ -859,8 +927,8 @@ public class GUIGame {
         name.setText(report.getTurnOf());
         name.setHorizontalAlignment(SwingConstants.CENTER);
         name.setVerticalAlignment(SwingConstants.CENTER);
-        name.setFont(new Font("MV Boli", Font.BOLD, 9));
-        name.setBounds(0,0,105,20);
+        name.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        name.setBounds(0,0, ScalingUtils.scaleX(105, 180), ScalingUtils.scaleY(20, 40));
         containerInfo.add(name);
         JLabel phase = new JLabel();
         //phase.setText(report.getCurrentPhase());
@@ -871,8 +939,8 @@ public class GUIGame {
         else if(report.getPhase()==Phase.ACTIVECARD) phase.setText("Activating card");
         phase.setHorizontalAlignment(SwingConstants.CENTER);
         phase.setVerticalAlignment(SwingConstants.CENTER);
-        phase.setFont(new Font("MV Boli", Font.BOLD, 9));
-        phase.setBounds(0,20,105,20);
+        phase.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        phase.setBounds(0, ScalingUtils.scaleY(20, 40), ScalingUtils.scaleX(105, 180), ScalingUtils.scaleY(20, 40));
         containerInfo.add(phase);
         containerInfo.repaint();
 
@@ -881,36 +949,36 @@ public class GUIGame {
         len = report.getMyEntrance().size();
         for(int i=0; i<len; i++){
             JButton st = new JButton();
-            ImageIcon stIcon = new ImageIcon(this.getClass().getResource(report.getMyEntrance().get(i).getSprite()));
+            ImageIcon stIcon = ScalingUtils.getImage(report.getMyEntrance().get(i).getSprite());
             Image stImage = stIcon.getImage();
-            Image newImg = stImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+            Image newImg = stImage.getScaledInstance(ScalingUtils.scaleX(30, 500), ScalingUtils.scaleY(30, 200),  Image.SCALE_SMOOTH);
             stIcon = new ImageIcon(newImg);
             st.setIcon(stIcon);
             st.setContentAreaFilled(false);
             st.setBorderPainted(false);
-            st.setBounds(10+30*((i+1)%2),20+31*((i+1)/2),  30, 30);
+            st.setBounds(ScalingUtils.scaleX(10+30*((i+1)%2), 500), ScalingUtils.scaleY(20+31*((i+1)/2), 200),  ScalingUtils.scaleX(30, 500), ScalingUtils.scaleY(30, 200));
             st.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             containerDash.add(st);
 
             JLabel halo = new JLabel();
-            ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo.png"));
+            ImageIcon haloIcon = ScalingUtils.getImage("/Halo.png");
             Image haloImage = haloIcon.getImage();
-            newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+            newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(40, 500), ScalingUtils.scaleY(40, 200),  Image.SCALE_SMOOTH);
             haloIcon = new ImageIcon(newImg);
             halo.setIcon(haloIcon);
-            halo.setOpaque(false);;
-            halo.setBounds(5+30*((i+1)%2),20+31*((i+1)/2),  40, 40);
+            halo.setOpaque(false);
+            halo.setBounds(ScalingUtils.scaleX(5+30*((i+1)%2), 500), ScalingUtils.scaleY(20+31*((i+1)/2), 200), ScalingUtils.scaleX(40, 500), ScalingUtils.scaleY(40, 200));
             halo.setVisible(false);
             containerDash.add(halo);
             halos.add(halo);
             JLabel halo2 = new JLabel();
-            ImageIcon haloIcon2 = new ImageIcon(this.getClass().getResource("/Halo.png"));
+            ImageIcon haloIcon2 = ScalingUtils.getImage("/Halo.png");
             Image haloImage2 = haloIcon2.getImage();
-            newImg =haloImage2.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+            newImg =haloImage2.getScaledInstance(ScalingUtils.scaleX(40, 500), ScalingUtils.scaleY(40, 200),  Image.SCALE_SMOOTH);
             haloIcon2 = new ImageIcon(newImg);
             halo2.setIcon(haloIcon2);
-            halo2.setOpaque(false);;
-            halo2.setBounds(5+30*((i+1)%2),20+31*((i+1)/2),  40, 40);
+            halo2.setOpaque(false);
+            halo2.setBounds(ScalingUtils.scaleX(5+30*((i+1)%2), 500), ScalingUtils.scaleY(20+31*((i+1)/2), 200), ScalingUtils.scaleX(40, 500), ScalingUtils.scaleY(40, 200));
             halo2.setVisible(false);
             containerDash.add(halo2);
 
@@ -942,7 +1010,7 @@ public class GUIGame {
             JButton taButton = new JButton();
             taButton.setContentAreaFilled(false);
             taButton.setBorderPainted(false);
-            taButton.setBounds(95, 22+32*i, 24*10, 23);
+            taButton.setBounds(ScalingUtils.scaleX(95, 500), ScalingUtils.scaleY(22+32*i, 200), ScalingUtils.scaleX(24*10, 500), ScalingUtils.scaleY(23, 200));
             taButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             containerDash.add(taButton);
 
@@ -1004,18 +1072,18 @@ public class GUIGame {
                 JLabel st = new JLabel();
                 ImageIcon stIcon;
                 switch (i){
-                    case 0 -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_green.png"));
-                    case 1 -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_red.png"));
-                    case 2 -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_yellow.png"));
-                    case 3 -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_pink.png"));
-                    default -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_blue.png"));
+                    case 0 -> stIcon = ScalingUtils.getImage("/Stud_green.png");
+                    case 1 -> stIcon = ScalingUtils.getImage("/Stud_red.png");
+                    case 2 -> stIcon = ScalingUtils.getImage("/Stud_yellow.png");
+                    case 3 -> stIcon = ScalingUtils.getImage("/Stud_pink.png");
+                    default -> stIcon = ScalingUtils.getImage("/Stud_blue.png");
                 }
                 Image stImage = stIcon.getImage();
-                Image newImg = stImage.getScaledInstance(23, 23,  Image.SCALE_SMOOTH);
+                Image newImg = stImage.getScaledInstance(ScalingUtils.scaleX(23, 500), ScalingUtils.scaleY(23, 200),  Image.SCALE_SMOOTH);
                 stIcon = new ImageIcon(newImg);
                 st.setIcon(stIcon);
                 st.setOpaque(false);
-                st.setBounds(95+24*j,22+32*i,  23, 23);
+                st.setBounds(ScalingUtils.scaleX(95+24*j, 500), ScalingUtils.scaleY(22+32*i, 200), ScalingUtils.scaleX(23, 500), ScalingUtils.scaleY(23, 200));
                 containerDash.add(st);
             }
         }
@@ -1029,14 +1097,14 @@ public class GUIGame {
         }
         for(int i=0; i<len; i++){
             JLabel to = new JLabel();
-            ImageIcon toIcon = new ImageIcon(this.getClass().getResource(file));
+            ImageIcon toIcon = ScalingUtils.getImage(file);
             Image toImage = toIcon.getImage();
-            Image newImg = toImage.getScaledInstance(35, 45,  Image.SCALE_SMOOTH);
+            Image newImg = toImage.getScaledInstance(ScalingUtils.scaleX(35, 500), ScalingUtils.scaleY(45, 200),  Image.SCALE_SMOOTH);
             toIcon = new ImageIcon(newImg);
             to.setIcon(toIcon);
             to.setOpaque(false);
-            if(report.getNumPlayers()==3) to.setBounds(405+35*(i%2),85-30*(i/2),  35, 45);
-            else to.setBounds(405+35*(i%2),115-30*(i/2),  35, 45);
+            if(report.getNumPlayers()==3) to.setBounds(ScalingUtils.scaleX(405+35*(i%2), 500), ScalingUtils.scaleY(85-30*(i/2), 200), ScalingUtils.scaleX(35, 500), ScalingUtils.scaleY(45, 200));
+            else to.setBounds(ScalingUtils.scaleX(405+35*(i%2), 500), ScalingUtils.scaleY(115-30*(i/2), 200), ScalingUtils.scaleX(35, 500), ScalingUtils.scaleY(45, 200));
             containerDash.add(to);
         }
         it.polimi.ingsw.model.Color[] colInDashC = {it.polimi.ingsw.model.Color.GREEN, it.polimi.ingsw.model.Color.RED, it.polimi.ingsw.model.Color.YELLOW, it.polimi.ingsw.model.Color.PINK, it.polimi.ingsw.model.Color.BLUE};
@@ -1044,13 +1112,13 @@ public class GUIGame {
         for(int i=0; i<5; i++){
             if(report.getProfessors().get(colInDashC[i]).equals(report.getNamePlayer())){
                 JLabel pro = new JLabel();
-                ImageIcon proIcon = new ImageIcon(this.getClass().getResource(colInDashS[i]));
+                ImageIcon proIcon = ScalingUtils.getImage(colInDashS[i]);
                 Image proImage = proIcon.getImage();
-                Image newImg = proImage.getScaledInstance(23, 23,  Image.SCALE_SMOOTH);
+                Image newImg = proImage.getScaledInstance(ScalingUtils.scaleX(23, 500), ScalingUtils.scaleY(23, 200),  Image.SCALE_SMOOTH);
                 proIcon = new ImageIcon(newImg);
                 pro.setIcon(proIcon);
                 pro.setOpaque(false);
-                pro.setBounds(352,22+32*i,  23, 23);
+                pro.setBounds(ScalingUtils.scaleX(352, 500), ScalingUtils.scaleY(22+32*i, 200), ScalingUtils.scaleX(23, 500), ScalingUtils.scaleY(23, 200));
                 containerDash.add(pro);
             }
         }
@@ -1058,20 +1126,6 @@ public class GUIGame {
 
         //Show coins:
         numC.setText("x"+report.getMyCoins());
-
-        //Show played card:
-        if(report.getMyLastCard() != null){
-            containerLastCard.removeAll();
-            JLabel c = new JLabel();
-            ImageIcon cIcon = new ImageIcon(this.getClass().getResource(report.getMyLastCard().getFront()));
-            Image cImage = cIcon.getImage();
-            Image newImg = cImage.getScaledInstance(85, 125,  Image.SCALE_SMOOTH);
-            cIcon = new ImageIcon(newImg);
-            c.setIcon(cIcon);
-            c.setBounds(0, 0, 85, 125);
-            containerLastCard.add(c);
-            containerLastCard.repaint();
-        }
 
         //Enable/disable character'cards if it was activated in the previous move:
         if(report.getActiveCard()!=-1) characterButtons.get(report.getActiveCard()).setVisible(false);
@@ -1090,24 +1144,24 @@ public class GUIGame {
                 ArrayList<Student> studs = mc.getStudents();
                 for(int j=0; j<studs.size(); j++){
                     JButton soc = new JButton();
-                    ImageIcon socIcon = new ImageIcon(this.getClass().getResource(studs.get(j).getSprite()));
+                    ImageIcon socIcon = ScalingUtils.getImage(studs.get(j).getSprite());
                     Image socImage = socIcon.getImage();
-                    Image newImg = socImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                    Image newImg = socImage.getScaledInstance(ScalingUtils.scaleX(30, 145), ScalingUtils.scaleY(30, 105),  Image.SCALE_SMOOTH);
                     socIcon = new ImageIcon(newImg);
                     soc.setIcon(socIcon);
                     soc.setContentAreaFilled(false);
                     soc.setBorderPainted(false);
-                    soc.setBounds(22+j%2*30,(j/2)*30+55,30, 30);
+                    soc.setBounds(ScalingUtils.scaleX(22+j%2*30, 145), ScalingUtils.scaleY((j/2)*30+55, 105), ScalingUtils.scaleX(30, 145), ScalingUtils.scaleY(30, 105));
                     containerCharacters.get(i).add(soc);
 
                     JLabel halo = new JLabel();
-                    ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo.png"));
+                    ImageIcon haloIcon = ScalingUtils.getImage("/Halo.png");
                     Image haloImage = haloIcon.getImage();
-                    newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+                    newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(40, 145), ScalingUtils.scaleY(40, 105),  Image.SCALE_SMOOTH);
                     haloIcon = new ImageIcon(newImg);
                     halo.setIcon(haloIcon);
-                    halo.setOpaque(false);;
-                    halo.setBounds(17+j%2*30,(j/2)*30+55,40, 40);
+                    halo.setOpaque(false);
+                    halo.setBounds(ScalingUtils.scaleX(17+j%2*30, 145), ScalingUtils.scaleY((j/2)*30+55, 105), ScalingUtils.scaleX(40, 145), ScalingUtils.scaleY(40, 105));
                     halo.setVisible(false);
                     containerCharacters.get(i).add(halo);
 
@@ -1149,35 +1203,35 @@ public class GUIGame {
                 ArrayList<Student> studs = mc.getStudents();
                 for(int j=0; j<studs.size(); j++){
                     JButton soc = new JButton();
-                    ImageIcon socIcon = new ImageIcon(this.getClass().getResource(studs.get(j).getSprite()));
+                    ImageIcon socIcon = ScalingUtils.getImage(studs.get(j).getSprite());
                     Image socImage = socIcon.getImage();
-                    Image newImg = socImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+                    Image newImg = socImage.getScaledInstance(ScalingUtils.scaleX(30, 145), ScalingUtils.scaleY(30, 105), Image.SCALE_SMOOTH);
                     socIcon = new ImageIcon(newImg);
                     soc.setIcon(socIcon);
                     soc.setContentAreaFilled(false);
                     soc.setBorderPainted(false);
-                    soc.setBounds(22+j%2*30,(j/2)*30+55,30, 30);
+                    soc.setBounds(ScalingUtils.scaleX(22+j%2*30, 145), ScalingUtils.scaleY((j/2)*30+55, 105), ScalingUtils.scaleX(30, 145), ScalingUtils.scaleY(30, 105));
                     containerCharacters.get(i).add(soc);
 
                     JLabel halo = new JLabel();
-                    ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo.png"));
+                    ImageIcon haloIcon = ScalingUtils.getImage("/Halo.png");
                     Image haloImage = haloIcon.getImage();
-                    newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+                    newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(40, 145), ScalingUtils.scaleY(40, 105),  Image.SCALE_SMOOTH);
                     haloIcon = new ImageIcon(newImg);
                     halo.setIcon(haloIcon);
                     halo.setOpaque(false);;
-                    halo.setBounds(17+j%2*30,(j/2)*30+55,40, 40);
+                    halo.setBounds(ScalingUtils.scaleX(17+j%2*30, 145), ScalingUtils.scaleY((j/2)*30+55, 105), ScalingUtils.scaleX(40, 145), ScalingUtils.scaleY(40, 105));
                     halo.setVisible(false);
                     containerCharacters.get(i).add(halo);
                     halos.add(halo);
                     JLabel halo2 = new JLabel();
-                    ImageIcon haloIcon2 = new ImageIcon(this.getClass().getResource("/Halo.png"));
+                    ImageIcon haloIcon2 = ScalingUtils.getImage("/Halo.png");
                     Image haloImage2 = haloIcon2.getImage();
-                    newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+                    newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(40, 145), ScalingUtils.scaleY(40, 105), Image.SCALE_SMOOTH);
                     haloIcon2 = new ImageIcon(newImg);
                     halo2.setIcon(haloIcon2);
                     halo2.setOpaque(false);;
-                    halo2.setBounds(17+j%2*30,(j/2)*30+55,40, 40);
+                    halo2.setBounds(ScalingUtils.scaleX(17+j%2*30, 145), ScalingUtils.scaleY((j/2)*30+55, 105), ScalingUtils.scaleX(40, 145), ScalingUtils.scaleY(40, 105));
                     halo2.setVisible(false);
                     containerCharacters.get(i).add(halo2);
 
@@ -1215,14 +1269,14 @@ public class GUIGame {
                 ActionCharacter ac = (ActionCharacter) report.getChar().get(i);
                 for(int j=0; j<ac.getNumTokens(); j++){
                     JLabel soc = new JLabel();
-                    ImageIcon socIcon = new ImageIcon(this.getClass().getResource("/Block.png"));
+                    ImageIcon socIcon = ScalingUtils.getImage("/Block.png");
                     Image socImage = socIcon.getImage();
-                    Image newImg = socImage.getScaledInstance(26,26,Image.SCALE_SMOOTH);
+                    Image newImg = socImage.getScaledInstance(ScalingUtils.scaleX(26, 145), ScalingUtils.scaleY(26, 105), Image.SCALE_SMOOTH);
                     socIcon = new ImageIcon(newImg);
                     soc.setIcon(socIcon);
                     Border border = BorderFactory.createLineBorder(Color.BLACK);
                     soc.setBorder(border);
-                    soc.setBounds(22+j%2*30,(j/2)*30+70,26,26);
+                    soc.setBounds(ScalingUtils.scaleX(22+j%2*30, 145), ScalingUtils.scaleY((j/2)*30+70, 105), ScalingUtils.scaleX(26, 145), ScalingUtils.scaleY(26, 105));
                     containerCharacters.get(i).add(soc);
                 }
             }
@@ -1231,13 +1285,13 @@ public class GUIGame {
             int addedValue = report.getChar().get(i).getCost() - report.getChar().get(i).getOriginalCost();
             for(int j=0; j<addedValue; j++){
                 JLabel mo = new JLabel();
-                ImageIcon moIcon = new ImageIcon(this.getClass().getResource("/AddCoin.png"));
+                ImageIcon moIcon = ScalingUtils.getImage("/AddCoin.png");
                 Image moImage = moIcon.getImage();
-                Image newImg = moImage.getScaledInstance(25, 15,  Image.SCALE_SMOOTH);
+                Image newImg = moImage.getScaledInstance(ScalingUtils.scaleX(25, 145), ScalingUtils.scaleY(15, 105),  Image.SCALE_SMOOTH);
                 moIcon = new ImageIcon(newImg);
                 mo.setIcon(moIcon);
                 mo.setOpaque(false);
-                mo.setBounds(5, 18+j*10, 25, 15);
+                mo.setBounds(ScalingUtils.scaleX(5, 145), ScalingUtils.scaleY(18+j*10, 105), ScalingUtils.scaleX(25, 145), ScalingUtils.scaleY(15, 105));
                 containerCharacters.get(i).add(mo);
             }
 
@@ -1250,15 +1304,19 @@ public class GUIGame {
                 OD[i].updateDialog(report, i);
             }
         }
+
+        layered.setLayer(loading, 1);
+        layered.repaint();
     }
 
 
 
     private void buildHelpScreen(JPanel helpScreen, int numPlayers){
+        //900x705
 
         //My cards'panel:
         JPanel cards = new JPanel();
-        cards.setBounds(80, 625, 914, 59);
+        cards.setBounds(ScalingUtils.scaleX(80, 900), ScalingUtils.scaleY(625, 705), ScalingUtils.scaleX(914, 900), ScalingUtils.scaleY(59, 705));
         cards.setLayout(null);
         cards.setOpaque(false);
         Border border = BorderFactory.createLineBorder(Color.YELLOW, 7, true);
@@ -1267,23 +1325,23 @@ public class GUIGame {
 
         JLabel cardsT = new JLabel("Click on a card to play it", JLabel.CENTER);
         cardsT.setOpaque(true);
-        cardsT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        cardsT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         cardsT.setBackground(new Color(128,128,128,255));
         cardsT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        cardsT.setBounds(140, 640, 145, 20);
+        cardsT.setBounds(ScalingUtils.scaleX(140, 900), ScalingUtils.scaleY(640, 705), ScalingUtils.scaleX(145, 900), ScalingUtils.scaleY(20, 705));
         helpScreen.add(cardsT);
 
         //My entrance:
         JLabel entranceT = new JLabel("<html>Click on a student<br>to select it</html>", JLabel.CENTER);
         entranceT.setOpaque(true);
-        entranceT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        entranceT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         entranceT.setBackground(new Color(128,128,128,255));
         entranceT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        entranceT.setBounds(52, 470, 95, 40);
+        entranceT.setBounds(ScalingUtils.scaleX(52, 900), ScalingUtils.scaleY(470, 705), ScalingUtils.scaleX(95, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(entranceT);
 
         JPanel entrance = new JPanel();
-        entrance.setBounds(55, 440, 80, 178);
+        entrance.setBounds(ScalingUtils.scaleX(55, 900), ScalingUtils.scaleY(440, 705), ScalingUtils.scaleX(80, 900), ScalingUtils.scaleY(178, 705));
         entrance.setLayout(null);
         entrance.setOpaque(false);
         entrance.setBorder(border);
@@ -1292,14 +1350,14 @@ public class GUIGame {
         //My tables:
         JLabel profT = new JLabel("<html>Here're your<br>professors</html>", JLabel.CENTER);
         profT.setOpaque(true);
-        profT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        profT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         profT.setBackground(new Color(128,128,128,255));
         profT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        profT.setBounds(387, 470, 70, 40);
+        profT.setBounds(ScalingUtils.scaleX(387, 900), ScalingUtils.scaleY(470, 705), ScalingUtils.scaleX(70, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(profT);
 
         JPanel tables = new JPanel();
-        tables.setBounds(136, 440, 259, 178);
+        tables.setBounds(ScalingUtils.scaleX(136, 900), ScalingUtils.scaleY(440, 705), ScalingUtils.scaleX(259, 900), ScalingUtils.scaleY(178, 705));
         tables.setLayout(null);
         tables.setOpaque(false);
         tables.setBorder(border);
@@ -1307,15 +1365,15 @@ public class GUIGame {
 
         JLabel tablesT = new JLabel("<html>Click on a table to place<br>there a selected student</html>", JLabel.CENTER);
         tablesT.setOpaque(true);
-        tablesT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        tablesT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         tablesT.setBackground(new Color(128,128,128,255));
         tablesT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        tablesT.setBounds(196, 500, 130, 40);
+        tablesT.setBounds(ScalingUtils.scaleX(196, 900), ScalingUtils.scaleY(500, 705), ScalingUtils.scaleX(130, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(tablesT);
 
         //My prof:
         JPanel prof = new JPanel();
-        prof.setBounds(397, 440, 47, 178);
+        prof.setBounds(ScalingUtils.scaleX(397, 900), ScalingUtils.scaleY(440, 705), ScalingUtils.scaleX(47, 900), ScalingUtils.scaleY(178, 705));
         prof.setLayout(null);
         prof.setOpaque(false);
         prof.setBorder(border);
@@ -1324,14 +1382,14 @@ public class GUIGame {
         //My towers:
         JLabel towersT = new JLabel("<html>Here're your<br>team's towers</html>", JLabel.CENTER);
         towersT.setOpaque(true);
-        towersT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        towersT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         towersT.setBackground(new Color(128,128,128,255));
         towersT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        towersT.setBounds(455, 520, 80, 40);
+        towersT.setBounds(ScalingUtils.scaleX(455, 900), ScalingUtils.scaleY(520, 705), ScalingUtils.scaleX(80, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(towersT);
 
         JPanel towers = new JPanel();
-        towers.setBounds(450, 445, 91, 153);
+        towers.setBounds(ScalingUtils.scaleX(450, 900), ScalingUtils.scaleY(445, 705), ScalingUtils.scaleX(91, 900), ScalingUtils.scaleY(153, 705));
         towers.setLayout(null);
         towers.setOpaque(false);
         towers.setBorder(border);
@@ -1340,14 +1398,14 @@ public class GUIGame {
         //My coins:
         JLabel coinsT = new JLabel("<html>Here're<br>your coins</html>", JLabel.CENTER);
         coinsT.setOpaque(true);
-        coinsT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        coinsT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         coinsT.setBackground(new Color(128,128,128,255));
         coinsT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        coinsT.setBounds(642, 405, 60, 40);
+        coinsT.setBounds(ScalingUtils.scaleX(642, 900), ScalingUtils.scaleY(405, 705), ScalingUtils.scaleX(60, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(coinsT);
 
         JPanel coins = new JPanel();
-        coins.setBounds(560, 425, 101, 30);
+        coins.setBounds(ScalingUtils.scaleX(560, 900), ScalingUtils.scaleY(425, 705), ScalingUtils.scaleX(101, 900), ScalingUtils.scaleY(30, 705));
         coins.setLayout(null);
         coins.setOpaque(false);
         coins.setBorder(border);
@@ -1356,14 +1414,14 @@ public class GUIGame {
         //My last card:
         JLabel lastT = new JLabel("<html>The last card<br>you played</html>", JLabel.CENTER);
         lastT.setOpaque(true);
-        lastT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        lastT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         lastT.setBackground(new Color(128,128,128,255));
         lastT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        lastT.setBounds(572, 515, 75, 40);
+        lastT.setBounds(ScalingUtils.scaleX(572, 900), ScalingUtils.scaleY(515, 705), ScalingUtils.scaleX(75, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(lastT);
 
         JPanel last = new JPanel();
-        last.setBounds(560, 455, 101, 155);
+        last.setBounds(ScalingUtils.scaleX(560, 900), ScalingUtils.scaleY(455, 705), ScalingUtils.scaleX(101, 900), ScalingUtils.scaleY(155, 705));
         last.setLayout(null);
         last.setOpaque(false);
         last.setBorder(border);
@@ -1372,14 +1430,14 @@ public class GUIGame {
         //Info:
         JLabel infoT = new JLabel("<html>The info box displays the current<br>player's nickname and what he/she is<br>supposed to do in the current turn</html>", JLabel.CENTER);
         infoT.setOpaque(true);
-        infoT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        infoT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         infoT.setBackground(new Color(128,128,128,255));
         infoT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        infoT.setBounds(565, 7, 190, 60);
+        infoT.setBounds(ScalingUtils.scaleX(565, 900), ScalingUtils.scaleY(7, 705), ScalingUtils.scaleX(190, 900), ScalingUtils.scaleY(60, 705));
         helpScreen.add(infoT);
 
         JPanel info = new JPanel();
-        info.setBounds(705, 5, 190, 50);
+        info.setBounds(ScalingUtils.scaleX(705, 900), ScalingUtils.scaleY(5, 705), ScalingUtils.scaleX(190, 900), ScalingUtils.scaleY(50, 705));
         info.setLayout(null);
         info.setOpaque(false);
         info.setBorder(border);
@@ -1388,14 +1446,14 @@ public class GUIGame {
         //My opponents:
         JLabel opponentsT = new JLabel("<html>The opponents box displays all the<br>players according to turn's order<br>Click on the nickname of a player<br>to see his/her dashboard</html>", JLabel.CENTER);
         opponentsT.setOpaque(true);
-        opponentsT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        opponentsT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         opponentsT.setBackground(new Color(128,128,128,255));
         opponentsT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        opponentsT.setBounds(695, 83, 180, 65);
+        opponentsT.setBounds(ScalingUtils.scaleX(695, 900), ScalingUtils.scaleY(83, 705), ScalingUtils.scaleX(180, 900), ScalingUtils.scaleY(65, 705));
         helpScreen.add(opponentsT);
 
         JPanel opponents = new JPanel();
-        opponents.setBounds(705, 50, 190, 34+numPlayers*22);
+        opponents.setBounds(ScalingUtils.scaleX(705, 900), ScalingUtils.scaleY(50, 705), ScalingUtils.scaleX(190, 900), ScalingUtils.scaleY(34+numPlayers*22, 705));
         opponents.setLayout(null);
         opponents.setOpaque(false);
         opponents.setBorder(border);
@@ -1404,14 +1462,14 @@ public class GUIGame {
         //My island:
         JLabel islandT = new JLabel("<html>Click on an island to place there a selected student<br>Or click an island to move there MotherNature</html>", JLabel.CENTER);
         islandT.setOpaque(true);
-        islandT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        islandT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         islandT.setBackground(new Color(128,128,128,255));
         islandT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        islandT.setBounds(102, 52, 260, 40);
+        islandT.setBounds(ScalingUtils.scaleX(102, 900), ScalingUtils.scaleY(52, 705), ScalingUtils.scaleX(260, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(islandT);
 
         JPanel island = new JPanel();
-        island.setBounds(2, 2, 148, 148);
+        island.setBounds(ScalingUtils.scaleX(2, 900), ScalingUtils.scaleY(2, 705), ScalingUtils.scaleX(148, 900), ScalingUtils.scaleY(148, 705));
         island.setLayout(null);
         island.setOpaque(false);
         island.setBorder(border);
@@ -1420,14 +1478,14 @@ public class GUIGame {
         //My cloud:
         JLabel cloudT = new JLabel("<html>Click on a cloud to get<br>the students on it</html>", JLabel.CENTER);
         cloudT.setOpaque(true);
-        cloudT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        cloudT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         cloudT.setBackground(new Color(128,128,128,255));
         cloudT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        cloudT.setBounds(205, 202, 125, 40);
+        cloudT.setBounds(ScalingUtils.scaleX(205, 900), ScalingUtils.scaleY(202, 705), ScalingUtils.scaleX(125, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(cloudT);
 
         JPanel cloud = new JPanel();
-        cloud.setBounds(145, 155, 110, 110);
+        cloud.setBounds(ScalingUtils.scaleX(145, 900), ScalingUtils.scaleY(155, 705), ScalingUtils.scaleX(110, 900), ScalingUtils.scaleY(110, 705));
         cloud.setLayout(null);
         cloud.setOpaque(false);
         cloud.setBorder(border);
@@ -1436,14 +1494,14 @@ public class GUIGame {
         //Characters:
         JLabel charactersT = new JLabel("<html>Click on a character to activate<br>his/her own special power</html>", JLabel.CENTER);
         charactersT.setOpaque(true);
-        charactersT.setFont(new Font("MV Boli", Font.PLAIN, 10));
+        charactersT.setFont(new Font("MV Boli", Font.PLAIN, ScalingUtils.scaleFont(10)));
         charactersT.setBackground(new Color(128,128,128,255));
         charactersT.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        charactersT.setBounds(710, 215, 160, 40);
+        charactersT.setBounds(ScalingUtils.scaleX(710, 900), ScalingUtils.scaleY(215, 705), ScalingUtils.scaleX(160, 900), ScalingUtils.scaleY(40, 705));
         helpScreen.add(charactersT);
 
         JPanel characters = new JPanel();
-        characters.setBounds(760, 165, 155, 465);
+        characters.setBounds(ScalingUtils.scaleX(760, 900), ScalingUtils.scaleY(165, 705), ScalingUtils.scaleX(155, 900), ScalingUtils.scaleY(465, 705));
         characters.setLayout(null);
         characters.setOpaque(false);
         characters.setBorder(border);

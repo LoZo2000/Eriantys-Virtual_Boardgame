@@ -6,20 +6,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class RulesDialog extends JFrame{
-    private Dialog d;
-    private JButton closeButton;
+    private final Dialog d;
 
     public RulesDialog(JFrame window){
         //Background image:
-        ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("/Credits_bg.png"));
+        ImageIcon bgIcon = ScalingUtils.getImage("/Credits_bg.png");
         Image bgImage = bgIcon.getImage();
-        Image newImg = bgImage.getScaledInstance(390, 400,  Image.SCALE_SMOOTH);
+        Image newImg = bgImage.getScaledInstance(ScalingUtils.scaleX(390), ScalingUtils.scaleY(400),  Image.SCALE_SMOOTH);
         bgIcon = new ImageIcon(newImg);
         JLabel bgLabel = new JLabel(bgIcon);
-        bgLabel.setSize(390,400);
+        bgLabel.setSize(ScalingUtils.scaleX(390),ScalingUtils.scaleY(400));
 
         d = new JDialog(window, "Eriantys - Rules");
-        d.setSize(390, 400);
+        d.setSize(ScalingUtils.scaleX(390), ScalingUtils.scaleY(400));
         d.setResizable(false);
         d.add(bgLabel);
 
@@ -28,29 +27,29 @@ public class RulesDialog extends JFrame{
         title.setText("Rules:");
         title.setHorizontalAlignment(SwingConstants.CENTER);
         title.setVerticalAlignment(SwingConstants.CENTER);
-        title.setFont(new Font("MV Boli", Font.BOLD, 22));
-        title.setBounds(140,0,100,20);
+        title.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(22)));
+        title.setBounds(ScalingUtils.scaleX(140, 390), 0, ScalingUtils.scaleX(100, 390), ScalingUtils.scaleY(20, 355));
         bgLabel.add(title);
 
         //Page buttons:
         PageDialog pageDialog = new PageDialog(window);
         for(int i=0; i<12; i++){
             JButton pbButton = new JButton();
-            ImageIcon pbIcon = new ImageIcon(this.getClass().getResource("/Rules_pag"+String.valueOf(i)+".png"));
+            ImageIcon pbIcon = ScalingUtils.getImage("/Rules_pag"+i+".png");
             Image pbImage = pbIcon.getImage();
-            newImg = pbImage.getScaledInstance(80, 80,  Image.SCALE_SMOOTH);
+            newImg = pbImage.getScaledInstance(ScalingUtils.scaleX(80, 390), ScalingUtils.scaleY(80, 400),  Image.SCALE_SMOOTH);
             pbIcon = new ImageIcon(newImg);
             pbButton.setIcon(pbIcon);
             pbButton.setContentAreaFilled(false);
-            pbButton.setBounds(10+90*(i%4), 25+100*(i/4), 80, 80);
+            pbButton.setBounds(ScalingUtils.scaleX(10+90*(i%4),390), ScalingUtils.scaleY(25+100*(i/4), 400), ScalingUtils.scaleX(80, 390), ScalingUtils.scaleY(80, 400));
             pbButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             bgLabel.add(pbButton);
             JLabel bg = new JLabel();
-            bg.setText("Page "+String.valueOf(i+1));
-            bg.setFont(new Font("MV Boli", Font.BOLD, 10));
+            bg.setText("Page "+(i+1));
+            bg.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(10)));
             bg.setHorizontalAlignment(SwingConstants.CENTER);
             bg.setVerticalAlignment(SwingConstants.CENTER);
-            bg.setBounds(10+90*(i%4),105+100*(i/4),80,15);
+            bg.setBounds(ScalingUtils.scaleX(10+90*(i%4), 390),ScalingUtils.scaleY(105+100*(i/4), 400), ScalingUtils.scaleX(80, 390), ScalingUtils.scaleY(15, 400));
             bgLabel.add(bg);
             final int page = i;
             pbButton.addActionListener(e->{
@@ -59,26 +58,26 @@ public class RulesDialog extends JFrame{
         }
 
         //Button to close dialog:
-        closeButton = new JButton();
-        ImageIcon closeIcon = new ImageIcon(this.getClass().getResource("/Back.png"));
+        JButton closeButton = new JButton();
+        ImageIcon closeIcon = ScalingUtils.getImage("/Back.png");
         Image closeImage = closeIcon.getImage();
-        newImg = closeImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+        newImg = closeImage.getScaledInstance(ScalingUtils.scaleX(40, 390), ScalingUtils.scaleY(40, 400),  Image.SCALE_SMOOTH);
         closeIcon = new ImageIcon(newImg);
         closeButton.setIcon(closeIcon);
         closeButton.setContentAreaFilled(false);
         closeButton.setBorderPainted(false);
-        closeButton.setBounds(165, 315, 40, 40);
+        closeButton.setBounds(ScalingUtils.scaleX(165, 390), ScalingUtils.scaleY(315, 400), ScalingUtils.scaleX(40, 390), ScalingUtils.scaleY(40, 400));
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(closeButton);
 
         JLabel halo = new JLabel();
-        ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo_purple.png"));
+        ImageIcon haloIcon = ScalingUtils.getImage("/Halo_purple.png");
         Image haloImage = haloIcon.getImage();
-        newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+        newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(40, 390), ScalingUtils.scaleY(40, 400),  Image.SCALE_SMOOTH);
         haloIcon = new ImageIcon(newImg);
         halo.setIcon(haloIcon);
         halo.setOpaque(false);
-        halo.setBounds(165, 315, 40, 40);
+        halo.setBounds(ScalingUtils.scaleX(165, 390), ScalingUtils.scaleY(315, 400), ScalingUtils.scaleX(40, 390), ScalingUtils.scaleY(40, 400));
         halo.setVisible(false);
         bgLabel.add(halo);
 
@@ -99,10 +98,7 @@ public class RulesDialog extends JFrame{
         });
     }
 
-
-
     public void showDialog(){
-        if(d.isVisible()) d.setVisible(false);
-        else d.setVisible(true);
+        d.setVisible(!d.isVisible());
     }
 }
