@@ -5,8 +5,6 @@ import it.polimi.ingsw.model.ColorTower;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -14,6 +12,11 @@ import java.awt.event.MouseEvent;
  * This class represent the dialog containing the board of the other player
  */
 public class OpponentDialog extends JFrame{
+    private final Dialog d;
+    private final JPanel containerDash = new JPanel();
+    private final JPanel containerCard = new JPanel();
+    private final JLabel numC;
+
     private Dialog d;
     private JButton closeButton;
     private String opponent;
@@ -29,32 +32,31 @@ public class OpponentDialog extends JFrame{
      * @param opponent is the nickname of the opponent that owns the board to show
      */
     public OpponentDialog(JFrame window, String opponent){
-        this.opponent = opponent;
 
-        ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("/Game_bg.jpg"));
+        ImageIcon bgIcon = ScalingUtils.getImage("/Game_bg.jpg");
         Image bgImage = bgIcon.getImage();
-        Image newImg = bgImage.getScaledInstance(610, 225,  Image.SCALE_SMOOTH);
+        Image newImg = bgImage.getScaledInstance(ScalingUtils.scaleX(610, 620), ScalingUtils.scaleY(225, 260),  Image.SCALE_SMOOTH);
         bgIcon = new ImageIcon(newImg);
         JLabel bgLabel = new JLabel(bgIcon);
-        bgLabel.setSize(610,225);
+        bgLabel.setSize(ScalingUtils.scaleX(610, 620), ScalingUtils.scaleY(225, 260));
 
         d = new JDialog(window, "Eriantys - " + opponent +"'s dashboard");
-        d.setSize(620, 260);
+        d.setSize(ScalingUtils.scaleX(620), ScalingUtils.scaleY(260));
         d.setResizable(false);
         d.add(bgLabel);
 
         //Dashboard:
-        ImageIcon dashIcon = new ImageIcon(this.getClass().getResource("/Dashboard.png"));
+        ImageIcon dashIcon = ScalingUtils.getImage("/Dashboard.png");
         Image dashImage = dashIcon.getImage();
-        newImg = dashImage.getScaledInstance(500, 200,  Image.SCALE_SMOOTH);
+        newImg = dashImage.getScaledInstance(ScalingUtils.scaleX(500, 620), ScalingUtils.scaleY(200, 260),  Image.SCALE_SMOOTH);
         dashIcon = new ImageIcon(newImg);
         JLabel dashLabel = new JLabel(dashIcon);
-        dashLabel.setBounds(5, 15, 500, 200);
+        dashLabel.setBounds(ScalingUtils.scaleX(5, 620), ScalingUtils.scaleY(15, 260), ScalingUtils.scaleX(500, 620), ScalingUtils.scaleY(200, 260));
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         dashLabel.setBorder(border);
         bgLabel.add(dashLabel);
 
-        containerDash.setBounds(0, 0, 500, 200);
+        containerDash.setBounds(0, 0, ScalingUtils.scaleX(500, 620), ScalingUtils.scaleY(200, 260));
         containerDash.setLayout(null);
         containerDash.setOpaque(false);
         dashLabel.add(containerDash);
@@ -62,7 +64,7 @@ public class OpponentDialog extends JFrame{
         //Coins:
         JPanel coins = new JPanel();
         coins.setLayout(null);
-        coins.setBounds(510, 5, 91, 20);
+        coins.setBounds(ScalingUtils.scaleX(510, 620), ScalingUtils.scaleY(5, 260), ScalingUtils.scaleX(91, 620), ScalingUtils.scaleY(20, 260));
         Color colorPanel = new Color(128,128,128,125);
         coins.setBackground(colorPanel);
         coins.setBorder(border);
@@ -71,21 +73,21 @@ public class OpponentDialog extends JFrame{
         titleCo.setText("Coins:");
         titleCo.setHorizontalAlignment(SwingConstants.CENTER);
         titleCo.setVerticalAlignment(SwingConstants.CENTER);
-        titleCo.setFont(new Font("MV Boli", Font.BOLD, 9));
-        titleCo.setBounds(0,0,50,20);
+        titleCo.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        titleCo.setBounds(0,0, ScalingUtils.scaleX(50, 91), ScalingUtils.scaleY(20, 20));
         coins.add(titleCo);
         numC = new JLabel();
         numC.setText("x0");
         numC.setHorizontalAlignment(SwingConstants.CENTER);
         numC.setVerticalAlignment(SwingConstants.CENTER);
-        numC.setFont(new Font("MV Boli", Font.BOLD, 9));
-        numC.setBounds(50,0,31,20);
+        numC.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        numC.setBounds(ScalingUtils.scaleX(50, 91),0, ScalingUtils.scaleX(31, 91), ScalingUtils.scaleY(20, 20));
         coins.add(numC);
 
         //Last card:
         JPanel card = new JPanel();
         card.setLayout(null);
-        card.setBounds(510, 30, 91, 145);
+        card.setBounds(ScalingUtils.scaleX(510, 620), ScalingUtils.scaleY(30, 260), ScalingUtils.scaleX(91, 620), ScalingUtils.scaleY(145, 260));
         card.setBackground(colorPanel);
         card.setBorder(border);
         bgLabel.add(card);
@@ -93,42 +95,42 @@ public class OpponentDialog extends JFrame{
         titleCa.setText("Last played card:");
         titleCa.setHorizontalAlignment(SwingConstants.CENTER);
         titleCa.setVerticalAlignment(SwingConstants.CENTER);
-        titleCa.setFont(new Font("MV Boli", Font.BOLD, 9));
-        titleCa.setBounds(0,0,91,20);
+        titleCa.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(9)));
+        titleCa.setBounds(0,0, ScalingUtils.scaleX(91, 91), ScalingUtils.scaleY(20, 145));
         card.add(titleCa);
         containerCard.setLayout(null);
-        containerCard.setBounds(3, 17, 85, 125);
+        containerCard.setBounds(ScalingUtils.scaleX(3, 91), ScalingUtils.scaleY(17, 145), ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145));
         card.add(containerCard);
         JLabel c = new JLabel();
-        ImageIcon cIcon = new ImageIcon(this.getClass().getResource("/Char_back.png"));
+        ImageIcon cIcon = ScalingUtils.getImage("/Char_back.png");
         Image cImage = cIcon.getImage();
-        newImg = cImage.getScaledInstance(85, 125,  Image.SCALE_SMOOTH);
+        newImg = cImage.getScaledInstance(ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145),  Image.SCALE_SMOOTH);
         cIcon = new ImageIcon(newImg);
         c.setIcon(cIcon);
-        c.setBounds(0, 0, 85, 125);
+        c.setBounds(0, 0, ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145));
         containerCard.add(c);
 
         //Button to close dialog:
-        closeButton = new JButton();
-        ImageIcon closeIcon = new ImageIcon(this.getClass().getResource("/Back.png"));
+        JButton closeButton = new JButton();
+        ImageIcon closeIcon = ScalingUtils.getImage("/Back.png");
         Image closeImage = closeIcon.getImage();
-        newImg = closeImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+        newImg = closeImage.getScaledInstance(ScalingUtils.scaleX(40, 620), ScalingUtils.scaleY(40, 260),  Image.SCALE_SMOOTH);
         closeIcon = new ImageIcon(newImg);
         closeButton.setIcon(closeIcon);
         closeButton.setContentAreaFilled(false);
         closeButton.setBorderPainted(false);
-        closeButton.setBounds(530, 180, 40, 40);
+        closeButton.setBounds(ScalingUtils.scaleX(530, 620), ScalingUtils.scaleY(180, 260), ScalingUtils.scaleX(40, 620), ScalingUtils.scaleY(40, 260));
         closeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         bgLabel.add(closeButton);
 
         JLabel halo = new JLabel();
-        ImageIcon haloIcon = new ImageIcon(this.getClass().getResource("/Halo_purple.png"));
+        ImageIcon haloIcon = ScalingUtils.getImage("/Halo_purple.png");
         Image haloImage = haloIcon.getImage();
-        newImg =haloImage.getScaledInstance(40, 40,  Image.SCALE_SMOOTH);
+        newImg =haloImage.getScaledInstance(ScalingUtils.scaleX(40, 620), ScalingUtils.scaleY(40, 260),  Image.SCALE_SMOOTH);
         haloIcon = new ImageIcon(newImg);
         halo.setIcon(haloIcon);
         halo.setOpaque(false);
-        halo.setBounds(530, 180, 40, 40);
+        halo.setBounds(ScalingUtils.scaleX(530, 620), ScalingUtils.scaleY(180, 260), ScalingUtils.scaleX(40, 620), ScalingUtils.scaleY(40, 260));
         halo.setVisible(false);
         bgLabel.add(halo);
 
@@ -170,13 +172,13 @@ public class OpponentDialog extends JFrame{
         int len = report.getOpponentsEntrance().get(position).size();
         for(int i=0; i<len; i++){
             JLabel st = new JLabel();
-            ImageIcon stIcon = new ImageIcon(this.getClass().getResource(report.getOpponentsEntrance().get(position).get(i).getSprite()));
+            ImageIcon stIcon = ScalingUtils.getImage(report.getOpponentsEntrance().get(position).get(i).getSprite());
             Image stImage = stIcon.getImage();
-            Image newImg = stImage.getScaledInstance(30, 30,  Image.SCALE_SMOOTH);
+            Image newImg = stImage.getScaledInstance(ScalingUtils.scaleX(30, 500), ScalingUtils.scaleY(30, 200),  Image.SCALE_SMOOTH);
             stIcon = new ImageIcon(newImg);
             st.setIcon(stIcon);
             st.setOpaque(false);
-            st.setBounds(10+30*((i+1)%2),20+31*((i+1)/2),  30, 30);
+            st.setBounds(ScalingUtils.scaleX(10+30*((i+1)%2), 500), ScalingUtils.scaleY(20+31*((i+1)/2), 200),  ScalingUtils.scaleX(30, 500), ScalingUtils.scaleY(30, 200));
             containerDash.add(st);
         }
         for(int i=0; i<5; i++){
@@ -185,18 +187,18 @@ public class OpponentDialog extends JFrame{
                 JLabel st = new JLabel();
                 ImageIcon stIcon;
                 switch (i){
-                    case 0 -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_green.png"));
-                    case 1 -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_red.png"));
-                    case 2 -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_yellow.png"));
-                    case 3 -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_pink.png"));
-                    default -> stIcon = new ImageIcon(this.getClass().getResource("/Stud_blue.png"));
+                    case 0 -> stIcon = ScalingUtils.getImage("/Stud_green.png");
+                    case 1 -> stIcon = ScalingUtils.getImage("/Stud_red.png");
+                    case 2 -> stIcon = ScalingUtils.getImage("/Stud_yellow.png");
+                    case 3 -> stIcon = ScalingUtils.getImage("/Stud_pink.png");
+                    default -> stIcon = ScalingUtils.getImage("/Stud_blue.png");
                 }
                 Image stImage = stIcon.getImage();
-                Image newImg = stImage.getScaledInstance(23, 23,  Image.SCALE_SMOOTH);
+                Image newImg = stImage.getScaledInstance(ScalingUtils.scaleX(23, 500), ScalingUtils.scaleY(23, 200),  Image.SCALE_SMOOTH);
                 stIcon = new ImageIcon(newImg);
                 st.setIcon(stIcon);
                 st.setOpaque(false);
-                st.setBounds(95+24*j,22+32*i,  23, 23);
+                st.setBounds(ScalingUtils.scaleX(95+24*j, 500), ScalingUtils.scaleY(22+32*i, 200), ScalingUtils.scaleX(23, 500), ScalingUtils.scaleY(23, 200));
                 containerDash.add(st);
             }
         }
@@ -210,14 +212,14 @@ public class OpponentDialog extends JFrame{
         }
         for(int i=0; i<len; i++){
             JLabel to = new JLabel();
-            ImageIcon toIcon = new ImageIcon(this.getClass().getResource(file));
+            ImageIcon toIcon = ScalingUtils.getImage(file);
             Image toImage = toIcon.getImage();
-            Image newImg = toImage.getScaledInstance(35, 45,  Image.SCALE_SMOOTH);
+            Image newImg = toImage.getScaledInstance(ScalingUtils.scaleX(35, 500), ScalingUtils.scaleX(45, 200),  Image.SCALE_SMOOTH);
             toIcon = new ImageIcon(newImg);
             to.setIcon(toIcon);
             to.setOpaque(false);
-            if(report.getNumPlayers()==3) to.setBounds(405+35*(i%2),85-30*(i/2),  35, 45);
-            else to.setBounds(405+35*(i%2),115-30*(i/2),  35, 45);
+            if(report.getNumPlayers()==3) to.setBounds(ScalingUtils.scaleX(405+35*(i%2), 500), ScalingUtils.scaleY(85-30*(i/2), 200), ScalingUtils.scaleX(35, 500), ScalingUtils.scaleX(45, 200));
+            else to.setBounds(ScalingUtils.scaleX(405+35*(i%2), 500), ScalingUtils.scaleY(115-30*(i/2), 200), ScalingUtils.scaleX(35, 500), ScalingUtils.scaleX(45, 200));
             containerDash.add(to);
         }
         it.polimi.ingsw.model.Color[] colInDashC = {it.polimi.ingsw.model.Color.GREEN, it.polimi.ingsw.model.Color.RED, it.polimi.ingsw.model.Color.YELLOW, it.polimi.ingsw.model.Color.PINK, it.polimi.ingsw.model.Color.BLUE};
@@ -225,13 +227,13 @@ public class OpponentDialog extends JFrame{
         for(int i=0; i<5; i++){
             if(report.getProfessors().get(colInDashC[i]).equals(report.getOpponentsNick().get(position))){
                 JLabel pro = new JLabel();
-                ImageIcon proIcon = new ImageIcon(this.getClass().getResource(colInDashS[i]));
+                ImageIcon proIcon = ScalingUtils.getImage(colInDashS[i]);
                 Image proImage = proIcon.getImage();
-                Image newImg = proImage.getScaledInstance(23, 23,  Image.SCALE_SMOOTH);
+                Image newImg = proImage.getScaledInstance(ScalingUtils.scaleX(23, 500), ScalingUtils.scaleY(23, 200),  Image.SCALE_SMOOTH);
                 proIcon = new ImageIcon(newImg);
                 pro.setIcon(proIcon);
                 pro.setOpaque(false);
-                pro.setBounds(352,22+32*i,  23, 23);
+                pro.setBounds(ScalingUtils.scaleX(352, 500), ScalingUtils.scaleX(22+32*i, 200),  ScalingUtils.scaleX(23, 500), ScalingUtils.scaleY(23, 200));
                 containerDash.add(pro);
             }
         }
@@ -244,12 +246,12 @@ public class OpponentDialog extends JFrame{
         if(report.getOpponentsLastCard().get(position) != null){
             containerCard.removeAll();
             JLabel c = new JLabel();
-            ImageIcon cIcon = new ImageIcon(this.getClass().getResource(report.getOpponentsLastCard().get(position).getFront()));
+            ImageIcon cIcon = ScalingUtils.getImage(report.getOpponentsLastCard().get(position).getFront());
             Image cImage = cIcon.getImage();
-            Image newImg = cImage.getScaledInstance(85, 125,  Image.SCALE_SMOOTH);
+            Image newImg = cImage.getScaledInstance(ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145),  Image.SCALE_SMOOTH);
             cIcon = new ImageIcon(newImg);
             c.setIcon(cIcon);
-            c.setBounds(0, 0, 85, 125);
+            c.setBounds(0, 0, ScalingUtils.scaleX(85, 91), ScalingUtils.scaleY(125, 145));
             containerCard.add(c);
             containerCard.repaint();
         }
