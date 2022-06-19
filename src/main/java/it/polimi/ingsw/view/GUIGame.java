@@ -22,6 +22,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * This class is the object that represent the window that contain the game to play
+ */
 public class GUIGame {
     private InputStream inputStream;
     private ObjectInputStream objectInputStream;
@@ -57,11 +60,16 @@ public class GUIGame {
     //Characters'buttons:
     private ArrayList<JButton> characterButtons = new ArrayList<>();
 
-
+    /**
+     * This method is the constructor of the class
+     * @param socket is the socket of the connection with the server
+     * @param report is the report of the game returned by the GUIEntry
+     * @param lockWrite is a lock to synchronize the object
+     * @throws IOException
+     */
     public GUIGame(Socket socket, GameReport report, Object lockWrite) throws IOException {
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
-
         this.lockWrite = lockWrite;
 
         createGUI(report);
@@ -69,7 +77,10 @@ public class GUIGame {
     }
 
 
-
+    /**
+     * This method is called to open the gui to play the game
+     * @return an int representing if the player want to play another game or not (0 if the player want to play another game, 1 otherwise)
+     */
     public int openGUI(){
         window.setVisible(true);
         while(true){
@@ -1459,7 +1470,9 @@ public class GUIGame {
     }
 
 
-
+    /**
+     * This method is used to hide the GUIGame
+     */
     public void hideGUI(){
             window.setVisible(false);
     }

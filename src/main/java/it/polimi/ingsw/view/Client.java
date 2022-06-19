@@ -14,6 +14,9 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * This class represent the cli interface for the client
+ */
 public class Client {
 
     private final String ip;
@@ -42,6 +45,11 @@ public class Client {
 
     private final Scanner stdin;
 
+    /**
+     * This method is the constructor of the class
+     * @param ip is the ip of the server in which run the model
+     * @param port is the port of the application on the server
+     */
     public Client(String ip, int port){
         this.ip = ip;
         this.port = port;
@@ -89,6 +97,9 @@ public class Client {
         }
     }
 
+    /**
+     * This method is called to send messages to server
+     */
     public void sendToServer() {
         Message message = null;
         try{
@@ -127,6 +138,7 @@ public class Client {
             //e.printStackTrace();
         }
     }
+
 
     private void receiveFromServer(){
         try{
@@ -237,6 +249,11 @@ public class Client {
         }
     }
 
+    /**
+     * This method start the cli client initializing the thread to receive the input, send the output and ping the server
+     * @throws IOException when there is an input/output error
+     * @throws InterruptedException when a thread is interrupted while it's waiting, sleeping, or otherwise occupied
+     */
     public void startClient() throws IOException, InterruptedException {
         boolean repeat;
 
@@ -686,6 +703,10 @@ public class Client {
         return id;
     }
 
+    /**
+     * This method is called to print the board in terminal
+     * @param report is the report representing the state of the game
+     */
     public void showBoard(GameReport report){
         if(report.getError() == null) {
             Columns col = new Columns();
@@ -755,6 +776,9 @@ public class Client {
         }
     }
 
+    /**
+     * This method is called to print the info of the cards
+     */
     public void showCardInfo(){
         Columns col = new Columns();
         col.addColumn(1, "\u001B[1;31mISLANDS\u001B[0m");

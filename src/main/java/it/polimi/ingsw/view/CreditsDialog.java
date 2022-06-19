@@ -4,10 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * This class represent the dialog containing the credits of the game
+ */
 public class CreditsDialog extends JFrame{
     private Dialog d;
     private JButton closeButton;
 
+    /**
+     * This method is the constructor of the class
+     * @param window is the main window
+     */
     public CreditsDialog(JFrame window){
         //Background image:
         ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("/Credits_bg.png"));
@@ -123,8 +130,9 @@ public class CreditsDialog extends JFrame{
         });
     }
 
-
-
+    /**
+     * This method set the dialog visible
+     */
     public void showDialog(){
         if(d.isVisible()) d.setVisible(false);
         else d.setVisible(true);

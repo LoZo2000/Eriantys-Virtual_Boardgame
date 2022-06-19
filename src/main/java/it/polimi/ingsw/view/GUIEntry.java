@@ -13,6 +13,9 @@ import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * This class is the object that represent the window that permit the player to join a game
+ */
 public class GUIEntry{
     private InputStream inputStream;
     private ObjectInputStream objectInputStream;
@@ -33,6 +36,12 @@ public class GUIEntry{
 
     private final Object lockWrite;
 
+    /**
+     * This method is the constructor of the game
+     * @param socket is the socket of the connection with the server
+     * @param lockWrite is a lock to synchronize the object
+     * @throws IOException when there is an input/output error
+     */
     public GUIEntry(Socket socket, Object lockWrite) throws IOException{
         System.setProperty("sun.java2d.uiScale", "1.0");
 
@@ -44,6 +53,10 @@ public class GUIEntry{
         createGUI();
     }
 
+    /**
+     * This method is called to open the gui to join a new game
+     * @return a GameReport object to pass to GUIGame to play the game
+     */
     public GameReport openGUI(){
         window.setVisible(true);
 
@@ -84,13 +97,13 @@ public class GUIEntry{
         return report;
     }
 
+    /**
+     * This method is called to hide the GUIEntry window
+     */
     public void hideGUI(){
         window.setVisible(false);
     }
 
-    public void showGUI(){
-        window.setVisible(true);
-    }
 
 
 

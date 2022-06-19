@@ -6,18 +6,30 @@ import org.fusesource.jansi.AnsiConsole;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represent the columns in which is divided the terminal to print things, it implements some methods to help
+ * the programmer print text divided in column
+ */
 public class Columns {
 
     private final int terminalDim;
     private final List<String> col1;
     private final List<String> col2;
 
+    /**
+     * This method is the constructor of the class
+     */
     public Columns(){
         col1 = new ArrayList<>();
         col2 = new ArrayList<>();
         terminalDim = AnsiConsole.getTerminalWidth() != 0 ? AnsiConsole.getTerminalWidth() : 178;
     }
 
+    /**
+     * This method is called to insert something that will be printed in a column
+     * @param numberColumn is the id of the column in which print the text
+     * @param stringToInsert is the String to insert in the column
+     */
     public void addColumn(int numberColumn, String stringToInsert){
         int maxLength = terminalDim / 2-3;
 
@@ -81,6 +93,9 @@ public class Columns {
         }
     }
 
+    /**
+     * This method is called to print the columns and everything they contain
+     */
     public void printAll(){
         System.out.println(Ansi.ansi().eraseScreen().toString());
         int maxLength = terminalDim / 2 - 3;

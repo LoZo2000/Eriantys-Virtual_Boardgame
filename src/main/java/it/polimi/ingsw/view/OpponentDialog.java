@@ -10,6 +10,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * This class represent the dialog containing the board of the other player
+ */
 public class OpponentDialog extends JFrame{
     private Dialog d;
     private JButton closeButton;
@@ -20,7 +23,11 @@ public class OpponentDialog extends JFrame{
     private JLabel numC;
 
 
-
+    /**
+     * This method is the constructor of the class
+     * @param window is the main window of the game
+     * @param opponent is the nickname of the opponent that owns the board to show
+     */
     public OpponentDialog(JFrame window, String opponent){
         this.opponent = opponent;
 
@@ -143,14 +150,20 @@ public class OpponentDialog extends JFrame{
     }
 
 
-
+    /**
+     * This method set the dialog visible
+     */
     public void showDialog(){
         if(d.isVisible()) d.setVisible(false);
         else d.setVisible(true);
     }
 
 
-
+    /**
+     * This method update the dialog with the refreshed values
+     * @param report represent the state of the game
+     * @param position represent the position of the player //todo gab controlla
+     */
     public void updateDialog(GameReport report, int position){
         //Show entrance:
         containerDash.removeAll();

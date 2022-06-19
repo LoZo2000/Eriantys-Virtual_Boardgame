@@ -7,6 +7,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * This class create the gui for the client to play the game
+ */
 public class ClientGUI {
     private final String ip;
     private final int port;
@@ -16,6 +19,11 @@ public class ClientGUI {
     private OutputStream outputStream;
     private final Object lockWrite;
 
+    /**
+     * This method is the constructor of the class
+     * @param ip is the ip of the server in which run the model
+     * @param port is the port of the application on the server
+     */
     public ClientGUI(String ip, int port){
         this.ip = ip;
         this.port = port;
@@ -23,6 +31,12 @@ public class ClientGUI {
         this.lockWrite = new Object();
     }
 
+    /**
+     * This method is the default method called in ClientGui, it set the ping the client will exchange with the server to
+     * check the connection, manage the games from the client perspective creating the window to join a game and the window
+     * that contain the game
+     * @throws IOException when there is an input/output error
+     */
     public void run() throws IOException{
         int anothergame=0;
         while(anothergame==0){

@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * This class represent the dialog containing the board of the other player
+ */
 public class PageDialog {
     private Dialog d;
     private int currentPage = -1;
