@@ -154,11 +154,11 @@ public class OpponentDialog extends JFrame{
         else d.setVisible(true);
     }
 
-
+    //TODO Mario controlla
     /**
      * This method update the dialog with the refreshed values
      * @param report represent the state of the game
-     * @param position represent the position of the player //todo gab controlla
+     * @param position represent the position of the opponent in the report list.
      */
     public void updateDialog(GameReport report, int position){
         //Show entrance:

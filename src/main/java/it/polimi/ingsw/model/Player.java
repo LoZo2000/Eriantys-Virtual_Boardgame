@@ -80,8 +80,6 @@ public class Player implements Comparable<Player> {
         this.coins -= usedCoins;
     }
 
-    //TODO Test Method
-
     /**
      * Method to return the number of Player's coins
      * @return the number of Player's coins

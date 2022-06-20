@@ -5,8 +5,10 @@ import it.polimi.ingsw.controller.Location;
 
 import java.util.Set;
 
+//TODO Mario controlla se si capisce meglio adesso
 /**
- * This class is used to store the parameters of the different characters cards taken from a JSON file
+ * This class is used to store the parameters of the different characters cards taken from a JSON file.
+ * The GSON library requires a class to store information from JSON file, so the parameters that can be null are in this class.
  */
 public class JSONParams {
     private final Action typeAction;
@@ -21,19 +23,20 @@ public class JSONParams {
     private final Integer extraPoints;
     private final Integer extraMNMovement;
     private final Integer maxMoves;
-    //Todo Gabriele controlla che non sono sicuro
     /**
      * This method is the constructor of the class
-     * @param typeAction is the type of Action the card could enable
-     * @param numThingOnIt is the number of things is possible to put over a card
-     * @param locationType is the type of the location enabled by some characters card for some actions
-     * @param refill is a boolean that report if the card need a refill or not
-     * @param allowedDepartures are the locations permitted to be a departure point for a movement
-     * @param allowedArrivals are the locations permitted to be an arrival point for a movement
-     * @param towersDisabled is a boolean reporting if the tower are disabled
-     * @param extraPoints ia an int containing the extra points given by some character cards
-     * @param extraMNMovement is an int containing the amount of extra movement permitted to mother nature by some character cards
-     * @param maxMoves is an int reporting the number of max moves possible
+     * This class holds data read from the JSON file "characters.json" that holds information about characters.
+     * Some of these parameters could be null, depending on the character type.
+     * @param typeAction is the type of Action the card could enable. It's used only if the character is an Action, Movement or Exchange one.
+     * @param numThingOnIt is the number of things is possible to put over a card. It's used only if the character is an Action, Movement or Exchange one.
+     * @param locationType is the type of the location enabled by some characters card for some actions. It's used only if the character is a Movement or Exchange one.
+     * @param refill is a boolean that report if the card need a refill or not when a student is taken from the card. This parameter is used only for Movement characters.
+     * @param allowedDepartures are the locations permitted to be a departure point for a movement. This parameter is used only for Movement characters.
+     * @param allowedArrivals are the locations permitted to be an arrival point for a movement. This parameter is used only for Movement characters.
+     * @param towersDisabled is a boolean reporting if the tower are disabled. It isn't null only if the character is an Influence one.
+     * @param extraPoints ia an int containing the extra points given by some character cards. It isn't null only if the character is an Influence one.
+     * @param extraMNMovement is an int containing the amount of extra movement permitted to mother nature by some character cards. It isn't null only if the character is a MotherNature one.
+     * @param maxMoves is an int reporting the number of max moves possible for Exchange characters.
      */
     public JSONParams(Action typeAction, Integer numThingOnIt, Location locationType, Boolean refill, Set<Location> allowedDepartures, Set<Location> allowedArrivals, Boolean towersDisabled, Integer extraPoints, Integer extraMNMovement, Integer maxMoves) {
         this.typeAction = typeAction;

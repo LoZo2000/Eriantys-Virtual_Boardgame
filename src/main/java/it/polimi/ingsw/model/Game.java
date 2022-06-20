@@ -736,7 +736,6 @@ public class Game extends Observable<GameReport> {
      * This method returns the current Rule
      * @return the current Rule
      */
-    //TODO Debug Method
     public Rule getCurrentRule(){
         return this.currentRule;
     }
