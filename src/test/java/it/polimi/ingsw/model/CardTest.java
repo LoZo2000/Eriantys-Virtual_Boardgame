@@ -5,9 +5,14 @@ import it.polimi.ingsw.model.Card;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class Card
+ */
 public class CardTest{
 
-
+    /**
+     * This method tests the getters of Card
+     */
     @Test
     public void checkGetter(){
         for(int i=1; i<10; i++){
@@ -20,6 +25,9 @@ public class CardTest{
         }
     }
 
+    /**
+     * This method tests the equal method of Card
+     */
     @Test
     public void equalsTest(){
         Card c1 = new Card(10, 5);
@@ -31,6 +39,9 @@ public class CardTest{
         assertNotEquals(c3,c1);
     }
 
+    /**
+     * This method test the method toString of Card
+     */
     @Test
     public void toStringTest(){
         Card c1 = new Card(10, 5);

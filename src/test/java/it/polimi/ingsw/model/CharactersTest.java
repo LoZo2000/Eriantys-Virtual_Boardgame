@@ -16,8 +16,14 @@ import java.util.Set;
 
 import static org.fusesource.jansi.Ansi.*;
 
+/**
+ * This class contains the test for the Characters cards
+ */
 class CharactersTest {
 
+    /**
+     * This method tests the action characters with tokens
+     */
     @Test
     void actionCharacterWithTokensTest(){
         JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island","Block island", 2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0, 0);
@@ -48,6 +54,9 @@ class CharactersTest {
         assertThrows(NoMoreTokensException.class, character::removeToken, "It should return an exception because you can't remove tokens when the card is empty");
     }
 
+    /**
+     * This method tests the action characters without tokens
+     */
     @Test
     void actionCharacterWithoutTokensTest(){
         JSONCharacter jc = new JSONCharacter(3, CharacterType.ACTION, "Calculate influence without moving Mother Nature", "Calculate influence without moving Mother Nature",3, Action.ISLAND_INFLUENCE, 0, null, false, null, null, false, 0, 0, 0);
@@ -70,6 +79,9 @@ class CharactersTest {
         assertThrows(NoMoreTokensException.class, character::removeToken, "It should return an exception because you can't remove tokens when the card is empty");
     }
 
+    /**
+     * This method tests the ability to disable tower of the influence character
+     */
     @Test
     void influenceCharacterDisableTowersTest(){
         JSONCharacter jc = new JSONCharacter(6, CharacterType.INFLUENCE, "Disable towers Influence","Disable towers Influence",2, null, 0, null, false, null, null, true, 0, 0, 0);
@@ -86,6 +98,9 @@ class CharactersTest {
         assertTrue(character.toString().contains("\u001B[1mExtraPoints:\u001B[0m 0"), "It doesn't give extra influence points");
     }
 
+    /**
+     * This method tests the ability to give extra points of the influence character
+     */
     @Test
     void influenceCharacterExtraPointsTest(){
         JSONCharacter jc = new JSONCharacter(8, CharacterType.INFLUENCE, "Influence + 2","Influence + 2",2, null, 0, null, false, null, null, false, 2, 0, 0);
@@ -102,6 +117,9 @@ class CharactersTest {
         assertTrue(character.toString().contains("\u001B[1mExtraPoints:\u001B[0m 2"), "It gives 2 extra influence points");
     }
 
+    /**
+     * This method tests the motherNature character
+     */
     @Test
     void motherNatureCharacterTest(){
         JSONCharacter jc = new JSONCharacter(4, CharacterType.MOTHERNATURE, "Maximum movement + 2","Maximum movement + 2",1, null, 0, null, false, null, null, false, 0, 2, 0);
@@ -117,6 +135,9 @@ class CharactersTest {
         assertTrue(character.toString().contains("\u001B[1mExtraMovement:\u001B[0m 2"), "The Extra Movement is 2");
     }
 
+    /**
+     * This method tests the professor character
+     */
     @Test
     void professorCharacterTest(){
         JSONCharacter jc = new JSONCharacter(2, CharacterType.PROFESSOR, "Professor change with tie","Professor change with tie",2, null, 0, null, false, null, null, false, 0, 0, 0);
@@ -129,6 +150,11 @@ class CharactersTest {
         assertTrue(character.toString().contains("\u001B[1mCost:\u001B[0m 2"), "It's costs 2 Coins");
     }
 
+    /**
+     * This method tests the movement Character
+     * @throws NoSuchStudentException when there is not the student with the id passed in the parameter in the card
+     * @throws CannotAddStudentException when is not possible to add the student
+     */
     @Test
     void movementCharacterTest() throws NoSuchStudentException, CannotAddStudentException {
         Set<Location> allowedDepartures = Set.of(Location.CARD_ISLAND);
@@ -192,6 +218,11 @@ class CharactersTest {
         assertThrows(NoSuchStudentException.class, () -> character.removeStudent(15));
     }
 
+    /**
+     * This method tests the exchangeCharacter
+     * @throws NoSuchStudentException when there is not the student with the id passed in the parameter in the card
+     * @throws CannotAddStudentException when is not possible to add the student
+     */
     @Test
     void exchangeCharacterTest() throws NoSuchStudentException, CannotAddStudentException {
         Set<Location> allowedDepartures = Set.of(Location.CARD_EXCHANGE, Location.ENTRANCE);
@@ -261,6 +292,9 @@ class CharactersTest {
         assertThrows(NoSuchStudentException.class, () -> character.removeStudent(15));
     }
 
+    /**
+     * This method tests the getter of the character classes
+     */
     @Test
     public void getterTest(){
         JSONCharacter jc = new JSONCharacter(5, CharacterType.ACTION, "Block island","Block island",2, Action.BLOCK_ISLAND, 4, null, false, null, null, false, 0, 0, 0);

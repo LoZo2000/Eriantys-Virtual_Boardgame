@@ -6,8 +6,14 @@ import it.polimi.ingsw.model.Student;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class Student
+ */
 public class StudentTest{
 
+    /**
+     * This method tests the getters of the class Student
+     */
     @Test
     public void getterTest(){
         for(int i=0; i<50; i++){
@@ -24,6 +30,9 @@ public class StudentTest{
         }
     }
 
+    /**
+     * This method tests the equal method of the class Student
+     */
     @Test
     public void equalsTest(){
         Student s1 = new Student(0, Color.BLUE);
@@ -35,6 +44,9 @@ public class StudentTest{
         assertNotEquals(s3,s1);
     }
 
+    /**
+     * This method tests the toString method of the class Student
+     */
     @Test
     public void toStringTest(){
         Student s1 = new Student(0, Color.BLUE);

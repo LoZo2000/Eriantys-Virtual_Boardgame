@@ -8,14 +8,23 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class Canteen
+ */
 public class CanteenTest {
     private Canteen canteen;
 
+    /**
+     * This method is called before each test, creates a Canteen to use in the test
+     */
     @BeforeEach
     void init(){
         canteen = new Canteen();
     }
 
+    /**
+     * This method test the methods addStudent, removeStudent and getStudents in canteen
+     */
     @Test
     public void addGetRemoveTest(){
         canteen.addStudent(new Student(0, Color.BLUE));

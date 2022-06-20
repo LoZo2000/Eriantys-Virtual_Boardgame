@@ -17,10 +17,16 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for some methods present ony in the complete rule game
+ */
 class CompleteRulesGameTest {
     private Game game;
     private final String JSON_PATH = "/characters.json";
 
+    /**
+     * This method is called before each test, create a game with two player and give every player some students
+     */
     @BeforeEach
     void init(){
         ArrayList<Student> students1 = new ArrayList<>();
@@ -125,6 +131,10 @@ class CompleteRulesGameTest {
         }
     }
 
+    /**
+     * This method tests the rules when are present extra points given bu the character cards
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void useRulesExtraPoints() throws Exception {
         Character[] characters = new Character[1];
@@ -220,6 +230,10 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
+    /**
+     * This method tests the rules when a ColorTower is disabled by a character card
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void useRulesDisableTower() throws Exception{
         Character[] characters = new Character[1];
@@ -346,6 +360,10 @@ class CompleteRulesGameTest {
         assertEquals(2, i.getReport().getTowerNumbers());
     }
 
+    /**
+     * This method tests the update of a professor after a move between the entrance and the canteen
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void updateProfessorsMoveToCanteen() throws Exception{
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
@@ -356,6 +374,10 @@ class CompleteRulesGameTest {
         assertEquals(this.game.getPlayer("player1"), professors.get(Color.BLUE));
     }
 
+    /**
+     * This method tests the update of a professor after a move between the entrance and an island
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void updateProfessorsNotMoveToCanteen() throws Exception{
         Entrance e = this.game.getPlayer("player1").getDashboard().getEntrance();
@@ -366,6 +388,10 @@ class CompleteRulesGameTest {
         assertNull(professors.get(Color.BLUE));
     }
 
+    /**
+     * This method checks if the different rule for the change of professor introduce by a character card works
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void updateProfessorsChangeOwnershipTieRule() throws Exception{
         Character[] characters = new Character[1];
@@ -400,6 +426,10 @@ class CompleteRulesGameTest {
         assertEquals(this.game.getPlayer("player2"), professors.get(Color.BLUE));
     }
 
+    /**
+     * This method tests the rules when an island is disabled
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void useRulesDisableIsland() throws Exception{
         Character[] characters = new Character[1];
@@ -485,6 +515,10 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
+    /**
+     * This method tests the rules when the island merge is disabled
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void useRulesDisableIslandMerge2Tokens() throws Exception{
         Character[] characters = new Character[1];
@@ -628,6 +662,11 @@ class CompleteRulesGameTest {
         assertEquals(4, ac.getNumTokens());
     }
 
+    /**
+     * This method tests a more specific case of the rules when the island merge is disabled, so if the merge is disabled
+     * and the island doesn't merge with the previous one
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void useRulesDisableIslandMerge2TokensPREVIOUSISLAND() throws Exception{
         Character[] characters = new Character[1];
@@ -696,6 +735,10 @@ class CompleteRulesGameTest {
         }
     }
 
+    /**
+     * This method tests the method use power when it blocks a color
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void usePowerBlockColor() throws Exception{
         Character[] characters = new Character[1];
@@ -760,6 +803,10 @@ class CompleteRulesGameTest {
         assertEquals(1, i.getReport().getTowerNumbers());
     }
 
+    /**
+     * This method tests the method use power when it computes the influence if an island
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void usePowerInfluenceIsland() throws Exception{
         Character[] characters = new Character[1];
@@ -815,6 +862,10 @@ class CompleteRulesGameTest {
         assertEquals(i, game.getMotherNaturePosition());
     }
 
+    /**
+     * This method tests the method use power when some students are put back in the bag
+     * @throws Exception
+     */
     @RepeatedTest(10)
     void usePowerPutBack() throws Exception{
         Character[] characters = new Character[1];
@@ -870,6 +921,10 @@ class CompleteRulesGameTest {
         assertEquals(2, p1.getCoins());
     }
 
+    /**
+     * This method tests the enabling of the extra movement of mother nature
+     * @throws Exception
+     */
     @Test
     void motherNatureExtraMovement() throws Exception{
         Character[] characters = new Character[1];
@@ -890,6 +945,10 @@ class CompleteRulesGameTest {
         assertEquals(2, this.game.getMotherNatureExtraMovement());
     }
 
+    /**
+     * This method tests the exchange students when the canteen is empty
+     * @throws Exception
+     */
     @Test
     void exchangeStudentEmptyCanteen() throws Exception{
         Character[] characters = new Character[1];
@@ -926,6 +985,10 @@ class CompleteRulesGameTest {
         assertFalse(studentEntrance.contains(new Student(17, Color.BLUE)));
     }
 
+    /**
+     * This method tests the exchange students with the entrance
+     * @throws Exception
+     */
     @Test
     void exchangeStudentCardEntrance() throws Exception{
         Character[] characters = new Character[1];
@@ -976,6 +1039,10 @@ class CompleteRulesGameTest {
         assertTrue(studentEntrance.contains(new Student(32, Color.BLUE)));
     }
 
+    /**
+     * This method check if a card is refilled when needed
+     * @throws Exception
+     */
     @Test
     void checkRefillMovementCard() throws Exception{
         Character[] characters = new Character[1];
@@ -998,6 +1065,10 @@ class CompleteRulesGameTest {
         //game.refillActiveCard();
     }
 
+    /**
+     * This method check if the behavior of the needing of refill works properly
+     * @throws Exception
+     */
     @Test
     void checkRefillNoMovementCard() throws Exception{
         Character[] characters = new Character[1];
@@ -1020,6 +1091,10 @@ class CompleteRulesGameTest {
         assertFalse(this.game.needsRefill());
     }
 
+    /**
+     * This method check the right behaviour of the coins when is used the move student
+     * @throws Exception
+     */
     @Test
     void giveCoinsMoveStudent() throws Exception{
         Player p1 = this.game.getPlayer("player1");
@@ -1045,6 +1120,10 @@ class CompleteRulesGameTest {
         assertEquals(2, p1.getCoins());
     }
 
+    /**
+     * This method check the right behaviour of the coins when is used the exchange student
+     * @throws Exception
+     */
     @Test
     void giveCoinsExchangeStudentsEntranceCanteen() throws Exception{
         Character[] characters = new Character[1];
@@ -1090,6 +1169,10 @@ class CompleteRulesGameTest {
         assertEquals(2, p1.getCoins());
     }
 
+    /**
+     * This method check the right behaviour of the coins when some students are put bacck in bag
+     * @throws Exception
+     */
     @Test
     void giveCoinPutBack() throws Exception{
         Character[] characters = new Character[1];

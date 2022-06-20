@@ -7,10 +7,16 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class Cloud
+ */
 class CloudTest {
     Cloud cloud;
     ArrayList<Student> newStudents;
 
+    /**
+     * This method is called before each test, it creates a new cloud and adds some students to it
+     */
     @BeforeEach
     void init(){
         this.cloud = new Cloud(3);
@@ -23,6 +29,9 @@ class CloudTest {
         newStudents.add(new Student(5, Color.PINK));
     }
 
+    /**
+     * This method tests the refill of a Cloud
+     */
     @Test
     void refillCloud() {
         try {
@@ -35,6 +44,10 @@ class CloudTest {
         assertEquals(this.newStudents, this.cloud.getStudents());
     }
 
+    /**
+     * This method tests the method getNumberOfStudentsPerColor, refilling the Cloud and then checking if the students
+     * returned are the same
+     */
     @Test
     void getNumberOfStudentPerColor() {
         try {
@@ -52,6 +65,9 @@ class CloudTest {
 
     }
 
+    /**
+     * This method tests the method to add a student in a cloud
+     */
     @Test
     void addStudent() {
         ArrayList<Student> students = new ArrayList<>();
@@ -74,6 +90,9 @@ class CloudTest {
         assertEquals(students, this.cloud.getStudents());
     }
 
+    /**
+     * This method tests the method chooseCloud, after choosing a cloud check if the number of students returned is zero
+     */
     @Test
     void chooseCloud() {
         try {
@@ -89,6 +108,9 @@ class CloudTest {
         assertEquals(0, this.cloud.getStudents().size());
     }
 
+    /**
+     * This method tests other cases of the method refill cloud
+     */
     @Test
     public void fillTest(){
         try{

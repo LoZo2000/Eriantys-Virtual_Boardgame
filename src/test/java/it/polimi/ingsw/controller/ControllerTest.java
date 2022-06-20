@@ -10,9 +10,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ *This class contains the controller tests
+ */
 public class ControllerTest {
     Controller controller;
 
+    /**
+     * This method is called before each test and create a new Game, GameManager and Controller
+     */
     @BeforeEach
     public void init(){
         Game game = new Game(true, 2);
@@ -20,6 +26,9 @@ public class ControllerTest {
         controller = new Controller(game, gameManager);
     }
 
+    /**
+     * This method test the controller adding two players to the game and the execution of a message
+     */
     @Test
     public void test(){
         Message mes = new AddMeMessage("player1", true, 2);

@@ -20,8 +20,7 @@ public class Player implements Comparable<Player> {
      * @param nickname is the nickname of the Player
      * @param numPlayers is the number of the Players in the match
      * @param color is the Player's towers'color
-     * @param entranceStudents is a List containing all the Students to be placed in the Player's
-     *                         Entrance
+     * @param entranceStudents is a List containing all the Students to be placed in the Player's Entrance
      */
     public Player(String nickname, int numPlayers, ColorTower color, ArrayList<Student> entranceStudents) {
         this.nickname = nickname;

@@ -14,11 +14,15 @@ import java.util.Stack;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * This class contains the test for the class Bag
+ */
 public class BagTest{
     private Bag bag;
 
-    //Creates a bag containing 120 students
+    /**
+     * This method is called before each test, creates a bag containing 120 students
+     */
     @BeforeEach
     public void init(){
         Stack<Student> students = new Stack<>();
@@ -31,8 +35,9 @@ public class BagTest{
     }
 
 
-
-    //Checks if 'getStudentsNum' works correctly
+    /**
+     * This method check if the method getStudentsNum works correctly
+     */
     @Test
     public void checkStudentsNum(){
         for(int i=0; i<5; i++){

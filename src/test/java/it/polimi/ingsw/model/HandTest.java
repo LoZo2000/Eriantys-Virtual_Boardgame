@@ -12,15 +12,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
+/**
+ * This class contains the test for the class Hand
+ */
 public class HandTest {
     private Hand hand;
 
+    /**
+     * This method is called before every test, it creates a new Hand
+     */
     @BeforeEach
     public void init(){
         hand = new Hand();
     }
 
-    //Checks 'getNumCard' and a correct extraction and if exception is triggered
+
+    /**
+     * This method check the correct extraction of the card from the Hand and if the exception is correctly triggered
+     */
     @Test
     public void getNumCardTest(){
         for(int i=0; i <10; i++){
@@ -34,7 +43,9 @@ public class HandTest {
         assertThrows(OverflowCardException.class, () -> hand.playCard(0));
     }
 
-    //Checks if the exception is thrown if the position requested from playCard is higher than the size of the ArrayList
+    /**
+     * This method check if the exception OverflowCardException is thrown correctly for every card number
+     */
     @Test
     public void playOverflowCard(){
         for(int i = 1; i <= 10; i++){
@@ -46,8 +57,9 @@ public class HandTest {
         }
     }
 
-    //Checks if it returns the right card
-
+    /**
+     * This method check if is returned the right card
+     */
     @RepeatedTest(10)
     public void testExtraction(){
         int rand = (int)(Math.random()*10);
@@ -62,8 +74,9 @@ public class HandTest {
     }
 
 
-
-    //Checks if all cards are created correctly
+    /**
+     * This method check if all cards are created correctly
+     */
     @Test
     public void checksCardsCreated(){
         ArrayList<Card> cards = hand.getAllCards();

@@ -9,14 +9,23 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+/**
+ * This class contains the test for the class FactoryBag
+ */
 public class FactoryBagTest {
     FactoryBag fb;
 
+    /**
+     * This method is called before each test, create a FactoryBag
+     */
     @BeforeEach
     public void init(){
         fb = new FactoryBag();
     }
 
+    /**
+     * This method check if the method getInitBag in FactoryBag works properly
+     */
     @Test
     public void initBagTest(){
         Bag initBag = fb.getInitBag();
@@ -39,7 +48,9 @@ public class FactoryBagTest {
     }
 
 
-
+    /**
+     *  This method check if the method getBag in FactoryBag works properly
+     */
     @Test
     public void bagTest(){
         Bag bag = fb.getBag();

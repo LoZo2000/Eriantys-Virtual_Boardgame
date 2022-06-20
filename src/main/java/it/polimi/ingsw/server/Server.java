@@ -60,11 +60,10 @@ public class Server {
     }
 
     /**
-     * This method is called to add a player to a game
+     * This method is called to add a player to a game according to his preferences
      * @param c is the connection of the player
      * @param message is the AddMeMessage sent by the player
      */
-    //To sort the players among matches availables according to their preferences
     public synchronized void lobby(Connection c, AddMeMessage message){
         gameMaker.joinLobby(c, message);
     }

@@ -14,9 +14,15 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class Game
+ */
 class GameTest {
     private Game game;
 
+    /**
+     * This method is called before each test, it creates a game with two players
+     */
     @BeforeEach
     void init(){
         ArrayList<Student> students1 = new ArrayList<>();
@@ -47,6 +53,10 @@ class GameTest {
         this.game.addPlayer(player2);
     }
 
+    /**
+     * This method tests the moveMotherNature method of the class game
+     * @throws Exception
+     */
     @Test
     void moveMotherNature() throws Exception{
         Entrance e = null;
@@ -109,6 +119,10 @@ class GameTest {
         assertEquals("03, 04", this.game.getIsland(4).getId());
     }
 
+    /**
+     * This method test the merging of the island until is caused an endgame
+     * @throws Exception
+     */
     @Test
     void mergeIslandFirstLastUntilEndGame() throws Exception{
         Entrance e = null;
@@ -125,6 +139,7 @@ class GameTest {
         } catch (Exception ex) {
             fail();
         }
+        //todo Mario metti un test di endgame qua
 
         try {
             this.game.moveStudent(6, c, e);
@@ -138,9 +153,7 @@ class GameTest {
             this.game.moveMotherNature(i, true);
         } catch (NoActiveCardException ex) {
             fail();
-        } /*catch (EndGameException ex) {
-            ex.printStackTrace();
-        } */
+        }
 
         assertEquals(ColorTower.BLACK, i.getReport().getOwner());
         assertEquals(1, i.getReport().getTowerNumbers());
@@ -164,9 +177,7 @@ class GameTest {
                 this.game.moveMotherNature(i, true);
             } catch (NoActiveCardException ex) {
                 fail();
-            } /*catch (EndGameException ex) {
-                ex.printStackTrace();
-            } */
+            }
 
             assertEquals(11-cont, this.game.getAllIslands().size());
             id += String.format(", %02d", 11-cont);
@@ -206,6 +217,9 @@ class GameTest {
         assertFalse(this.game.getAllIslands().contains(new Island(4)));
     }
 
+    /**
+     * This method tests the update of the professors owning, when is moved a student to the canteen
+     */
     @Test
     void updateProfessorsMoveToCanteen(){
         Entrance e = null;
@@ -230,6 +244,9 @@ class GameTest {
         }
     }
 
+    /**
+     * This method tests the update professors when a student is not move to the canteen
+     */
     @Test
     void updateProfessorsNotMoveToCanteen(){
         Entrance e = null;
@@ -254,6 +271,9 @@ class GameTest {
         assertNull(professors.get(Color.BLUE));
     }
 
+    /**
+     * This method tests the change of ownership of a professor
+     */
     @Test
     void updateProfessorsChangeOwnership(){
         Entrance e = null;
@@ -300,6 +320,9 @@ class GameTest {
         }
     }
 
+    /**
+     * This method tests all the getters of the class game
+     */
     @Test
     void getterTest(){
         assertEquals(2, game.getNumPlayers());
@@ -314,6 +337,9 @@ class GameTest {
         game.resetPlayedCards();
     }
 
+    /**
+     * This method tests some possible cases in the first part of the game
+     */
     @Test
     public void otherInitTest(){
         try {
@@ -332,8 +358,11 @@ class GameTest {
         assertThrows(NoSuchStudentException.class, () -> game.moveStudent(3045, game.getIsland(0), game.getIsland(1)));
     }
 
+    /**
+     * This method tests other cases of moveMotherNature method
+     */
     @RepeatedTest(100)
-    public void moveMotherNatureTest() throws Exception{
+    public void moveMotherNatureTest() {
         try {
             for(int i=1; i<8; i++)
                 game.moveStudent(i, game.getPlayer("player1").getDashboard().getCanteen(), game.getPlayer("player1").getDashboard().getEntrance());
@@ -357,6 +386,9 @@ class GameTest {
         }
     }
 
+    /**
+     * This method tests the setter and getter of the phase
+     */
     @Test
     public void setGetPlayerPhase(){
         game.setCurrentPlayer("player2", false);
@@ -367,6 +399,11 @@ class GameTest {
         }
     }
 
+    /**
+     * This method tests the exception AlreadyPlayedCardException is thrown when the player plays a card already
+     * played in that turn
+     * @throws Exception
+     */
     @Test
     public void playCardAlreadyPlayed() throws Exception{
         Player p1 = game.getPlayer("player1");
@@ -378,6 +415,10 @@ class GameTest {
         assertThrows(AlreadyPlayedCardException.class, ()->this.game.playCard(p1, 1));
     }
 
+    /**
+     * This method tests the rules regarding the use of the assistant cards
+     * @throws Exception
+     */
     @Test
     public void playCardAlreadyPlayedButOnlyCardPlayable() throws Exception{
         Player p1 = game.getPlayer("player1");
@@ -394,6 +435,10 @@ class GameTest {
         assertEquals(1, game.getMaximumMNMovement(p1));
     }
 
+    /**
+     * This method test no active card exception when an action can be executed only with a card active
+     * @throws Exception
+     */
     @Test
     void testNoActiveCard() throws Exception{
         Player p1 = game.getPlayer("player1");
@@ -411,8 +456,12 @@ class GameTest {
         assertThrows(NoActiveCardException.class, () -> game.refillActiveCard());
     }
 
+    /**
+     * //todo da fare
+     */
     @Test
     void notifyAndEndGameTest(){
+        //Todo Mario metti qui il test di endgame
         game.endGame();
         game.setNextLastTurn(false);
         game.sendDisconnectionAll("player1");

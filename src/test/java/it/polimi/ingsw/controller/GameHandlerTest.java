@@ -19,9 +19,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 
+/**
+ * This class contains the GameHandler test
+ */
 public class GameHandlerTest {
     private GameHandler gameHandler;
 
+    /**
+     * This method is called before every test, create a Game object and a GameHandler object
+     */
     @BeforeEach
     public void init(){
         Game game = new Game(true, 3);
@@ -42,6 +48,10 @@ public class GameHandlerTest {
         }
     }
 
+    /**
+     * This method test the adding of the players to the game
+     * @throws Exception
+     */
     @Test
     public void addPlayersTest() throws Exception{
         ArrayList<String> players = new ArrayList<>();
@@ -80,6 +90,10 @@ public class GameHandlerTest {
         assertEquals(3, gameHandler.getActivePlayers());
     }
 
+    /**
+     * This method test the playing of the card from a player
+     * @throws Exception
+     */
     @Test
     public void playCardsTest() throws Exception{
         ArrayList<String> players = new ArrayList<>();
@@ -117,6 +131,10 @@ public class GameHandlerTest {
         gameHandler.execute(message);
     }
 
+    /**
+     * This method test the movement of the student
+     * @throws Exception
+     */
     @Test
     public void moveStudentsTest() throws Exception{
         addPlayers();
@@ -192,6 +210,10 @@ public class GameHandlerTest {
         return students;
     }
 
+    /**
+     * This method test the movement of mother nature
+     * @throws Exception
+     */
     @Test
     public void moveMotherNatureTest() throws Exception{
         addPlayers();
@@ -215,6 +237,10 @@ public class GameHandlerTest {
         gameHandler.execute(message);
     }
 
+    /**
+     * This method test the selection of a cloud
+     * @throws Exception
+     */
     @Test
     public void selectCloudTest() throws Exception{
         addPlayers();
@@ -248,6 +274,10 @@ public class GameHandlerTest {
         gameHandler.execute(message);
     }
 
+    /**
+     * This method test the execution of a whole round in the simple rules game
+     * @throws Exception
+     */
     @Test
     public void testWholeRound() throws Exception{
         addPlayers();
@@ -275,6 +305,9 @@ public class GameHandlerTest {
         assertEquals("player3", gameHandler.getPlayers().get(0));
     }
 
+    /**
+     *This method test the use of every character card
+     */
     @RepeatedTest(300)
     public void activePowerTest(){
         Message message;

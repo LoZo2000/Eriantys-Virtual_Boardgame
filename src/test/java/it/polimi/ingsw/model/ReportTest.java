@@ -12,10 +12,17 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+/**
+ * This class contains the test for the class Report
+ */
 public class ReportTest {
 
     private Map<Color, Integer> students;
 
+    /**
+     * This method is called before each test, it creates a hashmap with a determined amount of students for each color
+     * to pass to the Report constructor
+     */
     @BeforeEach
     public void init(){
         students = new HashMap<>();
@@ -26,6 +33,9 @@ public class ReportTest {
         }
     }
 
+    /**
+     * This method test the values inside a Report object
+     */
     @Test
     public void reportTest(){
         Report report = new Report(ColorTower.BLACK, 0, students, null, 0);

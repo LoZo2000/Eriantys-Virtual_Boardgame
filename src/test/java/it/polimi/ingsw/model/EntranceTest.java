@@ -12,9 +12,15 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class Entrance
+ */
 public class EntranceTest {
     Entrance entrance;
 
+    /**
+     * This method is called before each test, it creates an entrance and put some students in it
+     */
     @BeforeEach
     public void init(){
         ArrayList<Student> students = new ArrayList<>();
@@ -36,6 +42,9 @@ public class EntranceTest {
         entrance = new Entrance(students);
     }
 
+    /**
+     * This method tests the getter of the student
+     */
     @Test
     public void getStudentsTest(){
         ArrayList<Student> students = entrance.getAllStudents();
@@ -50,6 +59,9 @@ public class EntranceTest {
 
     }
 
+    /**
+     * This method test the remove student and the add student
+     */
     @Test
     public void setRemoveTest(){
         assertEquals(7, entrance.getAllStudents().size());

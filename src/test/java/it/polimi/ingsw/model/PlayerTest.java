@@ -9,9 +9,15 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class Player
+ */
 public class PlayerTest {
     Player player;
 
+    /**
+     * This method is called before each test, it creates a new player and place some students in his entrance
+     */
     @BeforeEach
     public void init(){
         ArrayList<Student> students = new ArrayList<>();
@@ -32,12 +38,18 @@ public class PlayerTest {
         player = new Player("player1", 2, ColorTower.BLACK, students);
     }
 
+    /**
+     * This method tests the getters of the player class
+     */
     @Test
     public void getter(){
         assertEquals("player1", player.getNickname());
         assertEquals(8, player.getDashboard().getTowers());
     }
 
+    /**
+     * This method test the method equal of the class player
+     */
     @Test
     public void equalsTest(){
         assertTrue(player.equals(player));
@@ -62,6 +74,9 @@ public class PlayerTest {
         assertNotEquals(player, temp);
     }
 
+    /**
+     * This method tests the sorting of the player according to their graveyard
+     */
     @Test
     void comparatorTest(){
         ArrayList<Player> players = new ArrayList<>();
@@ -85,10 +100,14 @@ public class PlayerTest {
         assertEquals(p2, players.get(2));
     }
 
+    /**
+     * This method tests the toString method of the class Player
+     */
     @Test
     public void toStringTest(){
         assertEquals("player1", player.toString());
     }
+
 
     private Player newPlayer(String name, int numPlayer, ColorTower color){
         ArrayList<Student> students = new ArrayList<>();
