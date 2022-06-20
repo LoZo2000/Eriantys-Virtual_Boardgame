@@ -13,6 +13,10 @@ public class PageDialog {
     private int currentPage = -1;
     private final JPanel pageContainer = new JPanel();
 
+    /**
+     * This method is the constructor of the class
+     * @param window is the main window of the game
+     */
     public PageDialog(JFrame window){
         d = new JDialog(window, "Eriantys - Rules");
         d.setSize(ScalingUtils.scaleX(815), ScalingUtils.scaleY(725));
@@ -126,7 +130,10 @@ public class PageDialog {
     }
 
 
-
+    /**
+     * This method show the page dialog
+     * @param page represent the page to show
+     */
     public void showDialog(int page){
         if(d.isVisible() && page==currentPage){
             d.setVisible(false);

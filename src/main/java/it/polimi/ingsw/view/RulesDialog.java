@@ -5,9 +5,16 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * This class represent the dialog containing the rules of the game
+ */
 public class RulesDialog extends JFrame{
     private final Dialog d;
 
+    /**
+     * This method is the constructor of the class
+     * @param window is the main window of the game
+     */
     public RulesDialog(JFrame window){
         //Background image:
         ImageIcon bgIcon = ScalingUtils.getImage("/Credits_bg.png");
@@ -98,6 +105,9 @@ public class RulesDialog extends JFrame{
         });
     }
 
+    /**
+     * This method set the dialog visible
+     */
     public void showDialog(){
         d.setVisible(!d.isVisible());
     }

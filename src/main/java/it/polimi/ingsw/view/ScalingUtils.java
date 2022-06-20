@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
+/**
+ * This class contains some methods to help in the gui construction, these methods principally scale the objects in the gui
+ */
 public class ScalingUtils {
     private final static HashMap<String, ImageIcon> images = new HashMap<>();
     private final static int widthScreen = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -36,6 +39,11 @@ public class ScalingUtils {
         }
     }
 
+    /**
+     * This method return the Image contained in the path
+     * @param path is the path where the image is placed
+     * @return an ImageIcon object representing the image requested
+     */
     public static ImageIcon getImage(String path){
         if(images.containsKey(path)){
             return images.get(path);
@@ -46,10 +54,20 @@ public class ScalingUtils {
         }
     }
 
+    /**
+     * This method is called to scale a font
+     * @param fontNotScaled is the font to scale
+     * @return an int representing the size of the font scaled
+     */
     public static int scaleFont(int fontNotScaled){
         return fontNotScaled*widthScreen/1366;
     }
 
+    /**
+     * This method is called to scale an icon
+     * @param icon is the icon to scale
+     * @return an Icon object that is the icon scaled
+     */
     public static Icon scaleDefaultIcon(Icon icon){
         BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = bufferedImage.createGraphics();

@@ -16,14 +16,8 @@ public class OpponentDialog extends JFrame{
     private final JPanel containerDash = new JPanel();
     private final JPanel containerCard = new JPanel();
     private final JLabel numC;
-
-    private Dialog d;
     private JButton closeButton;
     private String opponent;
-
-    private JPanel containerDash = new JPanel();
-    private JPanel containerCard = new JPanel();
-    private JLabel numC;
 
 
     /**
