@@ -15,6 +15,7 @@ import it.polimi.ingsw.server.Observable;
 import it.polimi.ingsw.view.GameReport;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -342,9 +343,7 @@ public class Game extends Observable<GameReport> {
 
             if (higherInfluence != report.getOwner()) {
                 island.conquest(higherInfluence);
-                //TODO Necesario passare per Team
                 for (Player p : this.players) {
-                    //System.out.println("il giocatore "+p.getNickname()+"ha nella dashbord num torri"+ p.getDashboard().getTowers());
                     if (p.getColor() == report.getOwner()) {
                         p.getDashboard().addTowers(report.getTowerNumbers());
                     }
@@ -356,9 +355,10 @@ public class Game extends Observable<GameReport> {
                             p.getDashboard().removeTowers(report.getTowerNumbers());
                         }
                         if(p.getDashboard().getTowers()==0){
-                            this.winner=p.getNickname(); // i could use also compute winner but in this case i already know who won
+                            this.winner=computeWinner();
                             this.finishedGame=true;
                             sendNotifyAll();
+                            break;
                         }
                     }
                 }
@@ -387,9 +387,6 @@ public class Game extends Observable<GameReport> {
         } else{
             addProhibitionToken(island);
         }
-
-        //MoveMotherNature has worked: update all the clients!
-        //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     /**
@@ -417,7 +414,9 @@ public class Game extends Observable<GameReport> {
         }
         motherNature.movement(temp);
         if(islands.size()<=3){
-            this.isLastTurn=true;
+            this.winner=computeWinner();
+            this.finishedGame=true;
+            sendNotifyAll();
         }
         return temp;
     }
@@ -1069,8 +1068,137 @@ public class Game extends Observable<GameReport> {
         return students;
     }
 
+    private int findMax(int a, int b, int c){
+        int max=0;
+        if (a >= b && a >= c) max=a;
+        else if (b >= a && b >=c) max=b;
+        else max=c;
+
+        return max;
+    }
+
+    private String findWinner(ArrayList<ColorTower> winners){
+        int max=0;
+        String winnera="Se stampa questo find winner è sbagliato";
+        ArrayList<Player> possibleWinners= new ArrayList<>();
+        ArrayList<Integer> countProfessor = new ArrayList<>();
+        //initialize the counter array
+        for(int k=0; k<4; k++){
+            countProfessor.add(0);
+        }
+        if (winners.size() == 1) {
+            for (Player p : players) {
+                if (p.getColor().equals(winners.get(0))) {
+                    winnera = (p.getNickname());
+                }
+            }
+        }
+        else {
+            //put possible winner in an array
+            for (Player p: players){
+                if(winners.contains(p.getColor())){
+                    possibleWinners.add(p);
+                }
+            }
+            //count the professor of each possible winner
+            for (int l=0; l<possibleWinners.size(); l++){
+                for(Color c: Color.values()){
+                    Player owner = this.professors.get(c);
+                    if(owner == possibleWinners.get(l)){
+                        int temp;
+                        temp=countProfessor.get(l);
+                        temp++;
+                        countProfessor.set(l, temp);
+                    }
+                }
+            }
+            //Find the max
+            for (int l=0; l< possibleWinners.size(); l++){
+                if(countProfessor.get(l)>max){
+                    max=countProfessor.get(l);
+                }
+            }
+            int count=0;
+            //Check if exists only a max
+            for (int l=0; l< possibleWinners.size(); l++){
+                if(countProfessor.get(l)==max){
+                    count++;
+                    winnera=possibleWinners.get(l).getNickname();
+                }
+            }
+            if(count!=1){
+                winnera="no one, is a tie";
+            }
+        }
+        return winnera;
+    }
+
+    private String findTeam(ArrayList<ColorTower> winners){
+        ArrayList<Integer> countProfessor = new ArrayList<>();
+        countProfessor.add(0);
+        countProfessor.add(0);
+        ColorTower winnerTeam= null;
+        String winner="Se stampa questo findTeam è sbagliato";
+        ArrayList<String> Teamplayers= new ArrayList<>();
+        if(winners.size()==1){
+            for (Player p : players){
+                if(p.getColor().equals(winners.get(0))){
+                    Teamplayers.add(p.getNickname());
+                }
+            }
+            winner="the team of"+Teamplayers.get(0)+"and"+Teamplayers.get(1);
+        }
+        else {
+            //create an hashmap of professor and colorTower
+            HashMap<Color, ColorTower> profAndPlayer = new HashMap<>();
+            for(Color c: Color.values()){
+                Player owner = this.professors.get(c);
+                if(owner == null)
+                    profAndPlayer.put(c, null);
+                else
+                    profAndPlayer.put(c, owner.getColor());
+            }
+            //count the professor owned by each color tower
+            for(Color c: Color.values()){
+                if(profAndPlayer.get(c)==ColorTower.BLACK){
+                    int temp;
+                    temp=countProfessor.get(0);
+                    temp++;
+                    countProfessor.set(0, temp);
+                }
+                if(profAndPlayer.get(c)==ColorTower.WHITE){
+                    int temp;
+                    temp=countProfessor.get(0);
+                    temp++;
+                    countProfessor.set(0, temp);
+                }
+            }
+            //Find the max
+            if(countProfessor.get(0)==countProfessor.get(1)) winner="no one, is a tie";
+            else{
+                if(countProfessor.get(0)> countProfessor.get(1)){
+                    winnerTeam=ColorTower.BLACK;
+                }
+                else {
+                    winnerTeam=ColorTower.WHITE;
+                }
+            }
+            if(winnerTeam!=null){
+                for (Player p : players){
+                    if(p.getColor().equals(winnerTeam)){
+                        Teamplayers.add(p.getNickname());
+                    }
+                }
+                winner="the team of"+Teamplayers.get(0)+"and"+Teamplayers.get(1);
+            }
+        }
+        return winner;
+    }
+
     private String computeWinner() {
-        ColorTower max;
+        int maxnum;
+        String winner;
+        ArrayList<ColorTower> winners = new ArrayList<>();
         int black = 0;
         int white = 0;
         int grey = 0;
@@ -1084,13 +1212,17 @@ public class Game extends Observable<GameReport> {
                 }
             }
         }
-        if (black >= white && black >= grey) max= ColorTower.BLACK;
-        else if (white >= black && white >= grey) max= ColorTower.WHITE;
-        else max= ColorTower.GREY;
-        for (Player p : players){
-            if(p.getColor().equals(max)) return p.getNickname();
+        maxnum = findMax(black, white, grey);
+        if (black == maxnum) winners.add(ColorTower.BLACK);
+        if (white == maxnum) winners.add(ColorTower.WHITE);
+        if (grey == maxnum) winners.add(ColorTower.GREY);
+
+        if (numPlayers == 4) {
+            winner = findTeam(winners);
+        } else {
+            winner = findWinner(winners);
         }
-        return null;
+        return winner;
     }
 
     /**

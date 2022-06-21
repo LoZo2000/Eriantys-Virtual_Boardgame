@@ -80,7 +80,7 @@ public class Island implements Movable, Serializable {
 
     /**
      * Method to return the Report of the Island (the Report contains all the info useful to compute
-     * the influence of the Players on the Island
+     * the influence of the Players on the Island)
      * @return tne Report of the Island
      */
     public Report getReport(){

@@ -120,11 +120,11 @@ class GameTest {
     }
 
     /**
-     * This method test the merging of the island until is caused an endgame
+     * This method test the merging of the island until is caused an endgame because the towers of one player finish
      * @throws Exception
      */
     @Test
-    void mergeIslandFirstLastUntilEndGame() throws Exception{
+    void mergeIslandFirstLastUntilEndGame1() throws Exception{
         Entrance e = null;
         Canteen c = null;
         try {
@@ -139,7 +139,6 @@ class GameTest {
         } catch (Exception ex) {
             fail();
         }
-        //todo Mario metti un test di endgame qua
 
         try {
             this.game.moveStudent(6, c, e);
@@ -181,6 +180,7 @@ class GameTest {
 
             assertEquals(11-cont, this.game.getAllIslands().size());
             id += String.format(", %02d", 11-cont);
+            //System.out.println(this.game.getAllIslands().size());
 
             String[] arr = id.split(", ");
 
@@ -195,26 +195,185 @@ class GameTest {
             assertFalse(this.game.getAllIslands().contains(new Island(11-cont)));
         }
 
-        try {
-            i = this.game.getIsland(game.getAllIslands().size()-1);
-        } catch (Exception ex) {
-            fail();
-        }
 
-        e.addStudent(new Student(50, Color.BLUE));
 
-        try {
-            this.game.moveStudent(50, i, e);
-        } catch (Exception ex) {
-            fail();
-        }
-
-        Island finalI = i;
         assertEquals(true, game.getFinishedGame());
+        assertEquals("player1", game.getWinner());
+    }
 
-        System.out.println(this.game.getAllIslands().size());
-        //assertEquals(3, this.game.getAllIslands().size());
-        assertFalse(this.game.getAllIslands().contains(new Island(4)));
+    //util method that print all the students in every island
+    private void printStudentsInIslands() {
+        Island island=null;
+        ArrayList<Student> students=null;
+        for(int i=0; i<12; i++){
+            try {
+                island = game.getIsland(i);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            students=island.getAllStudents();
+            for(Student t: students){
+                System.out.println(""+t+"");
+            }
+            System.out.println("fine isola"+i);
+        }
+    }
+
+    /**
+     * This method test the merging of the island until is caused an endgame because there are only 3 islands
+     * @throws Exception
+     */
+    @Test
+    void mergeIslandFirstLastUntilEndGame2() throws Exception{
+        Entrance e1 = null;
+        Canteen c1 = null;
+        Entrance e2 = null;
+        Canteen c2 = null;
+        try {
+            e1 = this.game.getPlayer("player1").getDashboard().getEntrance();
+            c1 = this.game.getPlayer("player1").getDashboard().getCanteen();
+            e2 = this.game.getPlayer("player2").getDashboard().getEntrance();
+            c2 = this.game.getPlayer("player2").getDashboard().getCanteen();
+        }catch(Exception ex){
+            fail();
+        }
+        Island i = null;
+
+        //assign the island to let the player2 conquest, the first
+        try {
+            i = this.game.getIsland(0);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player1 obtain the blue professor
+        try {
+            this.game.moveStudent(6, c1, e1);
+            this.game.moveStudent(2, i, e1);
+            this.game.moveStudent(7, i, e1);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+        //assign the island to let the player2 conquest, the last
+        try {
+            i = this.game.getIsland(11);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player2 obtain the red professor
+        try {
+            this.game.moveStudent(8, c2, e2);
+            this.game.moveStudent(10, i, e2);
+            this.game.moveStudent(11, i, e2);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+        //printStudentsInIslands();
+
+        assertEquals(1, i.getReport().getTowerNumbers());
+
+        for(int cont = 0; cont < 4; cont++) {
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(game.getAllIslands().size() - 2 +cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e2.addStudent(new Student(40 + cont, Color.RED));
+            e2.addStudent(new Student(80 + cont, Color.RED));
+
+            try {
+                this.game.moveStudent(40 + cont, i, e2);
+                this.game.moveStudent(80 + cont, i, e2);
+            } catch (Exception ex) {
+                fail();
+            }
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(1 + cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e1.addStudent(new Student(60 + cont, Color.BLUE));
+            e1.addStudent(new Student(90 + cont, Color.BLUE));
+
+            try {
+                this.game.moveStudent(60 + cont, i, e1);
+                this.game.moveStudent(90 + cont, i, e1);
+            } catch (Exception ex) {
+                fail();
+            }
+
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+            assertEquals(11 - (2 * cont) - 1, this.game.getAllIslands().size());
+
+
+        }
+
+        try {
+            i = this.game.getIsland(6);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        e2.addStudent(new Student(50, Color.RED));
+        e2.addStudent(new Student(51, Color.RED));
+
+        try {
+            this.game.moveStudent(50, i, e2);
+            this.game.moveStudent(51, i, e2);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+
+        assertEquals(true, game.getFinishedGame());
+        assertEquals(3, this.game.getAllIslands().size());
     }
 
     /**
