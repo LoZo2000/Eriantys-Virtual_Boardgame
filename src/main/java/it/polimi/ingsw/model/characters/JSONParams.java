@@ -5,7 +5,7 @@ import it.polimi.ingsw.controller.Location;
 
 import java.util.Set;
 
-//TODO Mario controlla se si capisce meglio adesso
+
 /**
  * This class is used to store the parameters of the different characters cards taken from a JSON file.
  * The GSON library requires a class to store information from JSON file, so the parameters that can be null are in this class.

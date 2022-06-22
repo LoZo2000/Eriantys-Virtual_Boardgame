@@ -154,7 +154,6 @@ public class OpponentDialog extends JFrame{
         else d.setVisible(true);
     }
 
-    //TODO Mario controlla
     /**
      * This method update the dialog with the refreshed values
      * @param report represent the state of the game
