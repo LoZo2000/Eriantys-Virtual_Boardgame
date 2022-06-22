@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 
 import java.io.Serializable;
 import java.util.*;
@@ -138,15 +138,15 @@ public class Island implements Movable, Serializable {
      * Method to remove a Student from the Island
      * @param id is the id of the Student to be removed
      * @return the Student removed
-     * @throws NoSuchStudentException if there is no Student with such id on this Island
+     * @throws IllegalMoveException if there is no Student with such id on this Island
      */
-    public Student removeStudent(int id) throws NoSuchStudentException {
+    public Student removeStudent(int id) throws IllegalMoveException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent = new Student(id, Color.BLUE);
         int positionInList = this.students.indexOf(tempStudent);
 
         if(positionInList == -1){
-            throw new NoSuchStudentException("There isn't any Student with that id in the list");
+            throw new IllegalMoveException("There isn't any Student with that id in the list");
         }
 
         Student removedStudent = this.students.get(positionInList);
@@ -166,8 +166,10 @@ public class Island implements Movable, Serializable {
     /**
      * Method to place a Prohibition-Token on the Island
      * @param prohibitionToken is the boolean indicating if a Token is placed or not on the Island
+     * @throws IllegalMoveException if there is already a Prohibition Token on this Island
      */
-    public void setProhibition(boolean prohibitionToken) {
+    public void setProhibition(boolean prohibitionToken) throws IllegalMoveException {
+        if(prohibitionToken && this.prohibitionToken) throw new IllegalMoveException("You cannot place another No Entry tile on this Island...");
         this.prohibitionToken = prohibitionToken;
     }
 

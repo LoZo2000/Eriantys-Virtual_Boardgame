@@ -222,11 +222,9 @@ public class GameHandler {
      * @throws NotEnoughMoneyException      is the exception thrown when the money are finished and someone try to use them
      * @throws NoCharacterSelectedException is the exception thrown when in the method usePower in game someone try to use a character with
      *                                      a wrong index
-     * @throws NoSuchStudentException       is the exception thrown when are trying to move a student that doesn't
-     *                                      exist in that location (by studentid)
      * @throws CannotAddStudentException    is the exception thrown when is not possible to add a student
      */
-    public void execute(Message message) throws NotYourTurnException, IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, NoSuchStudentException, CannotAddStudentException {
+    public void execute(Message message) throws NotYourTurnException, IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, CannotAddStudentException {
         if (!isLegitPlayer(message.getSender())) {
             throw new NotYourTurnException("This is not your turn: please wait...");
         }

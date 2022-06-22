@@ -181,6 +181,7 @@ public class GameHandlerTest {
         Message wrongMessage2 = new MoveStudentMessage(sender, 148, Location.ENTRANCE, -1, Location.CANTEEN, -1);
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage2), "Impossible Student ID");
 
+
         Message wrongMessage3 = new MoveStudentMessage(sender, students.get(3).getId(), Location.ENTRANCE, -1, Location.CARD_ISLAND, -1);
         assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage3), "Wrong arrival");
 
@@ -280,6 +281,7 @@ public class GameHandlerTest {
      */
     @Test
     public void testWholeRound() throws Exception{
+
         addPlayers();
         playCards();
         List<String> players = new ArrayList<>();

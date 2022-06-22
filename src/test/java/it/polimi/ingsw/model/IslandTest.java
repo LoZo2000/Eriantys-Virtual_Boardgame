@@ -1,11 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,7 +59,7 @@ public class IslandTest {
         }catch(Exception e){
             fail();
         }
-        assertThrows(NoSuchStudentException.class, () -> island.removeStudent(0));
+        assertThrows(IllegalMoveException.class, () -> island.removeStudent(0));
     }
 
     /**
@@ -91,7 +88,11 @@ public class IslandTest {
     @Test
     public void prohibitionTest(){
         assertFalse(island.getProhibition());
-        island.setProhibition(true);
+        try {
+            island.setProhibition(true);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         assertTrue(island.getProhibition());
     }
 

@@ -160,7 +160,7 @@ class CompleteRulesGameTest {
             this.game.moveStudent(6, c, e);
             this.game.moveStudent(2, i, e);
             this.game.moveStudent(7, i, e);
-        }catch(CannotAddStudentException | NoSuchStudentException ex){
+        }catch(CannotAddStudentException | IllegalMoveException ex){
             fail();
         }
 
@@ -188,7 +188,7 @@ class CompleteRulesGameTest {
             this.game.moveStudent(11, i, e);
             this.game.moveStudent(13, i, e);
             this.game.moveStudent(16, i, e);
-        } catch (CannotAddStudentException | NoSuchStudentException ex){
+        } catch (CannotAddStudentException | IllegalMoveException ex){
             fail();
         }
 
@@ -260,7 +260,7 @@ class CompleteRulesGameTest {
         try {
             this.game.moveStudent(6, c, e);
             this.game.moveStudent(2, i, e);
-        } catch (CannotAddStudentException | NoSuchStudentException ex){
+        } catch (CannotAddStudentException | IllegalMoveException ex){
             fail();
         }
 
@@ -281,7 +281,7 @@ class CompleteRulesGameTest {
 
         try {
             this.game.moveStudent(7, i, e);
-        } catch (CannotAddStudentException | NoSuchStudentException ex){
+        } catch (CannotAddStudentException | IllegalMoveException ex){
             fail();
         }
 
@@ -320,7 +320,7 @@ class CompleteRulesGameTest {
             this.game.moveStudent(9, i, e);
             this.game.moveStudent(16, i, e);
             this.game.moveStudent(15, i, e);
-        } catch (CannotAddStudentException | NoSuchStudentException ex){
+        } catch (CannotAddStudentException | IllegalMoveException ex){
             fail();
         }
 

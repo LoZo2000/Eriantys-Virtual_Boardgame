@@ -97,15 +97,15 @@ public class MovementCharacter extends ActionCharacter implements Movable {
      * This method remove a student from the card
      * @param id the id of the student to remove
      * @return the student removed
-     * @throws NoSuchStudentException when there is not the student with the id passed in the parameter in the card
+     * @throws IllegalMoveException when there is not the student with the id passed in the parameter in the card
      */
-    public Student removeStudent(int id) throws NoSuchStudentException {
+    public Student removeStudent(int id) throws IllegalMoveException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent = new Student(id, Color.RED);
         int positionInList = this.students.indexOf(tempStudent);
 
         if(positionInList == -1){
-            throw new NoSuchStudentException("There isn't any Student with that id in the list");
+            throw new IllegalMoveException("There isn't any Student with that id in the list");
         }
 
         Student removedStudent = this.students.get(positionInList);

@@ -514,7 +514,7 @@ class GameTest {
         game = new Game(false, 2);
         for(int i=0; i<17; i++) game.addPlayer("bro1", ColorTower.WHITE);
 
-        assertThrows(NoSuchStudentException.class, () -> game.moveStudent(3045, game.getIsland(0), game.getIsland(1)));
+        assertThrows(IllegalMoveException.class, () -> game.moveStudent(3045, game.getIsland(0), game.getIsland(1)));
     }
 
     /**

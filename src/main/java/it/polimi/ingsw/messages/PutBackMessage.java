@@ -28,10 +28,9 @@ public class PutBackMessage extends ChooseColorMessage{
      * @return an Update object to communicate the state of the game to the controller
      * @throws IllegalMoveException is the exception thrown if the action is not permitted
      * @throws NoActiveCardException is the exception thrown if there is no character card active
-     * @throws NoSuchStudentException is the exception thrown if there is not any student with a specific id
      */
     @Override
-    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoSuchStudentException {
+    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException {
         if (game.getActiveCard() != -1) {
             Action requestedActiveAction = game.getRequestedAction();
             if (requestedActiveAction != Action.PUT_BACK)

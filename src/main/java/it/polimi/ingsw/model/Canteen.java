@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import java.util.ArrayList;
 
 /**
@@ -92,9 +92,9 @@ public class Canteen implements Movable{
      * Method to remove a student from the Canteen (needed only when certain characters are activated
      * @param id the identification number corresponding to the student you want to remove
      * @return the Student with the corresponding id (if it is in the Canteen)
-     * @throws NoSuchStudentException if there is no such Student in this Canteen
+     * @throws IllegalMoveException if there is no such Student in this Canteen
      */
-    public Student removeStudent(int id) throws NoSuchStudentException {
+    public Student removeStudent(int id) throws IllegalMoveException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent;
         int positionInList;
@@ -154,7 +154,7 @@ public class Canteen implements Movable{
             return removedStudent;
         }
 
-        throw new NoSuchStudentException("There isn't any Student with that id in the lists");
+        throw new IllegalMoveException("There isn't any Student with that id in the lists");
     }
 
     /**

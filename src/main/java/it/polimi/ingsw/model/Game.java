@@ -115,12 +115,6 @@ public class Game extends Observable<GameReport> {
         sendNotifyAll();
     }
 
-    /**
-     * This method initialize and refill all the clouds of the match, according to the number of
-     * the players
-     * @param numPlayers is the number of players who can join the match
-     * @throws NoMoreStudentsException is thrown if, while this method is refilling a cloud, there
-     */
     private void initClouds(int numPlayers) throws NoMoreStudentsException {
         switch(numPlayers){
             case 2:
@@ -143,11 +137,6 @@ public class Game extends Observable<GameReport> {
         }
     }
 
-    /**
-     * This method initialize and put a student on every island of the match
-     * @param initBag is a temporary bag that contains only 10 students (2x every color) to fill
-     *                the islands
-     */
     private void initIslands(Bag initBag){
         for(int i=0; i<12; i++){
             islands.add(new Island(i));
@@ -321,7 +310,7 @@ public class Game extends Observable<GameReport> {
      * @throws NoActiveCardException
      * @throws NoMoreTokensException
      */
-    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException, NoMoreTokensException {
+    public void moveMotherNature(Island island, boolean enableMovement) throws NoActiveCardException, NoMoreTokensException, IllegalMoveException{
         if(enableMovement)
             motherNature.movement(island);
         else{
@@ -470,21 +459,28 @@ public class Game extends Observable<GameReport> {
      * @param studentId is the id of the student we want to move
      * @param arrival is the object (must be a Location) where we want to move the Student
      * @param departure is the object (must be a Location) where the Student is
-     * @throws NoSuchStudentException if there is no Student with such id on departure
+     * @throws IllegalMoveException if there is no Student with such id on departure
      * @throws CannotAddStudentException if it is not possible to move the Student between these Locations
-     */public void moveStudent(int studentId, Movable arrival, Movable departure) throws NoSuchStudentException, CannotAddStudentException {
-        Student s = departure.removeStudent(studentId);
-        arrival.addStudent(s);
+     */public void moveStudent(int studentId, Movable arrival, Movable departure) throws IllegalMoveException, CannotAddStudentException {
+         Student s = departure.removeStudent(studentId);
+         if(arrival instanceof Canteen){
+             Canteen c = (Canteen)arrival;
+             if(c.getNumberStudentColor(s.getColor())>=10){
+                 departure.addStudent(s);
+                 throw new CannotAddStudentException("There are already too many Students in this table!");
+             }
+         }
+         arrival.addStudent(s);
 
-        this.updateProfessors();
+         this.updateProfessors();
 
-        if(completeRules){
-            Color c = s.getColor();
-            this.assignCoins(c, true, false);
-        }
+         if(completeRules){
+             Color c = s.getColor();
+             this.assignCoins(c, true, false);
+         }
 
-        //MoveStudent has worked: update all the clients!
-        //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
+         //MoveStudent has worked: update all the clients!
+         //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     /**
@@ -495,10 +491,10 @@ public class Game extends Observable<GameReport> {
      *                move the second Student)
      * @param departure is the object (must be a Location) where the second Student is placed (and where we want
      *                  to move the first Student)
-     * @throws NoSuchStudentException if one of the two Students is missing
+     * @throws IllegalMoveException if one of the two Students is missing
      * @throws CannotAddStudentException is it is not possible to swap the two Students
      */
-    public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure) throws NoSuchStudentException, CannotAddStudentException {
+    public void exchangeStudent(int studentId1, int studentId2, Movable arrival, Movable departure) throws IllegalMoveException, CannotAddStudentException {
         Student s1, s2;
         s1 = departure.removeStudent(studentId1);
         s2 = arrival.removeStudent(studentId2);
@@ -691,6 +687,7 @@ public class Game extends Observable<GameReport> {
             }
 
             Character[] selectedCharacter = new Character[3];
+
             for(int i=0; i<3; i++){
                 Random rand = new Random();
                 int randomPos = rand.nextInt(allCharacters.size());
@@ -788,6 +785,10 @@ public class Game extends Observable<GameReport> {
         this.updateProfessors();
 
         if(this.currentRule.isActionNeeded()){
+            if(c.getId()==5){
+                ActionCharacter c2 = (ActionCharacter)c;
+                if(c2.getNumTokens()==0) throw new IllegalMoveException("Unfortunately there are no more available No Entry tiles...");
+            }
             this.activeCard = card;
         } else{
             sendNotifyAll();
@@ -883,17 +884,17 @@ public class Game extends Observable<GameReport> {
      * @param i indicates the island to be disabled
      * @throws NoActiveCardException if there is no active card
      * @throws NoMoreTokensException if all 4 block tokens available are already placed
+     * @throws IllegalMoveException if there is already a Prohibition Token on the Island
      */
-    public void disableIsland(Island i) throws NoActiveCardException, NoMoreTokensException{
+    public void disableIsland(Island i) throws NoActiveCardException, NoMoreTokensException,IllegalMoveException{
         if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
 
         ActionCharacter ac = (ActionCharacter) this.charactersCards[this.activeCard];
         if(ac.getType() != Action.BLOCK_ISLAND)
             throw new NoActiveCardException("You can't block an island with this power");
 
-        ac.removeToken();
-
         i.setProhibition(true);
+        ac.removeToken();
 
         //if(this.activeCard != -1){
             this.activeCard = -1;
@@ -919,7 +920,7 @@ public class Game extends Observable<GameReport> {
         this.activeCard = -1;
     }
 
-    private void addProhibitionToken(Island island) throws NoMoreTokensException{
+    private void addProhibitionToken(Island island) throws NoMoreTokensException, IllegalMoveException{
         ActionCharacter ac;
         for(Character c : this.charactersCards){
             if(c.getTypeCharacter() == CharacterType.ACTION){
@@ -938,9 +939,9 @@ public class Game extends Observable<GameReport> {
      * @param color is the Color of the Students to be put back again in the Bag
      * @throws NoActiveCardException if there is no active card or the active card doesn't allow to put back
      * three Students in the Bag
-     * @throws NoSuchStudentException cannot be thrown
+     * @throws IllegalMoveException cannot be thrown
      */
-    public void putBackInBag(Color color) throws NoActiveCardException, NoSuchStudentException {
+    public void putBackInBag(Color color) throws NoActiveCardException, IllegalMoveException {
         if(this.activeCard == -1) throw new NoActiveCardException("No Active Card");
 
         ActionCharacter ac = (ActionCharacter) this.charactersCards[this.activeCard];

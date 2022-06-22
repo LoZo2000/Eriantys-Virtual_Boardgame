@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.exceptions.CannotAddStudentException;
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 
 /**
  * Interface that represent the ability of a class to move student, so if a class want to move student have to
@@ -20,7 +20,7 @@ public interface Movable {
      * method that remove a student to the class that implement the interface movable
      * @param id the id of the student to remove
      * @return the student removed
-     * @throws NoSuchStudentException if there are not students to remove
+     * @throws IllegalMoveException if there are not students to remove
      */
-    Student removeStudent(int id) throws NoSuchStudentException;
+    Student removeStudent(int id) throws IllegalMoveException;
 }

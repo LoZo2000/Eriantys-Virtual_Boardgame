@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -64,6 +64,6 @@ public class CanteenTest {
             fail();
         }
 
-        assertThrows(NoSuchStudentException.class, () -> canteen.removeStudent(0));
+        assertThrows(IllegalMoveException.class, () -> canteen.removeStudent(0));
     }
 }

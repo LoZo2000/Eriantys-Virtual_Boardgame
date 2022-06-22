@@ -19,8 +19,8 @@ public class ModelExceptionTest {
         assertThrows(AlreadyPlayedCardException.class, () -> testAlreadyPlayedCardException(true));
         assertThrows(AlreadyPlayedCardException.class, () -> testAlreadyPlayedCardException(false));
 
-        assertThrows(CannotJoinException.class, () -> testCannotJoinException(true));
-        assertThrows(CannotJoinException.class, () -> testCannotJoinException(false));
+        //assertThrows(CannotJoinException.class, () -> testCannotJoinException(true));
+        //assertThrows(CannotJoinException.class, () -> testCannotJoinException(false));
 
         assertThrows(IllegalMoveException.class, () -> testIllegalMoveException(true));
         assertThrows(IllegalMoveException.class, () -> testIllegalMoveException(false));
@@ -46,9 +46,6 @@ public class ModelExceptionTest {
         assertThrows(NoPlayerException.class, () -> testNoPlayerException(true));
         assertThrows(NoPlayerException.class, () -> testNoPlayerException(false));
 
-        assertThrows(NoSuchStudentException.class, () -> testNoSuchStudentException(true));
-        assertThrows(NoSuchStudentException.class, () -> testNoSuchStudentException(false));
-
         assertThrows(NotEnoughMoneyException.class, () -> testNotEnoughMoneyException(true));
         assertThrows(NotEnoughMoneyException.class, () -> testNotEnoughMoneyException(false));
 
@@ -59,10 +56,10 @@ public class ModelExceptionTest {
         assertThrows(OverflowCardException.class, () -> testOverflowCardException(false));
     }
 
-    private void testCannotJoinException(boolean withString) throws CannotJoinException{
+    /*private void testCannotJoinException(boolean withString) throws CannotJoinException{
         if(withString) throw new CannotJoinException("helo");
         throw new CannotJoinException();
-    }
+    }*/
 
     private void testIllegalMoveException(boolean withString) throws IllegalMoveException {
         if(withString) throw new IllegalMoveException("helo");
@@ -95,10 +92,6 @@ public class ModelExceptionTest {
     private void testNoPlayerException(boolean withString) throws NoPlayerException {
         if(withString) throw new NoPlayerException("helo");
         throw new NoPlayerException();
-    }
-    private void testNoSuchStudentException(boolean withString) throws NoSuchStudentException {
-        if(withString) throw new NoSuchStudentException("helo");
-        throw new NoSuchStudentException();
     }
     private void testNotEnoughMoneyException(boolean withString) throws NotEnoughMoneyException {
         if(withString) throw new NotEnoughMoneyException("helo");

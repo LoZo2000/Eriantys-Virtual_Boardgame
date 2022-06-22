@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Color;
-import it.polimi.ingsw.model.Entrance;
-import it.polimi.ingsw.model.Student;
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -73,7 +70,7 @@ public class EntranceTest {
         assertEquals(6, entrance.getAllStudents().size());
         entrance.addStudent(new Student(8, Color.PINK));
         assertEquals(7, entrance.getAllStudents().size());
-        assertThrows(NoSuchStudentException.class, () -> entrance.removeStudent(0));
+        assertThrows(IllegalMoveException.class, () -> entrance.removeStudent(0));
         assertEquals(7, entrance.getAllStudents().size());
     }
 }

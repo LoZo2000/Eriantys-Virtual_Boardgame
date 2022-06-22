@@ -5,8 +5,8 @@ import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.model.characters.*;
 
 import it.polimi.ingsw.model.exceptions.CannotAddStudentException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -152,11 +152,11 @@ class CharactersTest {
 
     /**
      * This method tests the movement Character
-     * @throws NoSuchStudentException when there is not the student with the id passed in the parameter in the card
+     * @throws IllegalMoveException when there is not the student with the id passed in the parameter in the card
      * @throws CannotAddStudentException when is not possible to add the student
      */
     @Test
-    void movementCharacterTest() throws NoSuchStudentException, CannotAddStudentException {
+    void movementCharacterTest() throws IllegalMoveException, CannotAddStudentException {
         Set<Location> allowedDepartures = Set.of(Location.CARD_ISLAND);
         Set<Location> allowedArrivals = Set.of(Location.ISLAND);
 
@@ -215,16 +215,16 @@ class CharactersTest {
 
         assertEquals(stud, character.getStudents());
 
-        assertThrows(NoSuchStudentException.class, () -> character.removeStudent(15));
+        assertThrows(IllegalMoveException.class, () -> character.removeStudent(15));
     }
 
     /**
      * This method tests the exchangeCharacter
-     * @throws NoSuchStudentException when there is not the student with the id passed in the parameter in the card
+     * @throws IllegalMoveException when there is not the student with the id passed in the parameter in the card
      * @throws CannotAddStudentException when is not possible to add the student
      */
     @Test
-    void exchangeCharacterTest() throws NoSuchStudentException, CannotAddStudentException {
+    void exchangeCharacterTest() throws IllegalMoveException, CannotAddStudentException {
         Set<Location> allowedDepartures = Set.of(Location.CARD_EXCHANGE, Location.ENTRANCE);
         Set<Location> allowedArrivals = Set.of(Location.CARD_EXCHANGE, Location.ENTRANCE);
 
@@ -289,7 +289,7 @@ class CharactersTest {
 
         assertEquals(stud, character.getStudents());
 
-        assertThrows(NoSuchStudentException.class, () -> character.removeStudent(15));
+        assertThrows(IllegalMoveException.class, () -> character.removeStudent(15));
     }
 
     /**

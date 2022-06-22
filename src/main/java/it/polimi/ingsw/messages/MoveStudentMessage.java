@@ -40,7 +40,7 @@ public class MoveStudentMessage extends MovementMessage{
      * @throws CannotAddStudentException is the exception thrown if the student can't be added
      */
     @Override
-    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoPlayerException, NoIslandException, CannotAddStudentException {
+    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoPlayerException, NoIslandException, CannotAddStudentException{
         Boolean usedCard = null;
         boolean activeCard = false;
 
@@ -66,11 +66,7 @@ public class MoveStudentMessage extends MovementMessage{
             activeCard = true;
         }
 
-        try {
-            game.moveStudent(studentId, arrival, departure);
-        }catch (Exception e){
-            throw new IllegalMoveException("Student, arrival or departure missing...");
-        }
+        game.moveStudent(studentId, arrival, departure);
 
         try {
             if(game.needsRefill())

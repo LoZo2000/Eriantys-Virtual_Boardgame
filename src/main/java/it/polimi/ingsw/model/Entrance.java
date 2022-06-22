@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.NoSuchStudentException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
+
 import java.util.ArrayList;
 
 /**
@@ -31,15 +32,15 @@ public class Entrance implements Movable{
      * Method to remove a Student from Entrance
      * @param id is the id of the student to be removed
      * @return the student removed from the Entrance
-     * @throws NoSuchStudentException is thrown if there is no a student with this id on Entrance
+     * @throws IllegalMoveException is thrown if there is no a student with this id on Entrance
      */
-    public Student removeStudent(int id) throws NoSuchStudentException {
+    public Student removeStudent(int id) throws IllegalMoveException {
         //Random color because it doesn't matter for the equals method (Each Student has a unique id)
         Student tempStudent = new Student(id, Color.RED);
         int positionInList = this.students.indexOf(tempStudent);
 
         if(positionInList == -1){
-            throw new NoSuchStudentException("There isn't any Student with that id in the list");
+            throw new IllegalMoveException("There isn't any Student with that id in the list");
         }
 
         Student removedStudent = this.students.get(positionInList);
