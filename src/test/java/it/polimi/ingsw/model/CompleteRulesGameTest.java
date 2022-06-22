@@ -160,7 +160,7 @@ class CompleteRulesGameTest {
             this.game.moveStudent(6, c, e);
             this.game.moveStudent(2, i, e);
             this.game.moveStudent(7, i, e);
-        }catch(CannotAddStudentException | IllegalMoveException ex){
+        }catch(IllegalMoveException ex){
             fail();
         }
 
@@ -188,7 +188,7 @@ class CompleteRulesGameTest {
             this.game.moveStudent(11, i, e);
             this.game.moveStudent(13, i, e);
             this.game.moveStudent(16, i, e);
-        } catch (CannotAddStudentException | IllegalMoveException ex){
+        } catch (IllegalMoveException ex){
             fail();
         }
 
@@ -210,7 +210,7 @@ class CompleteRulesGameTest {
         try {
             //Card 1: 2 Extra Influence Points
             this.game.usePower(p2, 0);
-        } catch (IllegalMoveException | NoCharacterSelectedException | NotEnoughMoneyException ex) {
+        } catch (IllegalMoveException | NoCharacterSelectedException ex) {
             fail();
         }
 
@@ -260,7 +260,7 @@ class CompleteRulesGameTest {
         try {
             this.game.moveStudent(6, c, e);
             this.game.moveStudent(2, i, e);
-        } catch (CannotAddStudentException | IllegalMoveException ex){
+        } catch (IllegalMoveException ex){
             fail();
         }
 
@@ -281,7 +281,7 @@ class CompleteRulesGameTest {
 
         try {
             this.game.moveStudent(7, i, e);
-        } catch (CannotAddStudentException | IllegalMoveException ex){
+        } catch (IllegalMoveException ex){
             fail();
         }
 
@@ -320,7 +320,7 @@ class CompleteRulesGameTest {
             this.game.moveStudent(9, i, e);
             this.game.moveStudent(16, i, e);
             this.game.moveStudent(15, i, e);
-        } catch (CannotAddStudentException | IllegalMoveException ex){
+        } catch (IllegalMoveException ex){
             fail();
         }
 
@@ -339,7 +339,7 @@ class CompleteRulesGameTest {
         try {
             //Card 0 Disable Towers
             this.game.usePower(p2, 0);
-        } catch (IllegalMoveException | NoCharacterSelectedException | NotEnoughMoneyException ex) {
+        } catch (IllegalMoveException | NoCharacterSelectedException ex) {
             fail();
         }
 
@@ -604,7 +604,7 @@ class CompleteRulesGameTest {
         }
 
         Player finalP = p1;
-        assertThrows(NotEnoughMoneyException.class, () -> this.game.usePower(finalP, 0));
+        assertThrows(IllegalMoveException.class, () -> this.game.usePower(finalP, 0));
 
         p1.giveCoin();
         p1.giveCoin();

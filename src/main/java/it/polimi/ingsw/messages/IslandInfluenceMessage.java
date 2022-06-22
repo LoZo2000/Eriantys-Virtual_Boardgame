@@ -28,11 +28,10 @@ public class IslandInfluenceMessage extends ChooseIslandMessage{
      * @param game is the object that represent the game and is used to modify the model
      * @return an Update object to communicate the state of the game to the controller
      * @throws NoActiveCardException is the exception thrown if there is no character card active
-     * @throws IllegalMoveException is the exception thrown if IslandInfluenceMessage is not a permitted action
-     * @throws NoMoreTokensException is the exception thrown if there are no token left
+     * @throws IllegalMoveException is the exception thrown if IslandInfluenceMessage is not a permitted action or if there are no token left
      */
     @Override
-    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoMoreTokensException {
+    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException{
         if (game.getActiveCard() != -1) {
             Action requestedActiveAction = game.getRequestedAction();
             if (requestedActiveAction != Action.ISLAND_INFLUENCE)

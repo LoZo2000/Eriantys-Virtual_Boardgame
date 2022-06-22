@@ -31,13 +31,12 @@ public class MoveMotherNatureMessage extends Message{
      * other nature
      * @param game is the object that represent the game and is used to modify the model
      * @return an Update object to communicate the state of the game to the controller
-     * @throws IllegalMoveException is the exception thrown if MoveMotherNature is not a permitted action
+     * @throws IllegalMoveException is the exception thrown if MoveMotherNature is not a permitted action or if there are no token lef
      * @throws NoActiveCardException is the exception thrown if there is no character card active
-     * @throws NoMoreTokensException is the exception thrown if there are no token left
      * @throws NoPlayerException is the exception thrown if a player isn't found
      */
     @Override
-    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoMoreTokensException, NoPlayerException {
+    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoPlayerException {
         LinkedList<Island> islands = game.getAllIslands();
         int currentMNposition = islands.indexOf(game.getMotherNaturePosition());
         int numIslands = islands.size();

@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.characters.*;
 import it.polimi.ingsw.model.characters.Character;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoIslandException;
-import it.polimi.ingsw.model.exceptions.NotYourTurnException;
+import it.polimi.ingsw.model.exceptions.OverflowCardException;
 import it.polimi.ingsw.model.rules.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -65,7 +65,7 @@ public class GameHandlerTest {
         assertEquals(Phase.PRETURN, gameHandler.getPhase());
 
         Message m = new AddMeMessage("player4", true, 3);
-        assertThrows(NotYourTurnException.class, () -> gameHandler.execute(m));
+        assertThrows(IllegalActionException.class, () -> gameHandler.execute(m));
     }
 
     private void addPlayers() throws Exception{
@@ -113,10 +113,10 @@ public class GameHandlerTest {
         Message message;
 
         Message wrongMessage = new PlayCardMessage("player1", -1);
-        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage), "Play a card that doesn't exist");
+        assertThrows(OverflowCardException.class, () -> gameHandler.execute(wrongMessage), "Play a card that doesn't exist");
 
         Message wrongMessage2 = new PlayCardMessage("player1", 15);
-        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage2), "Play a card that doesn't exist");
+        assertThrows(OverflowCardException.class, () -> gameHandler.execute(wrongMessage2), "Play a card that doesn't exist");
 
         message = new PlayCardMessage("player1", 5);
         gameHandler.execute(message);

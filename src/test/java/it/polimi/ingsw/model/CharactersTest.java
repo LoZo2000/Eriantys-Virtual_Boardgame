@@ -3,10 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.model.characters.*;
-
-import it.polimi.ingsw.model.exceptions.CannotAddStudentException;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
-import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,12 +43,12 @@ class CharactersTest {
         //Test Methods
         assertEquals(Action.BLOCK_ISLAND, character.getType());
 
-        assertThrows(NoMoreTokensException.class, character::addToken, "It should return an exception because you can't add more tokens than the maximum on it");
+        assertThrows(IllegalMoveException.class, character::addToken, "It should return an exception because you can't add more tokens than the maximum on it");
         for(int i = 0; i<4; i++){
             assertEquals(4-i, character.getNumTokens());
             assertDoesNotThrow(character::removeToken, "You can remove up to "+ character.getNumTokens()+" tokens from the card");
         }
-        assertThrows(NoMoreTokensException.class, character::removeToken, "It should return an exception because you can't remove tokens when the card is empty");
+        assertThrows(IllegalMoveException.class, character::removeToken, "It should return an exception because you can't remove tokens when the card is empty");
     }
 
     /**
@@ -75,8 +72,8 @@ class CharactersTest {
         //Test Methods
         assertEquals(Action.ISLAND_INFLUENCE, character.getType());
 
-        assertThrows(NoMoreTokensException.class, character::addToken, "It should return an exception because you can't add more tokens than the maximum on it");
-        assertThrows(NoMoreTokensException.class, character::removeToken, "It should return an exception because you can't remove tokens when the card is empty");
+        assertThrows(IllegalMoveException.class, character::addToken, "It should return an exception because you can't add more tokens than the maximum on it");
+        assertThrows(IllegalMoveException.class, character::removeToken, "It should return an exception because you can't remove tokens when the card is empty");
     }
 
     /**
@@ -153,10 +150,9 @@ class CharactersTest {
     /**
      * This method tests the movement Character
      * @throws IllegalMoveException when there is not the student with the id passed in the parameter in the card
-     * @throws CannotAddStudentException when is not possible to add the student
      */
     @Test
-    void movementCharacterTest() throws IllegalMoveException, CannotAddStudentException {
+    void movementCharacterTest() throws IllegalMoveException {
         Set<Location> allowedDepartures = Set.of(Location.CARD_ISLAND);
         Set<Location> allowedArrivals = Set.of(Location.ISLAND);
 
@@ -194,10 +190,10 @@ class CharactersTest {
         assertEquals(students, character.getStudents());
 
         //Check Methods
-        assertThrows(NoMoreTokensException.class, character::addToken, "The only way to add a token on the card is through the students' movement");
-        assertThrows(NoMoreTokensException.class, character::removeToken, "The only way to remove a token on the card is through the students' movement");
+        assertThrows(IllegalMoveException.class, character::addToken, "The only way to add a token on the card is through the students' movement");
+        assertThrows(IllegalMoveException.class, character::removeToken, "The only way to remove a token on the card is through the students' movement");
 
-        assertThrows(CannotAddStudentException.class, ()->character.addStudent(new Student(5, Color.RED)));
+        assertThrows(IllegalMoveException.class, ()->character.addStudent(new Student(5, Color.RED)));
 
         Student s = character.removeStudent(1);
         assertEquals(new Student(1, Color.RED), s);
@@ -221,10 +217,9 @@ class CharactersTest {
     /**
      * This method tests the exchangeCharacter
      * @throws IllegalMoveException when there is not the student with the id passed in the parameter in the card
-     * @throws CannotAddStudentException when is not possible to add the student
      */
     @Test
-    void exchangeCharacterTest() throws IllegalMoveException, CannotAddStudentException {
+    void exchangeCharacterTest() throws IllegalMoveException {
         Set<Location> allowedDepartures = Set.of(Location.CARD_EXCHANGE, Location.ENTRANCE);
         Set<Location> allowedArrivals = Set.of(Location.CARD_EXCHANGE, Location.ENTRANCE);
 
@@ -266,10 +261,10 @@ class CharactersTest {
         assertEquals(3, character.getMaxMoves());
 
         //Check Methods
-        assertThrows(NoMoreTokensException.class, character::addToken, "The only way to add a token on the card is through the students' movement");
-        assertThrows(NoMoreTokensException.class, character::removeToken, "The only way to remove a token on the card is through the students' movement");
+        assertThrows(IllegalMoveException.class, character::addToken, "The only way to add a token on the card is through the students' movement");
+        assertThrows(IllegalMoveException.class, character::removeToken, "The only way to remove a token on the card is through the students' movement");
 
-        assertThrows(CannotAddStudentException.class, ()->character.addStudent(new Student(7, Color.RED)));
+        assertThrows(IllegalMoveException.class, ()->character.addStudent(new Student(7, Color.RED)));
 
         Student s = character.removeStudent(1);
         assertEquals(new Student(1, Color.RED), s);

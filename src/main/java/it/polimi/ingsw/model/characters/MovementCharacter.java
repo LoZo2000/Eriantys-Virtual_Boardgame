@@ -85,11 +85,11 @@ public class MovementCharacter extends ActionCharacter implements Movable {
     /**
      * This method add a student to the card
      * @param s the student to add
-     * @throws CannotAddStudentException when is not possible to add the student
+     * @throws IllegalMoveException when is not possible to add the student
      */
-    public void addStudent(Student s) throws CannotAddStudentException {
+    public void addStudent(Student s) throws IllegalMoveException {
         if(students.size() == getMaxNumTokens())
-            throw new CannotAddStudentException("You cannot add a student in this moment!");
+            throw new IllegalMoveException("You cannot add a student in this moment!");
         students.add(s);
     }
 
@@ -141,19 +141,19 @@ public class MovementCharacter extends ActionCharacter implements Movable {
 
     /**
      * This method remove a token from the card
-     * @throws NoMoreTokensException when there are no tokens left
+     * @throws IllegalMoveException when there are no tokens left
      */
     @Override
-    public void removeToken() throws NoMoreTokensException {
-        throw new NoMoreTokensException("You can't remove students without movement");
+    public void removeToken() throws IllegalMoveException {
+        throw new IllegalMoveException("You can't remove students without movement");
     }
 
     /**
      * This method add a token to the card
-     * @throws NoMoreTokensException when is not possible to add a token to the card
+     * @throws IllegalMoveException when is not possible to add a token to the card
      */
     @Override
-    public void addToken() throws NoMoreTokensException {
-        throw new NoMoreTokensException("You can't add students without movement");
+    public void addToken() throws IllegalMoveException {
+        throw new IllegalMoveException("You can't add students without movement");
     }
 }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.rules.MotherNatureRule;
 import it.polimi.ingsw.model.rules.Rule;
 
@@ -30,10 +30,10 @@ public class MotherNatureCharacter extends Character{
      * This method modify the model with the changed needed to use the power of the card
      * @param player is the player that use the character card
      * @return an object Rule containing the rule modified by the effect of the card
-     * @throws NotEnoughMoneyException when the player doesn't have enough money to use the character card
+     * @throws IllegalMoveException when the player doesn't have enough money to use the character card
      */
     @Override
-    public Rule usePower(Player player) throws NotEnoughMoneyException {
+    public Rule usePower(Player player) throws IllegalMoveException {
         player.useCoins(this.getCost());
         this.increaseTimesUsed();
 

@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.characters;
 
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
-import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import it.polimi.ingsw.model.rules.Rule;
 
 import java.io.Serializable;
@@ -97,10 +96,9 @@ public abstract class Character implements Serializable {
      * This method is called by the game to use the power of the character card
      * @param player is the player that use the character card
      * @return an object Rule containing the rule modified by the effect of the card
-     * @throws NotEnoughMoneyException when the player doesn't have enough money to use the character card
-     * @throws IllegalMoveException when the action use power is not legit
+     * @throws IllegalMoveException when the player doesn't have enough money to use the character card or the action use power is not legit
      */
-    public abstract Rule usePower(Player player) throws NotEnoughMoneyException, IllegalMoveException;
+    public abstract Rule usePower(Player player) throws IllegalMoveException;
 
     /**
      * This method return a string that report some parameters of the character card

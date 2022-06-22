@@ -571,7 +571,7 @@ class GameTest {
         this.game.playCard(p2, 1);
         assertEquals(1, game.getMaximumMNMovement(p2));
 
-        assertThrows(AlreadyPlayedCardException.class, ()->this.game.playCard(p1, 1));
+        assertThrows(IllegalMoveException.class, ()->this.game.playCard(p1, 1));
     }
 
     /**

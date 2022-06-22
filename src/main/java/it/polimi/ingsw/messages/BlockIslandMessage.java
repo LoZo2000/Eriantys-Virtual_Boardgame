@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.Island;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 import it.polimi.ingsw.model.exceptions.NoIslandException;
-import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
 
 /**
  * The class BlockIslandMessage represent the action that block an island in the computation of the influence in the game, extends the class Message and implement the method
@@ -30,11 +29,10 @@ public class BlockIslandMessage extends ChooseIslandMessage{
      * @param game is the object that represent the game and is used to modify the model
      * @return an Update object to communicate the state of the game to the controller
      * @throws NoActiveCardException is the exception thrown if there is no character card active
-     * @throws IllegalMoveException is the exception thrown if BlockIsland is not a permitted action or the island doesn't exist
-     * @throws NoMoreTokensException is the exception thrown if there are no token left
+     * @throws IllegalMoveException is the exception thrown if BlockIsland is not a permitted action or the island doesn't exist or if there are no token left
      */
     @Override
-    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoMoreTokensException {
+    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException {
         if (game.getActiveCard() != -1) {
             Action requestedActiveAction = game.getRequestedAction();
             if (requestedActiveAction != Action.BLOCK_ISLAND)

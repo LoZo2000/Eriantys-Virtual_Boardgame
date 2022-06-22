@@ -30,17 +30,12 @@ public class PlayCardMessage extends Message{
      * @return an Update object to communicate the state of the game to the controller
      * @throws IllegalMoveException is the exception thrown if the action is not permitted
      * @throws NoPlayerException is the exception thrown if a player isn't found
+     * @throws OverflowCardException if the Card doesn't exist or has already been played
      */
     @Override
-    public Update execute(Game game) throws IllegalMoveException, NoPlayerException {
-        try {
-            Player p = game.getPlayer(sender);
-            game.playCard(p, priority);
-        } catch(OverflowCardException e){
-            throw new IllegalMoveException("There is no such a card");
-        } catch(AlreadyPlayedCardException e){
-            throw new IllegalMoveException("Another player has already played that card!");
-        }
+    public Update execute(Game game) throws IllegalMoveException, NoPlayerException, OverflowCardException {
+        Player p = game.getPlayer(sender);
+        game.playCard(p, priority);
 
         return new Update(null, true, null, null, null, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
     }

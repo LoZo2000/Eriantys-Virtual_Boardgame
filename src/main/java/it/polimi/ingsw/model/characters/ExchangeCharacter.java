@@ -47,11 +47,10 @@ public class ExchangeCharacter extends MovementCharacter implements Movable {
      * This method modify the model with the changed needed to use the power of the card
      * @param player is the player that use the character card
      * @return an object Rule containing the rule modified by the effect of the card
-     * @throws NotEnoughMoneyException when the player doesn't have enough money to use the character card
-     * @throws IllegalMoveException when the action use power is not legit
+     * @throws IllegalMoveException when the player doesn't have enough money to use the character card or the action use power is not legit
      */
     @Override
-    public Rule usePower(Player player) throws NotEnoughMoneyException, IllegalMoveException {
+    public Rule usePower(Player player) throws IllegalMoveException {
         if(allowedArrivals.contains(Location.CANTEEN)){
             if(checkEmptyCanteen(player)){
                 throw new IllegalMoveException("You can't exchange students with the canteen if there isn't any student in it.");

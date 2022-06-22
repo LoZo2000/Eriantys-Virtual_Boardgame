@@ -37,10 +37,9 @@ public class MoveStudentMessage extends MovementMessage{
      * @throws IllegalMoveException is the exception thrown if MoveStudent is not a permitted action
      * @throws NoPlayerException is the exception thrown if a player isn't found
      * @throws NoIslandException is the exception thrown if an island isn't found
-     * @throws CannotAddStudentException is the exception thrown if the student can't be added
      */
     @Override
-    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoPlayerException, NoIslandException, CannotAddStudentException{
+    public Update execute(Game game) throws NoActiveCardException, IllegalMoveException, NoPlayerException, NoIslandException{
         Boolean usedCard = null;
         boolean activeCard = false;
 

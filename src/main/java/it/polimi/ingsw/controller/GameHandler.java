@@ -212,21 +212,18 @@ public class GameHandler {
      * gamehandler to refresh the state of the turn and phase
      *
      * @param message is the message that will be checked and eventually executed
-     * @throws NotYourTurnException         is the exception thrown when a player send a message and is not the current player
      * @throws IllegalActionException       is the exception thrown when the current player try to do an action not permitted in the current phase
      * @throws IllegalMoveException         is the exception thrown when is not possible to use a card
      * @throws NoActiveCardException        is the exception thrown when there is no an active card and someone try to use it
      * @throws NoIslandException            is the exception thrown when is requested an island that doesn't exist
      * @throws NoPlayerException            is the exception thrown when is requested a player that doesn't exist
-     * @throws NoMoreTokensException        is the exception thrown when the tokens are finished and someone try to use them
-     * @throws NotEnoughMoneyException      is the exception thrown when the money are finished and someone try to use them
      * @throws NoCharacterSelectedException is the exception thrown when in the method usePower in game someone try to use a character with
      *                                      a wrong index
-     * @throws CannotAddStudentException    is the exception thrown when is not possible to add a student
+     * @throws OverflowCardException if there is no such Card in the Player's Hand
      */
-    public void execute(Message message) throws NotYourTurnException, IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, CannotAddStudentException {
+    public void execute(Message message) throws IllegalActionException, IllegalMoveException, NoActiveCardException, NoIslandException, NoPlayerException, NoCharacterSelectedException, OverflowCardException{
         if (!isLegitPlayer(message.getSender())) {
-            throw new NotYourTurnException("This is not your turn: please wait...");
+            throw new IllegalActionException("This is not your turn: please wait...");
         }
         if (!isLegitAction(message.getAction())) {
             throw new IllegalActionException("Illegal move!");

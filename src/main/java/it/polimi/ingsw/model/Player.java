@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -71,11 +70,11 @@ public class Player implements Comparable<Player> {
     /**
      * Method to decrease Player's coins after a card activation
      * @param usedCoins is the number of coins spent
-     * @throws NotEnoughMoneyException if the Player hasn't enough money
+     * @throws IllegalMoveException if the Player hasn't enough money
      */
-    public void useCoins(int usedCoins) throws NotEnoughMoneyException{
+    public void useCoins(int usedCoins) throws IllegalMoveException {
         if(this.coins < usedCoins){
-            throw new NotEnoughMoneyException("You don't have enough money!");
+            throw new  IllegalMoveException("You don't have enough money!");
         }
         this.coins -= usedCoins;
     }

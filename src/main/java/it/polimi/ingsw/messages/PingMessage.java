@@ -25,13 +25,10 @@ public class PingMessage extends Message{
      * @throws NoActiveCardException is the exception thrown if there is no character card active
      * @throws NoPlayerException is the exception thrown if a player isn't found
      * @throws NoIslandException is the exception thrown if an island with a specific id isn't found
-     * @throws NoMoreTokensException is the exception thrown if there are no token left
-     * @throws NotEnoughMoneyException is the exception thrown if the player doesn't have enough money to activate the character card
      * @throws NoCharacterSelectedException is the exception thrown if there isn't a character selected to use its power
-     * @throws CannotAddStudentException is the exception thrown if the student can't be added
      */
     @Override
-    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoPlayerException, NoIslandException, NoMoreTokensException, NotEnoughMoneyException, NoCharacterSelectedException, CannotAddStudentException {
+    public Update execute(Game game) throws IllegalMoveException, NoActiveCardException, NoPlayerException, NoIslandException, NoCharacterSelectedException {
         return null;
     }
 }

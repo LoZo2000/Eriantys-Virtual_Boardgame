@@ -30,11 +30,10 @@ public class UsePowerMessage extends Message{
      * @return an Update object to communicate the state of the game to the controller
      * @throws IllegalMoveException is the exception thrown if the action is not permitted
      * @throws NoPlayerException is the exception thrown if a player isn't found
-     * @throws NotEnoughMoneyException is the exception thrown if the player doesn't have enough money to activate the character card
      * @throws NoCharacterSelectedException is the exception thrown if there isn't a character selected to use its power
      */
     @Override
-    public Update execute(Game game) throws IllegalMoveException, NoPlayerException, NotEnoughMoneyException, NoCharacterSelectedException {
+    public Update execute(Game game) throws IllegalMoveException, NoPlayerException, NoCharacterSelectedException {
         if (game.getUsedCard())
             throw new IllegalMoveException("You can't use characters' powers twice in the same turn");
         Player p = game.getPlayer(sender);

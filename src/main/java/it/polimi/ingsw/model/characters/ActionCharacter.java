@@ -3,8 +3,6 @@ package it.polimi.ingsw.model.characters;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
-import it.polimi.ingsw.model.exceptions.NoMoreTokensException;
-import it.polimi.ingsw.model.exceptions.NotEnoughMoneyException;
 import it.polimi.ingsw.model.rules.ActionRule;
 import it.polimi.ingsw.model.rules.Rule;
 
@@ -61,22 +59,22 @@ public class ActionCharacter extends Character{
 
     /**
      * This method remove a token
-     * @throws NoMoreTokensException when there are no token left to remove
+     * @throws IllegalMoveException when there are no token left to remove
      */
-    public void removeToken() throws NoMoreTokensException {
+    public void removeToken() throws IllegalMoveException {
         if(numTokens == 0){
-            throw new NoMoreTokensException("There is no token left");
+            throw new IllegalMoveException("There is no token left");
         }
         this.numTokens -= 1;
     }
 
     /**
      * This method add a token
-     * @throws NoMoreTokensException when the token reached the maximum number permitted
+     * @throws IllegalMoveException when the token reached the maximum number permitted
      */
-    public void addToken() throws NoMoreTokensException {
+    public void addToken() throws IllegalMoveException {
         if(numTokens == maxNumTokens){
-            throw new NoMoreTokensException("There is the maximum number of token on the card");
+            throw new IllegalMoveException("There is the maximum number of token on the card");
         }
         this.numTokens += 1;
     }
@@ -85,11 +83,10 @@ public class ActionCharacter extends Character{
      * This method modify the model with the changed needed to use the power of the card
      * @param player is the player that use the character card
      * @return an object Rule containing the rule modified by the effect of the card
-     * @throws NotEnoughMoneyException when the player doesn't have enough money to use the character card
-     * @throws IllegalMoveException when the action use power is not legit
+     * @throws IllegalMoveException when the player doesn't have enough money to use the character card or the action use power is not legit
      */
     @Override
-    public Rule usePower(Player player) throws NotEnoughMoneyException, IllegalMoveException {
+    public Rule usePower(Player player) throws IllegalMoveException {
         player.useCoins(this.getCost());
         this.increaseTimesUsed();
 

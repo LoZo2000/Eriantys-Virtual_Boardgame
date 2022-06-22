@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.CannotAddStudentException;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 
 /**
@@ -12,9 +11,9 @@ public interface Movable {
     /**
      * method that add a student to the class that implement the interface movable
      * @param s the student to add
-     * @throws CannotAddStudentException if the students can't be added
+     * @throws IllegalMoveException if the students can't be added
      */
-    void addStudent(Student s) throws CannotAddStudentException;
+    void addStudent(Student s) throws IllegalMoveException;
 
     /**
      * method that remove a student to the class that implement the interface movable
