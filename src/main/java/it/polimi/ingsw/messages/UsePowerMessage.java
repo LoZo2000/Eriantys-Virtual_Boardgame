@@ -49,7 +49,7 @@ public class UsePowerMessage extends Message{
         if(!activeCard)
             activeCard = null;
 
-        return new Update(null, null, null, null, activeCard, null, game.getFinishedGame(), game.getWinner(),game.getIsLastTurn());
+        return new Update(null, null, null, null, activeCard, null, game.getFinishedGame(),game.getIsLastTurn());
     }
 
     /**

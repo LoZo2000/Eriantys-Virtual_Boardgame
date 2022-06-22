@@ -83,7 +83,7 @@ public class MoveStudentMessage extends MovementMessage{
             game.reduceRemainingMoves(activeCard);
         }
 
-        return new Update(null, null, game.getRemainingMoves(), null, usedCard, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
+        return new Update(null, null, game.getRemainingMoves(), null, usedCard, null, game.getFinishedGame(), game.getIsLastTurn());
     }
 
     /**

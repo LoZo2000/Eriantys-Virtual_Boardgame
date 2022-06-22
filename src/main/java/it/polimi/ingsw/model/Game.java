@@ -1146,7 +1146,7 @@ public class Game extends Observable<GameReport> {
                     Teamplayers.add(p.getNickname());
                 }
             }
-            winner="the team of"+Teamplayers.get(0)+"and"+Teamplayers.get(1);
+            winner="the team of "+Teamplayers.get(0)+" and "+Teamplayers.get(1);
         }
         else {
             //create an hashmap of professor and colorTower
@@ -1168,9 +1168,9 @@ public class Game extends Observable<GameReport> {
                 }
                 if(profAndPlayer.get(c)==ColorTower.WHITE){
                     int temp;
-                    temp=countProfessor.get(0);
+                    temp=countProfessor.get(1);
                     temp++;
-                    countProfessor.set(0, temp);
+                    countProfessor.set(1, temp);
                 }
             }
             //Find the max
@@ -1189,7 +1189,7 @@ public class Game extends Observable<GameReport> {
                         Teamplayers.add(p.getNickname());
                     }
                 }
-                winner="the team of"+Teamplayers.get(0)+"and"+Teamplayers.get(1);
+                winner="the team of "+Teamplayers.get(0)+" and "+Teamplayers.get(1);
             }
         }
         return winner;

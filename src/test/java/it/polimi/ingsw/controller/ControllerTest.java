@@ -43,4 +43,13 @@ public class ControllerTest {
 
         controller.disconnectedPlayer("player1");
     }
+
+    /**
+     * This method tests the getters of the class Controller
+     */
+    @Test
+    public void getterTest(){
+        assertEquals(true, controller.getCompleteRules());
+        assertEquals(2, controller.getNumPlayers());
+    }
 }

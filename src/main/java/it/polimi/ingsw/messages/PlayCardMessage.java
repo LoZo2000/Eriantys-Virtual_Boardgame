@@ -42,7 +42,7 @@ public class PlayCardMessage extends Message{
             throw new IllegalMoveException("Another player has already played that card!");
         }
 
-        return new Update(null, true, null, null, null, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
+        return new Update(null, true, null, null, null, null, game.getFinishedGame(), game.getIsLastTurn());
     }
 
     /**

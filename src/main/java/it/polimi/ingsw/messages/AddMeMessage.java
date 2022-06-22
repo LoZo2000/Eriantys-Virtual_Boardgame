@@ -40,7 +40,7 @@ public class AddMeMessage extends Message{
         else
             game.addPlayer(sender, ColorTower.BLACK);
 
-        return new Update(game.getRegisteredNumPlayers(), null, null, null, null, null, null, null, null);
+        return new Update(game.getRegisteredNumPlayers(), null, null, null, null, null, null, null);
     }
 
     /**

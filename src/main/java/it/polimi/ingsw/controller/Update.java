@@ -17,8 +17,6 @@ public class Update {
 
     private final Boolean finishedGame;
 
-    private final String winner;
-
     private final Boolean isLastTurn;
 
     /**
@@ -30,10 +28,9 @@ public class Update {
      * @param activatedCard reports if a card has been activated
      * @param movedMotherNature reports if mother nature has been moved
      * @param finishedGame reports if the is finished
-     * @param winner reports who is the winner (if the game is finished)
      * @param isLastTurn reports if the last turn of the game
      */
-    public Update(Integer changedNumPlayer, Boolean playedCard, Integer numMovedStudents, Integer remainingClouds, Boolean activatedCard, Boolean movedMotherNature, Boolean finishedGame, String winner, Boolean isLastTurn){
+    public Update(Integer changedNumPlayer, Boolean playedCard, Integer numMovedStudents, Integer remainingClouds, Boolean activatedCard, Boolean movedMotherNature, Boolean finishedGame, Boolean isLastTurn){
         this.changedNumPlayer = changedNumPlayer;
         this.playedCard = playedCard;
         this.numMovedStudents = numMovedStudents;
@@ -41,7 +38,6 @@ public class Update {
         this.activatedCard = activatedCard;
         this.movedMotherNature = movedMotherNature;
         this.finishedGame = finishedGame;
-        this.winner = winner;
         this.isLastTurn = isLastTurn;
     }
 
@@ -98,12 +94,6 @@ public class Update {
      * @return a boolean to report if the is finished
      */
     public Optional<Boolean> getFinishedGame(){ return Optional.ofNullable(finishedGame);}
-
-    /**
-     * Method to return the winner of the game (if the game is finished)
-     * @return a String with the nickname of the winner of the game
-     */
-    public Optional<String> getWinner(){ return Optional.ofNullable(winner); }
 
     /**
      * Method to return if the current turn is the last
