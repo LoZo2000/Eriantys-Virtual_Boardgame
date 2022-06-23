@@ -22,12 +22,14 @@ public class ClientGuiApp {
         GUIConnection GUIconnection = new GUIConnection();
 
         while(port == -1){
-            port = GUIconnection.getPort();
-            ip = GUIconnection.getIp();
-            try{
-                Thread.sleep(20);
-            }catch (Exception e){
-                e.printStackTrace();
+            synchronized (GUIconnection) {
+                try{
+                    GUIconnection.wait();
+                    port = GUIconnection.getPort();
+                    ip = GUIconnection.getIp();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
 

@@ -7,7 +7,7 @@ import java.awt.*;
 
 
 /**
- * This class builds the Java Swing window to let the player to insert the server's address and port
+ * This class builds the Java Swing window to let the player insert the server's address and port
  */
 public class GUIConnection {
     private String ip;
@@ -20,20 +20,15 @@ public class GUIConnection {
         //Background image:
         ImageIcon bgIcon = ScalingUtils.getImage("/Game_bg.jpg");
         Image bgImage = bgIcon.getImage();
-        Image newImg = bgImage.getScaledInstance(ScalingUtils.scaleX(330), ScalingUtils.scaleY(170),  Image.SCALE_SMOOTH);
+        Image newImg = bgImage.getScaledInstance(ScalingUtils.scaleX(495, 495), ScalingUtils.scaleY(255, 255),  Image.SCALE_SMOOTH);
         bgIcon = new ImageIcon(newImg);
         JLabel bgLabel = new JLabel(bgIcon);
-        bgLabel.setSize(ScalingUtils.scaleX(330), ScalingUtils.scaleY(170));
-
-        JLayeredPane layered = new JLayeredPane();
-        layered.add(bgLabel, Integer.valueOf(5));
-        layered.setSize(ScalingUtils.scaleX(910), ScalingUtils.scaleY(705));
-        layered.setLayout(null);
+        bgLabel.setSize(ScalingUtils.scaleX(495, 495), ScalingUtils.scaleY(255, 255));
 
         //Main window:
         JFrame window = new JFrame("Eriantys - Connection settings");
-        window.add(layered);
-        window.setSize(ScalingUtils.scaleX(330), ScalingUtils.scaleY(170));
+        window.add(bgLabel);
+        window.setSize(ScalingUtils.scaleX(495), ScalingUtils.scaleY(255));
         window.setResizable(false);
         window.setLayout(null);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,7 +42,7 @@ public class GUIConnection {
         lp.setBackground(colorLabel);
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         lp.setBorder(border);
-        lp.setBounds(ScalingUtils.scaleX(5), ScalingUtils.scaleY(5), ScalingUtils.scaleX(305), ScalingUtils.scaleY(35));
+        lp.setBounds(ScalingUtils.scaleX(8, 495), ScalingUtils.scaleY(8, 255), ScalingUtils.scaleX(458, 495), ScalingUtils.scaleY(53, 255));
         bgLabel.add(lp);
 
         //Local text:
@@ -56,17 +51,21 @@ public class GUIConnection {
         localText.setFont(new Font("Times New Roman", Font.BOLD, ScalingUtils.scaleFont(10)));
         localText.setHorizontalAlignment(SwingConstants.CENTER);
         localText.setVerticalAlignment(SwingConstants.CENTER);
-        localText.setBounds(ScalingUtils.scaleX(5), ScalingUtils.scaleY(5), ScalingUtils.scaleX(120), ScalingUtils.scaleY(25));
+        localText.setBounds(ScalingUtils.scaleX(8, 495), ScalingUtils.scaleY(8, 255), ScalingUtils.scaleX(180, 495), ScalingUtils.scaleY(38, 255));
         lp.add(localText);
 
         //Local button:
         JButton localButton = new JButton("Connect to local server");
-        localButton.setBounds(ScalingUtils.scaleX(125), ScalingUtils.scaleY(5), ScalingUtils.scaleX(175), ScalingUtils.scaleY(25));
+        localButton.setBounds(ScalingUtils.scaleX(188, 495), ScalingUtils.scaleY(8, 255), ScalingUtils.scaleX(263, 495), ScalingUtils.scaleY(38, 255));
         localButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        localButton.setFocusPainted(false);
         lp.add(localButton);
         localButton.addActionListener(e->{
-            ip = "127.0.0.1";
-            port = 12346;
+            synchronized (this) {
+                ip = "127.0.0.1";
+                port = 12346;
+                notifyAll();
+            }
             window.setVisible(false);
         });
 
@@ -76,7 +75,7 @@ public class GUIConnection {
         op.setOpaque(true);
         op.setBackground(colorLabel);
         op.setBorder(border);
-        op.setBounds(ScalingUtils.scaleX(5), ScalingUtils.scaleY(45), ScalingUtils.scaleX(305), ScalingUtils.scaleY(80));
+        op.setBounds(ScalingUtils.scaleX(8, 495), ScalingUtils.scaleY(68, 255), ScalingUtils.scaleX(458, 495), ScalingUtils.scaleY(120, 255));
         bgLabel.add(op);
 
         //Ip text:
@@ -85,13 +84,13 @@ public class GUIConnection {
         ipLabel.setFont(new Font("Times New Roman", Font.BOLD, ScalingUtils.scaleFont(12)));
         ipLabel.setHorizontalAlignment(SwingConstants.CENTER);
         ipLabel.setVerticalAlignment(SwingConstants.CENTER);
-        ipLabel.setBounds(ScalingUtils.scaleX(5), ScalingUtils.scaleY(5), ScalingUtils.scaleX(100), ScalingUtils.scaleY(20));
+        ipLabel.setBounds(ScalingUtils.scaleX(8, 495), ScalingUtils.scaleY(8, 255), ScalingUtils.scaleX(150, 495), ScalingUtils.scaleY(30, 255));
         op.add(ipLabel);
 
         //TextField to get server's ip
         JTextField ipField = new JTextField(16);
         ipField.setFont(new Font("Times New Roman", Font.PLAIN, ScalingUtils.scaleFont(12)));
-        ipField.setBounds(ScalingUtils.scaleX(110), ScalingUtils.scaleY(5), ScalingUtils.scaleX(185), ScalingUtils.scaleY(20));
+        ipField.setBounds(ScalingUtils.scaleX(165, 495), ScalingUtils.scaleY(8, 255), ScalingUtils.scaleX(278, 495), ScalingUtils.scaleY(30, 255));
         op.add(ipField);
 
         //Port text:
@@ -100,24 +99,28 @@ public class GUIConnection {
         portLabel.setFont(new Font("Times New Roman", Font.BOLD, ScalingUtils.scaleFont(12)));
         portLabel.setHorizontalAlignment(SwingConstants.CENTER);
         portLabel.setVerticalAlignment(SwingConstants.CENTER);
-        portLabel.setBounds(ScalingUtils.scaleX(5), ScalingUtils.scaleY(30), ScalingUtils.scaleX(100), ScalingUtils.scaleY(20));
+        portLabel.setBounds(ScalingUtils.scaleX(8, 495), ScalingUtils.scaleY(45, 255), ScalingUtils.scaleX(150, 495), ScalingUtils.scaleY(30, 255));
         op.add(portLabel);
 
         //TextField to get server's port
         JTextField portField = new JTextField(16);
         portField.setFont(new Font("Times New Roman", Font.PLAIN, ScalingUtils.scaleFont(12)));
-        portField.setBounds(ScalingUtils.scaleX(110), ScalingUtils.scaleY(30), ScalingUtils.scaleX(185), ScalingUtils.scaleY(20));
+        portField.setBounds(ScalingUtils.scaleX(165, 495), ScalingUtils.scaleY(45, 255), ScalingUtils.scaleX(278, 495), ScalingUtils.scaleY(30, 255));
         op.add(portField);
 
         //Online button:
         JButton onlineButton = new JButton("Connect to online server");
-        onlineButton.setBounds(ScalingUtils.scaleX(65), ScalingUtils.scaleY(55), ScalingUtils.scaleX(175), ScalingUtils.scaleY(20));
+        onlineButton.setBounds(ScalingUtils.scaleX(98, 495), ScalingUtils.scaleY(83, 255), ScalingUtils.scaleX(263, 495), ScalingUtils.scaleY(30, 255));
         onlineButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        onlineButton.setFocusPainted(false);
         op.add(onlineButton);
         onlineButton.addActionListener(e->{
             try{
-                port = Integer.parseInt(portField.getText());
-                ip = ipField.getText();
+                synchronized (this){
+                    port = Integer.parseInt(portField.getText());
+                    ip = ipField.getText();
+                    notifyAll();
+                }
                 window.setVisible(false);
             }catch (Exception ex){
                 JOptionPane.showMessageDialog(null, "The port must be an integer!","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
