@@ -11,12 +11,19 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class MotherNatureRule
+ */
 class MotherNatureRuleTest {
 
     private MotherNatureRule rule;
     private Report rep;
     private Map<Color, ColorTower> professors;
 
+    /**
+     * This method is called before each test, it creates a hashmap of students, a hashmap of professor and ColorTower,
+     * a Report and a MotherNatureRule
+     */
     @BeforeEach
     void init() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -40,12 +47,18 @@ class MotherNatureRuleTest {
         this.rule = new MotherNatureRule(2);
     }
 
+    /**
+     * This method tests the calculateInfluence method
+     */
     @Test
     void calculateInfluence() {
         ColorTower winner = this.rule.calculateInfluence(this.rep, this.professors);
         assertEquals(ColorTower.BLACK, winner);
     }
 
+    /**
+     * This method tests the update professor in a two players game
+     */
     @Test
     void updateProfessor2Players(){
         String owner = "player1";
@@ -58,6 +71,9 @@ class MotherNatureRuleTest {
         assertEquals("player2", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a two player game with a tie
+     */
     @Test
     void updateProfessor2PlayersTie(){
         String owner = "player1";
@@ -70,6 +86,9 @@ class MotherNatureRuleTest {
         assertEquals("player1", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a three player game with a tie
+     */
     @Test
     void updateProfessor3PlayersTie(){
         String owner = "player1";
@@ -83,16 +102,25 @@ class MotherNatureRuleTest {
         assertEquals("player1", winner);
     }
 
+    /**
+     * This method tests the value of the variable isActionNeeded in the MotherNatureRule
+     */
     @Test
     void isActionNeededInfluence(){
         assertFalse(this.rule.isActionNeeded());
     }
 
+    /**
+     * This method tests the MotherNatureExtraMovement getter
+     */
     @Test
     void getMotherNatureExtraMovement(){
         assertEquals(2, this.rule.getMotherNatureExtraMovement());
     }
 
+    /**
+     * This method tests the MaximumExchangeMoves getter
+     */
     @Test
     void getMaximumExchangeMoves(){
         assertEquals(0, this.rule.getMaximumExchangeMoves());

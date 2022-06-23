@@ -5,7 +5,7 @@ import it.polimi.ingsw.controller.Location;
 
 import java.util.Set;
 
-//TODO Mario controlla se si capisce meglio adesso
+
 /**
  * This class represent a character and is used to store the characters attributes after being extracted from the JSON.
  * This class store the information that has each character, like the id or the type, and a reference to JSONParams object

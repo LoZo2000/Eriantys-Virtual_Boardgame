@@ -47,7 +47,7 @@ public class SelectCloudMessage extends  Message{
 
         int numberFullClouds = (int) Arrays.stream(clouds).filter((Cloud::isFull)).count();
 
-        return new Update(null, null, null, numberFullClouds, null, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
+        return new Update(null, null, null, numberFullClouds, null, null, game.getFinishedGame(), game.getIsLastTurn());
     }
 
     /**

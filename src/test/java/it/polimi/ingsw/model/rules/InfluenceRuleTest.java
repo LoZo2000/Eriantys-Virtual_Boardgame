@@ -11,12 +11,19 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class InfluenceRule
+ */
 class InfluenceRuleTest {
 
     private InfluenceRule rule;
     private Report rep;
     private Map<Color, ColorTower> professors;
 
+    /**
+     * This method is called before each test, it creates a hashmap of students, a hashmap of professor and ColorTower,
+     * a Report
+     */
     @BeforeEach
     void init() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -38,6 +45,9 @@ class InfluenceRuleTest {
         //WHITE: 5
     }
 
+    /**
+     * This method tests the calculateInfluence method when the towers are disabled
+     */
     @Test
     void calculateInfluenceTowersDisabled() {
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 0, true);
@@ -47,6 +57,9 @@ class InfluenceRuleTest {
         assertEquals(ColorTower.WHITE, winner);
     }
 
+    /**
+     * This method tests the calculateInfluence method when the amount of extraPoints is >0
+     */
     @Test
     void calculateInfluenceExtraPoints() {
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
@@ -56,6 +69,9 @@ class InfluenceRuleTest {
         assertEquals(ColorTower.WHITE, winner);
     }
 
+    /**
+     * This method tests the calculateInfluence method when a Color is blocked
+     */
     @Test
     void calculateInfluenceBlockedColor() {
         this.rule = new InfluenceRule(ColorTower.WHITE, Color.RED, 2, false);
@@ -69,6 +85,9 @@ class InfluenceRuleTest {
         assertEquals(ColorTower.WHITE, winner);
     }
 
+    /**
+     * This method tests the update professor in a two players game
+     */
     @Test
     void updateProfessor2Players(){
         this.rule = new InfluenceRule(ColorTower.WHITE,null,2, false);
@@ -82,6 +101,9 @@ class InfluenceRuleTest {
         assertEquals("player2", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a two player game with a tie
+     */
     @Test
     void updateProfessor2PlayersTie(){
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
@@ -95,6 +117,9 @@ class InfluenceRuleTest {
         assertEquals("player1", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a three player game with a tie
+     */
     @Test
     void updateProfessor3PlayersTie(){
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
@@ -109,6 +134,9 @@ class InfluenceRuleTest {
         assertEquals("player1", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a three player game with no previously owner of the professor
+     */
     @Test
     void updateProfessor3PlayersNoOwner(){
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
@@ -122,6 +150,9 @@ class InfluenceRuleTest {
         assertEquals("player1", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a three player game with a tie and no previously owner of the professor
+     */
     @Test
     void updateProfessor3PlayersNoOwnerTie(){
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
@@ -135,18 +166,27 @@ class InfluenceRuleTest {
         assertNull(winner);
     }
 
+    /**
+     * This method tests the value of the variable isActionNeeded in the InfluenceRule
+     */
     @Test
     void isActionNeededInfluence(){
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
         assertFalse(this.rule.isActionNeeded());
     }
 
+    /**
+     * This method tests the MotherNatureExtraMovement getter
+     */
     @Test
     void getMotherNatureExtraMovement(){
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);
         assertEquals(0, this.rule.getMotherNatureExtraMovement());
     }
 
+    /**
+     * This method tests the MaximumExchangeMoves getter
+     */
     @Test
     void getMaximumExchangeMoves(){
         this.rule = new InfluenceRule(ColorTower.WHITE, null, 2, false);

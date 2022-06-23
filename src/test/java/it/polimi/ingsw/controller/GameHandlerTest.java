@@ -131,6 +131,28 @@ public class GameHandlerTest {
         gameHandler.execute(message);
     }
 
+    private void playCards2() throws Exception{
+        Message message;
+
+        Message wrongMessage = new PlayCardMessage("player3", -1);
+        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage), "Play a card that doesn't exist");
+
+        Message wrongMessage2 = new PlayCardMessage("player3", 15);
+        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage2), "Play a card that doesn't exist");
+
+        message = new PlayCardMessage("player3", 5);
+        gameHandler.execute(message);
+
+        Message wrongMessage3 = new PlayCardMessage("player1", 5);
+        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage3), "Play an already played card");
+
+        message = new PlayCardMessage("player1", 7);
+        gameHandler.execute(message);
+
+        message = new PlayCardMessage("player2", 2);
+        gameHandler.execute(message);
+    }
+
     /**
      * This method test the movement of the student
      * @throws Exception
@@ -276,7 +298,7 @@ public class GameHandlerTest {
     }
 
     /**
-     * This method test the execution of a whole round in the simple rules game
+     * This method tests the execution of a whole round in the simple rules game
      * @throws Exception
      */
     @Test
@@ -305,6 +327,126 @@ public class GameHandlerTest {
 
         assertEquals(Phase.PRETURN, gameHandler.getPhase());
         assertEquals("player3", gameHandler.getPlayers().get(0));
+    }
+
+    /**
+     * This method tests id when the game finish in the model the controller refreshes the state of the game
+     * @throws Exception
+     */
+    @Test
+    public void testFinishedGame() throws Exception{
+        addPlayers();
+        playCards();
+        List<String> players = new ArrayList<>();
+        players.add("player3");
+        players.add("player1");
+        players.add("player2");
+
+        for(int i=0; i<3; i++){
+            moveStudents(players.get(i));
+            moveMotherNature(players.get(i));
+
+            assertEquals(gameHandler.getGame().getIsland(i+1), gameHandler.getGame().getMotherNaturePosition());
+
+            if(i!=0){
+                Message wrongMessage = new SelectCloudMessage(players.get(i), i-1);
+                assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage));
+            }
+            gameHandler.getGame().endGame();
+            selectCloud(players.get(i), i);
+            if(gameHandler.getGame().getFinishedGame()) break;
+        }
+
+        assertEquals(Phase.ENDGAME, gameHandler.getPhase());
+    }
+
+    /**
+     * This method tests that the game finish when the round finish if the flag isLastTurn in Game is true
+     * @throws Exception
+     */
+    @Test
+    public void testEndGameIsLastTurn() throws Exception{
+        gameHandler.getGame().setLastTurn(true);
+        addPlayers();
+        playCards();
+        List<String> players = new ArrayList<>();
+        players.add("player3");
+        players.add("player1");
+        players.add("player2");
+
+        for(int i=0; i<3; i++){
+            moveStudents(players.get(i));
+            moveMotherNature(players.get(i));
+            assertEquals(gameHandler.getGame().getIsland(i+1), gameHandler.getGame().getMotherNaturePosition());
+
+            if(i!=0){
+                Message wrongMessage = new SelectCloudMessage(players.get(i), i-1);
+                assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage));
+            }
+            selectCloud(players.get(i), i);
+        }
+        assertEquals(Phase.ENDGAME, gameHandler.getPhase());
+        assertEquals("player3", gameHandler.getPlayers().get(0));
+    }
+
+    /**
+     * This method tests that the game finish when the round finish if the flag isLastTurn in Game is true, the test is
+     * repeated a high number of times because the winner is random, so it can test all the winner cases
+     * @throws Exception
+     */
+    @RepeatedTest(200)
+    public void testEndGameNextLastTurn() throws Exception{
+        gameHandler.getGame().setNextLastTurn(true);
+        addPlayers();
+        playCards();
+        List<String> players = new ArrayList<>();
+        players.add("player3");
+        players.add("player1");
+        players.add("player2");
+
+        Cloud[] clouds = gameHandler.getGame().getAllClouds();
+        for(int k=0; k<5; k++){
+            for (int j=0; j<3; j++){
+                clouds[j].chooseCloud();
+            }
+            gameHandler.getGame().refillClouds();
+        }
+
+        for(int i=0; i<3; i++){
+            moveStudents(players.get(i));
+            moveMotherNature(players.get(i));
+            assertEquals(gameHandler.getGame().getIsland(i+1), gameHandler.getGame().getMotherNaturePosition());
+
+            if(i!=0){
+                Message wrongMessage = new SelectCloudMessage(players.get(i), i-1);
+                assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage));
+            }
+
+
+            selectCloud(players.get(i), i);
+        }
+        assertEquals(Phase.PRETURN, gameHandler.getPhase());
+        assertEquals("player3", gameHandler.getPlayers().get(0));
+
+        playCards2();
+
+        players = new ArrayList<>();
+        players.add("player2");
+        players.add("player3");
+        players.add("player1");
+
+        for(int i=0; i<3; i++){
+            moveStudents(players.get(i));
+            moveMotherNature(players.get(i));
+
+            if(i!=0){
+                Message wrongMessage = new SelectCloudMessage(players.get(i), i-1);
+                assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage));
+            }
+            selectCloud(players.get(i), i);
+        }
+        assertEquals(Phase.ENDGAME, gameHandler.getPhase());
+        //System.out.println("The winner is "+gameHandler.getGame().getWinner());
     }
 
     /**

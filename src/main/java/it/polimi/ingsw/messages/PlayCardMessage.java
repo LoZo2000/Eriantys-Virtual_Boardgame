@@ -37,7 +37,7 @@ public class PlayCardMessage extends Message{
         Player p = game.getPlayer(sender);
         game.playCard(p, priority);
 
-        return new Update(null, true, null, null, null, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
+        return new Update(null, true, null, null, null, null, game.getFinishedGame(), game.getIsLastTurn());
     }
 
     /**

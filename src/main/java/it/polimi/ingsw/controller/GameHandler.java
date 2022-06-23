@@ -339,7 +339,7 @@ public class GameHandler {
                 game.setNextLastTurn(true);
                 this.nextLastTurn = true;
             }
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -351,5 +351,6 @@ public class GameHandler {
             pos = (pos + 1) % numPlayers;
         }
     }
+
 
 }

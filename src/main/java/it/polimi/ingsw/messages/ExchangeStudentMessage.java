@@ -66,7 +66,7 @@ public class ExchangeStudentMessage extends MovementMessage{
 
         game.reduceRemainingExchanges();
 
-        return new Update(null, null, null, null, null, null, game.getFinishedGame(), game.getWinner(), game.getIsLastTurn());
+        return new Update(null, null, null, null, null, null, game.getFinishedGame(), game.getIsLastTurn());
 
     }
 

@@ -12,18 +12,27 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class contains the test for the class DefaultRule
+ */
 class DefaultRuleTest {
 
     private DefaultRule rule;
     private Report rep;
     private Map<Color, ColorTower> professors;
 
+    /**
+     * This method is called before each test, it creates a DefaultRule and a Hashmap
+     */
     @BeforeEach
     void init() {
         this.rule = new DefaultRule();
         this.professors = new HashMap<>();
     }
 
+    /**
+     * This method tests that the player who has the ColorTower black obtain the influence according to the rules
+     */
     @Test
     void calculateInfluenceBlackWinner() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -46,6 +55,9 @@ class DefaultRuleTest {
         assertEquals(ColorTower.BLACK, winner);
     }
 
+    /**
+     * This method tests that the player who has the ColorTower white obtain the influence according to the rules
+     */
     @Test
     void calculateInfluenceWhiteWinner() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -68,6 +80,10 @@ class DefaultRuleTest {
         assertEquals(ColorTower.WHITE, winner);
     }
 
+    /**
+     * This method tests that the player who has the ColorTower black obtain the influence according to the rules, because
+     * both players have the same amount of influence but the island was of the black ColorTower
+     */
     @Test
     void calculateInfluenceTieWinner() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -90,6 +106,9 @@ class DefaultRuleTest {
         assertEquals(ColorTower.BLACK, winner);
     }
 
+    /**
+     * This method tests that the player who has the ColorTower grey obtain the influence according to the rules
+     */
     @Test
     void calculateInfluenceNoTowers() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -112,6 +131,10 @@ class DefaultRuleTest {
         assertEquals(ColorTower.GREY, winner);
     }
 
+    /**
+     * This method tests that no one obtain the influence of the island according to the rules, because in the computation
+     * of the influence every player has the same amount and no one previously owned the influence of the island
+     */
     @Test
     void calculateInfluenceTieNoInfluence() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -134,6 +157,11 @@ class DefaultRuleTest {
         assertNull(winner);
     }
 
+    /**
+     * This method tests that the player who has the ColorTower grey obtain the influence according to the rules, because
+     * there is a tie in the computation of the island influence, but the influence of the island was previously owned by
+     * the gray ColorTower
+     */
     @Test
     void calculateInfluenceTieNoChange() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -156,6 +184,10 @@ class DefaultRuleTest {
         assertEquals(ColorTower.GREY, winner);
     }
 
+    /**
+     * This method tests that the player who has the ColorTower black obtain the influence according to the rules, the black
+     * ColorTower obtain the influence of the island due to the extra points given
+     */
     @Test
     void calculateInfluenceWithExtraPoints() {
         HashMap<Color, Integer> students = new HashMap<>();
@@ -178,6 +210,9 @@ class DefaultRuleTest {
         assertEquals(ColorTower.BLACK, winner);
     }
 
+    /**
+     * This method tests the update of the professor in a two player game
+     */
     @Test
     void updateProfessor2Players(){
         String owner = "player1";
@@ -190,6 +225,9 @@ class DefaultRuleTest {
         assertEquals("player2", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a two player game with a tie
+     */
     @Test
     void updateProfessor2PlayersTie(){
         String owner = "player1";
@@ -202,6 +240,9 @@ class DefaultRuleTest {
         assertEquals("player1", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a three player game with a tie
+     */
     @Test
     void updateProfessor3PlayersTie(){
         String owner = "player1";
@@ -215,6 +256,9 @@ class DefaultRuleTest {
         assertEquals("player1", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a three player game with no previously owner of the professor
+     */
     @Test
     void updateProfessor3PlayersNoOwner(){
         HashMap<String, Integer> counterPerColor = new HashMap<>();
@@ -227,6 +271,9 @@ class DefaultRuleTest {
         assertEquals("player1", winner);
     }
 
+    /**
+     * This method tests the update of the professor in a three player game with a tie and no previously owner of the professor
+     */
     @Test
     void updateProfessor3PlayersNoOwnerTie(){
         HashMap<String, Integer> counterPerColor = new HashMap<>();
@@ -239,16 +286,25 @@ class DefaultRuleTest {
         assertNull(winner);
     }
 
+    /**
+     * This method tests the value of the variable isActionNeeded in the DefaultRule
+     */
     @Test
     void isActionNeededDefault(){
         assertFalse(this.rule.isActionNeeded());
     }
 
+    /**
+     * This method tests the MotherNatureExtraMovement getter
+     */
     @Test
     void getMotherNatureExtraMovement(){
         assertEquals(0, this.rule.getMotherNatureExtraMovement());
     }
 
+    /**
+     * This method tests the MaximumExchangeMoves getter
+     */
     @Test
     void getMaximumExchangeMoves(){
         assertEquals(0, this.rule.getMaximumExchangeMoves());

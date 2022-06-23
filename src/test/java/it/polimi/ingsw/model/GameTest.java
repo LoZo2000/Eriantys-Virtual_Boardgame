@@ -197,6 +197,7 @@ class GameTest {
 
         assertEquals(true, game.getFinishedGame());
         assertEquals("player1", game.getWinner());
+        //System.out.println("The winner is"+ game.getWinner());
     }
 
     //util method that print all the students in every island
@@ -371,7 +372,220 @@ class GameTest {
         }
 
         assertEquals(true, game.getFinishedGame());
+        //System.out.println("The winner is"+ game.getWinner());
         assertEquals(3, this.game.getAllIslands().size());
+    }
+
+    private void create4PlayerGame(){
+        ArrayList<Student> students1 = new ArrayList<>();
+        students1.add(new Student(1, Color.RED));
+        students1.add(new Student(2, Color.BLUE));
+        students1.add(new Student(3, Color.GREEN));
+        students1.add(new Student(4, Color.PINK));
+        students1.add(new Student(5, Color.BLUE));
+        students1.add(new Student(6, Color.BLUE));
+        students1.add(new Student(7, Color.BLUE));
+
+        Player player1 = new Player("player1",4, ColorTower.BLACK, students1);
+
+        ArrayList<Student> students2 = new ArrayList<>();
+        students2.add(new Student(8, Color.RED));
+        students2.add(new Student(9, Color.BLUE));
+        students2.add(new Student(10, Color.RED));
+        students2.add(new Student(11, Color.RED));
+        students2.add(new Student(12, Color.RED));
+        students2.add(new Student(13, Color.RED));
+        students2.add(new Student(14, Color.BLUE));
+
+        Player player2 = new Player("player2", 4, ColorTower.WHITE, students2);
+
+        ArrayList<Student> students3 = new ArrayList<>();
+        students3.add(new Student(8, Color.RED));
+        students3.add(new Student(9, Color.BLUE));
+        students3.add(new Student(10, Color.RED));
+        students3.add(new Student(11, Color.RED));
+        students3.add(new Student(12, Color.RED));
+        students3.add(new Student(13, Color.RED));
+        students3.add(new Student(14, Color.BLUE));
+
+        Player player3 = new Player("player3", 4, ColorTower.BLACK, students3);
+
+        ArrayList<Student> students4 = new ArrayList<>();
+        students4.add(new Student(8, Color.RED));
+        students4.add(new Student(9, Color.BLUE));
+        students4.add(new Student(10, Color.RED));
+        students4.add(new Student(11, Color.RED));
+        students4.add(new Student(12, Color.RED));
+        students4.add(new Student(13, Color.RED));
+        students4.add(new Student(14, Color.BLUE));
+
+        Player player4 = new Player("player4", 4, ColorTower.WHITE, students4);
+
+        this.game = new Game(false, 4);
+
+        this.game.addPlayer(player1);
+        this.game.addPlayer(player2);
+        this.game.addPlayer(player3);
+        this.game.addPlayer(player4);
+    }
+
+    /**
+     * This method test the merging of the island until is caused an endgame because there are only 3 islands in the 4
+     * players game
+     */
+    @Test
+    void mergeIslandUntilEndGame4Player() throws Exception{
+        create4PlayerGame();
+        Entrance e1 = null;
+        Canteen c1 = null;
+        Entrance e2 = null;
+        Canteen c2 = null;
+        try {
+            e1 = this.game.getPlayer("player1").getDashboard().getEntrance();
+            c1 = this.game.getPlayer("player1").getDashboard().getCanteen();
+            e2 = this.game.getPlayer("player2").getDashboard().getEntrance();
+            c2 = this.game.getPlayer("player2").getDashboard().getCanteen();
+        }catch(Exception ex){
+            fail();
+        }
+        Island i = null;
+
+        //assign the island to let the player2 conquest, the first
+        try {
+            i = this.game.getIsland(0);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player1 obtain the blue professor
+        try {
+            this.game.moveStudent(6, c1, e1);
+            this.game.moveStudent(2, i, e1);
+            this.game.moveStudent(7, i, e1);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+        //assign the island to let the player2 conquest, the last
+        try {
+            i = this.game.getIsland(11);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player2 obtain the red professor
+        try {
+            this.game.moveStudent(8, c2, e2);
+            this.game.moveStudent(10, i, e2);
+            this.game.moveStudent(11, i, e2);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+        //printStudentsInIslands();
+
+        assertEquals(1, i.getReport().getTowerNumbers());
+
+        for(int cont = 0; cont < 4; cont++) {
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(game.getAllIslands().size() - 2 +cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e2.addStudent(new Student(40 + cont, Color.RED));
+            e2.addStudent(new Student(80 + cont, Color.RED));
+
+            try {
+                this.game.moveStudent(40 + cont, i, e2);
+                this.game.moveStudent(80 + cont, i, e2);
+            } catch (Exception ex) {
+                fail();
+            }
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(1 + cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e1.addStudent(new Student(60 + cont, Color.BLUE));
+            e1.addStudent(new Student(90 + cont, Color.BLUE));
+
+            try {
+                this.game.moveStudent(60 + cont, i, e1);
+                this.game.moveStudent(90 + cont, i, e1);
+            } catch (Exception ex) {
+                fail();
+            }
+
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+            assertEquals(11 - (2 * cont) - 1, this.game.getAllIslands().size());
+
+
+        }
+
+        try {
+            i = this.game.getIsland(6);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        e2.addStudent(new Student(50, Color.RED));
+        e2.addStudent(new Student(51, Color.RED));
+
+        try {
+            this.game.moveStudent(50, i, e2);
+            this.game.moveStudent(51, i, e2);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+
+        assertEquals(true, game.getFinishedGame());
+        //System.out.println("The winner is"+ game.getWinner());
+        assertEquals(3, this.game.getAllIslands().size());
+
     }
 
     /**
@@ -614,13 +828,607 @@ class GameTest {
     }
 
     /**
-     * //todo da fare
+     * This method tests that when the assistant card are finished the flag isLastTurn is true
+     * @throws Exception
      */
     @Test
-    void notifyAndEndGameTest(){
-        //Todo Mario metti qui il test di endgame
-        game.endGame();
-        game.setNextLastTurn(false);
-        game.sendDisconnectionAll("player1");
+    void EndGameByFinishedAssistentCard() throws Exception {
+        create4PlayerGame();
+        Player p1 = game.getPlayer("player1");
+        Player p2 = game.getPlayer("player2");
+        Player p3 = game.getPlayer("player3");
+        Player p4 = game.getPlayer("player4");
+
+        //Play cards from 1 to 10
+        for(int i=0; i<10; i++) {
+            this.game.playCard(p1, i+1);
+        }
+
+        assertEquals(true, game.getIsLastTurn());
+
+        //Play cards from 1 to 10
+        for(int i=0; i<10; i++){
+            this.game.playCard(p2, i+1);
+        }
+
+
+        assertEquals(true, game.getIsLastTurn());
+
+        //Play cards from 1 to 10
+        for(int i=0; i<10; i++) {
+            this.game.playCard(p3, i + 1);
+        }
+
+        assertEquals(true, game.getIsLastTurn());
+
+        //Play cards from 1 to 10
+        for(int i=0; i<10; i++) {
+            this.game.playCard(p4, i + 1);
+        }
+
+        assertEquals(true, game.getIsLastTurn());
     }
+
+    /**
+     * This method tests the end of the game in 4 player game, when the two team have the same amount of islands conquered
+     * but the Black team has more professor
+     * @throws Exception
+     */
+    @Test
+    void EndGame4PlayerTieMoreProfessorBlack() throws Exception{
+        create4PlayerGame();
+        Entrance e1 = null;
+        Canteen c1 = null;
+        Entrance e2 = null;
+        Canteen c2 = null;
+        try {
+            e1 = this.game.getPlayer("player1").getDashboard().getEntrance();
+            c1 = this.game.getPlayer("player1").getDashboard().getCanteen();
+            e2 = this.game.getPlayer("player2").getDashboard().getEntrance();
+            c2 = this.game.getPlayer("player2").getDashboard().getCanteen();
+        }catch(Exception ex){
+            fail();
+        }
+        Island i = null;
+
+        //assign the island to let the player2 conquest, the first
+        try {
+            i = this.game.getIsland(0);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player1 obtain the blue professor and the
+        try {
+            this.game.moveStudent(3, c1, e1);
+            this.game.moveStudent(6, c1, e1);
+            this.game.moveStudent(2, i, e1);
+            this.game.moveStudent(7, i, e1);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+        //assign the island to let the player2 conquest, the last
+        try {
+            i = this.game.getIsland(11);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player2 obtain the red professor
+        try {
+            this.game.moveStudent(8, c2, e2);
+            this.game.moveStudent(10, i, e2);
+            this.game.moveStudent(11, i, e2);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+        //printStudentsInIslands();
+
+        assertEquals(1, i.getReport().getTowerNumbers());
+
+        for(int cont = 0; cont < 4; cont++) {
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(game.getAllIslands().size() - 2 +cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e2.addStudent(new Student(40 + cont, Color.RED));
+            e2.addStudent(new Student(80 + cont, Color.RED));
+
+            try {
+                this.game.moveStudent(40 + cont, i, e2);
+                this.game.moveStudent(80 + cont, i, e2);
+            } catch (Exception ex) {
+                fail();
+            }
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(1 + cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e1.addStudent(new Student(60 + cont, Color.BLUE));
+            e1.addStudent(new Student(90 + cont, Color.BLUE));
+
+            try {
+                this.game.moveStudent(60 + cont, i, e1);
+                this.game.moveStudent(90 + cont, i, e1);
+            } catch (Exception ex) {
+                fail();
+            }
+
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+            assertEquals(11 - (2 * cont) - 1, this.game.getAllIslands().size());
+
+
+        }
+
+
+        game.endGame();
+
+        assertEquals(true, game.getFinishedGame());
+        //System.out.println("The winner is"+ game.getWinner());
+        assertEquals(4, this.game.getAllIslands().size());
+
+    }
+
+    /**
+     * This method tests the end of the game in 4 players game, when the two team have the same amount of islands conquered
+     * and the same amount of professors
+     * @throws Exception
+     */
+    @Test
+    void EndGame4PlayerCompletelyTie() throws Exception{
+        create4PlayerGame();
+        Entrance e1 = null;
+        Canteen c1 = null;
+        Entrance e2 = null;
+        Canteen c2 = null;
+        try {
+            e1 = this.game.getPlayer("player1").getDashboard().getEntrance();
+            c1 = this.game.getPlayer("player1").getDashboard().getCanteen();
+            e2 = this.game.getPlayer("player2").getDashboard().getEntrance();
+            c2 = this.game.getPlayer("player2").getDashboard().getCanteen();
+        }catch(Exception ex){
+            fail();
+        }
+        Island i = null;
+
+        //assign the island to let the player2 conquest, the first
+        try {
+            i = this.game.getIsland(0);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player1 obtain the blue professor
+        try {
+            this.game.moveStudent(6, c1, e1);
+            this.game.moveStudent(2, i, e1);
+            this.game.moveStudent(7, i, e1);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+        //assign the island to let the player2 conquest, the last
+        try {
+            i = this.game.getIsland(11);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player2 obtain the red professor
+        try {
+            this.game.moveStudent(8, c2, e2);
+            this.game.moveStudent(10, i, e2);
+            this.game.moveStudent(11, i, e2);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+        //printStudentsInIslands();
+
+        assertEquals(1, i.getReport().getTowerNumbers());
+
+        for(int cont = 0; cont < 4; cont++) {
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(game.getAllIslands().size() - 2 +cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e2.addStudent(new Student(40 + cont, Color.RED));
+            e2.addStudent(new Student(80 + cont, Color.RED));
+
+            try {
+                this.game.moveStudent(40 + cont, i, e2);
+                this.game.moveStudent(80 + cont, i, e2);
+            } catch (Exception ex) {
+                fail();
+            }
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(1 + cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e1.addStudent(new Student(60 + cont, Color.BLUE));
+            e1.addStudent(new Student(90 + cont, Color.BLUE));
+
+            try {
+                this.game.moveStudent(60 + cont, i, e1);
+                this.game.moveStudent(90 + cont, i, e1);
+            } catch (Exception ex) {
+                fail();
+            }
+
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+            assertEquals(11 - (2 * cont) - 1, this.game.getAllIslands().size());
+
+
+        }
+        //printStudentsInIslands();
+
+        game.endGame();
+
+        assertEquals(true, game.getFinishedGame());
+        //System.out.println("The winner is"+ game.getWinner());
+        assertEquals(4, this.game.getAllIslands().size());
+
+    }
+
+    /**
+     * This method tests the end of the game in 2 players game, when the players have the same amount of island conquered and
+     * the same amount of professors
+     * @throws Exception
+     */
+    @Test
+    void EndGame2playerCompletelyTie() throws Exception{
+        Entrance e1 = null;
+        Canteen c1 = null;
+        Entrance e2 = null;
+        Canteen c2 = null;
+        try {
+            e1 = this.game.getPlayer("player1").getDashboard().getEntrance();
+            c1 = this.game.getPlayer("player1").getDashboard().getCanteen();
+            e2 = this.game.getPlayer("player2").getDashboard().getEntrance();
+            c2 = this.game.getPlayer("player2").getDashboard().getCanteen();
+        }catch(Exception ex){
+            fail();
+        }
+        Island i = null;
+
+        //assign the island to let the player2 conquest, the first
+        try {
+            i = this.game.getIsland(0);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player1 obtain the blue professor
+        try {
+            this.game.moveStudent(6, c1, e1);
+            this.game.moveStudent(2, i, e1);
+            this.game.moveStudent(7, i, e1);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+        //assign the island to let the player2 conquest, the last
+        try {
+            i = this.game.getIsland(11);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player2 obtain the red professor
+        try {
+            this.game.moveStudent(8, c2, e2);
+            this.game.moveStudent(10, i, e2);
+            this.game.moveStudent(11, i, e2);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+        //printStudentsInIslands();
+
+        assertEquals(1, i.getReport().getTowerNumbers());
+
+        for(int cont = 0; cont < 4; cont++) {
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(game.getAllIslands().size() - 2 +cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e2.addStudent(new Student(40 + cont, Color.RED));
+            e2.addStudent(new Student(80 + cont, Color.RED));
+
+            try {
+                this.game.moveStudent(40 + cont, i, e2);
+                this.game.moveStudent(80 + cont, i, e2);
+            } catch (Exception ex) {
+                fail();
+            }
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(1 + cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e1.addStudent(new Student(60 + cont, Color.BLUE));
+            e1.addStudent(new Student(90 + cont, Color.BLUE));
+
+            try {
+                this.game.moveStudent(60 + cont, i, e1);
+                this.game.moveStudent(90 + cont, i, e1);
+            } catch (Exception ex) {
+                fail();
+            }
+
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+            assertEquals(11 - (2 * cont) - 1, this.game.getAllIslands().size());
+
+
+        }
+
+        game.endGame();
+
+        assertEquals(true, game.getFinishedGame());
+        //System.out.println("The winner is"+ game.getWinner());
+        assertEquals(4, this.game.getAllIslands().size());
+
+    }
+
+    /**
+     * This method tests the end of the game in 2 players game, when the players have the same amount of island conquered and
+     * the same amount of professors
+     * @throws Exception
+     */
+    @Test
+    void EndGame2playerTieMoreProfessorBlack() throws Exception{
+        Entrance e1 = null;
+        Canteen c1 = null;
+        Entrance e2 = null;
+        Canteen c2 = null;
+        try {
+            e1 = this.game.getPlayer("player1").getDashboard().getEntrance();
+            c1 = this.game.getPlayer("player1").getDashboard().getCanteen();
+            e2 = this.game.getPlayer("player2").getDashboard().getEntrance();
+            c2 = this.game.getPlayer("player2").getDashboard().getCanteen();
+        }catch(Exception ex){
+            fail();
+        }
+        Island i = null;
+
+        //assign the island to let the player2 conquest, the first
+        try {
+            i = this.game.getIsland(0);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player1 obtain the blue professor
+        try {
+            this.game.moveStudent(3, c1, e1);
+            this.game.moveStudent(6, c1, e1);
+            this.game.moveStudent(2, i, e1);
+            this.game.moveStudent(7, i, e1);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+        //assign the island to let the player2 conquest, the last
+        try {
+            i = this.game.getIsland(11);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        // the player2 obtain the red professor
+        try {
+            this.game.moveStudent(8, c2, e2);
+            this.game.moveStudent(10, i, e2);
+            this.game.moveStudent(11, i, e2);
+        } catch (Exception ex) {
+            fail();
+        }
+
+        //conquest the island by moving mother nature
+        try {
+            this.game.moveMotherNature(i, true);
+        } catch (NoActiveCardException ex) {
+            fail();
+        }
+        //Check if the island were conquered
+        assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+        //printStudentsInIslands();
+
+        assertEquals(1, i.getReport().getTowerNumbers());
+
+        for(int cont = 0; cont < 4; cont++) {
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(game.getAllIslands().size() - 2 +cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e2.addStudent(new Student(40 + cont, Color.RED));
+            e2.addStudent(new Student(80 + cont, Color.RED));
+
+            try {
+                this.game.moveStudent(40 + cont, i, e2);
+                this.game.moveStudent(80 + cont, i, e2);
+            } catch (Exception ex) {
+                fail();
+            }
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.WHITE, i.getReport().getOwner());
+
+            //assign the island to let the player2 conquest
+            try {
+                i = this.game.getIsland(1 + cont);
+            } catch (Exception ex) {
+                fail();
+            }
+            e1.addStudent(new Student(60 + cont, Color.BLUE));
+            e1.addStudent(new Student(90 + cont, Color.BLUE));
+
+            try {
+                this.game.moveStudent(60 + cont, i, e1);
+                this.game.moveStudent(90 + cont, i, e1);
+            } catch (Exception ex) {
+                fail();
+            }
+
+
+            try {
+                this.game.moveMotherNature(i, true);
+            } catch (NoActiveCardException ex) {
+                fail();
+            }
+
+            assertEquals(ColorTower.BLACK, i.getReport().getOwner());
+
+            assertEquals(11 - (2 * cont) - 1, this.game.getAllIslands().size());
+
+
+        }
+
+        game.endGame();
+
+        assertEquals(true, game.getFinishedGame());
+        System.out.println("The winner is"+ game.getWinner());
+        assertEquals(4, this.game.getAllIslands().size());
+
+    }
+
 }

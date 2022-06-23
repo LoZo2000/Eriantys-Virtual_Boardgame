@@ -44,6 +44,6 @@ public class BlockColorMessage extends ChooseColorMessage{
 
         game.disableColor(p, chosenColor);
 
-        return new Update(null, null, null, null, false, null, null, null, null);
+        return new Update(null, null, null, null, false, null, null, null);
     }
 }
