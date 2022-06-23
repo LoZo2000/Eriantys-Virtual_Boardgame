@@ -1,6 +1,8 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.client.gui;
 
+import it.polimi.ingsw.client.gui.ScalingUtils;
 import it.polimi.ingsw.model.ColorTower;
+import it.polimi.ingsw.view.GameReport;
 
 import javax.swing.*;
 import javax.swing.border.Border;

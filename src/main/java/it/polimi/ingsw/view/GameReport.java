@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.exceptions.NoActiveCardException;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -18,7 +17,7 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class GameReport implements Serializable {
     private final String turnOf;
-    private final Phase currentPhase;
+    private Phase currentPhase;
     private final String namePlayer;
     private final String error;
     private final int remainingMoves;
@@ -39,7 +38,6 @@ public class GameReport implements Serializable {
 
 
     //Attributes for GUI:
-    private Phase phase;
     private int numPlayers = 0;
     private ArrayList<Card> myCards = new ArrayList<>();
     private ArrayList<String> allPlayersNick = new ArrayList<>();
@@ -261,7 +259,6 @@ public class GameReport implements Serializable {
      * @param owner is the player that will receive the game report
      */
     public GameReport(Game game, Player owner){
-        //System.out.println("BuildingGameRep");
 
         this.error = null;
         this.finished =game.getFinishedGame();
@@ -273,7 +270,7 @@ public class GameReport implements Serializable {
         opponents = new ArrayList<>();
         characters = new ArrayList<>();
 
-        this.phase = game.getCurrentPhase();
+        this.currentPhase = game.getCurrentPhase();
         this.turnOf = game.getCurrentPlayer();
         this.namePlayer = owner.getNickname();
 
@@ -648,7 +645,7 @@ public class GameReport implements Serializable {
      * @return a Phase object representing the current phase of the game
      */
     public Phase getPhase(){
-        return phase;
+        return currentPhase;
     }
 
     /**

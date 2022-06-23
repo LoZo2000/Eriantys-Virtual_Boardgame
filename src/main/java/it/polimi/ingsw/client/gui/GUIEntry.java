@@ -1,15 +1,13 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.messages.AddMeMessage;
 import it.polimi.ingsw.messages.Message;
-
+import it.polimi.ingsw.view.GameReport;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 
@@ -403,5 +401,6 @@ public class GUIEntry{
         wait.setHorizontalAlignment(SwingConstants.CENTER);
         loading.add(wait);
         layered.add(loading, Integer.valueOf(1));
+
     }
 }

@@ -47,7 +47,7 @@ public class Controller implements Observer<Message> {
     }
 
     /**
-     * This metod return the nicknames of the players in the game
+     * This method return the nicknames of the players in the game
      * @return a list of string containing the nicknames of the players in the game
      */
     public List<String> getNicknames(){

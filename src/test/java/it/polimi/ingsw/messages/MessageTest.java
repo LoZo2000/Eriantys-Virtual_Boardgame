@@ -1,10 +1,8 @@
-package it.polimi.ingsw.message;
+package it.polimi.ingsw.messages;
 
 import it.polimi.ingsw.controller.Location;
-import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.model.Color;
-import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,11 +1,11 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.messages.PingMessage;
+import it.polimi.ingsw.view.GameReport;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -15,13 +15,15 @@ import java.net.Socket;
  * This class create the gui for the client to play the game
  */
 public class ClientGUI {
-    private final String ip;
-    private final int port;
+    private String ip;
+    private int port;
     private GUIEntry GUIentry;
     private GUIGame GUIgame;
 
     private OutputStream outputStream;
     private final Object lockWrite;
+
+
 
     /**
      * This method is the constructor of the class

@@ -1,4 +1,6 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.client.gui;
+
+import it.polimi.ingsw.client.gui.ScalingUtils;
 
 import javax.swing.*;
 import java.awt.*;

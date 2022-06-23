@@ -1,17 +1,16 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.controller.Action;
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
 import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.view.GameReport;
 import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**

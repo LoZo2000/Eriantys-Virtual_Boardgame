@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.controller.Location;
 import it.polimi.ingsw.controller.Phase;
@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.Student;
 import it.polimi.ingsw.model.characters.ActionCharacter;
 import it.polimi.ingsw.model.characters.CharacterType;
 import it.polimi.ingsw.model.characters.MovementCharacter;
+import it.polimi.ingsw.view.GameReport;
 
 import javax.swing.*;
 import javax.swing.border.Border;
