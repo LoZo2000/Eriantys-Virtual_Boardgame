@@ -135,10 +135,10 @@ public class GameHandlerTest {
         Message message;
 
         Message wrongMessage = new PlayCardMessage("player3", -1);
-        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage), "Play a card that doesn't exist");
+        assertThrows(OverflowCardException.class, () -> gameHandler.execute(wrongMessage), "Play a card that doesn't exist");
 
         Message wrongMessage2 = new PlayCardMessage("player3", 15);
-        assertThrows(IllegalMoveException.class, () -> gameHandler.execute(wrongMessage2), "Play a card that doesn't exist");
+        assertThrows(OverflowCardException.class, () -> gameHandler.execute(wrongMessage2), "Play a card that doesn't exist");
 
         message = new PlayCardMessage("player3", 5);
         gameHandler.execute(message);
