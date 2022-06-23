@@ -14,6 +14,9 @@ public class ClientGuiApp {
      * This is the entry point to play a GUI-based game.
      */
     public static void main(String[] args){
+        System.setProperty("sun.java2d.uiScale.enabled", "false");
+        System.setProperty("sun.java2d.uiScale", "1.0");
+
         String ip = "";
         int port = -1;
         GUIConnection GUIconnection = new GUIConnection();

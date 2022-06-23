@@ -13,8 +13,6 @@ public class GUIConnection {
     private String ip;
     private int port = -1;
 
-
-
     /**
      * This is the creator of the class
      */

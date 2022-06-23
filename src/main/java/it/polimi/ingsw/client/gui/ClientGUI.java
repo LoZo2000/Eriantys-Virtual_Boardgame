@@ -34,9 +34,6 @@ public class ClientGUI {
         this.ip = ip;
         this.port = port;
 
-        System.setProperty("sun.java2d.uiScale.enabled", "false");
-        System.setProperty("sun.java2d.uiScale", "1.0");
-
         UIManager.put("OptionPane.minimumSize",new Dimension(ScalingUtils.scaleX(262), ScalingUtils.scaleY(85)));
 
         FontUIResource old = (FontUIResource) UIManager.getFont("OptionPane.font");
