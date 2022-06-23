@@ -224,7 +224,7 @@ public class GUIEntry{
         //Label containing the setting menu:
         JPanel panel = new TransparentPanel();
         panel.setLayout(null);
-        panel.setBounds(ScalingUtils.scaleX(100, 700), ScalingUtils.scaleY(200, 400), ScalingUtils.scaleX(500, 700), ScalingUtils.scaleY(155, 400));
+        panel.setBounds(ScalingUtils.scaleX(75, 700), ScalingUtils.scaleY(200, 400), ScalingUtils.scaleX(550, 700), ScalingUtils.scaleY(155, 400));
         //panel.setOpaque(true);
         Color colorLabel = new Color(190, 190, 190,210);
         panel.setBackground(colorLabel);
@@ -238,7 +238,7 @@ public class GUIEntry{
         title.setHorizontalAlignment(SwingConstants.CENTER);
         title.setVerticalAlignment(SwingConstants.CENTER);
         title.setFont(new Font("MV Boli", Font.BOLD, ScalingUtils.scaleFont(18)));
-        title.setBounds(ScalingUtils.scaleX(100, 500), ScalingUtils.scaleY(5, 155), ScalingUtils.scaleX(300, 500), ScalingUtils.scaleY(20, 155));
+        title.setBounds(ScalingUtils.scaleX(125, 500), ScalingUtils.scaleY(5, 155), ScalingUtils.scaleX(300, 500), ScalingUtils.scaleY(20, 155));
         panel.add(title);
 
         //Text to state the requirements for the nickname:
@@ -247,20 +247,20 @@ public class GUIEntry{
         nick.setFont(new Font("Times New Roman", Font.BOLD, ScalingUtils.scaleFont(14)));
         nick.setHorizontalAlignment(SwingConstants.CENTER);
         nick.setVerticalAlignment(SwingConstants.CENTER);
-        nick.setBounds(ScalingUtils.scaleX(25, 500), ScalingUtils.scaleY(30, 155), ScalingUtils.scaleX(125, 500), ScalingUtils.scaleY(20, 155));
+        nick.setBounds(ScalingUtils.scaleX(25, 500), ScalingUtils.scaleY(30, 155), ScalingUtils.scaleX(145, 500), ScalingUtils.scaleY(20, 155));
         panel.add(nick);
         JLabel req = new JLabel();
         req.setText("(It must be different from other players' ones)");
         req.setFont(new Font("Times New Roman", Font.PLAIN, ScalingUtils.scaleFont(12)));
         req.setHorizontalAlignment(SwingConstants.CENTER);
         req.setVerticalAlignment(SwingConstants.CENTER);
-        req.setBounds(ScalingUtils.scaleX(150, 500), ScalingUtils.scaleY(30, 155), ScalingUtils.scaleX(200, 500), ScalingUtils.scaleY(20, 155));
+        req.setBounds(ScalingUtils.scaleX(170, 500), ScalingUtils.scaleY(30, 155), ScalingUtils.scaleX(230, 500), ScalingUtils.scaleY(20, 155));
         panel.add(req);
 
         //TextField to get player's nickname
         textField = new JTextField(16);
         textField.setFont(new Font("Times New Roman", Font.PLAIN, ScalingUtils.scaleFont(12)));
-        textField.setBounds(ScalingUtils.scaleX(350, 500), ScalingUtils.scaleY(30, 155), ScalingUtils.scaleX(125, 500), ScalingUtils.scaleY(20, 155));
+        textField.setBounds(ScalingUtils.scaleX(400, 500), ScalingUtils.scaleY(30, 155), ScalingUtils.scaleX(125, 500), ScalingUtils.scaleY(20, 155));
         panel.add(textField);
 
         //Text to insert number of players:
@@ -269,7 +269,7 @@ public class GUIEntry{
         pla.setFont(new Font("Times New Roman", Font.BOLD, ScalingUtils.scaleFont(13)));
         pla.setHorizontalAlignment(SwingConstants.CENTER);
         pla.setVerticalAlignment(SwingConstants.CENTER);
-        pla.setBounds(ScalingUtils.scaleX(25, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(125, 500), ScalingUtils.scaleY(30, 155));
+        pla.setBounds(ScalingUtils.scaleX(50, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(125, 500), ScalingUtils.scaleY(30, 155));
         panel.add(pla);
 
         //Slider to select the number of players:
@@ -277,7 +277,7 @@ public class GUIEntry{
         slider.setMajorTickSpacing(1);
         slider.setPaintLabels(true);
         slider.setOpaque(false);
-        slider.setBounds(ScalingUtils.scaleX(150, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(75, 500), ScalingUtils.scaleY(30, 155));
+        slider.setBounds(ScalingUtils.scaleX(175, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(75, 500), ScalingUtils.scaleY(30, 155));
         slider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         panel.add(slider);
 
@@ -287,19 +287,19 @@ public class GUIEntry{
         rul.setFont(new Font("Times New Roman", Font.BOLD, ScalingUtils.scaleFont(14)));
         rul.setHorizontalAlignment(SwingConstants.CENTER);
         rul.setVerticalAlignment(SwingConstants.CENTER);
-        rul.setBounds(ScalingUtils.scaleX(260, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(75, 500), ScalingUtils.scaleY(30, 155));
+        rul.setBounds(ScalingUtils.scaleX(285, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(75, 500), ScalingUtils.scaleY(30, 155));
         panel.add(rul);
         JRadioButton option1 = new JRadioButton("Simple",true);
         option1.setFont(new Font("Times New Roman", Font.PLAIN, ScalingUtils.scaleFont(14)));
         option1.setOpaque(false);
         option1.setFocusPainted(false);
-        option1.setBounds(ScalingUtils.scaleX(335, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(65, 500), ScalingUtils.scaleY(30, 155));
+        option1.setBounds(ScalingUtils.scaleX(360, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(65, 500), ScalingUtils.scaleY(30, 155));
         panel.add(option1);
         JRadioButton option2 = new JRadioButton("Complete",false);
         option2.setFont(new Font("Times New Roman", Font.PLAIN, ScalingUtils.scaleFont(14)));
         option2.setOpaque(false);
         option2.setFocusPainted(false);
-        option2.setBounds(ScalingUtils.scaleX(400, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(100, 500), ScalingUtils.scaleY(30, 155));
+        option2.setBounds(ScalingUtils.scaleX(425, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(100, 500), ScalingUtils.scaleY(30, 155));
         panel.add(option2);
         ButtonGroup group = new ButtonGroup();
         group.add(option1);
@@ -313,7 +313,7 @@ public class GUIEntry{
         newImg = playImage.getScaledInstance(ScalingUtils.scaleX(50, 500), ScalingUtils.scaleY(50, 155),  Image.SCALE_SMOOTH);
         playIcon = new ImageIcon(newImg);
         playButton.setIcon(playIcon);
-        playButton.setBounds(ScalingUtils.scaleX(220, 500), ScalingUtils.scaleY(90, 155), ScalingUtils.scaleX(50, 500), ScalingUtils.scaleY(50, 155));
+        playButton.setBounds(ScalingUtils.scaleX(245, 500), ScalingUtils.scaleY(90, 155), ScalingUtils.scaleX(50, 500), ScalingUtils.scaleY(50, 155));
         playButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         playButton.addActionListener(e->{
             if(requestSent){
@@ -346,7 +346,7 @@ public class GUIEntry{
         //Status bar:
         JPanel status = new JPanel();
         status.setLayout(null);
-        status.setBounds(ScalingUtils.scaleX(283, 500), ScalingUtils.scaleY(126, 155), ScalingUtils.scaleX(212, 500), ScalingUtils.scaleY(24, 155));
+        status.setBounds(ScalingUtils.scaleX(308, 500), ScalingUtils.scaleY(126, 155), ScalingUtils.scaleX(212, 500), ScalingUtils.scaleY(24, 155));
         status.setOpaque(false);
         status.setBackground(colorLabel);
         status.setBorder(border);

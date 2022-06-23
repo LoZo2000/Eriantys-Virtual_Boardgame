@@ -13,6 +13,8 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
+
 /**
  * This class represent the cli interface for the client
  */
@@ -99,7 +101,7 @@ public class Client {
     /**
      * This method is called to send messages to server
      */
-    public void sendToServer() {
+    private void sendToServer() {
         Message message = null;
         try{
             while (!finished.get()) {
@@ -137,7 +139,6 @@ public class Client {
             //e.printStackTrace();
         }
     }
-
 
     private void receiveFromServer(){
         try{
