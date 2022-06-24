@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.exceptions.*;
 import java.util.Set;
 
 
+
 /**
  * The class MovementMessage is an abstract class that owns some methods used in the messages where there are movement or exchanges
  * of the pawns

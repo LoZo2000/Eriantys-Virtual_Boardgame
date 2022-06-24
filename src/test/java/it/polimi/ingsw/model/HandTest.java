@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Card;
-import it.polimi.ingsw.model.Hand;
 import it.polimi.ingsw.model.exceptions.OverflowCardException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;

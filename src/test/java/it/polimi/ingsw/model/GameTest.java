@@ -200,25 +200,6 @@ class GameTest {
         //System.out.println("The winner is"+ game.getWinner());
     }
 
-    //util method that print all the students in every island
-    private void printStudentsInIslands() {
-        Island island=null;
-        ArrayList<Student> students=null;
-        for(int i=0; i<12; i++){
-            try {
-                island = game.getIsland(i);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-            students=island.getAllStudents();
-            for(Student t: students){
-                System.out.println(""+t+"");
-            }
-            System.out.println("fine isola"+i);
-        }
-    }
-
     /**
      * This method test the merging of the island until is caused an endgame because there are only 3 islands
      * @throws Exception
@@ -1430,5 +1411,4 @@ class GameTest {
         assertEquals(4, this.game.getAllIslands().size());
 
     }
-
 }

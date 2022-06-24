@@ -131,6 +131,7 @@ public class GUIConnection {
     }
 
 
+
     /**
      * Class to get the attribute ip
      * @return the ip of the server the player wants to connect to

@@ -23,6 +23,7 @@ public class JSONParams {
     private final Integer extraPoints;
     private final Integer extraMNMovement;
     private final Integer maxMoves;
+
     /**
      * This method is the constructor of the class
      * This class holds data read from the JSON file "characters.json" that holds information about characters.

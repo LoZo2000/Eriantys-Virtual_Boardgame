@@ -60,7 +60,15 @@ public class GameReport implements Serializable {
     private ArrayList<Integer> opponentsCoins = new ArrayList<>();
 
 
-
+    /**
+     * Method to build an IslandReport record. This record stores all the important info about an Island
+     * @param id is the id of the Island
+     * @param students is a map that connect every Color with the number of Students on this Island of that corresponding Color
+     * @param prohibitionToken is true if the Island is locked, false otherwise
+     * @param numTowers is the number of the Towers on the Island
+     * @param owner is the color of the team who owns the Island
+     * @param motherNature is true if MotherNature is on the Island, false otherwise
+     */
     private record IslandReport (String id, Map<Color, Integer> students, boolean prohibitionToken, int numTowers, ColorTower owner, boolean motherNature) implements Serializable{
         public Map<Color, Integer> students(){
             Map<Color, Integer> newMap = new HashMap<>();
@@ -93,6 +101,12 @@ public class GameReport implements Serializable {
         }
     }
 
+    /**
+     * Method to build a CloudReport record. This record stores all the important info about a Cloud
+     * @param id is the id of the Cloud
+     * @param students is the number of Students of that Color on the Cloud
+     * @param isFull is true if the Island contains 3/4 Students, false otherwise
+     */
     private record CloudReport (int id, Map<Color, Integer> students, boolean isFull) implements Serializable{
         public Map<Color, Integer> students(){
             Map<Color, Integer> newMap = new HashMap<>();
@@ -118,6 +132,16 @@ public class GameReport implements Serializable {
         }
     }
 
+    /**
+     * Method to build a OpponentReport record. This record stores all the important info about an Opponent
+     * @param nickname is the Nickname of the Opponent
+     * @param color is the Color of the Opponent's Team
+     * @param lastCard is the last Card played by the Opponent
+     * @param studentsEntrance is a Map containing the number of Students of every Color on the Opponent's Entrance
+     * @param studentsCanteen is a Map containing the number of Students of every Color on the Opponent's Dashboard
+     * @param remainingTowers is the number of Tower the Opponent still has
+     * @param coins is the number of Coin the Opponent owns
+     */
     private record OpponentReport(String nickname, ColorTower color, Card lastCard, Map<Color, Integer> studentsEntrance, Map<Color, Integer> studentsCanteen, int remainingTowers, int coins) implements Serializable{
         public Map<Color, Integer> studentsEntrance(){
             Map<Color, Integer> newMap = new HashMap<>();
@@ -165,6 +189,16 @@ public class GameReport implements Serializable {
         }
     }
 
+    /**
+     * Method to build the Player record. This record stores all the important info about the Player
+     * @param color is the color of the Player's Team
+     * @param lastCard is the last Card played by the Player
+     * @param remainingTowers is the number of Tower the Player still has
+     * @param hand is a List containing the Player's Cards
+     * @param entranceStudents is a Map containing the number of Students of every Color on the Player's Entrance
+     * @param canteenStudents is a Map containing the number of Students of every Color on the Player's Dashboard
+     * @param coins is the number of Coin the Opponent owns
+     */
     private record PlayerReport(ColorTower color, Card lastCard, int remainingTowers, List<Card> hand, List<Student> entranceStudents, Map<Color, List<Student>> canteenStudents, int coins) implements Serializable{
         public List<Student> entranceStudents(){
             return new ArrayList<>(entranceStudents);
@@ -214,6 +248,10 @@ public class GameReport implements Serializable {
         }
     }
 
+    /**
+     * Method to build the Character record. This record stores the description of the Character Cards
+     * @param c is the description of the Charater's power
+     */
     private record CharacterReport(Character c) implements Serializable{
         public String shortString(){
             return c.shortString();

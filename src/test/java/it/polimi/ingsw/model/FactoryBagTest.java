@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Bag;
-import it.polimi.ingsw.model.FactoryBag;
-import it.polimi.ingsw.model.Student;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +43,6 @@ public class FactoryBagTest {
         }
         for(int i=0; i<5; i++) assertEquals(2, cont[i]);
     }
-
 
     /**
      *  This method check if the method getBag in FactoryBag works properly

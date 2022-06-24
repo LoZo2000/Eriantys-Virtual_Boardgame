@@ -35,8 +35,6 @@ public class Report {
         this.extraPoint = extrapoints;
     }
 
-    //public String getId(){ return id; }
-
     /**
      * method that return the owner of the island
      * @return the enum ColorTower representing the owner of the island

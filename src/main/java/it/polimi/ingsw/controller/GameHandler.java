@@ -286,7 +286,6 @@ public class GameHandler {
 
     /**
      * Method to return the players in the fame
-     *
      * @return a list of String with the nicknames of the players
      */
     public List<String> getPlayers() {
@@ -351,6 +350,4 @@ public class GameHandler {
             pos = (pos + 1) % numPlayers;
         }
     }
-
-
 }

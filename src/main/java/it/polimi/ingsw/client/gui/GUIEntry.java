@@ -16,10 +16,22 @@ import java.net.Socket;
  */
 public class GUIEntry{
 
+    /**
+     * This class represent a transparent panel to cover the GUI while waiting for an update from the server
+     */
     private class TransparentPanel extends JPanel {
+
+        /**
+         * This method is the constructor of the class
+         */
         public TransparentPanel(){
             setOpaque(false);
         }
+
+        /**
+         * This method build the panel
+         * @param g the <code>Graphics</code> object to protect
+         */
         public void paintComponent(Graphics g) {
             g.setColor(getBackground());
             Rectangle r = g.getClipBounds();

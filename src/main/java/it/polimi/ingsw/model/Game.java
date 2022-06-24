@@ -98,8 +98,6 @@ public class Game extends Observable<GameReport> {
             }catch (IOException e){
                 e.printStackTrace();
             }
-            //Arrays.stream(charactersCards).map(Character::toString)
-            //        .forEach(System.out::println);
         } else{
             this.activeCard = -1;
             this.charactersCards = null;
@@ -478,9 +476,6 @@ public class Game extends Observable<GameReport> {
              Color c = s.getColor();
              this.assignCoins(c, true, false);
          }
-
-         //MoveStudent has worked: update all the clients!
-         //for(Player p : getAllPlayers()) notify(getGameStatus(p.getNickname()));
     }
 
     /**

@@ -12,5 +12,4 @@ public interface Observer<T> {
      * @param message is the object passed to the update
      */
     public void update(T message);
-
 }

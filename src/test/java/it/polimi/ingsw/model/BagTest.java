@@ -1,17 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Bag;
-import it.polimi.ingsw.model.Color;
-import it.polimi.ingsw.model.Student;
-
 import it.polimi.ingsw.model.exceptions.NoMoreStudentsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.Stack;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

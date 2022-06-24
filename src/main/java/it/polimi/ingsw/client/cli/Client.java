@@ -98,9 +98,6 @@ public class Client {
         }
     }
 
-    /**
-     * This method is called to send messages to server
-     */
     private void sendToServer() {
         Message message = null;
         try{
