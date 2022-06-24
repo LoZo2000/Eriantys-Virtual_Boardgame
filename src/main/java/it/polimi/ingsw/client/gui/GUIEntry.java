@@ -281,7 +281,7 @@ public class GUIEntry{
         pla.setFont(new Font("Times New Roman", Font.BOLD, ScalingUtils.scaleFont(13)));
         pla.setHorizontalAlignment(SwingConstants.CENTER);
         pla.setVerticalAlignment(SwingConstants.CENTER);
-        pla.setBounds(ScalingUtils.scaleX(50, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(125, 500), ScalingUtils.scaleY(30, 155));
+        pla.setBounds(ScalingUtils.scaleX(40, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(125, 500), ScalingUtils.scaleY(30, 155));
         panel.add(pla);
 
         //Slider to select the number of players:
@@ -289,7 +289,7 @@ public class GUIEntry{
         slider.setMajorTickSpacing(1);
         slider.setPaintLabels(true);
         slider.setOpaque(false);
-        slider.setBounds(ScalingUtils.scaleX(175, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(75, 500), ScalingUtils.scaleY(30, 155));
+        slider.setBounds(ScalingUtils.scaleX(165, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(75, 500), ScalingUtils.scaleY(30, 155));
         slider.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         panel.add(slider);
 
@@ -299,19 +299,19 @@ public class GUIEntry{
         rul.setFont(new Font("Times New Roman", Font.BOLD, ScalingUtils.scaleFont(14)));
         rul.setHorizontalAlignment(SwingConstants.CENTER);
         rul.setVerticalAlignment(SwingConstants.CENTER);
-        rul.setBounds(ScalingUtils.scaleX(285, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(75, 500), ScalingUtils.scaleY(30, 155));
+        rul.setBounds(ScalingUtils.scaleX(275, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(95, 500), ScalingUtils.scaleY(30, 155));
         panel.add(rul);
         JRadioButton option1 = new JRadioButton("Simple",true);
         option1.setFont(new Font("Times New Roman", Font.PLAIN, ScalingUtils.scaleFont(14)));
         option1.setOpaque(false);
         option1.setFocusPainted(false);
-        option1.setBounds(ScalingUtils.scaleX(360, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(65, 500), ScalingUtils.scaleY(30, 155));
+        option1.setBounds(ScalingUtils.scaleX(370, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(65, 500), ScalingUtils.scaleY(30, 155));
         panel.add(option1);
         JRadioButton option2 = new JRadioButton("Complete",false);
         option2.setFont(new Font("Times New Roman", Font.PLAIN, ScalingUtils.scaleFont(14)));
         option2.setOpaque(false);
         option2.setFocusPainted(false);
-        option2.setBounds(ScalingUtils.scaleX(425, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(100, 500), ScalingUtils.scaleY(30, 155));
+        option2.setBounds(ScalingUtils.scaleX(435, 500), ScalingUtils.scaleY(55, 155), ScalingUtils.scaleX(100, 500), ScalingUtils.scaleY(30, 155));
         panel.add(option2);
         ButtonGroup group = new ButtonGroup();
         group.add(option1);

@@ -1,0 +1,1435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/loren/Desktop/ing-sw-2022-Spagnolo-Vallone-Zoccatelli/src/main/java/it/polimi/ingsw</OriginalElement>
+  <nodes>
+    <node x="17097.0" y="1436.0">it.polimi.ingsw.model.MotherNature</node>
+    <node x="9709.5" y="1436.0">it.polimi.ingsw.messages.SelectCloudMessage</node>
+    <node x="13397.5" y="1370.0">it.polimi.ingsw.server.Connection</node>
+    <node x="18209.0" y="1315.0">it.polimi.ingsw.model.Player</node>
+    <node x="544.5" y="1448.0">it.polimi.ingsw.client.gui.ClientGUI</node>
+    <node x="101.0" y="1403.0">it.polimi.ingsw.model.rules.ExchangeRule</node>
+    <node x="11439.0" y="1459.5">it.polimi.ingsw.model.exceptions.NoActiveCardException</node>
+    <node x="12370.0" y="1326.0">it.polimi.ingsw.model.rules.InfluenceRule</node>
+    <node x="1603.0" y="1459.0">it.polimi.ingsw.client.cli.ClientCliApp</node>
+    <node x="2206.0" y="1448.0">it.polimi.ingsw.controller.Location</node>
+    <node x="18966.5" y="1238.0">it.polimi.ingsw.controller.GameHandler</node>
+    <node x="21092.5" y="1337.5">it.polimi.ingsw.client.cli.Client</node>
+    <node x="6468.5" y="1337.5">it.polimi.ingsw.model.characters.JSONCharacter</node>
+    <node x="6779.0" y="1426.0">it.polimi.ingsw.model.rules.Rule</node>
+    <node x="7167.0" y="1304.0">it.polimi.ingsw.model.characters.Character</node>
+    <node x="7962.0" y="1425.5">it.polimi.ingsw.client.gui.GUIConnection</node>
+    <node x="11187.5" y="1293.0">it.polimi.ingsw.model.Island</node>
+    <node x="7631.5" y="1403.0">it.polimi.ingsw.model.characters.ExchangeCharacter</node>
+    <node x="945.5" y="1459.5">it.polimi.ingsw.model.exceptions.NoContiguousIslandException</node>
+    <node x="21376.0" y="1459.0">it.polimi.ingsw.messages.PingMessage</node>
+    <node x="755.0" y="1448.0">it.polimi.ingsw.model.Color</node>
+    <node x="4759.0" y="1470.5">it.polimi.ingsw.model.rules.DecoratedRule</node>
+    <node x="21955.0" y="1404.0">it.polimi.ingsw.client.gui.GUIGame</node>
+    <node x="10530.0" y="1293.5">it.polimi.ingsw.controller.Update</node>
+    <node x="11903.5" y="1459.0">it.polimi.ingsw.messages.PutBackMessage</node>
+    <node x="1782.0" y="1414.5">it.polimi.ingsw.model.rules.ActionRule</node>
+    <node x="3623.0" y="1437.0">it.polimi.ingsw.client.gui.GUIEntry</node>
+    <node x="8318.0" y="1381.0">it.polimi.ingsw.model.Student</node>
+    <node x="21770.0" y="1459.0">it.polimi.ingsw.client.gui.ClientGuiApp</node>
+    <node x="9016.0" y="1414.5">it.polimi.ingsw.model.rules.MotherNatureRule</node>
+    <node x="17293.5" y="1414.5">it.polimi.ingsw.controller.Controller</node>
+    <node x="2892.0" y="1448.0">it.polimi.ingsw.client.gui.OpponentDialog</node>
+    <node x="13664.0" y="1448.0">it.polimi.ingsw.controller.Action</node>
+    <node x="9946.0" y="1459.0">it.polimi.ingsw.client.gui.PageDialog</node>
+    <node x="4315.0" y="1414.5">it.polimi.ingsw.model.rules.ProfessorRule</node>
+    <node x="-111.0" y="1459.5">it.polimi.ingsw.model.exceptions.NoIslandException</node>
+    <node x="19257.0" y="1437.0">it.polimi.ingsw.messages.MovementMessage</node>
+    <node x="6041.0" y="1436.0">it.polimi.ingsw.messages.UsePowerMessage</node>
+    <node x="5225.0" y="1436.5">it.polimi.ingsw.model.Bag</node>
+    <node x="16307.0" y="1436.0">it.polimi.ingsw.messages.MoveMotherNatureMessage</node>
+    <node x="20145.0" y="1370.0">it.polimi.ingsw.model.Cloud</node>
+    <node x="3162.0" y="1381.0">it.polimi.ingsw.model.Card</node>
+    <node x="15349.0" y="1470.5">it.polimi.ingsw.server.Observer</node>
+    <node x="17545.0" y="1459.5">it.polimi.ingsw.model.exceptions.NoCharacterSelectedException</node>
+    <node x="8136.0" y="1459.0">it.polimi.ingsw.client.gui.RulesDialog</node>
+    <node x="8719.5" y="1448.0">it.polimi.ingsw.model.characters.InfluenceCharacter</node>
+    <node x="18758.9" y="-181.5">it.polimi.ingsw.model.Entrance</node>
+    <node x="15520.0" y="1404.0">it.polimi.ingsw.server.Server</node>
+    <node x="18089.0" y="1425.5">it.polimi.ingsw.model.FactoryBag</node>
+    <node x="20606.5" y="1459.0">it.polimi.ingsw.client.gui.CreditsDialog</node>
+    <node x="5720.0" y="1293.0">it.polimi.ingsw.model.characters.MovementCharacter</node>
+    <node x="19627.0" y="1392.0">it.polimi.ingsw.messages.MoveStudentMessage</node>
+    <node x="2639.0" y="1459.0">it.polimi.ingsw.messages.IslandInfluenceMessage</node>
+    <node x="14417.0" y="1414.0">it.polimi.ingsw.messages.Message</node>
+    <node x="11637.5" y="1447.5">it.polimi.ingsw.messages.ChooseColorMessage</node>
+    <node x="10818.5" y="1370.0">it.polimi.ingsw.model.Report</node>
+    <node x="12126.0" y="1448.0">it.polimi.ingsw.model.ColorTower</node>
+    <node x="16822.0" y="1382.0">it.polimi.ingsw.client.gui.ScalingUtils</node>
+    <node x="15809.0" y="1459.0">it.polimi.ingsw.view.RemoteView</node>
+    <node x="2428.5" y="1447.5">it.polimi.ingsw.model.Hand</node>
+    <node x="7395.0" y="1448.0">it.polimi.ingsw.model.characters.ProfessorCharacter</node>
+    <node x="14624.0" y="1436.0">it.polimi.ingsw.messages.PlayCardMessage</node>
+    <node x="9440.0" y="1415.0">it.polimi.ingsw.model.Canteen</node>
+    <node x="12794.0" y="1437.0">it.polimi.ingsw.server.GameManager</node>
+    <node x="1239.5" y="699.5">it.polimi.ingsw.view.GameReport</node>
+    <node x="18671.5" y="1337.0">it.polimi.ingsw.model.Dashboard</node>
+    <node x="5834.375" y="-158.5">it.polimi.ingsw.model.Movable</node>
+    <node x="14841.0" y="1448.0">it.polimi.ingsw.model.characters.CharacterType</node>
+    <node x="18508.5" y="1459.5">it.polimi.ingsw.model.exceptions.IllegalMoveException</node>
+    <node x="3843.5" y="1447.5">it.polimi.ingsw.messages.ChooseIslandMessage</node>
+    <node x="20439.0" y="1459.0">it.polimi.ingsw.server.ServerApp</node>
+    <node x="15080.0" y="1448.0">it.polimi.ingsw.server.Observable</node>
+    <node x="6260.0" y="1459.5">it.polimi.ingsw.model.exceptions.NoMoreStudentsException</node>
+    <node x="17808.5" y="1425.0">it.polimi.ingsw.messages.AddMeMessage</node>
+    <node x="8520.0" y="1415.0">it.polimi.ingsw.client.cli.Columns</node>
+    <node x="4892.5" y="1271.5">it.polimi.ingsw.model.characters.JSONParams</node>
+    <node x="16077.0" y="1437.0">it.polimi.ingsw.view.View</node>
+    <node x="4015.5" y="1348.0">it.polimi.ingsw.model.characters.ActionCharacter</node>
+    <node x="19932.0" y="1459.5">it.polimi.ingsw.model.exceptions.NoPlayerException</node>
+    <node x="13119.0" y="1459.5">it.polimi.ingsw.model.exceptions.OverflowCardException</node>
+    <node x="14078.0" y="589.0">it.polimi.ingsw.model.Game</node>
+    <node x="13842.0" y="1459.0">it.polimi.ingsw.messages.BlockColorMessage</node>
+    <node x="5457.0" y="1448.0">it.polimi.ingsw.model.characters.MotherNatureCharacter</node>
+    <node x="16583.0" y="1459.5">it.polimi.ingsw.controller.exceptions.IllegalActionException</node>
+    <node x="21576.0" y="1448.0">it.polimi.ingsw.controller.Phase</node>
+    <node x="3348.0" y="1459.0">it.polimi.ingsw.messages.BlockIslandMessage</node>
+    <node x="10137.0" y="1414.5">it.polimi.ingsw.model.rules.DefaultRule</node>
+    <node x="20728.0" y="1381.0">it.polimi.ingsw.messages.ExchangeStudentMessage</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.messages.ChooseColorMessage" target="it.polimi.ingsw.model.Color" relationship="TO_ONE">
+      <point x="-48.75" y="-38.5" />
+      <point x="11729.75" y="310.0" />
+      <point x="771.2" y="310.0" />
+      <point x="-64.80000000000001" y="-115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.characters.ActionCharacter" relationship="CREATE">
+      <point x="-8.942857142857065" y="1017.5" />
+      <point x="14225.557142857142" y="2900.0" />
+      <point x="4196.0" y="2900.0" />
+      <point x="0.0" y="137.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.IslandInfluenceMessage" relationship="CREATE">
+      <point x="13.5" y="379.5" />
+      <point x="22097.5" y="3200.0" />
+      <point x="2679.125" y="3200.0" />
+      <point x="-78.375" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.GameManager" target="it.polimi.ingsw.model.Game" relationship="CREATE">
+      <point x="-75.0" y="104.5" />
+      <point x="12869.0" y="2540.0" />
+      <point x="14091.414285714285" y="2540.0" />
+      <point x="-143.0857142857143" y="1017.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.ClientGUI" target="it.polimi.ingsw.client.gui.GUIGame" relationship="CREATE">
+      <point x="-75.0" y="104.5" />
+      <point x="550.0" y="3290.0" />
+      <point x="22205.5" y="3290.0" />
+      <point x="121.5" y="379.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.MoveStudentMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="-75.0" y="-93.5" />
+      <point x="19735.0" y="1119.0" />
+      <point x="18698.958333333332" y="1119.0" />
+      <point x="88.45833333333333" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.GameReport" target="it.polimi.ingsw.controller.Phase" relationship="TO_ONE">
+      <point x="-144.58333333333334" y="863.5" />
+      <point x="1254.9166666666667" y="3240.0" />
+      <point x="21699.0" y="3240.0" />
+      <point x="41.0" y="115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.controller.Controller" target="it.polimi.ingsw.controller.GameHandler" relationship="TO_ONE">
+      <point x="81.375" y="104.5" />
+      <point x="17488.875" y="2605.0" />
+      <point x="18978.5" y="2605.0" />
+      <point x="-106.5" y="368.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.MotherNatureRule" target="it.polimi.ingsw.model.rules.DecoratedRule" relationship="GENERALIZATION">
+      <point x="98.5" y="82.5" />
+      <point x="9311.5" y="2780.0" />
+      <point x="4884.833333333333" y="2780.0" />
+      <point x="50.33333333333333" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Connection" target="it.polimi.ingsw.server.Server" relationship="TO_ONE">
+      <point x="22.5" y="-225.5" />
+      <point x="13517.5" y="370.0" />
+      <point x="15546.6" y="370.0" />
+      <point x="-106.39999999999998" y="-148.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.BlockColorMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="60.66666666666667" y="-27.0" />
+      <point x="14017.666666666666" y="420.0" />
+      <point x="18538.125" y="420.0" />
+      <point x="-72.375" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.controller.Controller" target="it.polimi.ingsw.server.Observer" relationship="REALIZATION">
+      <point x="-81.375" y="104.5" />
+      <point x="17326.125" y="2545.0" />
+      <point x="15384.25" y="2545.0" />
+      <point x="-35.25" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.GameManager" target="it.polimi.ingsw.model.Game" relationship="TO_MANY">
+      <point x="75.0" y="104.5" />
+      <point x="13019.0" y="2530.0" />
+      <point x="14082.471428571429" y="2530.0" />
+      <point x="-152.02857142857144" y="1017.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.GameReport" target="it.polimi.ingsw.model.characters.Character" relationship="TO_MANY">
+      <point x="28.916666666666657" y="-863.5" />
+      <point x="1428.4166666666667" y="514.0" />
+      <point x="7317.5" y="514.0" />
+      <point x="0.0" y="-203.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.controller.GameHandler" target="it.polimi.ingsw.model.Game" relationship="TO_ONE">
+      <point x="106.5" y="368.5" />
+      <point x="19191.5" y="2870.0" />
+      <point x="14314.985714285714" y="2870.0" />
+      <point x="80.48571428571444" y="1017.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.JSONCharacter" target="it.polimi.ingsw.model.characters.CharacterType" relationship="TO_ONE">
+      <point x="0.0" y="148.5" />
+      <point x="6634.5" y="2850.0" />
+      <point x="14945.5" y="2850.0" />
+      <point x="0.0" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.AddMeMessage" relationship="CREATE">
+      <point x="-90.65000000000003" y="-357.5" />
+      <point x="21105.85" y="1068.0" />
+      <point x="17981.0" y="1068.0" />
+      <point x="50.0" y="-71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.DefaultRule" target="it.polimi.ingsw.model.rules.Rule" relationship="REALIZATION">
+      <point x="-131.33333333333331" y="71.0" />
+      <point x="10202.666666666666" y="2760.0" />
+      <point x="7074.5" y="2760.0" />
+      <point x="98.5" y="71.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Server" target="it.polimi.ingsw.server.GameManager" relationship="CREATE">
+      <point x="53.19999999999999" y="-148.5" />
+      <point x="15706.2" y="310.0" />
+      <point x="13069.0" y="310.0" />
+      <point x="125.0" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.RemoteView" target="it.polimi.ingsw.server.Connection" relationship="TO_ONE">
+      <point x="-52.75" y="-49.5" />
+      <point x="15868.75" y="300.0" />
+      <point x="13382.5" y="300.0" />
+      <point x="-112.5" y="-225.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Island" relationship="CREATE">
+      <point x="-107.31428571428572" y="1017.5" />
+      <point x="14127.185714285713" y="2630.0" />
+      <point x="11214.0" y="2630.0" />
+      <point x="-80.0" y="225.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.Character" target="it.polimi.ingsw.model.characters.CharacterType" relationship="TO_ONE">
+      <point x="76.33333333333334" y="-203.5" />
+      <point x="7393.833333333333" y="360.0" />
+      <point x="14945.5" y="360.0" />
+      <point x="0.0" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.IslandInfluenceMessage" relationship="CREATE">
+      <point x="0.0" y="357.5" />
+      <point x="21196.5" y="3130.0" />
+      <point x="2731.375" y="3130.0" />
+      <point x="-26.125" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.SelectCloudMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="75.6" y="-49.5" />
+      <point x="9895.1" y="1290.0" />
+      <point x="10585.75" y="1290.0" />
+      <point x="-123.75" y="-192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.GameManager" target="it.polimi.ingsw.controller.Controller" relationship="TO_MANY">
+      <point x="-25.0" y="-104.5" />
+      <point x="12919.0" y="250.0" />
+      <point x="17335.166666666668" y="250.0" />
+      <point x="-72.33333333333334" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.PlayCardMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="-85.0" y="-0.0" />
+      <point x="85.0" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.UsePowerMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="-43.75" y="49.5" />
+      <point x="6101.75" y="2860.0" />
+      <point x="14435.166666666666" y="2860.0" />
+      <point x="-70.83333333333333" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Card" relationship="CREATE">
+      <point x="8.942857142857235" y="1017.5" />
+      <point x="14243.442857142858" y="3020.0" />
+      <point x="3282.4" y="3020.0" />
+      <point x="34.400000000000006" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.client.gui.RulesDialog" relationship="CREATE">
+      <point x="84.375" y="-379.5" />
+      <point x="22168.375" y="0.0" />
+      <point x="8251.75" y="0.0" />
+      <point x="36.25" y="-38.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Island" relationship="TO_MANY">
+      <point x="-116.25714285714285" y="1017.5" />
+      <point x="14118.242857142857" y="2590.0" />
+      <point x="11294.0" y="2590.0" />
+      <point x="0.0" y="225.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Connection" target="it.polimi.ingsw.view.GameReport" relationship="CREATE">
+      <point x="0.0" y="225.5" />
+      <point x="13495.0" y="3110.0" />
+      <point x="1486.25" y="3110.0" />
+      <point x="86.75" y="863.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.controller.Controller" target="it.polimi.ingsw.model.Game" relationship="TO_ONE">
+      <point x="-27.125" y="104.5" />
+      <point x="17380.375" y="2555.0" />
+      <point x="14368.642857142857" y="2555.0" />
+      <point x="134.14285714285722" y="1017.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.RulesDialog" target="it.polimi.ingsw.client.gui.PageDialog" relationship="CREATE">
+      <point x="0.0" y="38.5" />
+      <point x="8215.5" y="2670.0" />
+      <point x="10025.5" y="2670.0" />
+      <point x="0.0" y="60.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.ChooseColorMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="48.75" y="-38.5" />
+      <point x="11827.25" y="440.0" />
+      <point x="14527.25" y="440.0" />
+      <point x="21.25" y="-71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.view.GameReport" relationship="CREATE">
+      <point x="17.885714285714386" y="1017.5" />
+      <point x="14252.385714285714" y="3180.0" />
+      <point x="1370.5833333333333" y="3180.0" />
+      <point x="-28.916666666666657" y="863.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Dashboard" target="it.polimi.ingsw.model.Card" relationship="TO_ONE">
+      <point x="58.666666666666686" y="170.5" />
+      <point x="18883.666666666668" y="3080.0" />
+      <point x="3248.0" y="3080.0" />
+      <point x="0.0" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.client.cli.Columns" relationship="CREATE">
+      <point x="64.75" y="-357.5" />
+      <point x="21261.25" y="30.0" />
+      <point x="8650.5" y="30.0" />
+      <point x="0.0" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.InfluenceCharacter" target="it.polimi.ingsw.model.rules.InfluenceRule" relationship="CREATE">
+      <point x="58.333333333333314" y="60.5" />
+      <point x="8956.833333333334" y="2650.0" />
+      <point x="12488.2" y="2650.0" />
+      <point x="-78.80000000000001" y="159.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.DecoratedRule" target="it.polimi.ingsw.model.rules.Rule" relationship="TO_ONE">
+      <point x="56.625" y="-27.0" />
+      <point x="4891.125" y="1226.0" />
+      <point x="6877.5" y="1226.0" />
+      <point x="-98.5" y="-71.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.BlockColorMessage" target="it.polimi.ingsw.messages.ChooseColorMessage" relationship="GENERALIZATION">
+      <point x="-45.5" y="27.0" />
+      <point x="13911.5" y="2550.0" />
+      <point x="11778.5" y="2550.0" />
+      <point x="0.0" y="38.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.MoveMotherNatureMessage" relationship="CREATE">
+      <point x="-50.625" y="-379.5" />
+      <point x="22033.375" y="410.0" />
+      <point x="16408.0" y="410.0" />
+      <point x="-30.0" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Bag" relationship="TO_ONE">
+      <point x="-17.885714285714215" y="1017.5" />
+      <point x="14216.614285714286" y="2870.0" />
+      <point x="5458.333333333333" y="2870.0" />
+      <point x="93.33333333333334" y="60.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Player" target="it.polimi.ingsw.model.Dashboard" relationship="TO_ONE">
+      <point x="79.58333333333334" y="170.5" />
+      <point x="18448.083333333332" y="1683.0" />
+      <point x="18766.333333333332" y="1683.0" />
+      <point x="-58.66666666666667" y="170.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.MotherNatureCharacter" target="it.polimi.ingsw.model.characters.Character" relationship="GENERALIZATION">
+      <point x="69.33333333333334" y="49.5" />
+      <point x="5708.333333333333" y="2740.0" />
+      <point x="7231.625" y="2740.0" />
+      <point x="-85.875" y="203.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ProfessorCharacter" target="it.polimi.ingsw.model.characters.Character" relationship="GENERALIZATION">
+      <point x="-88.0" y="-0.0" />
+      <point x="114.5" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Player" target="it.polimi.ingsw.model.Hand" relationship="TO_ONE">
+      <point x="-15.916666666666671" y="170.5" />
+      <point x="18352.583333333332" y="3040.0" />
+      <point x="2477.4" y="3040.0" />
+      <point x="-41.599999999999994" y="49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.ClientGuiApp" target="it.polimi.ingsw.client.gui.ClientGUI" relationship="CREATE">
+      <point x="0.0" y="27.0" />
+      <point x="21844.5" y="3270.0" />
+      <point x="650.0" y="3270.0" />
+      <point x="25.0" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ActionCharacter" target="it.polimi.ingsw.model.rules.ActionRule" relationship="CREATE">
+      <point x="-59.333333333333314" y="-137.5" />
+      <point x="4136.666666666667" y="584.0" />
+      <point x="2077.5" y="584.0" />
+      <point x="98.5" y="-71.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.rules.Rule" relationship="TO_ONE">
+      <point x="-44.714285714285666" y="1017.5" />
+      <point x="14189.785714285714" y="2770.0" />
+      <point x="6877.5" y="2770.0" />
+      <point x="-98.5" y="71.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Canteen" target="it.polimi.ingsw.model.Student" relationship="CREATE">
+      <point x="-109.28571428571422" y="-148.5" />
+      <point x="9458.214285714286" y="1339.0" />
+      <point x="8481.4" y="1339.0" />
+      <point x="77.4" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.PlayCardMessage" relationship="CREATE">
+      <point x="-103.6" y="357.5" />
+      <point x="21092.9" y="2980.0" />
+      <point x="14768.5" y="2980.0" />
+      <point x="42.5" y="49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.MovementCharacter" target="it.polimi.ingsw.model.Student" relationship="CREATE">
+      <point x="31.875" y="192.5" />
+      <point x="5932.375" y="2700.0" />
+      <point x="8361.0" y="2700.0" />
+      <point x="-43.0" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Player" target="it.polimi.ingsw.model.Hand" relationship="CREATE">
+      <point x="15.916666666666657" y="170.5" />
+      <point x="18384.416666666668" y="3100.0" />
+      <point x="2435.8" y="3100.0" />
+      <point x="-83.2" y="49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Bag" target="it.polimi.ingsw.model.exceptions.NoMoreStudentsException" relationship="CREATE">
+      <point x="0.0" y="-60.5" />
+      <point x="5365.0" y="1295.0" />
+      <point x="6376.5" y="1295.0" />
+      <point x="0.0" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.rules.DefaultRule" relationship="CREATE">
+      <point x="-98.37142857142857" y="1017.5" />
+      <point x="14136.128571428571" y="2640.0" />
+      <point x="10465.333333333334" y="2640.0" />
+      <point x="131.33333333333331" y="71.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Entrance" target="it.polimi.ingsw.model.Student" relationship="CREATE">
+      <point x="90.0" y="60.5" />
+      <point x="18955.4" y="-30.0" />
+      <point x="8378.2" y="-30.0" />
+      <point x="-25.80000000000001" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.SelectCloudMessage" relationship="CREATE">
+      <point x="50.625" y="-379.5" />
+      <point x="22134.625" y="60.0" />
+      <point x="9743.9" y="60.0" />
+      <point x="-75.60000000000002" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Island" target="it.polimi.ingsw.model.Student" relationship="TO_MANY">
+      <point x="-60.0" y="-225.5" />
+      <point x="11234.0" y="1252.0" />
+      <point x="8429.8" y="1252.0" />
+      <point x="25.79999999999999" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.MovementMessage" target="it.polimi.ingsw.controller.Location" relationship="TO_ONE">
+      <point x="100.75" y="93.5" />
+      <point x="19559.25" y="3140.0" />
+      <point x="2340.25" y="3140.0" />
+      <point x="44.75" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.BlockIslandMessage" relationship="CREATE">
+      <point x="-67.5" y="379.5" />
+      <point x="22016.5" y="3070.0" />
+      <point x="3387.125" y="3070.0" />
+      <point x="-69.375" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.characters.MotherNatureCharacter" relationship="CREATE">
+      <point x="-26.828571428571365" y="1017.5" />
+      <point x="14207.671428571428" y="2820.0" />
+      <point x="5569.666666666667" y="2820.0" />
+      <point x="-69.33333333333334" y="49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ExchangeCharacter" target="it.polimi.ingsw.model.rules.ExchangeRule" relationship="CREATE">
+      <point x="-81.33333333333334" y="-82.5" />
+      <point x="7728.666666666667" y="494.0" />
+      <point x="199.5" y="494.0" />
+      <point x="-98.5" y="-82.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.ExchangeStudentMessage" target="it.polimi.ingsw.messages.MovementMessage" relationship="GENERALIZATION">
+      <point x="-74.66666666666666" y="-115.5" />
+      <point x="20830.333333333332" y="1109.0" />
+      <point x="19458.5" y="1109.0" />
+      <point x="0.0" y="-93.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIEntry" target="it.polimi.ingsw.view.GameReport" relationship="TO_ONE">
+      <point x="-101.25" y="-236.5" />
+      <point x="3612.75" y="614.0" />
+      <point x="1486.25" y="614.0" />
+      <point x="86.75" y="-863.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.ServerApp" target="it.polimi.ingsw.server.Server" relationship="CREATE">
+      <point x="0.0" y="27.0" />
+      <point x="20513.5" y="2940.0" />
+      <point x="15653.0" y="2940.0" />
+      <point x="0.0" y="148.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.FactoryBag" relationship="CREATE">
+      <point x="116.25714285714298" y="1017.5" />
+      <point x="14350.757142857143" y="2585.0" />
+      <point x="18091.333333333332" y="2585.0" />
+      <point x="-60.66666666666667" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.RemoteView" target="it.polimi.ingsw.view.View" relationship="GENERALIZATION">
+      <point x="105.5" y="-0.0" />
+      <point x="-105.5" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Canteen" target="it.polimi.ingsw.model.Student" relationship="TO_MANY">
+      <point x="-72.8571428571428" y="-148.5" />
+      <point x="9494.642857142857" y="1329.0" />
+      <point x="8464.2" y="1329.0" />
+      <point x="60.199999999999996" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Entrance" target="it.polimi.ingsw.model.Student" relationship="TO_MANY">
+      <point x="-90.0" y="60.5" />
+      <point x="18775.4" y="-40.0" />
+      <point x="8361.0" y="-40.0" />
+      <point x="-43.0" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.FactoryBag" target="it.polimi.ingsw.model.Bag" relationship="TO_ONE">
+      <point x="0.0" y="71.5" />
+      <point x="18152.0" y="2890.0" />
+      <point x="5365.0" y="2890.0" />
+      <point x="0.0" y="60.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.MovementCharacter" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="95.625" y="-192.5" />
+      <point x="5996.125" y="40.0" />
+      <point x="18650.708333333332" y="40.0" />
+      <point x="40.20833333333334" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.ExchangeStudentMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="74.66666666666666" y="-115.5" />
+      <point x="20979.666666666668" y="120.0" />
+      <point x="10635.25" y="120.0" />
+      <point x="-74.25" y="-192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.PutBackMessage" target="it.polimi.ingsw.messages.ChooseColorMessage" relationship="GENERALIZATION">
+      <point x="-85.0" y="-0.0" />
+      <point x="97.5" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.UsePowerMessage" relationship="CREATE">
+      <point x="118.125" y="-379.5" />
+      <point x="22202.125" y="-10.0" />
+      <point x="6087.166666666667" y="-10.0" />
+      <point x="-58.333333333333314" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.MoveMotherNatureMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="0.0" y="49.5" />
+      <point x="16438.0" y="1676.0" />
+      <point x="14576.833333333334" y="1676.0" />
+      <point x="70.83333333333331" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Cloud" target="it.polimi.ingsw.model.Student" relationship="TO_MANY">
+      <point x="0.0" y="-126.5" />
+      <point x="20277.0" y="50.0" />
+      <point x="8395.4" y="50.0" />
+      <point x="-8.600000000000009" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ExchangeCharacter" target="it.polimi.ingsw.model.characters.MovementCharacter" relationship="GENERALIZATION">
+      <point x="-61.0" y="82.5" />
+      <point x="7749.0" y="1711.0" />
+      <point x="5996.125" y="1711.0" />
+      <point x="95.625" y="192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Entrance" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="90.0" y="60.5" />
+      <point x="18955.4" y="-30.0" />
+      <point x="18666.791666666668" y="-30.0" />
+      <point x="56.29166666666667" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.IslandInfluenceMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="78.375" y="27.0" />
+      <point x="2835.875" y="2980.0" />
+      <point x="10709.5" y="2980.0" />
+      <point x="0.0" y="192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.View" target="it.polimi.ingsw.server.Observer" relationship="REALIZATION">
+      <point x="-52.75" y="49.0" />
+      <point x="16129.75" y="1656.0" />
+      <point x="15454.75" y="1656.0" />
+      <point x="35.25" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.ExchangeStudentMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="0.0" y="-115.5" />
+      <point x="20905.0" y="1078.0" />
+      <point x="18682.875" y="1078.0" />
+      <point x="72.375" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.ClientGUI" target="it.polimi.ingsw.client.gui.GUIEntry" relationship="TO_ONE">
+      <point x="-50.0" y="-104.5" />
+      <point x="575.0" y="564.0" />
+      <point x="3747.75" y="564.0" />
+      <point x="33.75" y="-236.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Dashboard" target="it.polimi.ingsw.model.ColorTower" relationship="TO_ONE">
+      <point x="-70.4" y="-170.5" />
+      <point x="18754.6" y="200.0" />
+      <point x="12223.0" y="200.0" />
+      <point x="0.0" y="-71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIEntry" target="it.polimi.ingsw.client.gui.CreditsDialog" relationship="CREATE">
+      <point x="-67.5" y="236.5" />
+      <point x="3646.5" y="2990.0" />
+      <point x="20690.5" y="2990.0" />
+      <point x="0.0" y="38.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.ClientCliApp" target="it.polimi.ingsw.client.cli.Client" relationship="CREATE">
+      <point x="0.0" y="27.0" />
+      <point x="1677.5" y="3170.0" />
+      <point x="21248.3" y="3170.0" />
+      <point x="51.80000000000001" y="357.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Server" target="it.polimi.ingsw.server.Connection" relationship="CREATE">
+      <point x="0.0" y="-148.5" />
+      <point x="15653.0" y="320.0" />
+      <point x="13427.5" y="320.0" />
+      <point x="-67.5" y="-225.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.PutBackMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="56.66666666666667" y="-27.0" />
+      <point x="12067.666666666666" y="220.0" />
+      <point x="18554.208333333332" y="220.0" />
+      <point x="-56.29166666666666" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.PingMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="-42.5" y="27.0" />
+      <point x="21418.5" y="3010.0" />
+      <point x="14491.833333333334" y="3010.0" />
+      <point x="-14.166666666666671" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.PutBackMessage" relationship="CREATE">
+      <point x="12.949999999999989" y="-357.5" />
+      <point x="21209.45" y="170.0" />
+      <point x="12011.0" y="170.0" />
+      <point x="0.0" y="-27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Card" relationship="TO_MANY">
+      <point x="8.526512829121202E-14" y="1017.5" />
+      <point x="14234.5" y="2970.0" />
+      <point x="3316.8" y="2970.0" />
+      <point x="68.80000000000001" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.GameReport" target="it.polimi.ingsw.model.Card" relationship="TO_MANY">
+      <point x="144.58333333333334" y="-863.5" />
+      <point x="1544.0833333333333" y="624.0" />
+      <point x="3248.0" y="624.0" />
+      <point x="0.0" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.MovementCharacter" target="it.polimi.ingsw.model.characters.ActionCharacter" relationship="GENERALIZATION">
+      <point x="-95.625" y="-192.5" />
+      <point x="5804.875" y="1216.0" />
+      <point x="4255.333333333333" y="1216.0" />
+      <point x="59.33333333333333" y="-137.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Player" target="it.polimi.ingsw.model.Dashboard" relationship="CREATE">
+      <point x="47.75" y="170.5" />
+      <point x="18416.25" y="1693.0" />
+      <point x="18825.0" y="1693.0" />
+      <point x="0.0" y="170.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.characters.MovementCharacter" relationship="CREATE">
+      <point x="-35.771428571428515" y="1017.5" />
+      <point x="14198.728571428572" y="2800.0" />
+      <point x="5804.875" y="2800.0" />
+      <point x="-95.625" y="192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.GameManager" target="it.polimi.ingsw.controller.Controller" relationship="CREATE">
+      <point x="-75.0" y="-104.5" />
+      <point x="12869.0" y="240.0" />
+      <point x="17407.5" y="240.0" />
+      <point x="0.0" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ActionCharacter" target="it.polimi.ingsw.model.characters.Character" relationship="GENERALIZATION">
+      <point x="0.0" y="-137.5" />
+      <point x="4196.0" y="564.0" />
+      <point x="7241.166666666667" y="564.0" />
+      <point x="-76.33333333333334" y="-203.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.client.gui.OpponentDialog" relationship="TO_MANY">
+      <point x="-13.5" y="379.5" />
+      <point x="22070.5" y="3160.0" />
+      <point x="2952.0" y="3160.0" />
+      <point x="-60.0" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.controller.Location" relationship="TO_ONE">
+      <point x="40.5" y="379.5" />
+      <point x="22124.5" y="3230.0" />
+      <point x="2250.75" y="3230.0" />
+      <point x="-44.75" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.MoveStudentMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="-25.0" y="-93.5" />
+      <point x="19785.0" y="140.0" />
+      <point x="10684.75" y="140.0" />
+      <point x="-24.75" y="-192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIEntry" target="it.polimi.ingsw.client.gui.RulesDialog" relationship="CREATE">
+      <point x="101.25" y="-236.5" />
+      <point x="3815.25" y="504.0" />
+      <point x="8179.25" y="504.0" />
+      <point x="-36.25" y="-38.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Canteen" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="109.28571428571428" y="-148.5" />
+      <point x="9676.785714285714" y="130.0" />
+      <point x="18602.458333333332" y="130.0" />
+      <point x="-8.041666666666643" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ExchangeCharacter" target="it.polimi.ingsw.model.Movable" relationship="REALIZATION">
+      <point x="0.0" y="-82.5" />
+      <point x="7810.0" y="-20.0" />
+      <point x="5932.375" y="-20.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Student" target="it.polimi.ingsw.model.Color" relationship="TO_ONE">
+      <point x="-60.19999999999999" y="-104.5" />
+      <point x="8343.8" y="350.0" />
+      <point x="868.4" y="350.0" />
+      <point x="32.400000000000006" y="-115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Entrance" target="it.polimi.ingsw.model.Movable" relationship="REALIZATION">
+      <point x="-120.0" y="-0.0" />
+      <point x="98.0" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Cloud" relationship="TO_MANY">
+      <point x="53.657142857142986" y="1017.5" />
+      <point x="14288.157142857142" y="2970.0" />
+      <point x="20343.0" y="2970.0" />
+      <point x="66.0" y="126.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ActionCharacter" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="-59.33333333333333" y="137.5" />
+      <point x="4136.666666666667" y="2950.0" />
+      <point x="18586.375" y="2950.0" />
+      <point x="-24.125" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.MoveMotherNatureMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="-90.0" y="-49.5" />
+      <point x="16348.0" y="270.0" />
+      <point x="10783.75" y="270.0" />
+      <point x="74.25" y="-192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.PlayCardMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="0.0" y="-49.5" />
+      <point x="14726.0" y="380.0" />
+      <point x="10833.25" y="380.0" />
+      <point x="123.75" y="-192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.JSONParams" target="it.polimi.ingsw.controller.Action" relationship="TO_ONE">
+      <point x="0.0" y="236.5" />
+      <point x="5067.5" y="2830.0" />
+      <point x="13689.333333333334" y="2830.0" />
+      <point x="-58.66666666666667" y="214.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Connection" target="it.polimi.ingsw.messages.Message" relationship="TO_ONE">
+      <point x="112.5" y="-225.5" />
+      <point x="13607.5" y="450.0" />
+      <point x="14484.75" y="450.0" />
+      <point x="-21.25" y="-71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Player" relationship="CREATE">
+      <point x="107.31428571428586" y="1017.5" />
+      <point x="14341.814285714287" y="2595.0" />
+      <point x="18288.916666666668" y="2595.0" />
+      <point x="-79.58333333333333" y="170.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.InfluenceRule" target="it.polimi.ingsw.model.Color" relationship="TO_ONE">
+      <point x="78.80000000000001" y="159.5" />
+      <point x="12645.8" y="3190.0" />
+      <point x="890.0" y="3190.0" />
+      <point x="54.0" y="115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.MovementMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="-100.75" y="93.5" />
+      <point x="19357.75" y="2880.0" />
+      <point x="14520.166666666666" y="2880.0" />
+      <point x="14.166666666666657" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.model.Color" relationship="TO_ONE">
+      <point x="67.5" y="379.5" />
+      <point x="22151.5" y="3260.0" />
+      <point x="782.0" y="3260.0" />
+      <point x="-54.0" y="115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Dashboard" target="it.polimi.ingsw.model.Entrance" relationship="TO_ONE">
+      <point x="35.199999999999996" y="-170.5" />
+      <point x="18860.2" y="-20.0" />
+      <point x="18835.4" y="-20.0" />
+      <point x="-30.0" y="60.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Canteen" target="it.polimi.ingsw.model.Color" relationship="TO_ONE">
+      <point x="-36.42857142857139" y="-148.5" />
+      <point x="9531.07142857143" y="330.0" />
+      <point x="836.0" y="330.0" />
+      <point x="0.0" y="-115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.controller.Phase" relationship="TO_ONE">
+      <point x="44.714285714285836" y="1017.5" />
+      <point x="14279.214285714286" y="3050.0" />
+      <point x="21617.0" y="3050.0" />
+      <point x="-41.0" y="115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.SelectCloudMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="37.800000000000004" y="-49.5" />
+      <point x="9857.3" y="390.0" />
+      <point x="14569.75" y="390.0" />
+      <point x="63.75" y="-71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.characters.ExchangeCharacter" relationship="CREATE">
+      <point x="-80.48571428571427" y="1017.5" />
+      <point x="14154.014285714286" y="2680.0" />
+      <point x="7871.0" y="2680.0" />
+      <point x="61.0" y="82.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Island" target="it.polimi.ingsw.model.Report" relationship="CREATE">
+      <point x="-120.0" y="-0.0" />
+      <point x="118.0" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="89.42857142857159" y="1017.5" />
+      <point x="14323.928571428572" y="2635.0" />
+      <point x="18538.125" y="2635.0" />
+      <point x="-72.375" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.AddMeMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="-50.0" y="71.5" />
+      <point x="17881.0" y="2575.0" />
+      <point x="14548.5" y="2575.0" />
+      <point x="42.499999999999986" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.IslandInfluenceMessage" target="it.polimi.ingsw.messages.ChooseIslandMessage" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.0" />
+      <point x="2757.5" y="604.0" />
+      <point x="4027.5" y="604.0" />
+      <point x="49.5" y="-38.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.BlockColorMessage" relationship="CREATE">
+      <point x="-16.875" y="-379.5" />
+      <point x="22067.125" y="330.0" />
+      <point x="13896.333333333334" y="330.0" />
+      <point x="-60.666666666666686" y="-27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.MoveMotherNatureMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="90.0" y="-49.5" />
+      <point x="16528.0" y="1317.0" />
+      <point x="18522.041666666668" y="1317.0" />
+      <point x="-88.45833333333334" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.MotherNature" relationship="TO_ONE">
+      <point x="143.08571428571435" y="1017.5" />
+      <point x="14377.585714285715" y="2535.0" />
+      <point x="17226.0" y="2535.0" />
+      <point x="43.0" y="49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.ExchangeStudentMessage" relationship="CREATE">
+      <point x="-129.5" y="-0.0" />
+      <point x="112.0" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Hand" target="it.polimi.ingsw.model.exceptions.OverflowCardException" relationship="CREATE">
+      <point x="0.0" y="49.5" />
+      <point x="2519.0" y="3010.0" />
+      <point x="13227.0" y="3010.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.InfluenceRule" target="it.polimi.ingsw.model.Report" relationship="CREATE">
+      <point x="-157.6" y="159.5" />
+      <point x="12409.4" y="2600.0" />
+      <point x="10947.0" y="2600.0" />
+      <point x="-59.0" y="126.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.characters.Character" relationship="TO_MANY">
+      <point x="-53.657142857142816" y="1017.5" />
+      <point x="14180.842857142858" y="2740.0" />
+      <point x="7288.875" y="2740.0" />
+      <point x="-28.625" y="203.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.GameReport" target="it.polimi.ingsw.controller.Action" relationship="TO_ONE">
+      <point x="28.916666666666686" y="863.5" />
+      <point x="1428.4166666666667" y="3150.0" />
+      <point x="13806.666666666666" y="3150.0" />
+      <point x="58.666666666666686" y="214.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.MoveStudentMessage" target="it.polimi.ingsw.messages.MovementMessage" relationship="GENERALIZATION">
+      <point x="-100.0" y="-0.0" />
+      <point x="201.5" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.Message" target="it.polimi.ingsw.controller.Action" relationship="TO_ONE">
+      <point x="-63.75" y="-71.5" />
+      <point x="14442.25" y="470.0" />
+      <point x="13792.0" y="470.0" />
+      <point x="44.0" y="-214.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.GameReport" target="it.polimi.ingsw.model.Student" relationship="TO_MANY">
+      <point x="-28.916666666666686" y="-863.5" />
+      <point x="1370.5833333333333" y="484.0" />
+      <point x="8326.6" y="484.0" />
+      <point x="-77.39999999999998" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.exceptions.NoActiveCardException" relationship="CREATE">
+      <point x="-125.2" y="1017.5" />
+      <point x="14109.3" y="2570.0" />
+      <point x="11547.5" y="2570.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.IslandInfluenceMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="26.125" y="27.0" />
+      <point x="2783.625" y="3090.0" />
+      <point x="18682.875" y="3090.0" />
+      <point x="72.375" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Canteen" target="it.polimi.ingsw.model.Movable" relationship="REALIZATION">
+      <point x="2.8421709430404007E-14" y="-148.5" />
+      <point x="9567.5" y="-20.0" />
+      <point x="5932.375" y="-20.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.FactoryBag" target="it.polimi.ingsw.model.Bag" relationship="CREATE">
+      <point x="60.666666666666686" y="71.5" />
+      <point x="18212.666666666668" y="2910.0" />
+      <point x="5271.666666666667" y="2910.0" />
+      <point x="-93.33333333333334" y="60.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.JSONCharacter" target="it.polimi.ingsw.model.characters.JSONParams" relationship="TO_ONE">
+      <point x="57.25" y="-148.5" />
+      <point x="6691.75" y="1236.0" />
+      <point x="5067.5" y="1236.0" />
+      <point x="0.0" y="-236.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.characters.Character" relationship="CREATE">
+      <point x="-62.599999999999966" y="1017.5" />
+      <point x="14171.9" y="2720.0" />
+      <point x="7346.125" y="2720.0" />
+      <point x="28.625" y="203.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.FactoryBag" target="it.polimi.ingsw.model.Student" relationship="CREATE">
+      <point x="0.0" y="-71.5" />
+      <point x="18152.0" y="180.0" />
+      <point x="8412.6" y="180.0" />
+      <point x="8.599999999999994" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.MovementCharacter" target="it.polimi.ingsw.model.Movable" relationship="REALIZATION">
+      <point x="31.875" y="-192.5" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.GameReport" target="it.polimi.ingsw.model.ColorTower" relationship="TO_MANY">
+      <point x="144.58333333333331" y="863.5" />
+      <point x="1544.0833333333333" y="3050.0" />
+      <point x="12287.666666666666" y="3050.0" />
+      <point x="64.66666666666666" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.ProfessorRule" target="it.polimi.ingsw.model.rules.DecoratedRule" relationship="GENERALIZATION">
+      <point x="197.0" y="-0.0" />
+      <point x="-75.5" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ExchangeCharacter" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="81.33333333333334" y="-82.5" />
+      <point x="7891.333333333333" y="100.0" />
+      <point x="18618.541666666668" y="100.0" />
+      <point x="8.041666666666686" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.JSONParams" target="it.polimi.ingsw.controller.Location" relationship="TO_MANY">
+      <point x="-85.0" y="-236.5" />
+      <point x="4982.5" y="574.0" />
+      <point x="2340.25" y="574.0" />
+      <point x="44.75" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Server" target="it.polimi.ingsw.server.Connection" relationship="TO_MANY">
+      <point x="-53.19999999999999" y="-148.5" />
+      <point x="15599.8" y="350.0" />
+      <point x="13472.5" y="350.0" />
+      <point x="-22.5" y="-225.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Hand" target="it.polimi.ingsw.model.Card" relationship="TO_MANY">
+      <point x="41.599999999999994" y="49.5" />
+      <point x="2560.6" y="2990.0" />
+      <point x="3213.6" y="2990.0" />
+      <point x="-34.400000000000006" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.PutBackMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="0.0" y="27.0" />
+      <point x="12011.0" y="2610.0" />
+      <point x="10828.3" y="2610.0" />
+      <point x="118.80000000000001" y="192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.MoveStudentMessage" relationship="CREATE">
+      <point x="-84.375" y="-379.5" />
+      <point x="21999.625" y="1098.0" />
+      <point x="19835.0" y="1098.0" />
+      <point x="25.0" y="-93.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.ClientGUI" target="it.polimi.ingsw.messages.PingMessage" relationship="CREATE">
+      <point x="75.0" y="104.5" />
+      <point x="700.0" y="3250.0" />
+      <point x="21503.5" y="3250.0" />
+      <point x="42.5" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.client.gui.OpponentDialog" relationship="CREATE">
+      <point x="-40.5" y="379.5" />
+      <point x="22043.5" y="3120.0" />
+      <point x="3072.0" y="3120.0" />
+      <point x="60.0" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Cloud" relationship="CREATE">
+      <point x="62.600000000000136" y="1017.5" />
+      <point x="14297.1" y="2930.0" />
+      <point x="20211.0" y="2930.0" />
+      <point x="-66.0" y="126.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.BlockColorMessage" relationship="CREATE">
+      <point x="-38.85000000000002" y="-357.5" />
+      <point x="21157.65" y="400.0" />
+      <point x="13957.0" y="400.0" />
+      <point x="0.0" y="-27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.ClientGUI" target="it.polimi.ingsw.client.gui.GUIEntry" relationship="CREATE">
+      <point x="50.0" y="-104.5" />
+      <point x="675.0" y="594.0" />
+      <point x="3680.25" y="594.0" />
+      <point x="-33.75" y="-236.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.ClientGUI" target="it.polimi.ingsw.client.gui.GUIGame" relationship="TO_ONE">
+      <point x="-25.0" y="104.5" />
+      <point x="600.0" y="3280.0" />
+      <point x="22178.5" y="3280.0" />
+      <point x="94.5" y="379.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Island" target="it.polimi.ingsw.model.Movable" relationship="REALIZATION">
+      <point x="20.0" y="-225.5" />
+      <point x="11314.0" y="-20.0" />
+      <point x="5932.375" y="-20.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Report" target="it.polimi.ingsw.model.Color" relationship="TO_MANY">
+      <point x="0.0" y="-126.5" />
+      <point x="11006.0" y="320.0" />
+      <point x="803.6" y="320.0" />
+      <point x="-32.400000000000006" y="-115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.controller.Phase" relationship="TO_ONE">
+      <point x="116.55" y="-357.5" />
+      <point x="21313.05" y="1130.0" />
+      <point x="21603.333333333332" y="1130.0" />
+      <point x="-54.666666666666686" y="-115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.MoveStudentMessage" relationship="CREATE">
+      <point x="-116.55000000000004" y="-357.5" />
+      <point x="21079.95" y="1130.0" />
+      <point x="19885.0" y="1130.0" />
+      <point x="75.0" y="-93.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.UsePowerMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="58.33333333333333" y="-49.5" />
+      <point x="6203.833333333333" y="70.0" />
+      <point x="18634.625" y="70.0" />
+      <point x="24.125000000000014" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.controller.Controller" target="it.polimi.ingsw.controller.GameHandler" relationship="CREATE">
+      <point x="27.125" y="104.5" />
+      <point x="17434.625" y="2625.0" />
+      <point x="19049.5" y="2625.0" />
+      <point x="-35.5" y="368.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.BlockIslandMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="69.375" y="27.0" />
+      <point x="3525.875" y="2930.0" />
+      <point x="10650.1" y="2930.0" />
+      <point x="-59.400000000000006" y="192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.view.GameReport" relationship="TO_ONE">
+      <point x="103.60000000000002" y="357.5" />
+      <point x="21300.1" y="3210.0" />
+      <point x="1312.75" y="3210.0" />
+      <point x="-86.75" y="863.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ActionCharacter" target="it.polimi.ingsw.controller.Action" relationship="TO_ONE">
+      <point x="59.333333333333314" y="137.5" />
+      <point x="4255.333333333333" y="2880.0" />
+      <point x="13748.0" y="2880.0" />
+      <point x="0.0" y="214.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.UsePowerMessage" relationship="CREATE">
+      <point x="90.65" y="-357.5" />
+      <point x="21287.15" y="20.0" />
+      <point x="6145.5" y="20.0" />
+      <point x="0.0" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.ActionRule" target="it.polimi.ingsw.model.rules.DecoratedRule" relationship="GENERALIZATION">
+      <point x="-98.5" y="-71.0" />
+      <point x="1880.5" y="554.0" />
+      <point x="4777.875" y="554.0" />
+      <point x="-56.625" y="-27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Dashboard" target="it.polimi.ingsw.model.Canteen" relationship="TO_ONE">
+      <point x="0.0" y="-170.5" />
+      <point x="18825.0" y="80.0" />
+      <point x="9603.92857142857" y="80.0" />
+      <point x="36.428571428571445" y="-148.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.MoveMotherNatureMessage" relationship="CREATE">
+      <point x="-64.75000000000003" y="-357.5" />
+      <point x="21131.75" y="1058.0" />
+      <point x="16468.0" y="1058.0" />
+      <point x="30.0" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.PutBackMessage" relationship="CREATE">
+      <point x="16.875" y="-379.5" />
+      <point x="22100.875" y="160.0" />
+      <point x="11954.333333333334" y="160.0" />
+      <point x="-56.666666666666686" y="-27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.JSONCharacter" target="it.polimi.ingsw.model.characters.JSONParams" relationship="CREATE">
+      <point x="-57.25" y="-148.5" />
+      <point x="6577.25" y="1246.0" />
+      <point x="5152.5" y="1246.0" />
+      <point x="85.0" y="-236.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.characters.ProfessorCharacter" relationship="CREATE">
+      <point x="-71.54285714285712" y="1017.5" />
+      <point x="14162.957142857143" y="2690.0" />
+      <point x="7570.0" y="2690.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.View" target="it.polimi.ingsw.server.Observable" relationship="GENERALIZATION">
+      <point x="52.75" y="49.0" />
+      <point x="16235.25" y="1666.0" />
+      <point x="15189.5" y="1666.0" />
+      <point x="0.0" y="49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Island" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="60.0" y="-225.5" />
+      <point x="11354.0" y="190.0" />
+      <point x="18570.291666666668" y="190.0" />
+      <point x="-40.208333333333314" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.controller.Action" relationship="TO_MANY">
+      <point x="-12.950000000000017" y="-357.5" />
+      <point x="21183.55" y="340.0" />
+      <point x="13704.0" y="340.0" />
+      <point x="-44.0" y="-214.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.ClientGuiApp" target="it.polimi.ingsw.client.gui.GUIConnection" relationship="CREATE">
+      <point x="0.0" y="-27.0" />
+      <point x="21844.5" y="10.0" />
+      <point x="8037.5" y="10.0" />
+      <point x="0.0" y="-60.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.controller.Controller" target="it.polimi.ingsw.server.GameManager" relationship="TO_ONE">
+      <point x="72.33333333333334" y="-104.5" />
+      <point x="17479.833333333332" y="230.0" />
+      <point x="12819.0" y="230.0" />
+      <point x="-125.0" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.server.Observable" relationship="GENERALIZATION">
+      <point x="0.0" y="-1017.5" />
+      <point x="14234.5" y="460.0" />
+      <point x="15134.75" y="460.0" />
+      <point x="-54.75" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.MotherNature" relationship="CREATE">
+      <point x="152.02857142857147" y="1017.5" />
+      <point x="14386.528571428571" y="2525.0" />
+      <point x="17140.0" y="2525.0" />
+      <point x="-43.0" y="49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.exceptions.NoPlayerException" relationship="CREATE">
+      <point x="71.54285714285729" y="1017.5" />
+      <point x="14306.042857142857" y="2900.0" />
+      <point x="20027.5" y="2900.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIEntry" target="it.polimi.ingsw.messages.AddMeMessage" relationship="CREATE">
+      <point x="67.5" y="236.5" />
+      <point x="3781.5" y="2960.0" />
+      <point x="17981.0" y="2960.0" />
+      <point x="50.0" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.BlockIslandMessage" relationship="CREATE">
+      <point x="-51.80000000000001" y="357.5" />
+      <point x="21144.7" y="3030.0" />
+      <point x="3433.375" y="3030.0" />
+      <point x="-23.125" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.controller.Phase" relationship="TO_ONE">
+      <point x="-118.125" y="-379.5" />
+      <point x="21965.875" y="1108.0" />
+      <point x="21712.666666666668" y="1108.0" />
+      <point x="54.66666666666667" y="-115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.ExchangeRule" target="it.polimi.ingsw.model.rules.DecoratedRule" relationship="GENERALIZATION">
+      <point x="98.5" y="-82.5" />
+      <point x="396.5" y="524.0" />
+      <point x="4815.625" y="524.0" />
+      <point x="-18.875" y="-27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.controller.GameHandler" target="it.polimi.ingsw.controller.exceptions.IllegalActionException" relationship="CREATE">
+      <point x="35.5" y="368.5" />
+      <point x="19120.5" y="2645.0" />
+      <point x="16687.5" y="2645.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.PingMessage" relationship="CREATE">
+      <point x="129.5" y="-0.0" />
+      <point x="-85.0" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.SelectCloudMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="0.0" y="-49.5" />
+      <point x="9819.5" y="150.0" />
+      <point x="18586.375" y="150.0" />
+      <point x="-24.12499999999997" y="-14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.DecoratedRule" target="it.polimi.ingsw.model.rules.Rule" relationship="REALIZATION">
+      <point x="18.875" y="-27.0" />
+      <point x="4853.375" y="1206.0" />
+      <point x="7074.5" y="1206.0" />
+      <point x="98.5" y="-71.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.GameReport" target="it.polimi.ingsw.model.Island" relationship="TO_MANY">
+      <point x="-86.75" y="-863.5" />
+      <point x="1312.75" y="340.0" />
+      <point x="11274.0" y="340.0" />
+      <point x="-20.0" y="-225.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.MovementCharacter" target="it.polimi.ingsw.controller.Location" relationship="TO_MANY">
+      <point x="-31.875" y="-192.5" />
+      <point x="5868.625" y="544.0" />
+      <point x="2250.75" y="544.0" />
+      <point x="-44.75" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.controller.GameHandler" target="it.polimi.ingsw.controller.Phase" relationship="TO_MANY">
+      <point x="0.0" y="-368.5" />
+      <point x="19085.0" y="1088.0" />
+      <point x="21658.0" y="1088.0" />
+      <point x="0.0" y="-115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Island" target="it.polimi.ingsw.model.ColorTower" relationship="TO_ONE">
+      <point x="80.0" y="225.5" />
+      <point x="11374.0" y="1733.0" />
+      <point x="12158.333333333334" y="1733.0" />
+      <point x="-64.66666666666666" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Connection" target="it.polimi.ingsw.server.Observable" relationship="GENERALIZATION">
+      <point x="67.5" y="-225.5" />
+      <point x="13562.5" y="430.0" />
+      <point x="15244.25" y="430.0" />
+      <point x="54.75" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.AddMeMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="-50.0" y="-71.5" />
+      <point x="17881.0" y="210.0" />
+      <point x="10734.25" y="210.0" />
+      <point x="24.75" y="-192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Server" target="it.polimi.ingsw.server.GameManager" relationship="TO_ONE">
+      <point x="106.4" y="-148.5" />
+      <point x="15759.4" y="290.0" />
+      <point x="13019.0" y="290.0" />
+      <point x="75.0" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.InfluenceRule" target="it.polimi.ingsw.model.rules.DecoratedRule" relationship="GENERALIZATION">
+      <point x="0.0" y="159.5" />
+      <point x="12567.0" y="2840.0" />
+      <point x="4784.166666666667" y="2840.0" />
+      <point x="-50.33333333333333" y="27.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.characters.InfluenceCharacter" relationship="CREATE">
+      <point x="-89.42857142857142" y="1017.5" />
+      <point x="14145.07142857143" y="2660.0" />
+      <point x="8898.5" y="2660.0" />
+      <point x="0.0" y="60.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.view.GameReport" target="it.polimi.ingsw.model.Color" relationship="TO_MANY">
+      <point x="-144.58333333333331" y="-863.5" />
+      <point x="1254.9166666666667" y="624.0" />
+      <point x="900.8" y="624.0" />
+      <point x="64.8" y="-115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Dashboard" target="it.polimi.ingsw.model.Entrance" relationship="CREATE">
+      <point x="70.4" y="-170.5" />
+      <point x="30.0" y="60.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.MovementCharacter" target="it.polimi.ingsw.model.Student" relationship="TO_MANY">
+      <point x="-31.875" y="192.5" />
+      <point x="5868.625" y="2730.0" />
+      <point x="8447.0" y="2730.0" />
+      <point x="43.0" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Player" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="95.5" y="-0.0" />
+      <point x="-96.5" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.cli.Client" target="it.polimi.ingsw.messages.SelectCloudMessage" relationship="CREATE">
+      <point x="38.849999999999994" y="-357.5" />
+      <point x="21235.35" y="110.0" />
+      <point x="9781.7" y="110.0" />
+      <point x="-37.80000000000001" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.rules.InfluenceRule" relationship="CREATE">
+      <point x="-134.14285714285714" y="1017.5" />
+      <point x="14100.357142857143" y="2560.0" />
+      <point x="12724.6" y="2560.0" />
+      <point x="157.60000000000002" y="159.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Color" relationship="TO_MANY">
+      <point x="26.828571428571536" y="1017.5" />
+      <point x="14261.328571428572" y="3220.0" />
+      <point x="836.0" y="3220.0" />
+      <point x="0.0" y="115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.exceptions.NoCharacterSelectedException" relationship="CREATE">
+      <point x="125.2000000000001" y="1017.5" />
+      <point x="14359.7" y="2565.0" />
+      <point x="17673.5" y="2565.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Hand" target="it.polimi.ingsw.model.Card" relationship="CREATE">
+      <point x="83.19999999999999" y="49.5" />
+      <point x="2602.2" y="1617.0" />
+      <point x="3179.2" y="1617.0" />
+      <point x="-68.8" y="104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.BlockIslandMessage" target="it.polimi.ingsw.model.exceptions.IllegalMoveException" relationship="CREATE">
+      <point x="23.125" y="27.0" />
+      <point x="3479.625" y="3000.0" />
+      <point x="18634.625" y="3000.0" />
+      <point x="24.125" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.exceptions.NoIslandException" relationship="CREATE">
+      <point x="35.771428571428686" y="1017.5" />
+      <point x="14270.271428571428" y="3300.0" />
+      <point x="-16.0" y="3300.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.InfluenceCharacter" target="it.polimi.ingsw.model.characters.Character" relationship="GENERALIZATION">
+      <point x="-58.33333333333333" y="60.5" />
+      <point x="8840.166666666666" y="2710.0" />
+      <point x="7403.375" y="2710.0" />
+      <point x="85.875" y="203.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.DecoratedRule" target="it.polimi.ingsw.model.rules.DefaultRule" relationship="CREATE">
+      <point x="0.0" y="27.0" />
+      <point x="4834.5" y="2810.0" />
+      <point x="10334.0" y="2810.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.PlayCardMessage" relationship="CREATE">
+      <point x="-94.5" y="379.5" />
+      <point x="21989.5" y="3060.0" />
+      <point x="14683.5" y="3060.0" />
+      <point x="-42.5" y="49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.ChooseIslandMessage" target="it.polimi.ingsw.messages.Message" relationship="GENERALIZATION">
+      <point x="0.0" y="38.5" />
+      <point x="3978.0" y="2920.0" />
+      <point x="14463.5" y="2920.0" />
+      <point x="-42.5" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.BlockColorMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="45.5" y="27.0" />
+      <point x="14002.5" y="2620.0" />
+      <point x="10768.9" y="2620.0" />
+      <point x="59.400000000000006" y="192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Dashboard" target="it.polimi.ingsw.model.Canteen" relationship="CREATE">
+      <point x="-35.2" y="-170.5" />
+      <point x="18789.8" y="90.0" />
+      <point x="9640.357142857143" y="90.0" />
+      <point x="72.85714285714286" y="-148.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.Observable" target="it.polimi.ingsw.server.Observer" relationship="TO_MANY">
+      <point x="109.5" y="-0.0" />
+      <point x="-70.5" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.rules.InfluenceRule" target="it.polimi.ingsw.model.ColorTower" relationship="TO_ONE">
+      <point x="-197.0" y="-0.0" />
+      <point x="97.0" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.ProfessorCharacter" target="it.polimi.ingsw.model.rules.ProfessorRule" relationship="CREATE">
+      <point x="0.0" y="-38.0" />
+      <point x="7570.0" y="534.0" />
+      <point x="4512.0" y="534.0" />
+      <point x="0.0" y="-82.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Island" target="it.polimi.ingsw.model.Student" relationship="CREATE">
+      <point x="-100.0" y="-225.5" />
+      <point x="11194.0" y="1262.0" />
+      <point x="8447.0" y="1262.0" />
+      <point x="42.99999999999999" y="-104.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Game" target="it.polimi.ingsw.model.Player" relationship="TO_MANY">
+      <point x="98.37142857142874" y="1017.5" />
+      <point x="14332.871428571429" y="2615.0" />
+      <point x="18320.75" y="2615.0" />
+      <point x="-47.75" y="170.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.Report" target="it.polimi.ingsw.model.ColorTower" relationship="TO_ONE">
+      <point x="59.0" y="126.5" />
+      <point x="11065.0" y="2580.0" />
+      <point x="12223.0" y="2580.0" />
+      <point x="0.0" y="71.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.BlockIslandMessage" target="it.polimi.ingsw.messages.ChooseIslandMessage" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.0" />
+      <point x="3456.5" y="1251.0" />
+      <point x="3928.5" y="1251.0" />
+      <point x="-49.5" y="-38.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.client.gui.GUIGame" target="it.polimi.ingsw.messages.ExchangeStudentMessage" relationship="CREATE">
+      <point x="-121.5" y="379.5" />
+      <point x="21962.5" y="3020.0" />
+      <point x="20905.0" y="3020.0" />
+      <point x="0.0" y="115.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.server.GameManager" target="it.polimi.ingsw.view.RemoteView" relationship="CREATE">
+      <point x="25.0" y="-104.5" />
+      <point x="12969.0" y="280.0" />
+      <point x="15974.25" y="280.0" />
+      <point x="52.75" y="-49.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.messages.UsePowerMessage" target="it.polimi.ingsw.controller.Update" relationship="CREATE">
+      <point x="43.75" y="49.5" />
+      <point x="6189.25" y="2790.0" />
+      <point x="10590.7" y="2790.0" />
+      <point x="-118.8" y="192.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.MotherNature" target="it.polimi.ingsw.model.Island" relationship="TO_ONE">
+      <point x="0.0" y="-49.5" />
+      <point x="17183.0" y="260.0" />
+      <point x="11394.0" y="260.0" />
+      <point x="100.0" y="-225.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.characters.MotherNatureCharacter" target="it.polimi.ingsw.model.rules.MotherNatureRule" relationship="CREATE">
+      <point x="0.0" y="49.5" />
+      <point x="5639.0" y="2750.0" />
+      <point x="9114.5" y="2750.0" />
+      <point x="-98.5" y="82.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="true" x="11062.5" y="1258.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

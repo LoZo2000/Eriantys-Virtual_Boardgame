@@ -855,8 +855,10 @@ public class GameReport implements Serializable {
     }
 
     /**
-     * This method return the students remaining in the canteen
-     * @return an ArrayList of integer representing the students remained in the canteen //Todo lore controlla questo Javadoc
+     * This method return an ArrayList containing the id of five students (one for every Colour) on the
+     * Player's Canteen. These id are needed in case the Player exchanges one of his/her Students with one
+     * Student on his/her Canteen.
+     * @return an ArrayList of integer containing the id of the last Students of every table
      */
     public ArrayList<Integer> getLastMyCanteen(){
         return lastMyCanteen;
