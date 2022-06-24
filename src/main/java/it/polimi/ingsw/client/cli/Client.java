@@ -7,6 +7,7 @@ import it.polimi.ingsw.messages.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.view.GameReport;
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.*;
 import java.net.Socket;
@@ -254,6 +255,8 @@ public class Client {
     public void startClient() throws IOException, InterruptedException {
         boolean repeat;
 
+        AnsiConsole.systemInstall();
+
         do {
             initGame();
 
@@ -265,8 +268,6 @@ public class Client {
             Thread input = new Thread(this::sendToServer);
             Thread output = new Thread(this::receiveFromServer);
             Thread ping = new Thread(this::ping);
-
-            //AnsiConsole.systemInstall();
 
             input.start();
             output.start();

@@ -278,8 +278,6 @@ public class GameHandler {
         });
 
     }
-
-    //TODO Debug method used for testing
     Game getGame() {
         return game;
     }

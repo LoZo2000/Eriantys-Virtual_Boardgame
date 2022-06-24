@@ -153,8 +153,7 @@ public class Game extends Observable<GameReport> {
      * a pre-determined set of students in Entrance
      * @param p the Player to be added
      */
-    //TODO TEMPORARY METHOD
-    public void addPlayer(Player p){
+    void addPlayer(Player p){
         this.players.add(p);
 
         //AddPlayer has worked: update all the clients!
@@ -409,8 +408,6 @@ public class Game extends Observable<GameReport> {
     }
 
     private ColorTower influence(Report report){
-        //TODO Costruzione Mappa Professori da quella con Player
-
         //Map with the information about the Color of the professor and the Color of the Tower of the player or team who
         //has the professor
         HashMap<Color, ColorTower> profAndPlayer = new HashMap<>();
@@ -693,8 +690,6 @@ public class Game extends Observable<GameReport> {
         }
     }
 
-    //TODO Refill method for cards which need it (Wait for controller) or use a flag in moveStudent (The Card will always be the departure Movable)
-
     //SameColors is a flag that checks if this movement was an exchange between 2 students of the same color.
     //In this case the Player won't receive any coin because this action could lead to a farm of coins.
     private void assignCoins(Color c, boolean reset, boolean sameColors){
@@ -734,8 +729,7 @@ public class Game extends Observable<GameReport> {
      * Method needed only for test. This method sets the character
      * @param characters is the character to be introduced in the match
      */
-    //TODO Debug Method
-    public void setCharactersCards(Character[] characters){
+    void setCharactersCards(Character[] characters){
         this.charactersCards = characters.clone();
     }
 

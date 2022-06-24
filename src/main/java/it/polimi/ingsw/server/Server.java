@@ -42,9 +42,8 @@ public class Server {
         Controller controller = gameMaker.searchGameByNickname(c.getNickname());
         if(controller != null)
             controller.disconnectedPlayer(c.getNickname());
-        else
-            //TODO DEBUG MESSAGE
-            System.out.println("ALREADY REMOVED GAME");
+        //else
+            //System.out.println("ALREADY REMOVED GAME");
         c.closeConnection();
     }
 
