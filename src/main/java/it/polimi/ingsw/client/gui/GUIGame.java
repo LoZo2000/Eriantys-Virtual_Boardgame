@@ -111,8 +111,14 @@ public class GUIGame {
                     JOptionPane.showMessageDialog(null, report.getError(),"Eriantys - Illegal move", JOptionPane.WARNING_MESSAGE);
                     idStudentToMove = -1;
                     turnOffAllHalos();
+
+                    layered.setLayer(loading, 1);
+                    layered.repaint();
                 }
                 if(report.getFinishedGame()){
+                    layered.setLayer(loading, 1);
+                    layered.repaint();
+
                     int confirm;
                     if(report.getWinner()==null){ confirm=JOptionPane.showConfirmDialog(null, "The game is finished."+" \nDo you want to play another game?", "Eriantys" ,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null);}
                     else{confirm=JOptionPane.showConfirmDialog(null, "The game is finished, the winner is: "+report.getWinner()+". \nDo you want to play another game?", "Eriantys" ,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null);}
