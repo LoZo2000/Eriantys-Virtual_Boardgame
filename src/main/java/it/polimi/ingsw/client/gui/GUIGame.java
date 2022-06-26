@@ -19,6 +19,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -105,7 +107,7 @@ public class GUIGame {
                 objectInputStream = new ObjectInputStream(inputStream);
                 GameReport report = (GameReport) objectInputStream.readObject();
                 if(report.getError()==null) displayReport(report);
-                else{
+                else if(!report.getError().equals("PONG")){
                     JOptionPane.showMessageDialog(null, report.getError(),"Eriantys - Illegal move", JOptionPane.WARNING_MESSAGE);
                     idStudentToMove = -1;
                     turnOffAllHalos();
@@ -116,9 +118,12 @@ public class GUIGame {
                     else{confirm=JOptionPane.showConfirmDialog(null, "The game is finished, the winner is: "+report.getWinner()+". \nDo you want to play another game?", "Eriantys" ,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null);}
                     return confirm;
                 }
-            }catch (Exception e){
+            }catch (SocketTimeoutException e){
+                JOptionPane.showMessageDialog(null, "<html>Server unreachable, the game is finished.<br>Check your connection and retry","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                return 1;
+            } catch (Exception e){
                 JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-                return 0;
+                return 1;
             }
         }
     }
@@ -438,6 +443,7 @@ public class GUIGame {
                     synchronized (lockWrite) {
                         objectOutputStream = new ObjectOutputStream(outputStream);
                         objectOutputStream.writeObject(new UsePowerMessage(myNick, numThisCard));
+                        startLoading();
                     }
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -455,9 +461,6 @@ public class GUIGame {
     }
 
     private void displayReport(GameReport report){
-        layered.setLayer(loading, 10);
-        layered.repaint();
-
         currentPhase = report.getPhase();
         halos = new ArrayList<>();
 
@@ -495,6 +498,7 @@ public class GUIGame {
                     synchronized (lockWrite) {
                         objectOutputStream = new ObjectOutputStream(outputStream);
                         objectOutputStream.writeObject(new PlayCardMessage(myNick, p));
+                        startLoading();
                     }
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -747,6 +751,7 @@ public class GUIGame {
                             synchronized (lockWrite) {
                                 objectOutputStream = new ObjectOutputStream(outputStream);
                                 objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                                startLoading();
                             }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -759,6 +764,7 @@ public class GUIGame {
                         synchronized (lockWrite) {
                             objectOutputStream = new ObjectOutputStream(outputStream);
                             objectOutputStream.writeObject(new MoveMotherNatureMessage(myNick, (numIslands + posIsland - posMT) % numIslands));
+                            startLoading();
                         }
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -770,6 +776,7 @@ public class GUIGame {
                             synchronized (lockWrite) {
                                 objectOutputStream = new ObjectOutputStream(outputStream);
                                 objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                                startLoading();
                             }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -781,6 +788,7 @@ public class GUIGame {
                             synchronized (lockWrite) {
                                 objectOutputStream = new ObjectOutputStream(outputStream);
                                 objectOutputStream.writeObject(new IslandInfluenceMessage(myNick, idIsland));
+                                startLoading();
                             }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -792,6 +800,7 @@ public class GUIGame {
                             synchronized (lockWrite) {
                                 objectOutputStream = new ObjectOutputStream(outputStream);
                                 objectOutputStream.writeObject(new BlockIslandMessage(myNick, idIsland));
+                                startLoading();
                             }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -908,6 +917,7 @@ public class GUIGame {
                     synchronized (lockWrite) {
                         objectOutputStream = new ObjectOutputStream(outputStream);
                         objectOutputStream.writeObject(new SelectCloudMessage(myNick, posCloud));
+                        startLoading();
                     }
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -1044,6 +1054,7 @@ public class GUIGame {
                         synchronized (lockWrite) {
                             objectOutputStream = new ObjectOutputStream(outputStream);
                             objectOutputStream.writeObject(new BlockColorMessage(myNick, colorTable));
+                            startLoading();
                         }
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -1054,6 +1065,7 @@ public class GUIGame {
                         synchronized (lockWrite) {
                             objectOutputStream = new ObjectOutputStream(outputStream);
                             objectOutputStream.writeObject(new ExchangeStudentMessage(myNick, idStudentToMove, report.getLastMyCanteen().get(pos), Location.ENTRANCE, -1, Location.CANTEEN, -1));
+                            startLoading();
                         }
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -1064,6 +1076,7 @@ public class GUIGame {
                         synchronized (lockWrite) {
                             objectOutputStream = new ObjectOutputStream(outputStream);
                             objectOutputStream.writeObject(new PutBackMessage(myNick, colorTable));
+                            startLoading();
                         }
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -1074,6 +1087,7 @@ public class GUIGame {
                         synchronized (lockWrite) {
                             objectOutputStream = new ObjectOutputStream(outputStream);
                             objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.CANTEEN, -1));
+                            startLoading();
                         }
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -1192,6 +1206,7 @@ public class GUIGame {
                             synchronized (lockWrite) {
                                 objectOutputStream = new ObjectOutputStream(outputStream);
                                 objectOutputStream.writeObject(new ExchangeStudentMessage(myNick, idStudentToMove, idStudent, Location.ENTRANCE, -1, Location.CARD_EXCHANGE, -1));
+                                startLoading();
                             }
                         }catch (Exception ex){
                             JOptionPane.showMessageDialog(null, ex.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
@@ -1523,7 +1538,10 @@ public class GUIGame {
         helpScreen.add(characters);
     }
 
-
+    private void startLoading(){
+        layered.setLayer(loading, 10);
+        layered.repaint();
+    }
 
     private void turnOffAllHalos(){
         for(int i=0; i< halos.size(); i++){

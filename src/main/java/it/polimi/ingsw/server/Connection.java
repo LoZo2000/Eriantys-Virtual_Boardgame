@@ -110,6 +110,8 @@ public class Connection extends Observable<Message> implements Runnable {
                     if (server.isNotValidNickname(message.getSender())) {
                         send(new GameReport(null, "This nickname is already taken", null, false));
                     }
+                } else{
+                    send(new GameReport(null, "PONG", null, false));
                 }
             }while (server.isNotValidNickname(message.getSender()));
             server.lobby(this, (AddMeMessage) message);
@@ -122,6 +124,8 @@ public class Connection extends Observable<Message> implements Runnable {
 
                 if(message.getAction() != Action.PING)
                     notify(message);
+                else
+                    send(new GameReport(null, "PONG", null, false));
             }
         } catch(Exception e){
             System.err.println(e.getMessage());

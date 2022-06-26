@@ -66,6 +66,8 @@ public class ClientGUI {
         while(anothergame==0){
             Socket socket = new Socket(ip, port);
 
+            socket.setSoTimeout(20000);
+
             outputStream = socket.getOutputStream();
 
             Thread ping = new Thread(this::ping);

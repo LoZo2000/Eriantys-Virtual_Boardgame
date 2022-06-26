@@ -250,7 +250,7 @@ public class GameReport implements Serializable {
 
     /**
      * Method to build the Character record. This record stores the description of the Character Cards
-     * @param c is the description of the Charater's power
+     * @param c is the description of the Character's power
      */
     private record CharacterReport(Character c) implements Serializable{
         public String shortString(){

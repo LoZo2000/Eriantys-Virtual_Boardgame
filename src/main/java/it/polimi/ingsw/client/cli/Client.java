@@ -144,13 +144,16 @@ public class Client {
             do {
                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
-                showBoard(report);
 
-                if(report.getError() != null && report.getError().equals("This nickname is already taken")){
-                    synchronized (lock) {
-                        yourTurn.set(true);
-                        canWrite.set(true);
-                        lock.notifyAll();
+                if(report.getError() == null || !report.getError().equals("PONG")) {
+                    showBoard(report);
+
+                    if (report.getError() != null && report.getError().equals("This nickname is already taken")) {
+                        synchronized (lock) {
+                            yourTurn.set(true);
+                            canWrite.set(true);
+                            lock.notifyAll();
+                        }
                     }
                 }
 
@@ -181,37 +184,39 @@ public class Client {
             while(!finished.get()){
                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
-                showBoard(report);
 
-                if(report.getError() == null) {
-                    gameReport = report;
-                    activeCard = report.getActiveCard();
-                    currentPhase = report.getCurrentPhase();
-                    if (activeCard != -1) {
-                        requestedAction = report.getRequestedAction();
-                    } else {
-                        requestedAction = null;
+                if(report.getError() == null || !report.getError().equals("PONG")) {
+                    showBoard(report);
+
+                    if(report.getError() == null) {
+                        gameReport = report;
+                        activeCard = report.getActiveCard();
+                        currentPhase = report.getCurrentPhase();
+                        if (activeCard != -1) {
+                            requestedAction = report.getRequestedAction();
+                        } else {
+                            requestedAction = null;
+                        }
+                    }
+
+                    if(report.getFinishedGame()) {
+                        synchronized (lock) {
+                            canWrite.set(true);
+                            finished.set(true);
+                            lock.notifyAll();
+                        }
+                    }
+
+                    if(report.getTurnOf().equals(nickname)){
+                        synchronized (lock){
+                            yourTurn.set(true);
+                            canWrite.set(true);
+                            lock.notifyAll();
+                        }
+                    } else{
+                        yourTurn.set(false);
                     }
                 }
-
-                if(report.getFinishedGame()) {
-                    synchronized (lock) {
-                        canWrite.set(true);
-                        finished.set(true);
-                        lock.notifyAll();
-                    }
-                }
-
-                if(report.getTurnOf().equals(nickname)){
-                    synchronized (lock){
-                        yourTurn.set(true);
-                        canWrite.set(true);
-                        lock.notifyAll();
-                    }
-                } else{
-                    yourTurn.set(false);
-                }
-
             }
             inputStream.close();
         } catch(Exception e){
@@ -261,6 +266,9 @@ public class Client {
             initGame();
 
             Socket socket = new Socket(ip, port);
+
+            socket.setSoTimeout(20000);
+
             //System.out.println("Connection established");
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();

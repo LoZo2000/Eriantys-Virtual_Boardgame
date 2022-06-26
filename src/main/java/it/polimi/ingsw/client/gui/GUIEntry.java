@@ -81,22 +81,26 @@ public class GUIEntry{
         window.setVisible(true);
 
         ObjectInputStream objectInputStream;
-        try {
-            objectInputStream = new ObjectInputStream(inputStream);
-            report = (GameReport) objectInputStream.readObject();
-        }catch(Exception e){
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-        }
-        while(report.getError() != null && report.getError().equals("This nickname is already taken")){
+        do{
+            try {
+                objectInputStream = new ObjectInputStream(inputStream);
+                report = (GameReport) objectInputStream.readObject();
+            }catch(Exception e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, e.getMessage(),"Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+        }while(report.getError() != null && report.getError().equals("PONG"));
+
+        while(report.getError() != null && (report.getError().equals("This nickname is already taken") || report.getError().equals("PONG"))){
             connDesc.setVisible(false);
             connLabel.setVisible(false);
             uncDesc.setVisible(true);
             uncLabel.setVisible(true);
             requestSent = false;
-            JOptionPane.showMessageDialog(null, "<html>This nickname was already taken!<br/>Please choose another one...</html>","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
-            try {
+            if(report.getError().equals("This nickname is already taken"))
+                JOptionPane.showMessageDialog(null, "<html>This nickname was already taken!<br/>Please choose another one...</html>","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+          try {
                 objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
             }catch(Exception e){
