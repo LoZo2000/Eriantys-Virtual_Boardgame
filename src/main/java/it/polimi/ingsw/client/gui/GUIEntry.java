@@ -40,9 +40,8 @@ public class GUIEntry{
         }
     }
 
-    private final InputStream inputStream;
-    private final OutputStream outputStream;
-    private ObjectOutputStream objectOutputStream;
+    private final ObjectInputStream objectInputStream;
+    private final ObjectOutputStream objectOutputStream;
     private final JFrame window = new JFrame("Eriantys"); //Main window
     private JTextField textField;
     private JSlider slider;
@@ -64,9 +63,9 @@ public class GUIEntry{
      * @param lockWrite is a lock to synchronize the object
      * @throws IOException when there is an input/output error
      */
-    public GUIEntry(Socket socket, Object lockWrite) throws IOException{
-        inputStream = socket.getInputStream();
-        outputStream = socket.getOutputStream();
+    public GUIEntry(Socket socket, Object lockWrite, final ObjectInputStream in, final ObjectOutputStream out) throws IOException{
+        objectInputStream = in;
+        objectOutputStream = out;
 
         this.lockWrite = lockWrite;
 
@@ -80,10 +79,9 @@ public class GUIEntry{
     public GameReport openGUI(){
         window.setVisible(true);
 
-        ObjectInputStream objectInputStream;
         do{
             try {
-                objectInputStream = new ObjectInputStream(inputStream);
+                //objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
             }catch(Exception e){
                 e.printStackTrace();
@@ -101,7 +99,7 @@ public class GUIEntry{
             if(report.getError().equals("This nickname is already taken"))
                 JOptionPane.showMessageDialog(null, "<html>This nickname was already taken!<br/>Please choose another one...</html>","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
           try {
-                objectInputStream = new ObjectInputStream(inputStream);
+                //objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
             }catch(Exception e){
                 e.printStackTrace();
@@ -111,7 +109,7 @@ public class GUIEntry{
         }
         while(report.getTurnOf() == null){
             try {
-                objectInputStream = new ObjectInputStream(inputStream);
+                //objectInputStream = new ObjectInputStream(inputStream);
                 report = (GameReport) objectInputStream.readObject();
             }catch(Exception e){
                 e.printStackTrace();
@@ -344,8 +342,9 @@ public class GUIEntry{
                     Message message = new AddMeMessage(nickname, option2.isSelected(), slider.getValue());
                     try {
                         synchronized (lockWrite) {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.reset();
                             objectOutputStream.writeObject(message);
+                            objectOutputStream.flush();
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();

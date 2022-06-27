@@ -39,6 +39,7 @@ public class ClientGuiApp {
         try{
             clientGUI.run();
         }catch (Exception ex){
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Connection failed!","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }

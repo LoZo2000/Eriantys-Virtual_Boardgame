@@ -42,10 +42,8 @@ public class GUIGame {
         }
     }
 
-    private final InputStream inputStream;
-    private ObjectInputStream objectInputStream;
-    private final OutputStream outputStream;
-    private ObjectOutputStream objectOutputStream;
+    private final ObjectInputStream objectInputStream;
+    private final ObjectOutputStream objectOutputStream;
     private final JFrame window = new JFrame("Eriantys"); //Main window
     private final JLayeredPane layered = new JLayeredPane();
     private JLabel bgLabel; //Main background
@@ -86,9 +84,9 @@ public class GUIGame {
      * @param lockWrite is a lock to synchronize the object
      * @throws IOException
      */
-    public GUIGame(Socket socket, GameReport report, Object lockWrite) throws IOException {
-        inputStream = socket.getInputStream();
-        outputStream = socket.getOutputStream();
+    public GUIGame(Socket socket, GameReport report, Object lockWrite, final ObjectInputStream in, final ObjectOutputStream out) throws IOException {
+        objectInputStream = in;
+        objectOutputStream = out;
         this.lockWrite = lockWrite;
 
         createGUI(report);
@@ -104,9 +102,12 @@ public class GUIGame {
         window.setVisible(true);
         while(true){
             try {
-                objectInputStream = new ObjectInputStream(inputStream);
+                //objectInputStream = new ObjectInputStream(inputStream);
                 GameReport report = (GameReport) objectInputStream.readObject();
-                if(report.getError()==null) displayReport(report);
+                if(report.getError()==null) {
+                    startLoading();
+                    displayReport(report);
+                }
                 else if(!report.getError().equals("PONG")){
                     JOptionPane.showMessageDialog(null, report.getError(),"Eriantys - Illegal move", JOptionPane.WARNING_MESSAGE);
                     idStudentToMove = -1;
@@ -447,8 +448,10 @@ public class GUIGame {
             cb.addActionListener(e-> {
                 try{
                     synchronized (lockWrite) {
-                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        //objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.reset();
                         objectOutputStream.writeObject(new UsePowerMessage(myNick, numThisCard));
+                        objectOutputStream.flush();
                         startLoading();
                     }
                 }catch (Exception ex){
@@ -502,8 +505,10 @@ public class GUIGame {
             bc.addActionListener(e->{
                 try {
                     synchronized (lockWrite) {
-                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        //objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.reset();
                         objectOutputStream.writeObject(new PlayCardMessage(myNick, p));
+                        objectOutputStream.flush();
                         startLoading();
                     }
                 }catch (Exception ex){
@@ -586,7 +591,7 @@ public class GUIGame {
                 JLabel soc = new JLabel();
                 ImageIcon socIcon = ScalingUtils.getImage("/Block.png");
                 Image socImage = socIcon.getImage();
-                Image newImg = socImage.getScaledInstance(26,26,Image.SCALE_SMOOTH);
+                Image newImg = socImage.getScaledInstance(ScalingUtils.scaleX(26, widthIsland),ScalingUtils.scaleY(26, heightIsland),Image.SCALE_SMOOTH);
                 socIcon = new ImageIcon(newImg);
                 soc.setIcon(socIcon);
                 Border border = BorderFactory.createLineBorder(Color.BLACK);
@@ -755,8 +760,10 @@ public class GUIGame {
                     if(idStudentToMove != -1){
                         try {
                             synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                //objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.reset();
                                 objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                                objectOutputStream.flush();
                                 startLoading();
                             }
                         }catch (Exception ex){
@@ -768,8 +775,10 @@ public class GUIGame {
                 else if(currentPhase==Phase.MOVEMNTURN){
                     try {
                         synchronized (lockWrite) {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            //objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.reset();
                             objectOutputStream.writeObject(new MoveMotherNatureMessage(myNick, (numIslands + posIsland - posMT) % numIslands));
+                            objectOutputStream.flush();
                             startLoading();
                         }
                     }catch (Exception ex){
@@ -780,8 +789,10 @@ public class GUIGame {
                     if(report.getChar().get(report.getActiveCard()).getId()==1){
                         try {
                             synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                //objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.reset();
                                 objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.ISLAND, idIsland));
+                                objectOutputStream.flush();
                                 startLoading();
                             }
                         }catch (Exception ex){
@@ -792,8 +803,10 @@ public class GUIGame {
                     else if(report.getChar().get(report.getActiveCard()).getId()==3){
                         try {
                             synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                //objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.reset();
                                 objectOutputStream.writeObject(new IslandInfluenceMessage(myNick, idIsland));
+                                objectOutputStream.flush();
                                 startLoading();
                             }
                         }catch (Exception ex){
@@ -804,8 +817,10 @@ public class GUIGame {
                     else if(report.getChar().get(report.getActiveCard()).getId()==5){
                         try {
                             synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                //objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.reset();
                                 objectOutputStream.writeObject(new BlockIslandMessage(myNick, idIsland));
+                                objectOutputStream.flush();
                                 startLoading();
                             }
                         }catch (Exception ex){
@@ -921,8 +936,10 @@ public class GUIGame {
             clButton.addActionListener(e->{
                 try {
                     synchronized (lockWrite) {
-                        objectOutputStream = new ObjectOutputStream(outputStream);
+                        //objectOutputStream = new ObjectOutputStream(outputStream);
+                        objectOutputStream.reset();
                         objectOutputStream.writeObject(new SelectCloudMessage(myNick, posCloud));
+                        objectOutputStream.flush();
                         startLoading();
                     }
                 }catch (Exception ex){
@@ -1058,8 +1075,10 @@ public class GUIGame {
                 if(report.getActiveCard()>-1 && report.getChar().get(report.getActiveCard()).getId()==9){
                     try {
                         synchronized (lockWrite) {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            //objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.reset();
                             objectOutputStream.writeObject(new BlockColorMessage(myNick, colorTable));
+                            objectOutputStream.flush();
                             startLoading();
                         }
                     }catch (Exception ex){
@@ -1069,8 +1088,10 @@ public class GUIGame {
                 else if(report.getActiveCard()>-1 && report.getChar().get(report.getActiveCard()).getId()==10 && report.getMyCanteen().get(pos)>0){
                     try {
                         synchronized (lockWrite) {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            //objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.reset();
                             objectOutputStream.writeObject(new ExchangeStudentMessage(myNick, idStudentToMove, report.getLastMyCanteen().get(pos), Location.ENTRANCE, -1, Location.CANTEEN, -1));
+                            objectOutputStream.flush();
                             startLoading();
                         }
                     }catch (Exception ex){
@@ -1080,8 +1101,10 @@ public class GUIGame {
                 else if(report.getActiveCard()>-1 && report.getChar().get(report.getActiveCard()).getId()==12){
                     try {
                         synchronized (lockWrite) {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            //objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.reset();
                             objectOutputStream.writeObject(new PutBackMessage(myNick, colorTable));
+                            objectOutputStream.flush();
                             startLoading();
                         }
                     }catch (Exception ex){
@@ -1091,8 +1114,10 @@ public class GUIGame {
                 else if(colorStudentToMove==colorTable){
                     try {
                         synchronized (lockWrite) {
-                            objectOutputStream = new ObjectOutputStream(outputStream);
+                            //objectOutputStream = new ObjectOutputStream(outputStream);
+                            objectOutputStream.reset();
                             objectOutputStream.writeObject(new MoveStudentMessage(myNick, idStudentToMove, departureType, departureID, Location.CANTEEN, -1));
+                            objectOutputStream.flush();
                             startLoading();
                         }
                     }catch (Exception ex){
@@ -1210,8 +1235,10 @@ public class GUIGame {
                     soc.addActionListener(e-> {
                         try {
                             synchronized (lockWrite) {
-                                objectOutputStream = new ObjectOutputStream(outputStream);
+                                //objectOutputStream = new ObjectOutputStream(outputStream);
+                                objectOutputStream.reset();
                                 objectOutputStream.writeObject(new ExchangeStudentMessage(myNick, idStudentToMove, idStudent, Location.ENTRANCE, -1, Location.CARD_EXCHANGE, -1));
+                                objectOutputStream.flush();
                                 startLoading();
                             }
                         }catch (Exception ex){
