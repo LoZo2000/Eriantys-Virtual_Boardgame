@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -20,7 +21,7 @@ public class ClientGUI {
     private GUIEntry GUIentry;
     private GUIGame GUIgame;
 
-    private OutputStream outputStream;
+    private ObjectOutputStream objectOutputStream;
     private final Object lockWrite;
 
 
@@ -68,16 +69,17 @@ public class ClientGUI {
 
             socket.setSoTimeout(20000);
 
-            outputStream = socket.getOutputStream();
+            ObjectInputStream  objectInputStream= new ObjectInputStream(socket.getInputStream());
+            objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
 
             Thread ping = new Thread(this::ping);
 
             ping.setDaemon(true);
             ping.start();
 
-            GUIentry = new GUIEntry(socket, lockWrite);
+            GUIentry = new GUIEntry(socket, lockWrite, objectInputStream, objectOutputStream);
             GameReport report = GUIentry.openGUI();
-            GUIgame = new GUIGame(socket, report, lockWrite);
+            GUIgame = new GUIGame(socket, report, lockWrite, objectInputStream, objectOutputStream);
             GUIentry.hideGUI();
             anothergame=GUIgame.openGUI();
             GUIgame.hideGUI();
@@ -93,8 +95,10 @@ public class ClientGUI {
         while(run){
             try{
                 synchronized(lockWrite) {
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    //ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    objectOutputStream.reset();
                     objectOutputStream.writeObject(new PingMessage());
+                    objectOutputStream.flush();
                 }
                 Thread.sleep(4000);
             } catch (InterruptedException e) {

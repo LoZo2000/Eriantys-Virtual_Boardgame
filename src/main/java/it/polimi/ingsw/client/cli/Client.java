@@ -42,8 +42,8 @@ public class Client {
     private final AtomicBoolean yourTurn;
     private final AtomicBoolean canWrite;
     private final AtomicBoolean finished;
-    private OutputStream outputStream;
-    private InputStream inputStream;
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
     private final Scanner stdin;
 
@@ -122,8 +122,10 @@ public class Client {
                     canWrite.set(false);
                     try{
                         synchronized (lockWrite) {
-                            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                            objectOutputStream.writeObject(message);
+                            //ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                            outputStream.reset();
+                            outputStream.writeObject(message);
+                            outputStream.flush();
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -142,8 +144,8 @@ public class Client {
         try{
             GameReport report = null;
             do {
-                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                report = (GameReport) objectInputStream.readObject();
+                //ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                report = (GameReport) inputStream.readObject();
 
                 if(report.getError() == null || !report.getError().equals("PONG")) {
                     showBoard(report);
@@ -182,8 +184,8 @@ public class Client {
             }
 
             while(!finished.get()){
-                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                report = (GameReport) objectInputStream.readObject();
+                //ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                report = (GameReport) inputStream.readObject();
 
                 if(report.getError() == null || !report.getError().equals("PONG")) {
                     showBoard(report);
@@ -238,8 +240,10 @@ public class Client {
         while(run){
             try{
                 synchronized(lockWrite) {
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                    objectOutputStream.writeObject(new PingMessage());
+                    //ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    outputStream.reset();
+                    outputStream.writeObject(new PingMessage());
+                    outputStream.flush();
                 }
                 Thread.sleep(4000);
             } catch (InterruptedException e) {
@@ -270,8 +274,8 @@ public class Client {
             socket.setSoTimeout(20000);
 
             //System.out.println("Connection established");
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
+            inputStream = new ObjectInputStream(socket.getInputStream());
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
 
             Thread input = new Thread(this::sendToServer);
             Thread output = new Thread(this::receiveFromServer);

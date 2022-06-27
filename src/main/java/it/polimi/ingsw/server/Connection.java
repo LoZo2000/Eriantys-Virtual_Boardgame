@@ -18,8 +18,8 @@ import java.net.Socket;
 public class Connection extends Observable<Message> implements Runnable {
 
     private Socket socket;
-    private InputStream inputStream;
-    private OutputStream outputStream;
+    //private InputStream inputStream;
+    //private OutputStream outputStream;
     private PrintWriter out;
     private Server server;
     private ObjectInputStream objectInputStream;
@@ -60,8 +60,10 @@ public class Connection extends Observable<Message> implements Runnable {
      */
     public void send(GameReport gr){
         try {
-            objectOutputStream = new ObjectOutputStream(outputStream);
+            //objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.reset();
             objectOutputStream.writeObject(gr);
+            objectOutputStream.flush();
         }catch (Exception e){
             //e.printStackTrace();
             System.out.println("Connection with user " + owner + " is already closed");
@@ -99,11 +101,11 @@ public class Connection extends Observable<Message> implements Runnable {
 
             this.socket.setSoTimeout(20000);
 
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
+            objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectInputStream = new ObjectInputStream(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream());
             do {
-                objectInputStream = new ObjectInputStream(inputStream);
+                //objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
 
                 if(message.getAction() != Action.PING) {
@@ -119,7 +121,7 @@ public class Connection extends Observable<Message> implements Runnable {
             owner = message.getSender();
             server.registerNickname(owner);
             while(isActive()){
-                objectInputStream = new ObjectInputStream(inputStream);
+                //objectInputStream = new ObjectInputStream(inputStream);
                 message = (Message) objectInputStream.readObject();
 
                 if(message.getAction() != Action.PING)
