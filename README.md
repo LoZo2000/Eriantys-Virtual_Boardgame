@@ -19,6 +19,9 @@ Method: 100% (285/285)<br>
 Line: 99% (1039/1047)</p>
  
 ### How to launch the apps from Terminal:
-<p>Server: "java -jar ServerApp.jar"<br>
+<p>To play the game, you need to update the environmental variable path including "%ProgramFiles%/Java/jdk-<version>/bin"<br>
+Your pc must run a terminal able to manage ANSI code and colors<br>
+Then, type on terminal the following lines to run...<br>
+Server: "java -jar ServerApp.jar"<br>
 CLI client: "java -jar CLIClient.jar"<br>
 GUI client: "java -jar GUIClient.jar"</p>
