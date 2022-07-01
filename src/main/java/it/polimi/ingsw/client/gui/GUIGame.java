@@ -365,7 +365,7 @@ public class GUIGame {
                     od.setBackground(new Color(0, 0, 0, 255));
                     od.setForeground(new Color(255, 255, 255, 255));
                 }
-                case GREY -> od.setBackground(new Color(130, 130, 130, 255));
+                case GREY -> od.setBackground(new Color(184, 184, 184, 255));
             }
             if(report.getOpponentsNick().get(i).equals(report.getNamePlayer())) od.setEnabled(false);
             else{

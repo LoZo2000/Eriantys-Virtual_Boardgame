@@ -17,6 +17,14 @@ public class ClientGuiApp {
         System.setProperty("sun.java2d.uiScale.enabled", "false");
         System.setProperty("sun.java2d.uiScale", "1.0");
 
+        try {
+            UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+            //UIManager.setLookAndFeel( "javax.swing.plaf.nimbus.NimbusLookAndFeel" );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Something went wrong!","Eriantys - Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
+
         String ip = "";
         int port = -1;
         GUIConnection GUIconnection = new GUIConnection();
